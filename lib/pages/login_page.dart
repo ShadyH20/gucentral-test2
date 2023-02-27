@@ -1,6 +1,9 @@
+import "dart:convert";
+
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "package:http/http.dart" as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +15,22 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final url = Uri.parse('http://127.0.0.1:8000/api/schedule/');
+
+  void loginPressed() async {
+    print("IM IN ONPRESSED");
+    var body = jsonEncode({
+      'username': usernameController.text,
+      'password': passwordController.text
+    });
+    var response = await http.post(url, body: body, headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Accept': '*/*',
+    });
+    print(response.body);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(7.5)),
                   backgroundColor: MyColors.secondary,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  loginPressed();
+                },
                 child: const Text(
                   "Login",
                   style: TextStyle(color: Colors.white, fontSize: 18),
