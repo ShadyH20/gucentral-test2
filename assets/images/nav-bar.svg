@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1136" height="559" viewBox="0 0 1136 559">
+  <defs>
+    <style>
+      .cls-1 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="Nav_Bar" data-name="Nav Bar" class="cls-1" d="M1065.79,139H69.5a69.5,69.5,0,0,1,0-139h996.29A69.5,69.5,0,0,1,1065.79,139ZM69.5,420H628.075a69.5,69.5,0,0,1,0,139H69.5A69.5,69.5,0,0,1,69.5,420Z"/>
+</svg>

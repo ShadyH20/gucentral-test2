@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gucentral/pages/transcript_page.dart';
 import "./pages/login_page.dart";
 
 void main() {
@@ -12,7 +13,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: "login_page",
+        // initialRoute: "login_page",
+        initialRoute: "transcript_page",
         theme: ThemeData(
           // Define the default brightness and colors.
           // brightness: Brightness.dark,
@@ -28,12 +30,13 @@ class MyApp extends StatelessWidget {
                 fontSize: 60.0,
                 fontWeight: FontWeight.bold,
                 color: Color.fromARGB(255, 246, 95, 62)),
-            titleLarge: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            titleLarge: TextStyle(fontSize: 30.0),
             bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Outfit'),
           ),
         ),
         routes: {
           "login_page": (context) => LoginPage(key: key),
+          "transcript_page": (context) => TranscriptPage(key: key),
         });
   }
 }
