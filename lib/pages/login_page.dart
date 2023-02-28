@@ -16,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  bool showPassword = true;
+
   final url = Uri.parse('http://127.0.0.1:8000/api/schedule/');
 
   void loginPressed() async {
@@ -98,6 +100,10 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7.5),
                     ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7.5),
+                        borderSide: const BorderSide(
+                            width: 2, color: MyColors.primaryVariant)),
                     contentPadding:
                         const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                   ),
@@ -124,10 +130,25 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Container(height: 5),
                 TextField(
+                  obscureText: showPassword,
+                  enableSuggestions: false,
+                  autocorrect: false,
                   controller: passwordController,
                   style: const TextStyle(fontSize: 21),
                   textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      icon: showPassword
+                          ? const Icon(Icons.visibility,
+                              color: MyColors.secondary)
+                          : const Icon(Icons.visibility_off,
+                              color: MyColors.secondary),
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                    ),
                     hintText: "password",
                     hintStyle: TextStyle(
                         fontFamily: "Outfit",
@@ -136,6 +157,10 @@ class _LoginPageState extends State<LoginPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7.5),
                     ),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(7.5),
+                        borderSide: const BorderSide(
+                            width: 2, color: MyColors.primaryVariant)),
                     contentPadding:
                         const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                   ),
