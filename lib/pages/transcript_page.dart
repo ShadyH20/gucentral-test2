@@ -6,8 +6,6 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:http/http.dart" as http;
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-// import 'package:navigation_drawer_animation/widet/menu_widget'
 
 class TranscriptPage extends StatefulWidget {
   const TranscriptPage({super.key});
