@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gucentral/pages/transcript_page.dart';
 import 'package:gucentral/widgets/HomePageNavDrawer.dart';
+import 'package:gucentral/widgets/MyColors.dart';
 import "./pages/login_page.dart";
 
 void main() {
@@ -25,7 +26,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // Define the default brightness and colors.
         // brightness: Brightness.dark,
-        primaryColor: const Color.fromARGB(255, 246, 95, 62),
+        // primaryColor: const Color.fromARGB(255, 246, 95, 62),
+        primaryColor: MyColors.background,
 
         // Define the default font family.
         fontFamily: 'Outfit',

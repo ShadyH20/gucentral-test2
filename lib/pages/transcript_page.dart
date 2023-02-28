@@ -52,11 +52,10 @@ class _TranscriptPageState extends State<TranscriptPage> {
         ),
         body: Container(
           width: double.infinity,
-          // color: Colors.red,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Hekki", style: TextStyle(color: Colors.red)),
+              const Text("Hekki", style: TextStyle(color: MyColors.primary)),
               Container(
                 width: 300.0,
                 height: 60.0,
@@ -64,7 +63,7 @@ class _TranscriptPageState extends State<TranscriptPage> {
                   borderRadius: BorderRadius.circular(
                     5.0,
                   ),
-                  color: Colors.red,
+                  color: MyColors.primaryVariant,
                 ),
               ),
               Container(height: 100.0),
