@@ -19,14 +19,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: new HomePageNavDrawer(),
+      // home: const LoginPage(),
       debugShowCheckedModeBanner: false,
       // initialRoute: "login_page",
-      initialRoute: "transcript_page",
+      initialRoute: "login_page",
       theme: ThemeData(
         // Define the default brightness and colors.
         // brightness: Brightness.dark,
-        primaryColor: Color.fromARGB(255, 246, 95, 62),
+        primaryColor: const Color.fromARGB(255, 246, 95, 62),
 
         // Define the default font family.
         fontFamily: 'Outfit',
@@ -44,7 +44,8 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "login_page": (context) => LoginPage(key: key),
-        "transcript_page": (context) => TranscriptPage(key: key),
+        "home_page": (context) => HomePageNavDrawer(key: key)
+        // "transcript_page": (context) => TranscriptPage(key: key),
       },
     );
   }

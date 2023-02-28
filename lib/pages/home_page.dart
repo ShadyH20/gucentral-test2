@@ -9,14 +9,14 @@ import "package:http/http.dart" as http;
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 // import 'package:navigation_drawer_animation/widet/menu_widget'
 
-class TranscriptPage extends StatefulWidget {
-  const TranscriptPage({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<TranscriptPage> createState() => _TranscriptPageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _TranscriptPageState extends State<TranscriptPage> {
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +32,7 @@ class _TranscriptPageState extends State<TranscriptPage> {
           leadingWidth: 50.0,
           leading: const MenuWidget(),
           title: const Text(
-            "Transcript",
+            "Home",
             style: TextStyle(color: MyColors.primary),
           ),
           actions: [

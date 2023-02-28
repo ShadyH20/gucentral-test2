@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:gucentral/pages/home_page.dart';
 import 'package:gucentral/pages/login_page.dart';
 import 'package:gucentral/pages/transcript_page.dart';
+import 'package:gucentral/widgets/MyColors.dart';
 
 import '../pages/MenuPage.dart';
 import 'MeduItemList.dart';
@@ -20,8 +22,10 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         mainScreenScale: 0,
         borderRadius: 40,
         angle: 0,
-        menuScreenWidth: 250,
-        slideWidth: MediaQuery.of(context).size.width * 0.6,
+        menuScreenWidth: 290,
+        mainScreenTapClose: true,
+        menuBackgroundColor: MyColors.primaryVariant,
+        slideWidth: MediaQuery.of(context).size.width * 0.7,
         mainScreen: getScreen(),
         menuScreen: Builder(
           builder: (context) => MenuPage(
@@ -34,10 +38,22 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       );
   Widget getScreen() {
     switch (currentItem) {
+      case MenuItems.home:
+        return const HomePage();
+      case MenuItems.grades:
+        return const TranscriptPage();
+      case MenuItems.courses:
+        return const LoginPage();
+      case MenuItems.schedule:
+        return const TranscriptPage();
       case MenuItems.login:
-        return LoginPage();
+        return const LoginPage();
       case MenuItems.transcript:
-        return TranscriptPage();
+        return const TranscriptPage();
+      case MenuItems.map:
+        return const LoginPage();
+      case MenuItems.settings:
+        return const TranscriptPage();
       // case MenuItems.payment:
       //   return PaymentPage();
       // case MenuItems.promos:

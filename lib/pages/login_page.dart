@@ -2,6 +2,7 @@ import "dart:convert";
 
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:gucentral/widgets/HomePageNavDrawer.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:http/http.dart" as http;
 
@@ -22,6 +23,14 @@ class _LoginPageState extends State<LoginPage> {
 
   void loginPressed() async {
     print("IM IN ONPRESSED");
+
+    //FOR TESTING PURPOSES
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePageNavDrawer()),
+    );
+    //FOR TESTING PURPOSES
+
     var body = jsonEncode({
       'username': usernameController.text,
       'password': passwordController.text
@@ -57,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Container(
-                  height: 10,
+                  height: 5,
                 ),
                 SvgPicture.asset(
                   "assets/images/logo-text.svg",
