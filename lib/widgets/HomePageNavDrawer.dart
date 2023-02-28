@@ -24,7 +24,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         angle: 0,
         menuScreenWidth: 290,
         mainScreenTapClose: true,
-        menuBackgroundColor: MyColors.primaryVariant,
+        menuBackgroundColor: MyColors.primary,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
         mainScreen: getScreen(),
         menuScreen: Builder(

@@ -16,7 +16,7 @@ class MenuPage extends StatelessWidget {
   Widget build(BuildContext context) => Theme(
         data: ThemeData.dark(),
         child: Scaffold(
-          backgroundColor: MyColors.primaryVariant,
+          backgroundColor: MyColors.primary,
           body: Container(
             width: double.infinity,
             child: Column(
