@@ -22,7 +22,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         dragOffset: 100,
         openDragSensitivity: 300,
         mainScreenScale: 0,
-        borderRadius: 40,
+        borderRadius: 25,
         angle: 0,
         menuScreenWidth: 290,
         mainScreenTapClose: true,

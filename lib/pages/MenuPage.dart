@@ -20,8 +20,9 @@ class MenuPage extends StatelessWidget {
           body: Container(
             width: double.infinity,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                const Spacer(),
+                // const Spacer(),
                 Container(
                   // color: MyColors.accent,
                   width: 200,
@@ -31,9 +32,33 @@ class MenuPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Spacer(
-                  flex: 2,
-                ),
+                Expanded(
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Container(
+                      height: 150,
+                      decoration: const BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: MyColors.background,
+                                offset: Offset(-30, 30)),
+                            BoxShadow(
+                                color: MyColors.secondary,
+                                offset: Offset(30, 30))
+                          ],
+                          color: MyColors.secondary,
+                          borderRadius: BorderRadius.horizontal(
+                            left: Radius.circular(25),
+                          )),
+                      padding: const EdgeInsets.all(42),
+                      width: double.infinity,
+                      child: SvgPicture.asset(
+                        "assets/images/main-logo.svg",
+                        height: 70,
+                      ),
+                    ),
+                  ),
+                )
               ],
             ),
           ),
@@ -42,7 +67,7 @@ class MenuPage extends StatelessWidget {
   Widget buildMenuItem(MenuItemlist item) {
     if (item.title == "Profile") {
       return ListTile(
-        contentPadding: EdgeInsets.only(bottom: 60),
+        contentPadding: const EdgeInsets.only(top: 30, bottom: 50),
         horizontalTitleGap: 10.0,
         leading: SvgPicture.asset(
           "assets/images/profile.svg",
@@ -90,7 +115,7 @@ class MenuPage extends StatelessWidget {
             textAlign: TextAlign.start,
             style: const TextStyle(
               fontFamily: "Outfit",
-              fontSize: 30,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
             ),
           ),

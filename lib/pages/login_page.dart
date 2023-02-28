@@ -22,8 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   final url = Uri.parse('http://127.0.0.1:8000/api/schedule/');
 
   void loginPressed() async {
-    print("IM IN ONPRESSED");
-
     //FOR TESTING PURPOSES
     Navigator.push(
       context,
