@@ -1,5 +1,6 @@
 import "dart:convert";
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:http/http.dart" as http;
@@ -52,6 +53,10 @@ class _TranscriptPageState extends State<TranscriptPage> {
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(
+              statusBarColor: MyColors.background,
+              statusBarIconBrightness: Brightness.dark,
+              statusBarBrightness: Brightness.dark),
           elevation: 0,
           backgroundColor: MyColors.background,
           centerTitle: true,
