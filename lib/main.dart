@@ -18,33 +18,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: new HomePageNavDrawer()
-        // debugShowCheckedModeBanner: false,
-        // // initialRoute: "login_page",
-        // initialRoute: "transcript_page",
-        // theme: ThemeData(
-        //   // Define the default brightness and colors.
-        //   // brightness: Brightness.dark,
-        //   primaryColor: Color.fromARGB(255, 246, 95, 62),
+    return MaterialApp(
+      home: new HomePageNavDrawer(),
+      debugShowCheckedModeBanner: false,
+      // initialRoute: "login_page",
+      initialRoute: "transcript_page",
+      theme: ThemeData(
+        // Define the default brightness and colors.
+        // brightness: Brightness.dark,
+        primaryColor: Color.fromARGB(255, 246, 95, 62),
 
-        //   // Define the default font family.
-        //   fontFamily: 'Outfit',
+        // Define the default font family.
+        fontFamily: 'Outfit',
 
-        //   // Define the default `TextTheme`. Use this to specify the default
-        //   // text styling for headlines, titles, bodies of text, and more.
-        //   textTheme: const TextTheme(
-        //     displayLarge: TextStyle(
-        //         fontSize: 60.0,
-        //         fontWeight: FontWeight.bold,
-        //         color: Color.fromARGB(255, 246, 95, 62)),
-        //     titleLarge: TextStyle(fontSize: 30.0),
-        //     bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Outfit'),
-        //   ),
-        // ),
-        // routes: {
-        //   "login_page": (context) => LoginPage(key: key),
-        //   "transcript_page": (context) => TranscriptPage(key: key),
-        // },
-        );
+        // Define the default `TextTheme`. Use this to specify the default
+        // text styling for headlines, titles, bodies of text, and more.
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+              fontSize: 60.0,
+              fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 246, 95, 62)),
+          titleLarge: TextStyle(fontSize: 30.0),
+          bodyMedium: TextStyle(fontSize: 14.0, fontFamily: 'Outfit'),
+        ),
+      ),
+      routes: {
+        "login_page": (context) => LoginPage(key: key),
+        "transcript_page": (context) => TranscriptPage(key: key),
+      },
+    );
   }
 }

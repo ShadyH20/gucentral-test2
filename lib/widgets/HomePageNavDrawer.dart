@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:gucentral/pages/login_page.dart';
 import 'package:gucentral/pages/transcript_page.dart';
@@ -16,11 +17,11 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   MenuItemlist currentItem = MenuItems.transcript;
   @override
   Widget build(BuildContext context) => ZoomDrawer(
+        mainScreenScale: 0,
         borderRadius: 40,
-        angle: -10,
-        slideWidth: MediaQuery.of(context).size.width * 0.8,
-        showShadow: true,
-        drawerShadowsBackgroundColor: Colors.orangeAccent,
+        angle: 0,
+        menuScreenWidth: 250,
+        slideWidth: MediaQuery.of(context).size.width * 0.6,
         mainScreen: getScreen(),
         menuScreen: Builder(
           builder: (context) => MenuPage(

@@ -19,41 +19,6 @@ class _TranscriptPageState extends State<TranscriptPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawer(
-        backgroundColor: MyColors.primaryVariant,
-        width: 260.0,
-        child: ListView(
-          scrollDirection: Axis.vertical,
-          children: [
-            ListTile(
-              title: TextButton(
-                child: Text(
-                  "Home",
-                  style: TextStyle(
-                    color: MyColors.background.withOpacity(0.5),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 30.0,
-                  ),
-                ),
-                onPressed: () {},
-              ),
-            ),
-            ListTile(
-              title: TextButton(
-                child: Text(
-                  "Home",
-                  style: TextStyle(
-                    color: MyColors.background.withOpacity(0.5),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 30.0,
-                  ),
-                ),
-                onPressed: () {},
-              ),
-            ),
-          ],
-        ),
-      ),
       backgroundColor: Colors.white,
       appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
