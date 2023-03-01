@@ -24,11 +24,11 @@ class MenuPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 // const Spacer(),
-                Container(
-                  // color: MyColors.accent,
-                  width: 200,
-                  child: Expanded(
-                    flex: 10,
+                Expanded(
+                  flex: 9,
+                  child: Container(
+                    // color: MyColors.accent,
+                    width: 200,
                     child: Column(
                       children: [
                         ...MenuItems.all.map(buildMenuItem).toList(),
@@ -41,7 +41,7 @@ class MenuPage extends StatelessWidget {
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Container(
-                      height: 150,
+                      // height: 150,
                       decoration: const BoxDecoration(
                           boxShadow: [
                             BoxShadow(
@@ -59,7 +59,7 @@ class MenuPage extends StatelessWidget {
                       width: double.infinity,
                       child: SvgPicture.asset(
                         "assets/images/main-logo.svg",
-                        height: 70,
+                        // height: 70,
                       ),
                     ),
                   ),
@@ -97,7 +97,7 @@ class MenuPage extends StatelessWidget {
     }
     if (item.title == "Seperator") {
       return Column(children: [
-        Container(height: 80),
+        Container(height: 40),
         const Divider(
           color: MyColors.background,
           thickness: 4,
