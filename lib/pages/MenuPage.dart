@@ -18,6 +18,7 @@ class MenuPage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: MyColors.primary,
           body: Container(
+            // color: MyColors.accent,
             width: double.infinity,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -26,13 +27,17 @@ class MenuPage extends StatelessWidget {
                 Container(
                   // color: MyColors.accent,
                   width: 200,
-                  child: Column(
-                    children: [
-                      ...MenuItems.all.map(buildMenuItem).toList(),
-                    ],
+                  child: Expanded(
+                    flex: 10,
+                    child: Column(
+                      children: [
+                        ...MenuItems.all.map(buildMenuItem).toList(),
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
+                  flex: 2,
                   child: Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Container(

@@ -7,10 +7,13 @@ import "./pages/login_page.dart";
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
-      overlays: []).then(
-    (_) => runApp(MyApp()),
-  );
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive,
+  //     overlays: []).then(
+  //   (_) =>
+  runApp(MyApp()
+      // ),
+      );
 }
 
 class MyApp extends StatelessWidget {
