@@ -19,7 +19,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   MenuItemlist currentItem = MenuItems.transcript;
   @override
   Widget build(BuildContext context) => ZoomDrawer(
-        dragOffset: 100,
+        dragOffset: 120,
         openDragSensitivity: 300,
         mainScreenScale: 0,
         borderRadius: 25,
