@@ -19,26 +19,73 @@ class _LoginPageState extends State<LoginPage> {
 
   bool showPassword = true;
 
-  final url = Uri.parse('http://127.0.0.1:8000/api/schedule/');
+  bool showLoading = false;
+
+  final url = Uri.parse('http://127.0.0.1:8000/api/idname');
+  // final url = Uri.parse('https://academix-backend.onrender.com/api/gpa');
 
   void loginPressed() async {
     //FOR TESTING PURPOSES
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const HomePageNavDrawer()),
-    );
+
     //FOR TESTING PURPOSES
+    setState(() {
+      showLoading = true;
+    });
 
     var body = jsonEncode({
       'username': usernameController.text,
       'password': passwordController.text
     });
+    print("WILL SEND REQUEST NAAWW");
     var response = await http.post(url, body: body, headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       'Accept': '*/*',
     });
+    // setState(() {
+    //   showLoading = false;
+    // });
+    print("EZ RESPONSE");
+    if (jsonDecode(response.body)['success']) {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePageNavDrawer(
+                gpa: "jsonDecode(response.body)['gpa'].toString()")),
+      );
+    } else {
+      _showMyDialog();
+    }
     print(response.body);
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('AlertDialog Title'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('This is a demo alert dialog.'),
+                Text('Would you like to approve of this message?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -180,23 +227,25 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 height: 40,
               ),
-              Container(
-                  width: 115,
-                  height: 42,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7.5)),
-                      backgroundColor: MyColors.secondary,
-                    ),
-                    onPressed: () {
-                      loginPressed();
-                    },
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  )),
+              showLoading
+                  ? const CircularProgressIndicator()
+                  : Container(
+                      width: 115,
+                      height: 42,
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7.5)),
+                          backgroundColor: MyColors.secondary,
+                        ),
+                        onPressed: () {
+                          loginPressed();
+                        },
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      )),
               Container(
                 height: 90,
               ),

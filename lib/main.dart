@@ -48,7 +48,10 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "login_page": (context) => LoginPage(key: key),
-        "home_page": (context) => HomePageNavDrawer(key: key)
+        "home_page": (context) => HomePageNavDrawer(
+              key: key,
+              gpa: "",
+            )
         // "transcript_page": (context) => TranscriptPage(key: key),
       },
     );

@@ -10,7 +10,8 @@ import '../pages/MenuPage.dart';
 import 'MeduItemList.dart';
 
 class HomePageNavDrawer extends StatefulWidget {
-  const HomePageNavDrawer({Key? key}) : super(key: key);
+  final String gpa;
+  const HomePageNavDrawer({super.key, required this.gpa});
   @override
   State<HomePageNavDrawer> createState() => _HomePageNavDrawerState();
 }
@@ -43,19 +44,19 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       case MenuItems.home:
         return const HomePage();
       case MenuItems.grades:
-        return const TranscriptPage();
+        return const TranscriptPage(gpa: "");
       case MenuItems.courses:
         return const LoginPage();
       case MenuItems.schedule:
-        return const TranscriptPage();
+        return const TranscriptPage(gpa: "");
       case MenuItems.login:
         return const LoginPage();
       case MenuItems.transcript:
-        return const TranscriptPage();
+        return TranscriptPage(gpa: widget.gpa);
       case MenuItems.map:
         return const LoginPage();
       case MenuItems.settings:
-        return const TranscriptPage();
+        return const TranscriptPage(gpa: "");
       // case MenuItems.payment:
       //   return PaymentPage();
       // case MenuItems.promos:
@@ -68,7 +69,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       //   return AboutUsPage();
       // case MenuItems.rateUs:
       default:
-        return TranscriptPage();
+        return const TranscriptPage(gpa: "");
     }
   }
 }

@@ -9,7 +9,8 @@ import "package:gucentral/widgets/MyColors.dart";
 import "package:http/http.dart" as http;
 
 class TranscriptPage extends StatefulWidget {
-  const TranscriptPage({super.key});
+  final String gpa;
+  const TranscriptPage({super.key, required this.gpa});
 
   @override
   State<TranscriptPage> createState() => _TranscriptPageState();
