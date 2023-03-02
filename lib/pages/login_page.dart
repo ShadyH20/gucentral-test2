@@ -21,7 +21,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool showLoading = false;
 
-  final url = Uri.parse('http://127.0.0.1:8000/api/idname');
+  final url = Uri.parse('https://academix-backend.onrender.com/api/idname');
   // final url = Uri.parse('https://academix-backend.onrender.com/api/gpa');
 
   void loginPressed() async {
