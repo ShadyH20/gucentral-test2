@@ -39,11 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     print("WILL SEND REQUEST NAAWW");
     var response = await http.post(url, body: body, headers: {
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Headers':
-          'Origin, Content-Type, Cookie, X-CSRF-TOKEN, Accept, Authorization, X-XSRF-TOKEN, Access-Control-Allow-Origin',
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, PATCH, PUT, OPTIONS',
-      'Access-Control-Allow-Credentials': 'true',
       'Accept': '*/*',
     });
     // setState(() {
