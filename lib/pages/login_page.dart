@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       'password': passwordController.text
     });
     print("WILL SEND REQUEST NAAWW");
+    _showMyDialog();
     var response = await http.post(url, body: body, headers: {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
@@ -56,6 +57,9 @@ class _LoginPageState extends State<LoginPage> {
       );
     } else {
       _showMyDialog();
+      setState(() {
+        showLoading = false;
+      });
     }
     print(response.body);
   }
