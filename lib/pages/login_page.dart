@@ -134,45 +134,42 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 width: 300,
                 // height: double.infinity,
-                child: AutofillGroup(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Username",
-                        style: TextStyle(
-                          fontFamily: "Outfit",
-                          fontWeight: FontWeight.w500,
-                          fontSize: 21,
-                          color: MyColors.primary,
-                        ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Username",
+                      style: TextStyle(
+                        fontFamily: "Outfit",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 21,
+                        color: MyColors.primary,
                       ),
-                      Container(height: 5),
-                      TextField(
-                        autofillHints: const [AutofillHints.username],
-                        controller: usernameController,
-                        style: const TextStyle(fontSize: 21),
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          hintText: "user.name",
-                          hintStyle: TextStyle(
-                              fontFamily: "Outfit",
-                              fontWeight: FontWeight.w500,
-                              color: MyColors.secondary.withOpacity(.15)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.5),
-                              borderSide: const BorderSide(
-                                  width: 2, color: MyColors.primaryVariant)),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 7, horizontal: 15),
+                    ),
+                    Container(height: 5),
+                    TextField(
+                      controller: usernameController,
+                      style: const TextStyle(fontSize: 21),
+                      textAlignVertical: TextAlignVertical.center,
+                      decoration: InputDecoration(
+                        hintText: "user.name",
+                        hintStyle: TextStyle(
+                            fontFamily: "Outfit",
+                            fontWeight: FontWeight.w500,
+                            color: MyColors.secondary.withOpacity(.15)),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7.5),
                         ),
-                      )
-                    ],
-                  ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.5),
+                            borderSide: const BorderSide(
+                                width: 2, color: MyColors.primaryVariant)),
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 7, horizontal: 15),
+                      ),
+                    )
+                  ],
                 ),
               ),
               Container(
