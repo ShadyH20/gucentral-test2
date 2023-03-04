@@ -13,10 +13,24 @@ class TranscriptPage extends StatefulWidget {
   const TranscriptPage({super.key, required this.gpa});
 
   @override
-  State<TranscriptPage> createState() => _TranscriptPageState();
+  // ignore: no_logic_in_create_state
+  State<TranscriptPage> createState() => _TranscriptPageState(gpa);
 }
 
 class _TranscriptPageState extends State<TranscriptPage> {
+  String gpa = "";
+
+  _TranscriptPageState(String gpaInit) {
+    gpa = gpaInit;
+  }
+
+  void updateTranscript() {
+    setState(() {
+      gpa = "3.14";
+    });
+    // build(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,13 +51,13 @@ class _TranscriptPageState extends State<TranscriptPage> {
           ),
           actions: [
             IconButton(
+              splashRadius: 15,
               // padding: EdgeInsets.symmetric(horizontal: 20.0),
-              icon: SvgPicture.asset(
-                "assets/images/edit.svg",
-                height: 30,
-                // color: MyColors.secondary,
-              ),
-              onPressed: () {},
+              icon: const Icon(Icons.refresh,
+                  color: MyColors.secondary, size: 35),
+              onPressed: () {
+                updateTranscript();
+              },
             ),
             Container(
               width: 10,
@@ -71,22 +85,25 @@ class _TranscriptPageState extends State<TranscriptPage> {
                         BoxShadow(color: MyColors.primary, offset: Offset(0, 2))
                       ],
                     ),
-                    child: const Text.rich(
-                      TextSpan(
-                        text: "1.37",
-                        style: TextStyle(
-                            color: MyColors.secondary,
-                            fontSize: 72,
-                            fontWeight: FontWeight.w900),
-                        children: [
-                          TextSpan(
-                            text: "GPA",
-                            style: TextStyle(
-                                // color: MyColors.background,
-                                fontSize: 22,
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ],
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Text.rich(
+                        TextSpan(
+                          text: gpa,
+                          style: const TextStyle(
+                              color: MyColors.secondary,
+                              fontSize: 72,
+                              fontWeight: FontWeight.w900),
+                          children: const [
+                            TextSpan(
+                              text: "GPA",
+                              style: TextStyle(
+                                  // color: MyColors.background,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

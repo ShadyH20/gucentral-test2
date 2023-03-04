@@ -1,6 +1,7 @@
 import "dart:convert";
 
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/HomePageNavDrawer.dart";
 import "package:gucentral/widgets/MyColors.dart";
@@ -25,9 +26,6 @@ class _LoginPageState extends State<LoginPage> {
   // final url = Uri.parse('https://academix-backend.onrender.com/api/gpa');
 
   void loginPressed() async {
-    //FOR TESTING PURPOSES
-
-    //FOR TESTING PURPOSES
     setState(() {
       showLoading = true;
     });
@@ -37,31 +35,34 @@ class _LoginPageState extends State<LoginPage> {
       'password': passwordController.text
     });
     print("WILL SEND REQUEST NAAWW");
-    _showMyDialog();
-    var response = await http.post(url, body: body, headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Accept': '*/*',
-    });
-    // setState(() {
-    //   showLoading = false;
-    // });
-    print("EZ RESPONSE");
-    if (jsonDecode(response.body)['success']) {
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomePageNavDrawer(
-                gpa: "jsonDecode(response.body)['gpa'].toString()")),
-      );
-    } else {
-      _showMyDialog();
-      setState(() {
-        showLoading = false;
+    // _showMyDialog();
+    try {
+      var response = await http.post(url, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Accept': '*/*',
       });
+
+      print(response.body);
+      if (jsonDecode(response.body)['success']) {
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const HomePageNavDrawer(gpa: "0.00"
+                  // "jsonDecode(response.body)['gpa'].toString()"
+                  )),
+        );
+      } else {
+        _showMyDialog();
+      }
+      print(response.body);
+    } on Exception {
+      print("Exception occured");
     }
-    print(response.body);
+    setState(() {
+      showLoading = false;
+    });
   }
 
   Future<void> _showMyDialog() async {
@@ -133,42 +134,45 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 width: 300,
                 // height: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Username",
-                      style: TextStyle(
-                        fontFamily: "Outfit",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 21,
-                        color: MyColors.primary,
-                      ),
-                    ),
-                    Container(height: 5),
-                    TextField(
-                      controller: usernameController,
-                      style: const TextStyle(fontSize: 21),
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        hintText: "user.name",
-                        hintStyle: TextStyle(
-                            fontFamily: "Outfit",
-                            fontWeight: FontWeight.w500,
-                            color: MyColors.secondary.withOpacity(.15)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.5),
+                child: AutofillGroup(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Username",
+                        style: TextStyle(
+                          fontFamily: "Outfit",
+                          fontWeight: FontWeight.w500,
+                          fontSize: 21,
+                          color: MyColors.primary,
                         ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.5),
-                            borderSide: const BorderSide(
-                                width: 2, color: MyColors.primaryVariant)),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 7, horizontal: 15),
                       ),
-                    )
-                  ],
+                      Container(height: 5),
+                      TextField(
+                        autofillHints: const [AutofillHints.username],
+                        controller: usernameController,
+                        style: const TextStyle(fontSize: 21),
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          hintText: "user.name",
+                          hintStyle: TextStyle(
+                              fontFamily: "Outfit",
+                              fontWeight: FontWeight.w500,
+                              color: MyColors.secondary.withOpacity(.15)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.5),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(7.5),
+                              borderSide: const BorderSide(
+                                  width: 2, color: MyColors.primaryVariant)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 7, horizontal: 15),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -176,56 +180,59 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Container(
                 width: 300,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Password",
-                      style: TextStyle(
-                        fontFamily: "Outfit",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 21,
-                        color: MyColors.primary,
+                child: AutofillGroup(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Password",
+                        style: TextStyle(
+                          fontFamily: "Outfit",
+                          fontWeight: FontWeight.w500,
+                          fontSize: 21,
+                          color: MyColors.primary,
+                        ),
                       ),
-                    ),
-                    Container(height: 5),
-                    TextField(
-                      obscureText: showPassword,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      controller: passwordController,
-                      style: const TextStyle(fontSize: 21),
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          icon: showPassword
-                              ? const Icon(Icons.visibility,
-                                  color: MyColors.secondary)
-                              : const Icon(Icons.visibility_off,
-                                  color: MyColors.secondary),
-                          onPressed: () {
-                            setState(() {
-                              showPassword = !showPassword;
-                            });
-                          },
-                        ),
-                        hintText: "password",
-                        hintStyle: TextStyle(
-                            fontFamily: "Outfit",
-                            fontWeight: FontWeight.w500,
-                            color: MyColors.secondary.withOpacity(.15)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
+                      Container(height: 5),
+                      TextField(
+                        autofillHints: const [AutofillHints.password],
+                        obscureText: showPassword,
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        controller: passwordController,
+                        style: const TextStyle(fontSize: 21),
+                        textAlignVertical: TextAlignVertical.center,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: showPassword
+                                ? const Icon(Icons.visibility,
+                                    color: MyColors.secondary)
+                                : const Icon(Icons.visibility_off,
+                                    color: MyColors.secondary),
+                            onPressed: () {
+                              setState(() {
+                                showPassword = !showPassword;
+                              });
+                            },
+                          ),
+                          hintText: "password",
+                          hintStyle: TextStyle(
+                              fontFamily: "Outfit",
+                              fontWeight: FontWeight.w500,
+                              color: MyColors.secondary.withOpacity(.15)),
+                          border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(7.5),
-                            borderSide: const BorderSide(
-                                width: 2, color: MyColors.primaryVariant)),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 7, horizontal: 15),
-                      ),
-                    )
-                  ],
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(7.5),
+                              borderSide: const BorderSide(
+                                  width: 2, color: MyColors.primaryVariant)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 7, horizontal: 15),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
               Container(
@@ -233,7 +240,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               showLoading
                   ? const CircularProgressIndicator()
-                  : Container(
+                  : SizedBox(
                       width: 115,
                       height: 42,
                       child: OutlinedButton(
@@ -243,6 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                           backgroundColor: MyColors.secondary,
                         ),
                         onPressed: () {
+                          TextInput.finishAutofillContext();
                           loginPressed();
                         },
                         child: const Text(
