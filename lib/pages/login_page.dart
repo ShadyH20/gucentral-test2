@@ -133,7 +133,8 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 width: 300,
                 // height: double.infinity,
-                child: Column(
+                child: AutofillGroup(
+child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -170,13 +171,14 @@ class _LoginPageState extends State<LoginPage> {
                     )
                   ],
                 ),
-              ),
+              ),),
               Container(
                 height: 20,
               ),
               Container(
                 width: 300,
-                child: Column(
+                child: AutofillGroup(
+child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
@@ -226,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     )
                   ],
-                ),
+                ),),
               ),
               Container(
                 height: 40,
@@ -243,6 +245,7 @@ class _LoginPageState extends State<LoginPage> {
                           backgroundColor: MyColors.secondary,
                         ),
                         onPressed: () {
+TextInput.finishAutofillContext();
                           loginPressed();
                         },
                         child: const Text(
