@@ -9,24 +9,20 @@ import "package:gucentral/widgets/MyColors.dart";
 import "package:http/http.dart" as http;
 
 class TranscriptPage extends StatefulWidget {
-  final String gpa;
-  const TranscriptPage({super.key, required this.gpa});
+  String gpa;
+  TranscriptPage({super.key, required this.gpa});
 
   @override
   // ignore: no_logic_in_create_state
-  State<TranscriptPage> createState() => _TranscriptPageState(gpa);
+  State<TranscriptPage> createState() => _TranscriptPageState();
 }
 
 class _TranscriptPageState extends State<TranscriptPage> {
-  String gpa = "";
-
-  _TranscriptPageState(String gpaInit) {
-    gpa = gpaInit;
-  }
+  // String gpa = "";
 
   void updateTranscript() {
     setState(() {
-      gpa = "3.14";
+      widget.gpa = "3.14";
     });
     // build(context);
   }
@@ -89,7 +85,7 @@ class _TranscriptPageState extends State<TranscriptPage> {
                       fit: BoxFit.fitWidth,
                       child: Text.rich(
                         TextSpan(
-                          text: gpa,
+                          text: widget.gpa,
                           style: const TextStyle(
                               color: MyColors.secondary,
                               fontSize: 72,

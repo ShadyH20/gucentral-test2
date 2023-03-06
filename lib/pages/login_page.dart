@@ -17,12 +17,16 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final FocusNode _usernameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
+  final _formKey = GlobalKey<FormState>();
 
   bool showPassword = true;
 
   bool showLoading = false;
 
-  final url = Uri.parse('https://academix-backend.onrender.com/api/courses');
+  final url = Uri.parse('http://13.58.183.81:8000/api/courses');
   // final url = Uri.parse('https://academix-backend.onrender.com/api/gpa');
 
   void loginPressed() async {
@@ -131,105 +135,119 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 height: 50,
               ),
-              Container(
-                width: 300,
-                // height: double.infinity,
+              Form(
+                key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Username",
-                      style: TextStyle(
-                        fontFamily: "Outfit",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 21,
-                        color: MyColors.primary,
-                      ),
-                    ),
-                    Container(height: 5),
-                    TextField(
-                      controller: usernameController,
-                      style: const TextStyle(fontSize: 21),
-                      textAlignVertical: TextAlignVertical.center,
-                      decoration: InputDecoration(
-                        hintText: "user.name",
-                        hintStyle: TextStyle(
-                            fontFamily: "Outfit",
-                            fontWeight: FontWeight.w500,
-                            color: MyColors.secondary.withOpacity(.15)),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(7.5),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.5),
-                            borderSide: const BorderSide(
-                                width: 2, color: MyColors.primaryVariant)),
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 7, horizontal: 15),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                height: 20,
-              ),
-              Container(
-                width: 300,
-                child: AutofillGroup(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Password",
-                        style: TextStyle(
-                          fontFamily: "Outfit",
-                          fontWeight: FontWeight.w500,
-                          fontSize: 21,
-                          color: MyColors.primary,
-                        ),
-                      ),
-                      Container(height: 5),
-                      TextField(
-                        autofillHints: const [AutofillHints.password],
-                        obscureText: showPassword,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        controller: passwordController,
-                        style: const TextStyle(fontSize: 21),
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: showPassword
-                                ? const Icon(Icons.visibility,
-                                    color: MyColors.secondary)
-                                : const Icon(Icons.visibility_off,
-                                    color: MyColors.secondary),
-                            onPressed: () {
-                              setState(() {
-                                showPassword = !showPassword;
-                              });
-                            },
-                          ),
-                          hintText: "password",
-                          hintStyle: TextStyle(
+                    SizedBox(
+                      width: 300,
+                      // height: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Username",
+                            style: TextStyle(
                               fontFamily: "Outfit",
                               fontWeight: FontWeight.w500,
-                              color: MyColors.secondary.withOpacity(.15)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.5),
+                              fontSize: 21,
+                              color: MyColors.primary,
+                            ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.5),
-                              borderSide: const BorderSide(
-                                  width: 2, color: MyColors.primaryVariant)),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 7, horizontal: 15),
+                          Container(height: 5),
+                          TextField(
+                            focusNode: _usernameFocusNode,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.text,
+                            autofillHints: const [AutofillHints.username],
+                            controller: usernameController,
+                            style: const TextStyle(fontSize: 21),
+                            textAlignVertical: TextAlignVertical.center,
+                            decoration: InputDecoration(
+                              hintText: "user.name",
+                              hintStyle: TextStyle(
+                                  fontFamily: "Outfit",
+                                  fontWeight: FontWeight.w500,
+                                  color: MyColors.secondary.withOpacity(.15)),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(7.5),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(7.5),
+                                  borderSide: const BorderSide(
+                                      width: 2,
+                                      color: MyColors.primaryVariant)),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 7, horizontal: 15),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: 300,
+                      child: AutofillGroup(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Password",
+                              style: TextStyle(
+                                fontFamily: "Outfit",
+                                fontWeight: FontWeight.w500,
+                                fontSize: 21,
+                                color: MyColors.primary,
+                              ),
+                            ),
+                            Container(height: 5),
+                            TextField(
+                              focusNode: _passwordFocusNode,
+                              autofillHints: const [AutofillHints.password],
+                              obscureText: showPassword,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              controller: passwordController,
+                              style: const TextStyle(fontSize: 21),
+                              textAlignVertical: TextAlignVertical.center,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  icon: showPassword
+                                      ? const Icon(Icons.visibility,
+                                          color: MyColors.secondary)
+                                      : const Icon(Icons.visibility_off,
+                                          color: MyColors.secondary),
+                                  onPressed: () {
+                                    setState(() {
+                                      showPassword = !showPassword;
+                                    });
+                                  },
+                                ),
+                                hintText: "password",
+                                hintStyle: TextStyle(
+                                    fontFamily: "Outfit",
+                                    fontWeight: FontWeight.w500,
+                                    color: MyColors.secondary.withOpacity(.15)),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(7.5),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(7.5),
+                                    borderSide: const BorderSide(
+                                        width: 2,
+                                        color: MyColors.primaryVariant)),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 7, horizontal: 15),
+                              ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -247,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                           backgroundColor: MyColors.secondary,
                         ),
                         onPressed: () {
-                          TextInput.finishAutofillContext();
+                          _formKey.currentState?.save();
                           loginPressed();
                         },
                         child: const Text(

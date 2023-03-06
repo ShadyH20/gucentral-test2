@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:gucentral/pages/home_page.dart';
 import 'package:gucentral/pages/login_page.dart';
+import 'package:gucentral/pages/courses_page.dart';
+import 'package:gucentral/pages/schedule_page.dart';
+import 'package:gucentral/pages/settings_page.dart';
+import 'package:gucentral/pages/grades_page.dart';
 import 'package:gucentral/pages/transcript_page.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 
@@ -18,6 +21,23 @@ class HomePageNavDrawer extends StatefulWidget {
 
 class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   MenuItemlist currentItem = MenuItems.transcript;
+
+  late TranscriptPage transcriptPage;
+  late HomePage homePage;
+  late CoursesPage coursesPage;
+  late SchedulePage schedulePage;
+  late SettingsPage settingsPage;
+  late GradesPage gradesPage;
+
+  _HomePageNavDrawerState() {
+    // Create all pages here!
+    transcriptPage = TranscriptPage(gpa: "hi.1");
+    homePage = const HomePage();
+    coursesPage = const CoursesPage();
+    schedulePage = const SchedulePage();
+    settingsPage = const SettingsPage();
+    gradesPage = const GradesPage();
+  }
   @override
   Widget build(BuildContext context) => ZoomDrawer(
         dragOffset: 120,
@@ -42,34 +62,23 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   Widget getScreen() {
     switch (currentItem) {
       case MenuItems.home:
-        return const HomePage();
+        return homePage;
       case MenuItems.grades:
-        return const TranscriptPage(gpa: "");
+        return gradesPage;
       case MenuItems.courses:
-        return const LoginPage();
+        return coursesPage;
       case MenuItems.schedule:
-        return const TranscriptPage(gpa: "");
+        return schedulePage;
       case MenuItems.login:
         return const LoginPage();
       case MenuItems.transcript:
-        return TranscriptPage(gpa: widget.gpa);
+        return transcriptPage;
       case MenuItems.map:
         return const LoginPage();
       case MenuItems.settings:
-        return const TranscriptPage(gpa: "");
-      // case MenuItems.payment:
-      //   return PaymentPage();
-      // case MenuItems.promos:
-      //   return PromoPage();
-      // case MenuItems.notification:
-      //   return NotificationNDPage();
-      // case MenuItems.help:
-      //   return HelpNDPage();
-      // case MenuItems.aboutUs:
-      //   return AboutUsPage();
-      // case MenuItems.rateUs:
+        return settingsPage;
       default:
-        return const TranscriptPage(gpa: "");
+        return homePage;
     }
   }
 }

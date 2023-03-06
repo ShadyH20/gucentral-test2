@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       // home: const LoginPage(),
       debugShowCheckedModeBanner: false,
-      // initialRoute: "login_page",
       initialRoute: "login_page",
       theme: ThemeData(
         // Define the default brightness and colors.
@@ -48,10 +47,10 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "login_page": (context) => LoginPage(key: key),
-        "home_page": (context) => HomePageNavDrawer(
-              key: key,
-              gpa: "",
-            )
+        // "home_page": (context) => HomePageNavDrawer(
+        //       key: key,
+        //       gpa: "",
+        //     )
         // "transcript_page": (context) => TranscriptPage(key: key),
       },
     );
