@@ -253,9 +253,31 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 height: 40,
               ),
-              showLoading
-                  ? const CircularProgressIndicator()
-                  : SizedBox(
+              Column(
+                children: [
+                  showLoading
+                      ? const CircularProgressIndicator()
+                      : SizedBox(
+                          width: 115,
+                          height: 42,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(7.5)),
+                              backgroundColor: MyColors.secondary,
+                            ),
+                            onPressed: () {
+                              _formKey.currentState?.save();
+                              loginPressed();
+                            },
+                            child: const Text(
+                              "Login",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          )),
+                  Container(height: 10),
+                  SizedBox(
                       width: 115,
                       height: 42,
                       child: OutlinedButton(
@@ -266,13 +288,20 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: () {
                           _formKey.currentState?.save();
-                          loginPressed();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const HomePageNavDrawer(gpa: "0.00")),
+                          );
                         },
                         child: const Text(
-                          "Login",
+                          "Skip",
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                       )),
+                ],
+              ),
               Container(
                 height: 90,
               ),
