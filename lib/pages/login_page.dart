@@ -1,4 +1,5 @@
 import "dart:convert";
+import "dart:math";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -27,7 +28,10 @@ class _LoginPageState extends State<LoginPage> {
   bool showLoading = false;
 
   // final url = Uri.parse('http://13.58.183.81:8000/api/courses');
-  final url = Uri.parse('https://academix-backend.onrender.com/api/courses');
+  // final url = Uri.parse('https://academix-backend.onrender.com/api/courses');
+  // final url = Uri.parse('http://127.0.0.1:8000/courses');
+  final url =
+      Uri.parse('https://gucentralbackend-production.up.railway.app/courses');
 
   void loginPressed() async {
     setState(() {
@@ -63,8 +67,9 @@ class _LoginPageState extends State<LoginPage> {
         _showMyDialog();
       }
       print(response.body);
-    } on Exception {
+    } on Exception catch (e) {
       print("Exception occured");
+      print(e.toString());
     }
     setState(() {
       showLoading = false;
