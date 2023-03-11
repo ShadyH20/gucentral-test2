@@ -39,6 +39,9 @@ class Requests {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('username', username);
         prefs.setString('password', password);
+        prefs.setString('gpa', res['gpa']);
+        prefs.setString('name', res['name']);
+        prefs.setString('id', res['id']);
       }
       return res;
     } on Exception {

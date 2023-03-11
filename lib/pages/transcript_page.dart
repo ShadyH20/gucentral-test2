@@ -6,6 +6,7 @@ import "package:flutter_svg/flutter_svg.dart";
 import 'package:data_table_2/data_table_2.dart';
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 import "../widgets/Requests.dart";
 
@@ -26,6 +27,14 @@ class _TranscriptPageState extends State<TranscriptPage> {
   @override
   void initState() {
     super.initState();
+    initalizePage();
+  }
+
+  void initalizePage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey('gpa')) {
+      widget.gpa = prefs.getString('gpa')!;
+    }
     updateTranscript();
   }
 
