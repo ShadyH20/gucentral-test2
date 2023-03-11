@@ -22,6 +22,7 @@ class TranscriptPage extends StatefulWidget {
 class _TranscriptPageState extends State<TranscriptPage> {
   // String gpa = "";
   bool showLoading = false;
+  bool firstAccess = true;
   var semesterGrades = [];
 
   @override
@@ -35,7 +36,12 @@ class _TranscriptPageState extends State<TranscriptPage> {
     if (prefs.containsKey('gpa')) {
       widget.gpa = prefs.getString('gpa')!;
     }
-    updateTranscript();
+    if (firstAccess) {
+      updateTranscript();
+      setState(() {
+        firstAccess = false;
+      });
+    }
   }
 
   void updateTranscript() async {
