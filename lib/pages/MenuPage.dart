@@ -28,7 +28,8 @@ class MenuPage extends StatelessWidget {
                   child: SizedBox(
                     // color: MyColors.accent,
                     width: 200,
-                    child: Column(
+                    child: Wrap(
+                      spacing: 0,
                       children: [
                         ...MenuItems.all.map(buildMenuItem).toList(),
                       ],
@@ -109,6 +110,8 @@ class MenuPage extends StatelessWidget {
         textColor: MyColors.background.withOpacity(0.5),
         iconColor: MyColors.background.withOpacity(0.5),
         child: ListTile(
+          dense: true,
+          visualDensity: const VisualDensity(vertical: 1),
           // selectedTileColor: Colors.white,
           // textColor: MyColors.background.withOpacity(0.5),
           selected: currentItem == item,

@@ -23,6 +23,12 @@ class _TranscriptPageState extends State<TranscriptPage> {
   bool showLoading = false;
   var semesterGrades = [];
 
+  @override
+  void initState() {
+    super.initState();
+    updateTranscript();
+  }
+
   void updateTranscript() async {
     setState(() {
       showLoading = true;
