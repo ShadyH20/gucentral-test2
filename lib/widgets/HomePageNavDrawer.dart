@@ -29,17 +29,22 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   late SettingsPage settingsPage;
   late GradesPage gradesPage;
 
-  _HomePageNavDrawerState() {
+  @override
+  void initState() {
+    super.initState();
     // Create all pages here!
-    transcriptPage = TranscriptPage(gpa: "hi.1");
+    transcriptPage = TranscriptPage(gpa: widget.gpa);
     homePage = const HomePage();
     coursesPage = const CoursesPage();
     schedulePage = const SchedulePage();
     settingsPage = const SettingsPage();
     gradesPage = const GradesPage();
   }
+
   @override
-  Widget build(BuildContext context) => ZoomDrawer(
+  Widget build(BuildContext context) => WillPopScope(
+      onWillPop: () async => false,
+      child: ZoomDrawer(
         dragOffset: 120,
         openDragSensitivity: 300,
         mainScreenScale: 0,
@@ -58,7 +63,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
                 ZoomDrawer.of(context)!.close();
               }),
         ),
-      );
+      ));
   Widget getScreen() {
     switch (currentItem) {
       case MenuItems.home:

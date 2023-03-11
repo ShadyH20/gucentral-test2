@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import "dart:convert";
 import "dart:math";
 
@@ -6,7 +8,9 @@ import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/HomePageNavDrawer.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "package:gucentral/widgets/Requests.dart";
 import "package:http/http.dart" as http;
+import "package:shared_preferences/shared_preferences.dart";
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -31,44 +35,26 @@ class _LoginPageState extends State<LoginPage> {
   // final url = Uri.parse('https://academix-backend.onrender.com/api/courses');
   // final url = Uri.parse('http://127.0.0.1:8000/courses');
   final url =
-      Uri.parse('https://gucentralbackend-production.up.railway.app/courses');
+      Uri.parse('https://gucentralbackend-production.up.railway.app/login');
 
   void loginPressed() async {
     setState(() {
       showLoading = true;
     });
 
-    var body = jsonEncode({
-      'username': usernameController.text,
-      'password': passwordController.text
-    });
     print("WILL SEND REQUEST NAAWW");
-    try {
-      var response = await http.post(url, body: body, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-        // 'Access-Control-Allow-Origin': '*'
-        //   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        //   'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-      });
+    var output = await Requests.login(
+        context, usernameController.text, passwordController.text);
 
-      print(response.body);
-      if (jsonDecode(response.body)['success']) {
-        // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const HomePageNavDrawer(gpa: "0.00"
-                  // "jsonDecode(response.body)['gpa'].toString()"
-                  )),
-        );
-      } else {
-        _showMyDialog();
-      }
-      print(response.body);
-    } on Exception catch (e) {
-      print("Exception occured");
-      print(e.toString());
+    print(output);
+
+    if (output['success']) {
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePageNavDrawer(gpa: output['gpa'])),
+      );
     }
     setState(() {
       showLoading = false;

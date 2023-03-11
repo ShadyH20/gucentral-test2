@@ -23,10 +23,9 @@ class MenuPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                // const Spacer(),
                 Expanded(
                   flex: 9,
-                  child: Container(
+                  child: SizedBox(
                     // color: MyColors.accent,
                     width: 200,
                     child: Column(

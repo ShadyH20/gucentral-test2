@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'GUCentral',
       // home: const LoginPage(),
       debugShowCheckedModeBanner: false,
       initialRoute: "login_page",
