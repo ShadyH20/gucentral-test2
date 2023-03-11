@@ -1,6 +1,6 @@
 {
-    "name": "gucentral",
-    "short_name": "gucentral",
+    "name": "GUCentral",
+    "short_name": "GUCentral",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
