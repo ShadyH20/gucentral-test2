@@ -52,7 +52,7 @@ class Requests {
   static dynamic getTranscript(context) async {
     var out = await getCreds();
     print(out);
-    out['year'] = '2021-2022';
+    out['year'] = '2020-2021';
     print(out);
     var body = jsonEncode(out);
 
