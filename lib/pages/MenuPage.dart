@@ -45,7 +45,7 @@ class _MenuPageState extends State<MenuPage> {
                   flex: 9,
                   child: SizedBox(
                     // color: MyColors.accent,
-                    // width: 200,
+                    width: 200,
                     child: Wrap(
                       spacing: 0,
                       children: [
@@ -90,85 +90,68 @@ class _MenuPageState extends State<MenuPage> {
   Widget buildMenuItem(MenuItemlist item) {
     if (item.title == "Profile") {
       print(idName);
-      return Container(
-        alignment: AlignmentDirectional.center,
-        margin: const EdgeInsets.only(bottom: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: MyColors.primaryVariant,
-        ),
-        child: ListTile(
-          isThreeLine: true,
-          contentPadding:
-              const EdgeInsets.only(left: 30, top: 15, bottom: 15, right: 30),
-
-          horizontalTitleGap: 10.0,
-          title: Align(
-            heightFactor: 1.1,
-            alignment: FractionalOffset.centerLeft,
-            child: CircleAvatar(
-              radius: 35,
+      return Column(
+        children: [
+          ListTile(
+            dense: false,
+            visualDensity: VisualDensity.standard,
+            contentPadding: const EdgeInsets.only(top: 20, bottom: 10),
+            horizontalTitleGap: 10.0,
+            minVerticalPadding: 10,
+            leading: CircleAvatar(
+              radius: 28,
               foregroundColor: MyColors.background,
               backgroundColor: MyColors.secondary,
               child: Text(
                 idName[1][0] ?? "",
-                style: const TextStyle(fontSize: 32),
+                style: const TextStyle(fontSize: 25),
               ),
             ),
-          ),
-          // title: Text(
-          //   idName[1].toString().split(" ").sublist(0, 2).join(" "),
-          //   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          // ),
-          subtitle: FittedBox(
-            alignment: Alignment.centerLeft,
-            fit: BoxFit.scaleDown,
-            child: Text.rich(
-              maxLines: 2,
-              TextSpan(
-                text:
-                    "${idName[1].toString().split(" ").sublist(0, 2).join(" ")}\n",
-                style: const TextStyle(
-                    overflow: TextOverflow.fade,
-                    height: 1.4,
-                    color: MyColors.background,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500),
-                children: [
-                  TextSpan(
-                    text: idName[0],
-                    style: const TextStyle(
-                        // color: MyColors.background,
-                        fontSize: 18,
-                        fontWeight: FontWeight.normal),
+            title: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3.0),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: FractionalOffset.centerLeft,
+                child: Text(
+                  idName[1].toString().split(" ").sublist(0, 2).join(" "),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    // fontWeight: FontWeight.bold,
                   ),
-                ],
+                ),
               ),
             ),
+            subtitle: Text(
+              idName[0],
+              style: const TextStyle(
+                color: MyColors.background, fontSize: 16,
+                // fontWeight:
+                // decoration: TextDecoration.underline,
+              ),
+            ),
+            // ),
           ),
-          // : Text(
-          //   idName[0],
-          //   style: const TextStyle(
-          //     color: MyColors.background,
-          //     // decoration: TextDecoration.underline,
-          //   ),
-          // ),
-        ),
+          const Divider(
+            color: MyColors.background,
+            thickness: 2,
+          ),
+          SizedBox(
+            height: 25,
+          )
+        ],
       );
     }
     if (item.title == "Seperator") {
       return Column(children: [
         Container(height: 40),
         const Divider(
-          indent: 30,
-          endIndent: 35,
           color: MyColors.background,
-          thickness: 4,
+          thickness: 2,
         ),
       ]);
     } else {
       return ListTileTheme(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 30),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 0),
         selectedColor: MyColors.background,
         textColor: MyColors.background.withOpacity(0.5),
         iconColor: MyColors.background.withOpacity(0.5),
