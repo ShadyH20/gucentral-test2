@@ -41,6 +41,7 @@ dependencies:
   data_table_2: ^2.3.12
   shared_preferences: ^2.0.18
   dropdown_button2: ^2.0.0
+  sensors_plus: ^2.0.2
 
 dev_dependencies:
   flutter_test:

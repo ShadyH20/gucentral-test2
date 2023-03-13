@@ -56,9 +56,7 @@ class Requests {
 
   static dynamic getTranscript(context, year) async {
     var out = await getCreds();
-    print(out);
     out['year'] = year;
-    print(out);
     var body = jsonEncode(out);
 
     try {

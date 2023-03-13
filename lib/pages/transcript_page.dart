@@ -10,14 +10,22 @@ import "package:flutter_svg/flutter_svg.dart";
 import 'package:data_table_2/data_table_2.dart';
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "package:sensors_plus/sensors_plus.dart";
 import "package:shared_preferences/shared_preferences.dart";
 
 import "../widgets/Requests.dart";
+
+bool showGPA = false;
 
 class TranscriptPage extends StatefulWidget {
   bool firstAccess = true;
   // var semesterGrades = [];
   TranscriptPage({super.key});
+
+  void hideGPA() {
+    print("HIDING");
+    showGPA = false;
+  }
 
   @override
   // ignore: no_logic_in_create_state
@@ -29,9 +37,42 @@ class _TranscriptPageState extends State<TranscriptPage>
   final _scrollController = ScrollController();
   String gpa = "";
   bool showLoading = false;
-  bool showGPA = false;
+  // bool showGPA = false;
 
   List<dynamic>? semesterGrades;
+
+  double x = 0, y = 0, z = 0;
+  String direction = "none";
+
+  @override
+  void initState() {
+    super.initState();
+
+    gyroscopeEvents.listen((GyroscopeEvent event) {
+      if (event.x > 1.0) {
+        setState(() {
+          showGPA = !showGPA;
+          print("SWITCH!!!");
+        });
+      }
+      print(event);
+
+      // x = event.x;
+      // y = event.y;
+      // z = event.z;
+
+      //rough calculation, you can use
+      //advance formula to calculate the orentation
+
+      // else if (x < 0) {
+      //   direction = "forward";
+      // } else if (y > 0) {
+      //   direction = "left";
+      // } else if (y < 0) {
+      //   direction = "right";
+      // }
+    });
+  }
 
   @override
   void didChangeDependencies() async {
@@ -43,7 +84,7 @@ class _TranscriptPageState extends State<TranscriptPage>
   }
 
   void initalizePage() async {
-    print("Initialize transcript, 2D array: $semesterGrades");
+    // print("Initialize transcript, 2D array: $semesterGrades");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('gpa')) {
       setState(() {
@@ -67,7 +108,7 @@ class _TranscriptPageState extends State<TranscriptPage>
       showLoading = false;
       // widget.gpa = "3.14";
       semesterGrades = output['transcript'];
-      print("Set state: $semesterGrades");
+      // print("Set state: $semesterGrades");
     });
     // build(context);
   }

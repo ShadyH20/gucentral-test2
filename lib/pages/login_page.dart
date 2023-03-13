@@ -54,8 +54,6 @@ class _LoginPageState extends State<LoginPage> {
     var output = await Requests.login(
         context, usernameController.text, passwordController.text);
 
-    print(output);
-
     if (output['success']) {
       // ignore: use_build_context_synchronously
       Navigator.push(

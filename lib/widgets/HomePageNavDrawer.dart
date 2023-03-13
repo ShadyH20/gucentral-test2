@@ -51,7 +51,12 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       case MenuItems.grades:
         return 4;
       case MenuItems.transcript:
-        return 5;
+        {
+          (pages[5] as TranscriptPage).hideGPA();
+          print("TRIED TO HIDE");
+          return 5;
+        }
+
       // case MenuItems.login:
       //   return const LoginPage();
       // case MenuItems.map:
