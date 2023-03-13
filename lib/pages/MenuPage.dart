@@ -92,14 +92,15 @@ class _MenuPageState extends State<MenuPage> {
       print(idName);
       return Container(
         alignment: AlignmentDirectional.center,
-        padding: const EdgeInsets.only(left: 50),
+        margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           color: MyColors.primaryVariant,
         ),
         child: ListTile(
           isThreeLine: true,
-          contentPadding: const EdgeInsets.only(top: 20, bottom: 20),
+          contentPadding:
+              const EdgeInsets.only(left: 30, top: 15, bottom: 15, right: 30),
 
           horizontalTitleGap: 10.0,
           title: Align(
@@ -119,25 +120,30 @@ class _MenuPageState extends State<MenuPage> {
           //   idName[1].toString().split(" ").sublist(0, 2).join(" "),
           //   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           // ),
-          subtitle: Text.rich(
-            maxLines: 2,
-            TextSpan(
-              text:
-                  "${idName[1].toString().split(" ").sublist(0, 2).join(" ")}\n",
-              style: const TextStyle(
-                  height: 1.4,
-                  color: MyColors.background,
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500),
-              children: [
-                TextSpan(
-                  text: idName[0],
-                  style: const TextStyle(
-                      // color: MyColors.background,
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal),
-                ),
-              ],
+          subtitle: FittedBox(
+            alignment: Alignment.centerLeft,
+            fit: BoxFit.scaleDown,
+            child: Text.rich(
+              maxLines: 2,
+              TextSpan(
+                text:
+                    "${idName[1].toString().split(" ").sublist(0, 2).join(" ")}\n",
+                style: const TextStyle(
+                    overflow: TextOverflow.fade,
+                    height: 1.4,
+                    color: MyColors.background,
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500),
+                children: [
+                  TextSpan(
+                    text: idName[0],
+                    style: const TextStyle(
+                        // color: MyColors.background,
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal),
+                  ),
+                ],
+              ),
             ),
           ),
           // : Text(
@@ -154,7 +160,7 @@ class _MenuPageState extends State<MenuPage> {
       return Column(children: [
         Container(height: 40),
         const Divider(
-          indent: 50,
+          indent: 30,
           endIndent: 35,
           color: MyColors.background,
           thickness: 4,
@@ -162,7 +168,7 @@ class _MenuPageState extends State<MenuPage> {
       ]);
     } else {
       return ListTileTheme(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 50),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 30),
         selectedColor: MyColors.background,
         textColor: MyColors.background.withOpacity(0.5),
         iconColor: MyColors.background.withOpacity(0.5),
