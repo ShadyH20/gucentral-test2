@@ -9,6 +9,7 @@ import 'package:gucentral/pages/settings_page.dart';
 import 'package:gucentral/pages/grades_page.dart';
 import 'package:gucentral/pages/transcript_page.dart';
 import 'package:gucentral/widgets/MyColors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/MenuPage.dart';
 import 'MeduItemList.dart';
@@ -87,8 +88,13 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         menuScreen: Builder(
           builder: (context) => MenuPage(
               currentItem: currentItem,
-              onSelecteItem: (item) {
+              onSelecteItem: (item) async {
                 if (item == MenuItems.login) {
+                  // Clear SharedPrefs
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.clear();
+                  // Navigate to login page
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const LoginPage()));
                 }
