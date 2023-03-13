@@ -76,7 +76,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         mainScreenScale: 0,
         borderRadius: 25,
         angle: 0,
-        menuScreenWidth: 290,
+        menuScreenWidth: MediaQuery.of(context).size.width * 0.7,
         mainScreenTapClose: true,
         menuBackgroundColor: MyColors.primary,
         slideWidth: MediaQuery.of(context).size.width * 0.7,

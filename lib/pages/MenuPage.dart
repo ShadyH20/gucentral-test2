@@ -90,55 +90,59 @@ class _MenuPageState extends State<MenuPage> {
   Widget buildMenuItem(MenuItemlist item) {
     if (item.title == "Profile") {
       print(idName);
-      return Column(
-        children: [
-          ListTile(
-            dense: false,
-            visualDensity: VisualDensity.standard,
-            contentPadding: const EdgeInsets.only(top: 20, bottom: 10),
-            horizontalTitleGap: 10.0,
-            minVerticalPadding: 10,
-            leading: CircleAvatar(
-              radius: 28,
-              foregroundColor: MyColors.background,
-              backgroundColor: MyColors.secondary,
-              child: Text(
-                idName[1][0] ?? "",
-                style: const TextStyle(fontSize: 25),
-              ),
-            ),
-            title: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3.0),
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: FractionalOffset.centerLeft,
+      return Container(
+        decoration: const BoxDecoration(boxShadow: [
+          BoxShadow(color: Colors.black38, blurRadius: 60, spreadRadius: 10)
+        ]),
+        child: Column(
+          children: [
+            ListTile(
+              dense: false,
+              contentPadding: const EdgeInsets.only(top: 20, bottom: 10),
+              horizontalTitleGap: 10.0,
+              minVerticalPadding: 10,
+              leading: CircleAvatar(
+                radius: 28,
+                foregroundColor: MyColors.background,
+                backgroundColor: MyColors.secondary,
                 child: Text(
-                  idName[1].toString().split(" ").sublist(0, 2).join(" "),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    // fontWeight: FontWeight.bold,
+                  idName[1][0] ?? "",
+                  style: const TextStyle(fontSize: 25),
+                ),
+              ),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: FractionalOffset.centerLeft,
+                  child: Text(
+                    idName[1].toString().split(" ").sublist(0, 2).join(" "),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      // fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            subtitle: Text(
-              idName[0],
-              style: const TextStyle(
-                color: MyColors.background, fontSize: 16,
-                // fontWeight:
-                // decoration: TextDecoration.underline,
+              subtitle: Text(
+                idName[0],
+                style: const TextStyle(
+                  color: MyColors.background, fontSize: 16,
+                  // fontWeight:
+                  // decoration: TextDecoration.underline,
+                ),
               ),
+              // ),
             ),
-            // ),
-          ),
-          const Divider(
-            color: MyColors.background,
-            thickness: 2,
-          ),
-          SizedBox(
-            height: 25,
-          )
-        ],
+            const Divider(
+              color: MyColors.background,
+              thickness: 3,
+            ),
+            const SizedBox(
+              height: 25,
+            )
+          ],
+        ),
       );
     }
     if (item.title == "Seperator") {
@@ -146,7 +150,7 @@ class _MenuPageState extends State<MenuPage> {
         Container(height: 40),
         const Divider(
           color: MyColors.background,
-          thickness: 2,
+          thickness: 3,
         ),
       ]);
     } else {
