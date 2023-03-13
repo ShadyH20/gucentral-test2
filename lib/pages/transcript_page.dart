@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import "dart:convert";
+import "dart:ui";
 import "package:dropdown_button2/dropdown_button2.dart";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
@@ -28,19 +29,7 @@ class _TranscriptPageState extends State<TranscriptPage>
   final _scrollController = ScrollController();
   String gpa = "";
   bool showLoading = false;
-  // late List<dynamic> semesterGrades;
-
-  _TranscriptPageState() {
-    print("CONSTRUCTOR :)");
-    // showLoading = false;
-    // semesterGrades = [];
-    // initalizePage();
-  }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
+  bool showGPA = false;
 
   List<dynamic>? semesterGrades;
 
@@ -106,6 +95,17 @@ class _TranscriptPageState extends State<TranscriptPage>
           IconButton(
             splashRadius: 15,
             // padding: EdgeInsets.symmetric(horizontal: 20.0),
+            icon: Icon(showGPA ? Icons.visibility : Icons.visibility_off,
+                color: MyColors.secondary, size: 35),
+            onPressed: () {
+              setState(() {
+                showGPA = !showGPA;
+              });
+            },
+          ),
+          IconButton(
+            splashRadius: 15,
+            // padding: EdgeInsets.symmetric(horizontal: 20.0),
             icon:
                 const Icon(Icons.refresh, color: MyColors.secondary, size: 35),
             onPressed: () {
@@ -142,24 +142,29 @@ class _TranscriptPageState extends State<TranscriptPage>
                         BoxShadow(color: MyColors.primary, offset: Offset(0, 2))
                       ],
                     ),
-                    child: FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: Text.rich(
-                        TextSpan(
-                          text: gpa,
-                          style: const TextStyle(
-                              color: MyColors.secondary,
-                              fontSize: 72,
-                              fontWeight: FontWeight.w800),
-                          children: const [
-                            TextSpan(
-                              text: "GPA",
-                              style: TextStyle(
-                                  // color: MyColors.background,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.normal),
-                            ),
-                          ],
+                    child: ImageFiltered(
+                      imageFilter: showGPA
+                          ? ImageFilter.blur()
+                          : ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text.rich(
+                          TextSpan(
+                            text: gpa,
+                            style: const TextStyle(
+                                color: MyColors.secondary,
+                                fontSize: 72,
+                                fontWeight: FontWeight.w800),
+                            children: const [
+                              TextSpan(
+                                text: "GPA",
+                                style: TextStyle(
+                                    // color: MyColors.background,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -208,7 +213,12 @@ class _TranscriptPageState extends State<TranscriptPage>
             for (var grade in courseGrades.take(courseGrades.length - 1))
               DataRow(cells: [
                 DataCell(Text(grade[0])), // Course name
-                DataCell(Text(grade[1])), // Grade
+                DataCell(ImageFiltered(
+                    imageFilter: showGPA
+                        ? ImageFilter.blur()
+                        : ImageFilter.blur(
+                            sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
+                    child: Text(grade[1]))), // Grade
                 DataCell(Text(grade[2].toString())), // Credits
               ])
           ];
@@ -227,63 +237,76 @@ class _TranscriptPageState extends State<TranscriptPage>
                 ),
               ),
               Container(height: 5),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    25.0,
-                  ),
-                  color: MyColors.background,
-                  boxShadow: const [
-                    BoxShadow(color: MyColors.primary, offset: Offset(0, -2))
-                  ],
-                ),
-                child: DataTable(
-                  headingRowHeight: 0,
-                  showBottomBorder: true,
-                  dividerThickness: 2,
-                  // border: TableBorder(
-                  //     horizontalInside: BorderSide(
-                  //         color: MyColors.secondary
-                  //             .withOpacity(.5))),
-                  columnSpacing: 25,
-                  dataRowHeight: 30,
-                  horizontalMargin: 3,
-                  dataTextStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13.5,
-                      letterSpacing: .1,
-                      color: MyColors.secondary),
-                  columns: const [
-                    DataColumn2(label: Text('Course Name'), size: ColumnSize.L),
-                    DataColumn(label: Text('')),
-                    DataColumn2(label: Text(''), numeric: true),
-                  ],
-                  rows: rows,
-                ),
-              ),
-              Align(
-                alignment: const FractionalOffset(0.96, 0.0),
-                child: Text.rich(
-                  // textAlign: TextAlign.end,
-                  TextSpan(
-                    text: courseGrades[courseGrades.length - 1][0].toString(),
-                    style: const TextStyle(
-                        color: MyColors.secondary,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w900),
-                    children: const [
-                      TextSpan(
-                        text: "GPA",
-                        style: TextStyle(
-                            // color: MyColors.background,
-                            fontSize: 10,
-                            fontWeight: FontWeight.normal),
+              Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        25.0,
                       ),
-                    ],
+                      color: MyColors.background,
+                      boxShadow: const [
+                        BoxShadow(
+                            color: MyColors.primary, offset: Offset(0, -2))
+                      ],
+                    ),
+                    child: DataTable(
+                      headingRowHeight: 0,
+                      showBottomBorder: true,
+                      dividerThickness: 2,
+                      // border: TableBorder(
+                      //     horizontalInside: BorderSide(
+                      //         color: MyColors.secondary
+                      //             .withOpacity(.5))),
+                      columnSpacing: 25,
+                      dataRowHeight: 30,
+                      horizontalMargin: 3,
+                      dataTextStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13.5,
+                          letterSpacing: .1,
+                          color: MyColors.secondary),
+                      columns: const [
+                        DataColumn2(
+                            label: Text('Course Name'), size: ColumnSize.L),
+                        DataColumn(label: Text('')),
+                        DataColumn2(label: Text(''), numeric: true),
+                      ],
+                      rows: rows,
+                    ),
                   ),
-                ),
+                  Align(
+                    alignment: const FractionalOffset(0.96, 0.0),
+                    child: ImageFiltered(
+                      imageFilter: showGPA
+                          ? ImageFilter.blur()
+                          : ImageFilter.blur(
+                              sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
+                      child: Text.rich(
+                        // textAlign: TextAlign.end,
+                        TextSpan(
+                          text: courseGrades[courseGrades.length - 1][0]
+                              .toString(),
+                          style: const TextStyle(
+                              color: MyColors.secondary,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900),
+                          children: const [
+                            TextSpan(
+                              text: "GPA",
+                              style: TextStyle(
+                                  // color: MyColors.background,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Container(height: 15)
             ],
