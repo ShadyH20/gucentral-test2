@@ -54,10 +54,10 @@ class Requests {
     return [prefs.getString('id'), prefs.getString('name')];
   }
 
-  static dynamic getTranscript(context) async {
+  static dynamic getTranscript(context, year) async {
     var out = await getCreds();
     print(out);
-    out['year'] = '2020-2021';
+    out['year'] = year;
     print(out);
     var body = jsonEncode(out);
 

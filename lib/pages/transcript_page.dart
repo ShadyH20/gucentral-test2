@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import "dart:convert";
+import "package:dropdown_button2/dropdown_button2.dart";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
@@ -61,18 +62,18 @@ class _TranscriptPageState extends State<TranscriptPage>
       });
     }
     if (widget.firstAccess) {
-      updateTranscript();
+      // updateTranscript();
       setState(() {
         widget.firstAccess = false;
       });
     }
   }
 
-  void updateTranscript() async {
+  void updateTranscript(String year) async {
     setState(() {
       showLoading = true;
     });
-    var output = await Requests.getTranscript(context);
+    var output = await Requests.getTranscript(context, year);
     setState(() {
       showLoading = false;
       // widget.gpa = "3.14";
@@ -108,7 +109,7 @@ class _TranscriptPageState extends State<TranscriptPage>
             icon:
                 const Icon(Icons.refresh, color: MyColors.secondary, size: 35),
             onPressed: () {
-              updateTranscript();
+              updateTranscript(dropdownValue);
             },
           ),
           Container(
@@ -149,7 +150,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                           style: const TextStyle(
                               color: MyColors.secondary,
                               fontSize: 72,
-                              fontWeight: FontWeight.w900),
+                              fontWeight: FontWeight.w800),
                           children: const [
                             TextSpan(
                               text: "GPA",
@@ -164,6 +165,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                     ),
                   ),
                   Container(height: 50),
+                  DropdownButtonYears(transcript: this),
                   Align(
                     alignment: FractionalOffset.bottomCenter,
                     child: Container(
@@ -307,59 +309,74 @@ class _TranscriptPageState extends State<TranscriptPage>
   bool get wantKeepAlive => true;
 }
 
-// Container(
-//                       width: double.infinity,
-//                       padding: const EdgeInsets.all(10),
-//                       decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(
-//                           25.0,
-//                         ),
-//                         color: MyColors.background,
-//                         boxShadow: const [
-//                           BoxShadow(
-//                               color: MyColors.primary, offset: Offset(0, -2))
-//                         ],
-//                       ),
-//                       // height: 300.0,
-//                       child: DataTable(
-//                         headingRowHeight: 0,
-//                         showBottomBorder: true,
-//                         dividerThickness: 2,
-//                         // border: TableBorder(
-//                         //     horizontalInside: BorderSide(
-//                         //         color: MyColors.secondary
-//                         //             .withOpacity(.5))),
-//                         columnSpacing: 25,
-//                         dataRowHeight: 30,
-//                         horizontalMargin: 3,
-//                         dataTextStyle: const TextStyle(
-//                             fontWeight: FontWeight.bold,
-//                             fontSize: 12,
-//                             letterSpacing: .1,
-//                             color: MyColors.secondary),
-//                         columns: const [
-//                           // column to set the name
-//                           DataColumn(label: Text("dsfsdf")),
-//                           DataColumn(label: Text(""), numeric: true),
-//                           DataColumn(label: Text(""), numeric: true),
-//                         ],
-//                         rows: const [
-//                           DataRow(cells: [
-//                             DataCell(Text("Mathematics V (Discrete Math)")),
-//                             DataCell(Text("A")),
-//                             DataCell(Text("4")),
-//                           ]),
-//                           DataRow(cells: [
-//                             DataCell(Text("Introduction to Media Engineering")),
-//                             DataCell(Text("A")),
-//                             DataCell(Text("4")),
-//                           ]),
-//                           DataRow(cells: [
-//                             DataCell(
-//                                 Text("Introduction to Communication Networks")),
-//                             DataCell(Text("A")),
-//                             DataCell(Text("4")),
-//                           ]),
-//                         ],
-//                       ),
-//                     // ),
+// DROPDOWN LIST CLASS
+
+const List<String> list = <String>[
+  'Select A Year',
+  '2019-2020',
+  '2020-2021',
+  '2021-2022',
+  '2022-2023'
+];
+
+String dropdownValue = list.first;
+
+class DropdownButtonYears extends StatefulWidget {
+  _TranscriptPageState transcript;
+  DropdownButtonYears({super.key, required this.transcript});
+
+  @override
+  State<DropdownButtonYears> createState() => _DropdownButtonYearsState();
+}
+
+class _DropdownButtonYearsState extends State<DropdownButtonYears> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 180,
+      height: 40,
+      padding: const EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 230, 230, 230),
+          borderRadius: BorderRadius.circular(10)),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2(
+          iconStyleData: const IconStyleData(
+              icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
+          isExpanded: true,
+          value: dropdownValue,
+          style: const TextStyle(
+              // decoration: TextDecoration.underline,
+              color: Colors.black54,
+              fontFamily: 'Outfit',
+              fontSize: 18,
+              fontWeight: FontWeight.bold),
+          // dropdownColor: MyColors.secondary,
+          dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          )),
+          underline: Container(
+            color: const Color(0),
+          ),
+
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              dropdownValue = value!;
+            });
+            if (dropdownValue != list.first) {
+              widget.transcript.updateTranscript(value!);
+            }
+          },
+          items: list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Center(child: Text(value)),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}

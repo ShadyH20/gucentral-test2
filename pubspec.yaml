@@ -40,6 +40,7 @@ dependencies:
   flutter_zoom_drawer: ^3.0.3
   data_table_2: ^2.3.12
   shared_preferences: ^2.0.18
+  dropdown_button2: ^2.0.0
 
 dev_dependencies:
   flutter_test:

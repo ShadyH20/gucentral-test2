@@ -92,8 +92,8 @@ class _MenuPageState extends State<MenuPage> {
       print(idName);
       return Container(
         // decoration: const BoxDecoration(boxShadow: [
-        //   BoxShadow(color: Colors.black38, blurRadius: 60, spreadRadius: 10)
-        // ])
+        //   BoxShadow(color: Colors.black26, blurRadius: 70, spreadRadius: 07)
+        // ]),
         child: Column(
           children: [
             ListTile(
