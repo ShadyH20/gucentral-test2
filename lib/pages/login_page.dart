@@ -54,13 +54,15 @@ class _LoginPageState extends State<LoginPage> {
     var output = await Requests.login(
         context, usernameController.text, passwordController.text);
 
-    if (output['success']) {
-      // ignore: use_build_context_synchronously
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomePageNavDrawer(gpa: output['gpa'])),
-      );
+    if (output != null) {
+      if (output['success']) {
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomePageNavDrawer(gpa: output['gpa'])),
+        );
+      }
     }
     setState(() {
       showLoading = false;
@@ -303,12 +305,19 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               Container(
-                height: 90,
+                height: 80,
               ),
               SvgPicture.asset(
                 "assets/images/main-logo.svg",
                 height: 70,
               ),
+              Container(
+                height: 10,
+              ),
+              const Text(
+                "v1.0.5",
+                style: TextStyle(color: MyColors.secondary),
+              )
             ],
           ),
         ));

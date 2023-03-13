@@ -10,7 +10,9 @@ import "package:flutter_svg/flutter_svg.dart";
 import 'package:data_table_2/data_table_2.dart';
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
-import "package:sensors_plus/sensors_plus.dart";
+// import "package:sensors_plus/sensors_plus.dart";
+// // import 'package:sensors_plus_web/sensors_plus_web.dart';
+import 'package:all_sensors/all_sensors.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
 import "../widgets/Requests.dart";
@@ -47,7 +49,7 @@ class _TranscriptPageState extends State<TranscriptPage>
   void initState() {
     super.initState();
 
-    gyroscopeEvents.listen((GyroscopeEvent event) {
+    gyroscopeEvents?.listen((GyroscopeEvent event) {
       if (event.x > 2.0) {
         setState(() {
           tiltingBack = true;
