@@ -48,9 +48,11 @@ class Requests {
       return null;
     }
   }
-  // JsonCodec get(){
 
-  // }
+  static dynamic getIdName() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return [prefs.getString('id'), prefs.getString('name')];
+  }
 
   static dynamic getTranscript(context) async {
     var out = await getCreds();

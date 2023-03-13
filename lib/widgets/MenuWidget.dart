@@ -13,11 +13,12 @@ class MenuWidget extends StatelessWidget {
           height: 15,
           color: MyColors.secondary,
         ),
-        padding: const EdgeInsets.only(left: 10),
+        padding: const EdgeInsets.only(left: 20),
         onPressed: () {
           if (ZoomDrawer.of(context) != null) {
             ZoomDrawer.of(context)!.toggle();
           }
+          // Scaffold.of(context).openDrawer();
         },
       );
 }

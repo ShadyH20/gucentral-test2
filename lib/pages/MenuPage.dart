@@ -3,14 +3,32 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/widgets/MyColors.dart';
+import 'package:gucentral/widgets/Requests.dart';
 
 import '../widgets/MeduItemList.dart';
-import '../widgets/MyColors.dart';
 
-class MenuPage extends StatelessWidget {
-  late MenuItemlist currentItem;
-  late ValueChanged<MenuItemlist> onSelecteItem;
-  MenuPage({required this.currentItem, required this.onSelecteItem});
+class MenuPage extends StatefulWidget {
+  MenuItemlist currentItem;
+  ValueChanged<MenuItemlist> onSelecteItem;
+  MenuPage({super.key, required this.currentItem, required this.onSelecteItem});
+
+  @override
+  State<MenuPage> createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  List<dynamic> idName = [];
+
+  _MenuPageState() {
+    getIdName();
+  }
+  getIdName() async {
+    var out = await Requests.getIdName();
+    setState(() {
+      idName = out;
+    });
+    print(idName);
+  }
 
   @override
   Widget build(BuildContext context) => Theme(
@@ -27,7 +45,7 @@ class MenuPage extends StatelessWidget {
                   flex: 9,
                   child: SizedBox(
                     // color: MyColors.accent,
-                    width: 200,
+                    // width: 200,
                     child: Wrap(
                       spacing: 0,
                       children: [
@@ -71,41 +89,80 @@ class MenuPage extends StatelessWidget {
       );
   Widget buildMenuItem(MenuItemlist item) {
     if (item.title == "Profile") {
-      return ListTile(
-        contentPadding: const EdgeInsets.only(top: 30, bottom: 50),
-        horizontalTitleGap: 10.0,
-        leading: SvgPicture.asset(
-          "assets/images/profile.svg",
-          height: 40,
-          // color: MyColors.secondary,
+      print(idName);
+      return Container(
+        alignment: AlignmentDirectional.center,
+        padding: const EdgeInsets.only(left: 50),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: MyColors.primaryVariant,
         ),
-        title: const Text("shady.farag"),
-        subtitle:
-            // TextButton(
-            //   style: ButtonStyle(alignment: Alignment.topLeft),
-            //   onPressed: () {},
-            //   child:
-            const Text(
-          "Edit Profile",
-          style: TextStyle(
-            color: MyColors.background,
-            decoration: TextDecoration.underline,
+        child: ListTile(
+          isThreeLine: true,
+          contentPadding: const EdgeInsets.only(top: 20, bottom: 20),
+
+          horizontalTitleGap: 10.0,
+          title: Align(
+            heightFactor: 1.1,
+            alignment: FractionalOffset.centerLeft,
+            child: CircleAvatar(
+              radius: 35,
+              foregroundColor: MyColors.background,
+              backgroundColor: MyColors.secondary,
+              child: Text(
+                idName[1][0] ?? "",
+                style: const TextStyle(fontSize: 32),
+              ),
+            ),
           ),
+          // title: Text(
+          //   idName[1].toString().split(" ").sublist(0, 2).join(" "),
+          //   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          // ),
+          subtitle: Text.rich(
+            maxLines: 2,
+            TextSpan(
+              text:
+                  "${idName[1].toString().split(" ").sublist(0, 2).join(" ")}\n",
+              style: const TextStyle(
+                  height: 1.4,
+                  color: MyColors.background,
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500),
+              children: [
+                TextSpan(
+                  text: idName[0],
+                  style: const TextStyle(
+                      // color: MyColors.background,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal),
+                ),
+              ],
+            ),
+          ),
+          // : Text(
+          //   idName[0],
+          //   style: const TextStyle(
+          //     color: MyColors.background,
+          //     // decoration: TextDecoration.underline,
+          //   ),
+          // ),
         ),
-        // ),
       );
     }
     if (item.title == "Seperator") {
       return Column(children: [
         Container(height: 40),
         const Divider(
+          indent: 50,
+          endIndent: 35,
           color: MyColors.background,
           thickness: 4,
         ),
       ]);
     } else {
       return ListTileTheme(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 50),
         selectedColor: MyColors.background,
         textColor: MyColors.background.withOpacity(0.5),
         iconColor: MyColors.background.withOpacity(0.5),
@@ -114,7 +171,7 @@ class MenuPage extends StatelessWidget {
           visualDensity: const VisualDensity(vertical: 1),
           // selectedTileColor: Colors.white,
           // textColor: MyColors.background.withOpacity(0.5),
-          selected: currentItem == item,
+          selected: widget.currentItem == item,
           minLeadingWidth: 0,
           leading: item.icon != null ? Icon(item.icon) : null,
           title: Text(
@@ -126,7 +183,7 @@ class MenuPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          onTap: () => onSelecteItem(item),
+          onTap: () => widget.onSelecteItem(item),
         ),
       );
     }
@@ -144,11 +201,6 @@ class MenuItems {
   static const map = MenuItemlist('Map');
   static const settings = MenuItemlist('Settings', Icons.settings);
   static const seperator = MenuItemlist('Seperator');
-  // static const promos = MenuItemlist('Promo', Icons.card_giftcard);
-  // static const notification = MenuItemlist('Notification', Icons.notifications);
-  // static const help = MenuItemlist('Help', Icons.help);
-  // static const aboutUs = MenuItemlist('About Us', Icons.info_outline);
-  // static const rateUs = MenuItemlist('Rate Us', Icons.star_border);
   static final all = <MenuItemlist>[
     profile,
     home,
@@ -159,12 +211,6 @@ class MenuItems {
     map,
     seperator,
     settings,
-    login,
-    // payment,
-    // promos,
-    // notification,
-    // help,
-    // aboutUs,
-    // rateUs
+    login
   ];
 }

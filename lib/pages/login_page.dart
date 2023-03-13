@@ -284,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const HomePageNavDrawer(gpa: "0.00")),
+                                    HomePageNavDrawer(gpa: "0.00")),
                           );
                         },
                         child: const Text(

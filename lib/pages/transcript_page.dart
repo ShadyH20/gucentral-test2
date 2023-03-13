@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import "dart:convert";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
@@ -11,35 +13,57 @@ import "package:shared_preferences/shared_preferences.dart";
 import "../widgets/Requests.dart";
 
 class TranscriptPage extends StatefulWidget {
-  String gpa;
-  TranscriptPage({super.key, required this.gpa});
+  bool firstAccess = true;
+  // var semesterGrades = [];
+  TranscriptPage({super.key});
 
   @override
   // ignore: no_logic_in_create_state
   State<TranscriptPage> createState() => _TranscriptPageState();
 }
 
-class _TranscriptPageState extends State<TranscriptPage> {
-  // String gpa = "";
+class _TranscriptPageState extends State<TranscriptPage>
+    with AutomaticKeepAliveClientMixin {
+  final _scrollController = ScrollController();
+  String gpa = "";
   bool showLoading = false;
-  bool firstAccess = true;
-  var semesterGrades = [];
+  // late List<dynamic> semesterGrades;
+
+  _TranscriptPageState() {
+    print("CONSTRUCTOR :)");
+    // showLoading = false;
+    // semesterGrades = [];
+    // initalizePage();
+  }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
+
+  List<dynamic>? semesterGrades;
 
   @override
-  void initState() {
-    super.initState();
-    initalizePage();
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (semesterGrades == null) {
+      initalizePage();
+      setState(() {});
+    }
   }
 
   void initalizePage() async {
+    print("Initialize transcript, 2D array: $semesterGrades");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('gpa')) {
-      widget.gpa = prefs.getString('gpa')!;
+      setState(() {
+        gpa = prefs.getString('gpa')!;
+      });
     }
-    if (firstAccess) {
+    if (widget.firstAccess) {
       updateTranscript();
       setState(() {
-        firstAccess = false;
+        widget.firstAccess = false;
       });
     }
   }
@@ -60,6 +84,7 @@ class _TranscriptPageState extends State<TranscriptPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -120,7 +145,7 @@ class _TranscriptPageState extends State<TranscriptPage> {
                       fit: BoxFit.fitWidth,
                       child: Text.rich(
                         TextSpan(
-                          text: widget.gpa,
+                          text: gpa,
                           style: const TextStyle(
                               color: MyColors.secondary,
                               fontSize: 72,
@@ -147,7 +172,7 @@ class _TranscriptPageState extends State<TranscriptPage> {
                       height: 400,
                       child: Column(
                         children: [
-                          semesterGrades.isNotEmpty
+                          semesterGrades != null
                               ? Expanded(child: createTables())
                               : const Text("Nothing Here!"),
                         ],
@@ -167,11 +192,12 @@ class _TranscriptPageState extends State<TranscriptPage> {
   Widget createTables() {
     return SingleChildScrollView(
       child: ListView.builder(
+        controller: _scrollController,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: semesterGrades.length,
+        itemCount: semesterGrades?.length,
         itemBuilder: (BuildContext context, int index) {
-          var semester = semesterGrades[index];
+          var semester = semesterGrades?[index];
           var semesterName = semester[0];
           var courseGrades = semester[1];
 
@@ -276,6 +302,9 @@ class _TranscriptPageState extends State<TranscriptPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 // Container(

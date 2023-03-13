@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:gucentral/pages/home_page.dart';
 import 'package:gucentral/pages/login_page.dart';
@@ -14,37 +15,62 @@ import 'MeduItemList.dart';
 
 class HomePageNavDrawer extends StatefulWidget {
   final String gpa;
-  const HomePageNavDrawer({super.key, required this.gpa});
+  bool firstAccess = true;
+  HomePageNavDrawer({Key? key, required this.gpa}) : super(key: key);
   @override
   State<HomePageNavDrawer> createState() => _HomePageNavDrawerState();
 }
 
 class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
-  MenuItemlist currentItem = MenuItems.transcript;
+  final List<Widget> pages = [
+    HomePage(),
+    CoursesPage(),
+    SchedulePage(),
+    SettingsPage(),
+    GradesPage(),
+    TranscriptPage()
+  ];
 
-  late TranscriptPage transcriptPage;
-  late HomePage homePage;
-  late CoursesPage coursesPage;
-  late SchedulePage schedulePage;
-  late SettingsPage settingsPage;
-  late GradesPage gradesPage;
+  int selectedIndex = 0;
+  MenuItemlist currentItem = MenuItems.home;
+
+  late ZoomDrawerController _drawerController;
+  GlobalKey transcriptKey = GlobalKey();
+
+  int getIndex(MenuItemlist item) {
+    switch (currentItem) {
+      case MenuItems.home:
+        return 0;
+      case MenuItems.courses:
+        return 1;
+      case MenuItems.schedule:
+        return 2;
+      case MenuItems.settings:
+        return 3;
+      case MenuItems.grades:
+        return 4;
+      case MenuItems.transcript:
+        return 5;
+      // case MenuItems.login:
+      //   return const LoginPage();
+      // case MenuItems.map:
+      //   return const LoginPage();
+      default:
+        return 0;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // Create all pages here!
-    transcriptPage = TranscriptPage(gpa: widget.gpa);
-    homePage = const HomePage();
-    coursesPage = const CoursesPage();
-    schedulePage = const SchedulePage();
-    settingsPage = const SettingsPage();
-    gradesPage = const GradesPage();
+    _drawerController = ZoomDrawerController();
   }
 
   @override
   Widget build(BuildContext context) => WillPopScope(
       onWillPop: () async => false,
       child: ZoomDrawer(
+        controller: ZoomDrawerController(),
         dragOffset: 120,
         openDragSensitivity: 300,
         mainScreenScale: 0,
@@ -54,36 +80,24 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         mainScreenTapClose: true,
         menuBackgroundColor: MyColors.primary,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
-        mainScreen: getScreen(),
+        mainScreen: IndexedStack(
+          index: selectedIndex,
+          children: pages,
+        ),
         menuScreen: Builder(
           builder: (context) => MenuPage(
               currentItem: currentItem,
               onSelecteItem: (item) {
-                setState(() => currentItem = item);
+                if (item == MenuItems.login) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const LoginPage()));
+                }
+                setState(() {
+                  currentItem = item;
+                  selectedIndex = getIndex(item);
+                });
                 ZoomDrawer.of(context)!.close();
               }),
         ),
       ));
-  Widget getScreen() {
-    switch (currentItem) {
-      case MenuItems.home:
-        return homePage;
-      case MenuItems.grades:
-        return gradesPage;
-      case MenuItems.courses:
-        return coursesPage;
-      case MenuItems.schedule:
-        return schedulePage;
-      case MenuItems.login:
-        return const LoginPage();
-      case MenuItems.transcript:
-        return transcriptPage;
-      case MenuItems.map:
-        return const LoginPage();
-      case MenuItems.settings:
-        return settingsPage;
-      default:
-        return homePage;
-    }
-  }
 }
