@@ -27,6 +27,12 @@ class _LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
 
+  @override
+  void initState() {
+    super.initState();
+    checkCredsExist();
+  }
+
   bool showPassword = true;
 
   bool showLoading = false;
