@@ -41,19 +41,23 @@ class _TranscriptPageState extends State<TranscriptPage>
 
   List<dynamic>? semesterGrades;
 
-  double x = 0, y = 0, z = 0;
-  String direction = "none";
+  bool tiltingBack = false;
 
   @override
   void initState() {
     super.initState();
 
     gyroscopeEvents.listen((GyroscopeEvent event) {
-      if (event.x > 1.0) {
+      if (event.x > 2.0) {
         setState(() {
-          showGPA = !showGPA;
-          print("SWITCH!!!");
+          tiltingBack = true;
         });
+      } else if (tiltingBack && event.x < -2.0) {
+        setState(() {
+          tiltingBack = false;
+          showGPA = !showGPA;
+        });
+        print("SWITCH!!!");
       }
       print(event);
 
