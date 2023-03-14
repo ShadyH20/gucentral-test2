@@ -126,7 +126,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                 // #### ACTUAL PAGE ####
                 // #####################
                 children: [
-                  Container(height: 10),
+                  Container(),
                   profile(),
                   // Container(height: 10),
                   cumulativeGPA(),
@@ -137,7 +137,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       // width: 380,
-                      height: 400,
+                      height: 350,
                       child: Column(
                         children: [
                           semesterGrades != null
@@ -209,7 +209,7 @@ class _TranscriptPageState extends State<TranscriptPage>
     return Container(
       alignment: Alignment.center,
       width: 200.0,
-      // height: 90.0,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
           20.0,
