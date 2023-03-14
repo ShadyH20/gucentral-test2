@@ -263,8 +263,8 @@ class _TranscriptPageState extends State<TranscriptPage>
                 DataCell(ImageFiltered(
                     imageFilter: showGPA
                         ? ImageFilter.blur()
-                        : ImageFilter.blur(
-                            sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
+                        : ImageFilter.blur(),
+                            //sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
                     child: Text(grade[1]))), // Grade
                 DataCell(Text(grade[2].toString())), // Credits
               ])
