@@ -189,8 +189,8 @@ class _TranscriptPageState extends State<TranscriptPage>
                         BoxShadow(color: MyColors.primary, offset: Offset(0, 2))
                       ],
                     ),
-                    child: ImageFiltered(
-                      imageFilter: showGPA
+                    child: BackdropFilter(
+                      filter: showGPA
                           ? ImageFilter.blur()
                           : ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                       child: FittedBox(
@@ -260,8 +260,8 @@ class _TranscriptPageState extends State<TranscriptPage>
             for (var grade in courseGrades.take(courseGrades.length - 1))
               DataRow(cells: [
                 DataCell(Text(grade[0])), // Course name
-                DataCell(ImageFiltered(
-                    imageFilter: showGPA
+                DataCell(BackdropFilter(
+                    filter: showGPA
                         ? ImageFilter.blur()
                         : ImageFilter.blur(
                             sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
@@ -326,8 +326,8 @@ class _TranscriptPageState extends State<TranscriptPage>
                   ),
                   Align(
                     alignment: const FractionalOffset(0.96, 0.0),
-                    child: ImageFiltered(
-                      imageFilter: showGPA
+                    child: BackdropFilter(
+                      filter: showGPA
                           ? ImageFilter.blur()
                           : ImageFilter.blur(
                               sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
