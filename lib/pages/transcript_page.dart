@@ -318,7 +318,9 @@ class _TranscriptPageState extends State<TranscriptPage>
                       columns: const [
                         DataColumn2(
                             label: Text('Course Name'), size: ColumnSize.L),
-                        DataColumn(label: Text('')),
+                        DataColumn(label: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+        child: Text('Grade')),
                         DataColumn2(label: Text(''), numeric: true),
                       ],
                       rows: rows,
