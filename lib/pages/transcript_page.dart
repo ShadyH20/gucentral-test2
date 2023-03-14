@@ -192,7 +192,11 @@ class _TranscriptPageState extends State<TranscriptPage>
         IconButton(
           splashRadius: 15,
           // padding: EdgeInsets.symmetric(horizontal: 20.0),
-          icon: const Icon(Icons.refresh, color: MyColors.secondary, size: 35),
+          icon: SvgPicture.asset(
+            "assets/images/refresh.svg",
+            height: 24,
+            color: MyColors.secondary,
+          ),
           onPressed: () {
             updateTranscript(dropdownValue);
           },

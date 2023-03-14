@@ -74,6 +74,7 @@ flutter:
     - assets/images/nav-bar.svg
     - assets/images/profile.svg
     - assets/images/edit.svg
+    - assets/images/refresh.svg
     - assets/images/nav-bar.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
