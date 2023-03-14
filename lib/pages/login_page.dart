@@ -27,10 +27,24 @@ class _LoginPageState extends State<LoginPage> {
 
   final _formKey = GlobalKey<FormState>();
 
+  _LoginPageState() {
+    checkCredsExist();
+  }
+
   @override
   void initState() {
     super.initState();
-    checkCredsExist();
+    checkCredsExist().then((userRemembered) {
+      userRemembered = this.userRemembered;
+      print("User Remembered? $userRemembered");
+      if (userRemembered) {
+        print("WE IN!");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => HomePageNavDrawer(gpa: "0.00")));
+      }
+    });
   }
 
   bool showPassword = true;
@@ -38,12 +52,6 @@ class _LoginPageState extends State<LoginPage> {
   bool showLoading = false;
 
   bool userRemembered = false;
-
-  // final url = Uri.parse('http://13.58.183.81:8000/api/courses');
-  // final url = Uri.parse('https://academix-backend.onrender.com/api/courses');
-  // final url = Uri.parse('http://127.0.0.1:8000/courses');
-  final url =
-      Uri.parse('https://gucentralbackend-production.up.railway.app/login');
 
   void loginPressed() async {
     setState(() {
@@ -277,31 +285,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           )),
                   Container(height: 10),
-                  userRemembered
-                      ? SizedBox(
-                          width: 115,
-                          height: 42,
-                          child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(7.5)),
-                                backgroundColor: MyColors.secondary,
-                              ),
-                              onPressed: () {
-                                _formKey.currentState?.save();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomePageNavDrawer(gpa: "0.00")),
-                                );
-                              },
-                              child: const Text(
-                                "Skip",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              )))
-                      : Container(),
                 ],
               ),
               Container(
