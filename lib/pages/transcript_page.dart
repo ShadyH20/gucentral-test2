@@ -315,7 +315,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                           fontSize: 13.5,
                           letterSpacing: .1,
                           color: MyColors.secondary),
-                      columns: const [
+                      columns: [
                         DataColumn2(
                             label: Text('Course Name'), size: ColumnSize.L),
                         DataColumn(label: BackdropFilter(
