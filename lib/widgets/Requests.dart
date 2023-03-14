@@ -54,6 +54,11 @@ class Requests {
     return [prefs.getString('id'), prefs.getString('name')];
   }
 
+  static dynamic getUsernameId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return [prefs.getString('username'), prefs.getString('id')];
+  }
+
   static dynamic getTranscript(context, year) async {
     var out = await getCreds();
     out['year'] = year;

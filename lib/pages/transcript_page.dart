@@ -37,13 +37,15 @@ class TranscriptPage extends StatefulWidget {
 class _TranscriptPageState extends State<TranscriptPage>
     with AutomaticKeepAliveClientMixin {
   final _scrollController = ScrollController();
+
   String gpa = "";
   bool showLoading = false;
-  // bool showGPA = false;
-
   List<dynamic>? semesterGrades;
-
   bool tiltingBack = false;
+
+  _TranscriptPageState() {
+    getUsernameId();
+  }
 
   @override
   void initState() {
@@ -61,22 +63,6 @@ class _TranscriptPageState extends State<TranscriptPage>
         });
         print("SWITCH!!!");
       }
-      print(event);
-
-      // x = event.x;
-      // y = event.y;
-      // z = event.z;
-
-      //rough calculation, you can use
-      //advance formula to calculate the orentation
-
-      // else if (x < 0) {
-      //   direction = "forward";
-      // } else if (y > 0) {
-      //   direction = "left";
-      // } else if (y < 0) {
-      //   direction = "right";
-      // }
     });
   }
 
@@ -124,46 +110,7 @@ class _TranscriptPageState extends State<TranscriptPage>
     super.build(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: MyColors.background,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.dark),
-        elevation: 0,
-        backgroundColor: MyColors.background,
-        centerTitle: true,
-        leadingWidth: 50.0,
-        leading: const MenuWidget(),
-        title: const Text(
-          "Transcript",
-          style: TextStyle(color: MyColors.primary),
-        ),
-        actions: [
-          IconButton(
-            splashRadius: 15,
-            // padding: EdgeInsets.symmetric(horizontal: 20.0),
-            icon: Icon(showGPA ? Icons.visibility : Icons.visibility_off,
-                color: MyColors.secondary, size: 35),
-            onPressed: () {
-              setState(() {
-                showGPA = !showGPA;
-              });
-            },
-          ),
-          IconButton(
-            splashRadius: 15,
-            // padding: EdgeInsets.symmetric(horizontal: 20.0),
-            icon:
-                const Icon(Icons.refresh, color: MyColors.secondary, size: 35),
-            onPressed: () {
-              updateTranscript(dropdownValue);
-            },
-          ),
-          Container(
-            width: 10,
-          )
-        ],
-      ),
+      appBar: transcriptAppBar(),
       body: Container(
         // color: MyColors.accent,
         alignment: Alignment.center,
@@ -174,48 +121,16 @@ class _TranscriptPageState extends State<TranscriptPage>
             : Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                // #####################
+                // #### ACTUAL PAGE ####
+                // #####################
                 children: [
-                  Container(height: 100),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 200.0,
-                    height: 90.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(
-                        20.0,
-                      ),
-                      color: MyColors.background,
-                      boxShadow: const [
-                        BoxShadow(color: MyColors.primary, offset: Offset(0, 2))
-                      ],
-                    ),
-                    child: ImageFiltered(
-                      enabled: !showGPA,
-                      imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                      child: FittedBox(
-                        fit: BoxFit.fitWidth,
-                        child: Text.rich(
-                          TextSpan(
-                            text: gpa,
-                            style: const TextStyle(
-                                color: MyColors.secondary,
-                                fontSize: 72,
-                                fontWeight: FontWeight.w800),
-                            children: const [
-                              TextSpan(
-                                text: "GPA",
-                                style: TextStyle(
-                                    // color: MyColors.background,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(height: 50),
+                  Container(height: 10),
+                  profile(),
+                  // Container(height: 10),
+                  cumulativeGPA(),
+                  // Container(height: 30),
                   DropdownButtonYears(transcript: this),
                   Align(
                     alignment: FractionalOffset.bottomCenter,
@@ -242,6 +157,149 @@ class _TranscriptPageState extends State<TranscriptPage>
     );
   }
 
+// ############################
+// ####### PAGE WIDGETS #######
+// ############################
+
+  // ####### APP BAR #######
+  AppBar transcriptAppBar() {
+    return AppBar(
+      systemOverlayStyle: const SystemUiOverlayStyle(
+          statusBarColor: MyColors.background,
+          statusBarIconBrightness: Brightness.dark,
+          statusBarBrightness: Brightness.dark),
+      elevation: 0,
+      backgroundColor: MyColors.background,
+      centerTitle: true,
+      leadingWidth: 50.0,
+      leading: const MenuWidget(),
+      title: const Text(
+        "Transcript",
+        style: TextStyle(color: MyColors.primary),
+      ),
+      actions: [
+        IconButton(
+          splashRadius: 15,
+          // padding: EdgeInsets.symmetric(horizontal: 20.0),
+          icon: Icon(showGPA ? Icons.visibility : Icons.visibility_off,
+              color: MyColors.secondary, size: 35),
+          onPressed: () {
+            setState(() {
+              showGPA = !showGPA;
+            });
+          },
+        ),
+        IconButton(
+          splashRadius: 15,
+          // padding: EdgeInsets.symmetric(horizontal: 20.0),
+          icon: const Icon(Icons.refresh, color: MyColors.secondary, size: 35),
+          onPressed: () {
+            updateTranscript(dropdownValue);
+          },
+        ),
+        Container(
+          width: 10,
+        )
+      ],
+    );
+  }
+
+  // ### CUMULATIVE GPA ####
+  Widget cumulativeGPA() {
+    return Container(
+      alignment: Alignment.center,
+      width: 200.0,
+      // height: 90.0,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          20.0,
+        ),
+        color: MyColors.background,
+        boxShadow: const [
+          BoxShadow(
+              color: MyColors.primary, offset: Offset(0, 2), spreadRadius: 0.3)
+        ],
+      ),
+      child: Column(
+        children: [
+          const Text(
+            "Cumulative",
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w800,
+                color: MyColors.primaryVariant),
+          ),
+          ImageFiltered(
+            enabled: !showGPA,
+            imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: FittedBox(
+              fit: BoxFit.fitWidth,
+              child: Text.rich(
+                TextSpan(
+                  text: gpa,
+                  style: const TextStyle(
+                      color: MyColors.secondary,
+                      fontSize: 72,
+                      fontWeight: FontWeight.w800),
+                  children: const [
+                    TextSpan(
+                      text: "GPA",
+                      style: TextStyle(
+                          // color: MyColors.background,
+                          fontSize: 22,
+                          fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ####### PROFILE #######
+  List<dynamic> usernameId = [];
+  getUsernameId() async {
+    var out = await Requests.getUsernameId();
+    setState(() {
+      usernameId = out;
+    });
+  }
+
+  Widget profile() {
+    return Column(
+      children: [
+        SvgPicture.asset(
+          "assets/images/profile.svg",
+          height: 95,
+        ),
+        const SizedBox(height: 5),
+        Text(
+          usernameId[0],
+          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w700),
+        ),
+        Text(
+          usernameId[1],
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        )
+      ],
+    );
+  }
+
+  Future<List> getUsernameAndID() {
+    return getUsernameAndIDHelper();
+  }
+
+  Future<List> getUsernameAndIDHelper() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return [prefs.getString('username'), prefs.getString('id')];
+  }
+
+// ###########################
+// ######### METHODS #########
+// ###########################
   Widget createTables() {
     return SingleChildScrollView(
       child: ListView.builder(

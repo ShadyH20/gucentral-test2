@@ -27,7 +27,6 @@ class _MenuPageState extends State<MenuPage> {
     setState(() {
       idName = out;
     });
-    print(idName);
   }
 
   @override
@@ -89,7 +88,6 @@ class _MenuPageState extends State<MenuPage> {
       );
   Widget buildMenuItem(MenuItemlist item) {
     if (item.title == "Profile") {
-      print(idName);
       return Container(
         // decoration: const BoxDecoration(boxShadow: [
         //   BoxShadow(color: Colors.black26, blurRadius: 70, spreadRadius: 07)
@@ -101,15 +99,19 @@ class _MenuPageState extends State<MenuPage> {
               contentPadding: const EdgeInsets.only(top: 20, bottom: 10),
               horizontalTitleGap: 10.0,
               minVerticalPadding: 10,
-              leading: CircleAvatar(
-                radius: 28,
-                foregroundColor: MyColors.background,
-                backgroundColor: MyColors.secondary,
-                child: Text(
-                  idName[1][0] ?? "",
-                  style: const TextStyle(fontSize: 25),
-                ),
+              leading: SvgPicture.asset(
+                "assets/images/profile.svg",
+                height: 50,
               ),
+              // CircleAvatar(
+              //   radius: 28,
+              //   foregroundColor: MyColors.background,
+              //   backgroundColor: MyColors.secondary,
+              //   child: Text(
+              //     idName[1][0] ?? "",
+              //     style: const TextStyle(fontSize: 25),
+              //   ),
+              // ),
               title: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3.0),
                 child: FittedBox(
@@ -119,7 +121,7 @@ class _MenuPageState extends State<MenuPage> {
                     idName[1].toString().split(" ").sublist(0, 2).join(" "),
                     style: const TextStyle(
                       fontSize: 20,
-                      // fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -127,10 +129,11 @@ class _MenuPageState extends State<MenuPage> {
               subtitle: Text(
                 idName[0],
                 style: const TextStyle(
-                  color: MyColors.background, fontSize: 16,
-                  // fontWeight:
-                  // decoration: TextDecoration.underline,
-                ),
+                    color: MyColors.background,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                    // decoration: TextDecoration.underline,
+                    ),
               ),
               // ),
             ),
