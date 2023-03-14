@@ -320,7 +320,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                             label: Text('Course Name'), size: ColumnSize.L),
                         DataColumn(label: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-        child: Text('')),
+        child: Text(' ')),
                         DataColumn2(label: Text(''), numeric: true),
                       ],
                       rows: rows,
