@@ -189,10 +189,9 @@ class _TranscriptPageState extends State<TranscriptPage>
                         BoxShadow(color: MyColors.primary, offset: Offset(0, 2))
                       ],
                     ),
-                    child: BackdropFilter(
-                      filter: showGPA
-                          ? ImageFilter.blur()
-                          : ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                    child: ImageFiltered(
+                      enabled: !showGPA,
+                      imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                       child: FittedBox(
                         fit: BoxFit.fitWidth,
                         child: Text.rich(
@@ -260,11 +259,10 @@ class _TranscriptPageState extends State<TranscriptPage>
             for (var grade in courseGrades.take(courseGrades.length - 1))
               DataRow(cells: [
                 DataCell(Text(grade[0])), // Course name
-                DataCell(BackdropFilter(
-                    filter: showGPA
-                        ? ImageFilter.blur()
-                        : ImageFilter.blur(),
-                            //sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
+                DataCell(ImageFiltered(
+                    enabled: !showGPA,
+                    imageFilter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    //sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
                     child: Text(grade[1]))), // Grade
                 DataCell(Text(grade[2].toString())), // Credits
               ])
@@ -315,12 +313,10 @@ class _TranscriptPageState extends State<TranscriptPage>
                           fontSize: 13.5,
                           letterSpacing: .1,
                           color: MyColors.secondary),
-                      columns: [
+                      columns: const [
                         DataColumn2(
                             label: Text('Course Name'), size: ColumnSize.L),
-                        DataColumn(label: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-        child: Text(' '))),
+                        DataColumn(label: Text(' ')),
                         DataColumn2(label: Text(''), numeric: true),
                       ],
                       rows: rows,
@@ -328,11 +324,10 @@ class _TranscriptPageState extends State<TranscriptPage>
                   ),
                   Align(
                     alignment: const FractionalOffset(0.96, 0.0),
-                    child: BackdropFilter(
-                      filter: showGPA
+                    child: ImageFiltered(
+                      imageFilter: showGPA
                           ? ImageFilter.blur()
-                          : ImageFilter.blur(
-                              sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
+                          : ImageFilter.blur(sigmaX: 7, sigmaY: 7),
                       child: Text.rich(
                         // textAlign: TextAlign.end,
                         TextSpan(
