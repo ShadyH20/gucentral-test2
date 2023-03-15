@@ -23,11 +23,8 @@ class _SchedulePageState extends State<SchedulePage> {
   String hour = DateFormat('a').format(DateTime.now());
 
   late Timer _timer;
-
-  DateTime? _selectedDay;
-
+  DateTime _selectedDay = DateTime.now();
   late DateTime _focusedDay = DateTime.now();
-
   CalendarFormat _calendarFormat = CalendarFormat.week;
 
   //   CalendarFormat _calendarFormat = CalendarFormat.month;
@@ -85,82 +82,10 @@ class _SchedulePageState extends State<SchedulePage> {
       body: Container(
         child: Column(
           children: [
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     Text(
-            //       formattedTime,
-            //       style: TextStyle(fontSize: 20),
-            //     ),
-            //     Padding(
-            //       padding: const EdgeInsets.only(top: 0.0, left: 10.0),
-            //       child: Text(
-            //         hour,
-            //         style: TextStyle(fontSize: 20),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // TableCalendar(
-            //   // daysOfWeekHeight: 40,
-            //   firstDay: DateTime.utc(2010, 10, 16),
-            //   lastDay: DateTime.utc(2030, 3, 14),
-            //   focusedDay: DateTime.now(),
-            //   rowHeight: 80,
-            //   // availableCalendarFormats: const {
-            //   //   CalendarFormat.month: 'Month',
-            //   //   CalendarFormat.week: 'Week',
-            //   // },
-            //   // headerVisible: false,
-            //   // rangeSelectionMode: RangeSelectionMode.toggledOff,
-            //   daysOfWeekStyle: DaysOfWeekStyle(),
-            //   // headerStyle: HeaderStyle(
-            //   //     // titleTextStyle: TextStyle(color: Colors.transparent),
-            //   //     titleCentered: true),
-            //   calendarStyle: CalendarStyle(
-            //       defaultTextStyle: TextStyle(fontSize: 25),
-            //       // outsideTextStyle: TextStyle(color: MyColors.primary),
-
-            //       // SELECTED DAY STYLE
-            //       selectedTextStyle:
-            //           TextStyle(color: MyColors.background, fontSize: 25),
-            //       selectedDecoration: BoxDecoration(
-            //         color: MyColors.primary,
-            //         borderRadius: BorderRadius.circular(7),
-            //       ),
-            //       todayTextStyle:
-            //           TextStyle(color: MyColors.primaryVariant, fontSize: 25),
-            //       todayDecoration: BoxDecoration(
-            //         color: Color.fromARGB(255, 237, 237, 237),
-            //         borderRadius: BorderRadius.circular(7),
-            //       )
-
-            //       // isTodayHighlighted: true
-
-            //       // rangeEndTextStyle:
-            //       // defaultDecoration:
-            //       //     BoxDecoration(borderRadius: BorderRadius.circular(5)),
-            //       ),
-            //   selectedDayPredicate: (day) {
-            //     return isSameDay(_selectedDay, day);
-            //   },
-            //   onDaySelected: (selectedDay, focusedDay) {
-            //     setState(() {
-            //       _selectedDay = selectedDay;
-            //       _focusedDay = focusedDay; // update `_focusedDay` here as well
-            //     });
-            //   },
-            //   calendarFormat: _calendarFormat,
-            //   onFormatChanged: (format) {
-            //     setState(() {
-            //       _calendarFormat = format;
-            //     });
-            //   },
-            // ),
             TableCalendar(
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(3030, 3, 14),
-              focusedDay: _focusedDay,
+              focusedDay: _selectedDay,
               calendarFormat: _calendarFormat,
               daysOfWeekVisible: false,
               rowHeight: 100,
@@ -294,15 +219,7 @@ class _SchedulePageState extends State<SchedulePage> {
           Container(
             margin: const EdgeInsets.only(bottom: 15),
             decoration: BoxDecoration(
-                // border: const Border(
-                //     right: BorderSide(
-                //         color: Color.fromARGB(255, 95, 95, 95), width: 3)),
-                // color:
-                // MyColors.background,
-                // Color.fromARGB(255, 244, 244, 244),
-                // boxShadow: [
-                //   BoxShadow(color: MyColors.primary, offset: Offset(0, 2))
-                // ],
+                color: MyColors.background,
                 borderRadius: BorderRadius.circular(7)),
             padding: const EdgeInsets.symmetric(vertical: 7),
             child: Expanded(
