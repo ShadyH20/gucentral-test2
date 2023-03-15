@@ -122,14 +122,14 @@ class _MenuPageState extends State<MenuPage> {
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: MyColors.background.withOpacity(0.9)),
+                        color: Color(0xFFF0F0F0)),
                   ),
                 ),
               ),
               subtitle: Text(
                 idName[0],
                 style: TextStyle(
-                    color: MyColors.background.withOpacity(0.9),
+                    color: Color(0xFFF0F0F0),
                     fontSize: 16,
                     fontWeight: FontWeight.bold
                     // decoration: TextDecoration.underline,
