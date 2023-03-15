@@ -119,17 +119,17 @@ class _MenuPageState extends State<MenuPage> {
                   alignment: FractionalOffset.centerLeft,
                   child: Text(
                     idName[1].toString().split(" ").sublist(0, 2).join(" "),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: MyColors.background.withOpacity(0.9)),
                   ),
                 ),
               ),
               subtitle: Text(
                 idName[0],
-                style: const TextStyle(
-                    color: MyColors.background,
+                style: TextStyle(
+                    color: MyColors.background.withOpacity(0.9),
                     fontSize: 16,
                     fontWeight: FontWeight.bold
                     // decoration: TextDecoration.underline,
@@ -137,10 +137,10 @@ class _MenuPageState extends State<MenuPage> {
               ),
               // ),
             ),
-            const Divider(
-              color: MyColors.background,
-              thickness: 3,
-            ),
+            // const Divider(
+            //   color: MyColors.background,
+            //   thickness: 3,
+            // ),
             const SizedBox(
               height: 25,
             )
