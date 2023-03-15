@@ -28,7 +28,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
   late DateTime _focusedDay = DateTime.now();
 
-  CalendarFormat _calendarFormat = CalendarFormat.month;
+  CalendarFormat _calendarFormat = CalendarFormat.week;
 
   //   CalendarFormat _calendarFormat = CalendarFormat.month;
   // DateTime _focusedDay = DateTime.now();
@@ -311,7 +311,7 @@ class _SchedulePageState extends State<SchedulePage> {
       style: const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
       child: Container(
         decoration: BoxDecoration(
-            color: Color.fromARGB(255, 232, 232, 232),
+            // color: Color.fromARGB(255, 239, 239, 239),
             borderRadius: BorderRadius.circular(7)),
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Column(
@@ -319,18 +319,19 @@ class _SchedulePageState extends State<SchedulePage> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: getDayIcons(focusedDay, true),
+              children: getDayIcons(day, true),
             ),
             // Container(height: 5),
             Text(
               '${day.day}',
               style: const TextStyle(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                // color: MyColors.background),
-              ),
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color:
+                      // Color.fromARGB(255, 255, 149, 0)
+                      MyColors.accent),
             ),
-            Text(DateFormat('EEE').format(focusedDay).toLowerCase()),
+            Text(DateFormat('EEE').format(day).toLowerCase()),
           ],
         ),
       ),
