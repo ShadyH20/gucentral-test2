@@ -72,82 +72,84 @@ class _SchedulePageState extends State<SchedulePage> {
               color: MyColors.primary,
               size: 35,
             ),
-            onPressed: () {},
+            onPressed: () {
+              setState(() {
+                _focusedDay = _selectedDay;
+              });
+            },
           ),
           Container(
             width: 15,
           )
         ],
       ),
-      body: Container(
-        child: Column(
-          children: [
-            TableCalendar(
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(3030, 3, 14),
-              focusedDay: _selectedDay,
-              calendarFormat: _calendarFormat,
-              daysOfWeekVisible: false,
-              rowHeight: 100,
-              selectedDayPredicate: (day) {
-                // Use `selectedDayPredicate` to determine which day is currently selected.
-                // If this returns true, then `day` will be marked as selected.
+      body: Column(
+        children: [
+          TableCalendar(
+            firstDay: DateTime.utc(2010, 10, 16),
+            lastDay: DateTime.utc(2080, 3, 14),
+            focusedDay: _selectedDay,
+            calendarFormat: _calendarFormat,
+            daysOfWeekVisible: false,
+            rowHeight: 100,
+            selectedDayPredicate: (day) {
+              // Use `selectedDayPredicate` to determine which day is currently selected.
+              // If this returns true, then `day` will be marked as selected.
 
-                // Using `isSameDay` is recommended to disregard
-                // the time-part of compared DateTime objects.
-                return isSameDay(_selectedDay, day);
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                if (!isSameDay(_selectedDay, selectedDay)) {
-                  // Call `setState()` when updating the selected day
-                  setState(() {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  });
-                }
-              },
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  // Call `setState()` when updating calendar format
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                // No need to call `setState()` here
-                _focusedDay = focusedDay;
-              },
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, date, _) =>
-                    defaultDayBuilder(context, date, _),
-                selectedBuilder: (context, day, focusedDay) =>
-                    selectedDayBuilder(context, day, focusedDay),
-                todayBuilder: (context, day, focusedDay) =>
-                    todayBuilder(context, day, focusedDay),
-              ),
-              calendarStyle: const CalendarStyle(
-                outsideDaysVisible: false,
-              ),
-              daysOfWeekStyle: const DaysOfWeekStyle(
-                weekdayStyle: TextStyle(fontSize: 16),
-                weekendStyle: TextStyle(fontSize: 16),
-              ),
-              headerStyle: const HeaderStyle(
-                titleTextStyle:
-                    TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
-                titleCentered: true,
-                formatButtonVisible: false,
-              ),
-              availableCalendarFormats: const {
-                CalendarFormat.week: 'Week',
-              },
-              startingDayOfWeek: StartingDayOfWeek.saturday,
-              // rangeEndDay: DateTime.now().add(Duration(days: 2)),
-              // rangeStartDay: DateTime.now().subtract(Duration(days: 2)),
+              // Using `isSameDay` is recommended to disregard
+              // the time-part of compared DateTime objects.
+              return isSameDay(_selectedDay, day);
+            },
+            onDaySelected: (selectedDay, focusedDay) {
+              if (!isSameDay(_selectedDay, selectedDay)) {
+                // Call `setState()` when updating the selected day
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
+                });
+              }
+            },
+            onFormatChanged: (format) {
+              if (_calendarFormat != format) {
+                // Call `setState()` when updating calendar format
+                setState(() {
+                  _calendarFormat = format;
+                });
+              }
+            },
+            onPageChanged: (focusedDay) {
+              // No need to call `setState()` here
+              _focusedDay = focusedDay;
+            },
+            calendarBuilders: CalendarBuilders(
+              defaultBuilder: (context, date, _) =>
+                  defaultDayBuilder(context, date, _),
+              selectedBuilder: (context, day, focusedDay) =>
+                  selectedDayBuilder(context, day, focusedDay),
+              todayBuilder: (context, day, focusedDay) =>
+                  todayBuilder(context, day, focusedDay),
             ),
-          ],
-        ),
+            calendarStyle: const CalendarStyle(
+              outsideDaysVisible: false,
+            ),
+            daysOfWeekStyle: const DaysOfWeekStyle(
+              weekdayStyle: TextStyle(fontSize: 16),
+              weekendStyle: TextStyle(fontSize: 16),
+            ),
+            headerStyle: const HeaderStyle(
+              titleTextStyle:
+                  TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
+              titleCentered: true,
+              formatButtonVisible: false,
+            ),
+            availableCalendarFormats: const {
+              CalendarFormat.week: 'Week',
+            },
+            startingDayOfWeek: StartingDayOfWeek.saturday,
+            // rangeEndDay: DateTime.now().add(Duration(days: 2)),
+            // rangeStartDay: DateTime.now().subtract(Duration(days: 2)),
+          ),
+        ],
       ),
     );
   }
@@ -217,29 +219,28 @@ class _SchedulePageState extends State<SchedulePage> {
         alignment: FractionalOffset.bottomCenter,
         children: [
           Container(
+            color: Colors.transparent,
             margin: const EdgeInsets.only(bottom: 15),
             padding: const EdgeInsets.symmetric(vertical: 7),
-            child: Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: getDayIcons(day, false),
-                  ),
-                  // Container(height: 5),
-                  Text(
-                    '${day.day}',
-                    style: const TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color:
-                            // Color.fromARGB(255, 255, 149, 0)
-                            MyColors.accent),
-                  ),
-                  Text(DateFormat('EEE').format(day).toLowerCase()),
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: getDayIcons(day, false),
+                ),
+                // Container(height: 5),
+                Text(
+                  '${day.day}',
+                  style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color:
+                          // Color.fromARGB(255, 255, 149, 0)
+                          MyColors.accent),
+                ),
+                Text(DateFormat('EEE').format(day).toLowerCase()),
+              ],
             ),
           ),
           const Positioned(
