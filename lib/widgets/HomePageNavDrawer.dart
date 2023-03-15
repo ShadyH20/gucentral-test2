@@ -9,6 +9,7 @@ import 'package:gucentral/pages/settings_page.dart';
 import 'package:gucentral/pages/grades_page.dart';
 import 'package:gucentral/pages/transcript_page.dart';
 import 'package:gucentral/widgets/MyColors.dart';
+import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/MenuPage.dart';
@@ -86,7 +87,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         mainScreenTapClose: true,
         menuBackgroundColor: MyColors.primary,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
-        mainScreen: IndexedStack(
+        mainScreen: LazyLoadIndexedStack(
           index: selectedIndex,
           children: pages,
         ),

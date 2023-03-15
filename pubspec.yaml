@@ -44,6 +44,11 @@ dependencies:
   sensors_plus: ^2.0.2
   sensors_plus_web: ^1.1.2
   all_sensors: ^0.4.2
+  lazy_load_indexed_stack: ^0.1.4
+  intl: ^0.18.0
+  table_calendar: ^3.0.9
+
+
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +81,11 @@ flutter:
     - assets/images/edit.svg
     - assets/images/refresh.svg
     - assets/images/nav-bar.png
+    - assets/images/location.svg
+    - assets/images/home.svg
+    - assets/images/deadline-new.svg
+    - assets/images/arrow.svg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

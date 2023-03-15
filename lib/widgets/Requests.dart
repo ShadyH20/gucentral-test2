@@ -42,6 +42,8 @@ class Requests {
         prefs.setString('gpa', res['gpa']);
         prefs.setString('name', res['name']);
         prefs.setString('id', res['id']);
+        var courses = jsonEncode(res['courses']);
+        prefs.setString('courses', courses);
       }
       return res;
     } on Exception {
@@ -57,6 +59,11 @@ class Requests {
   static dynamic getUsernameId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return [prefs.getString('username'), prefs.getString('id')];
+  }
+
+  static dynamic getCourses() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return jsonDecode(prefs.getString('courses')!);
   }
 
   static dynamic getTranscript(context, year) async {

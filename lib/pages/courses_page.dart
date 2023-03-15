@@ -7,6 +7,8 @@ import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:http/http.dart" as http;
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+
+import "../widgets/Requests.dart";
 // import 'package:navigation_drawer_animation/widet/menu_widget'
 
 class CoursesPage extends StatefulWidget {
@@ -17,6 +19,18 @@ class CoursesPage extends StatefulWidget {
 }
 
 class _CoursesPageState extends State<CoursesPage> {
+  List<dynamic> courses = [];
+
+  _CoursesPageState() {
+    getCourses();
+  }
+  getCourses() async {
+    var out = await Requests.getCourses();
+    setState(() {
+      courses = out;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

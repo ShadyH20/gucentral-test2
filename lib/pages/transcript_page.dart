@@ -171,7 +171,7 @@ class _TranscriptPageState extends State<TranscriptPage>
       elevation: 0,
       backgroundColor: MyColors.background,
       centerTitle: true,
-      leadingWidth: 50.0,
+      leadingWidth: 60.0,
       leading: const MenuWidget(),
       title: const Text(
         "Transcript",
