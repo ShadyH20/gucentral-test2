@@ -218,9 +218,6 @@ class _SchedulePageState extends State<SchedulePage> {
         children: [
           Container(
             margin: const EdgeInsets.only(bottom: 15),
-            decoration: BoxDecoration(
-                color: MyColors.background,
-                borderRadius: BorderRadius.circular(7)),
             padding: const EdgeInsets.symmetric(vertical: 7),
             child: Expanded(
               child: Column(
