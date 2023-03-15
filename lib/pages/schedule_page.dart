@@ -163,7 +163,7 @@ class _SchedulePageState extends State<SchedulePage> {
               focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,
               daysOfWeekVisible: false,
-              rowHeight: 90,
+              rowHeight: 100,
               selectedDayPredicate: (day) {
                 // Use `selectedDayPredicate` to determine which day is currently selected.
                 // If this returns true, then `day` will be marked as selected.
@@ -194,30 +194,8 @@ class _SchedulePageState extends State<SchedulePage> {
                 _focusedDay = focusedDay;
               },
               calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, date, _) => DefaultTextStyle(
-                  style:
-                      const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: getDayIcons(date, false),
-                        ),
-                        Text(
-                          '${date.day}',
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(DateFormat('EEE').format(date).toLowerCase()),
-                      ],
-                    ),
-                  ),
-                ),
+                defaultBuilder: (context, date, _) =>
+                    defaultDayBuilder(context, date, _),
                 selectedBuilder: (context, day, focusedDay) =>
                     selectedDayBuilder(context, day, focusedDay),
                 todayBuilder: (context, day, focusedDay) =>
@@ -257,14 +235,14 @@ class _SchedulePageState extends State<SchedulePage> {
       height: 15,
       color: color,
     );
-    if (rem == 0) {
+    if (rem == 1) {
       return [
         Container(
           height: 15,
         )
       ];
     }
-    if (rem == 1) {
+    if (rem == 0) {
       return [deadline];
     }
     return [
@@ -280,9 +258,10 @@ class _SchedulePageState extends State<SchedulePage> {
     return DefaultTextStyle(
       style: const TextStyle(color: MyColors.background),
       child: Container(
+        margin: const EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
             color: MyColors.primary, borderRadius: BorderRadius.circular(7)),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 7),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -309,29 +288,86 @@ class _SchedulePageState extends State<SchedulePage> {
   todayBuilder(BuildContext context, DateTime day, DateTime focusedDay) {
     return DefaultTextStyle(
       style: const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
+      child: Stack(
+        alignment: FractionalOffset.bottomCenter,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 15),
+            decoration: BoxDecoration(
+                // border: const Border(
+                //     right: BorderSide(
+                //         color: Color.fromARGB(255, 95, 95, 95), width: 3)),
+                // color:
+                // MyColors.background,
+                // Color.fromARGB(255, 244, 244, 244),
+                // boxShadow: [
+                //   BoxShadow(color: MyColors.primary, offset: Offset(0, 2))
+                // ],
+                borderRadius: BorderRadius.circular(7)),
+            padding: const EdgeInsets.symmetric(vertical: 7),
+            child: Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: getDayIcons(day, false),
+                  ),
+                  // Container(height: 5),
+                  Text(
+                    '${day.day}',
+                    style: const TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color:
+                            // Color.fromARGB(255, 255, 149, 0)
+                            MyColors.accent),
+                  ),
+                  Text(DateFormat('EEE').format(day).toLowerCase()),
+                ],
+              ),
+            ),
+          ),
+          const Positioned(
+            bottom: -2,
+            height: 30,
+            child:
+                //  Text(
+                //   "today",
+                //   style: TextStyle(fontSize: 15,),
+                // )
+                Icon(
+              Icons.arrow_drop_up_rounded,
+              size: 30,
+              color: MyColors.primary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  defaultDayBuilder(BuildContext context, DateTime date, DateTime dateTime) {
+    return DefaultTextStyle(
+      style: const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
       child: Container(
-        decoration: BoxDecoration(
-            // color: Color.fromARGB(255, 239, 239, 239),
-            borderRadius: BorderRadius.circular(7)),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.only(bottom: 15),
+        padding: const EdgeInsets.symmetric(vertical: 7),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: getDayIcons(day, true),
+              children: getDayIcons(date, false),
             ),
-            // Container(height: 5),
             Text(
-              '${day.day}',
+              '${date.day}',
               style: const TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                  color:
-                      // Color.fromARGB(255, 255, 149, 0)
-                      MyColors.accent),
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Text(DateFormat('EEE').format(day).toLowerCase()),
+            Text(DateFormat('EEE').format(date).toLowerCase()),
           ],
         ),
       ),
