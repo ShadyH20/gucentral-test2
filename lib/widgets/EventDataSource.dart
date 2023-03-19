@@ -55,10 +55,7 @@ class EventDataSource extends CalendarDataSource {
     final dynamic event = appointments![index];
     late final Event eventData;
     if (event is Event) {
-      print("IM EVENT");
       eventData = event;
-    } else {
-      print("IM NOT EVENT");
     }
 
     return eventData;

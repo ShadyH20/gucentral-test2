@@ -40,6 +40,7 @@ class _SchedulePageState extends State<SchedulePage> {
   List<dynamic> schedule = [];
   Map<int, List<Event>> groupedEvents = {};
   late final ValueNotifier<List<Event>> _selectedEvents;
+  late CalendarController _controller;
 
   //   CalendarFormat _calendarFormat = CalendarFormat.month;
   // DateTime _focusedDay = DateTime.now();
@@ -66,6 +67,7 @@ class _SchedulePageState extends State<SchedulePage> {
   void initState() {
     super.initState();
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
+    _controller = CalendarController();
     // _timer =
     // Timer.periodic(const Duration(milliseconds: 500), (timer) => _update());
   }
@@ -104,13 +106,15 @@ class _SchedulePageState extends State<SchedulePage> {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
                   _selectedEvents.value = _getEventsForDay(selectedDay);
+                  _controller.selectedDate = selectedDay;
+                  _controller.displayDate = selectedDay;
                 });
-                var dayEv = _getEventsForDay(selectedDay);
-                print("Day ${selectedDay.weekday}");
-                for (Event ev in dayEv) {
-                  print(
-                      "${ev.title} ${ev.description} : ${ev.start}-${ev.end}");
-                }
+                // var dayEv = _getEventsForDay(selectedDay);
+                // print("Day ${selectedDay.weekday}");
+                // for (Event ev in dayEv) {
+                //   print(
+                //       "${ev.title} ${ev.description} : ${ev.start}-${ev.end}");
+                // }
               }
             },
             onFormatChanged: (format) {
@@ -132,13 +136,10 @@ class _SchedulePageState extends State<SchedulePage> {
                   selectedDayBuilder(context, day, focusedDay),
               todayBuilder: (context, day, focusedDay) =>
                   todayBuilder(context, day, focusedDay),
+              markerBuilder: (context, day, events) => Container(),
             ),
             calendarStyle: const CalendarStyle(
                 outsideDaysVisible: false, isTodayHighlighted: true),
-            daysOfWeekStyle: const DaysOfWeekStyle(
-              weekdayStyle: TextStyle(fontSize: 16),
-              weekendStyle: TextStyle(fontSize: 16),
-            ),
             headerStyle: const HeaderStyle(
               titleTextStyle:
                   TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
@@ -148,8 +149,6 @@ class _SchedulePageState extends State<SchedulePage> {
             availableCalendarFormats: const {
               CalendarFormat.week: 'Week',
             },
-            // rangeEndDay: DateTime.now().add(Duration(days: 2)),
-            // rangeStartDay: DateTime.now().subtract(Duration(days: 2)),
           ),
           const SizedBox(height: 8),
           // Expanded(
@@ -185,12 +184,37 @@ class _SchedulePageState extends State<SchedulePage> {
             child: Container(
               margin: const EdgeInsets.only(right: 30, left: 8),
               child: SfCalendar(
+                controller: _controller,
                 view: CalendarView.day,
+                initialDisplayDate: DateTime.now(),
                 todayHighlightColor: MyColors.primary,
                 viewHeaderHeight: 0,
                 headerHeight: 0,
                 showCurrentTimeIndicator: true,
                 selectionDecoration: const BoxDecoration(),
+                // timeRegionBuilder: (context, regionDetails) {
+                //   var timeRegion = regionDetails.region;
+                //   if (timeRegion.startTime != null &&
+                //       timeRegion.endTime != null &&
+                //       DateTime.now().isAfter(timeRegion.startTime) &&
+                //       DateTime.now().isBefore(timeRegion.endTime)) {
+                //     return Positioned(
+                //       // top: timeRegion.top,
+                //       // left: timeRegion.left,
+                //       // right: timeRegion.right,
+                //       child: Container(
+                //         height: 40,
+                //         color: Colors.red,
+                //       ),
+                //     );
+                //   }
+                //   return Container();
+                // },
+                onViewChanged: (details) {
+                  setState(() {
+                    _selectedDay = _controller.displayDate ?? _selectedDay;
+                  });
+                },
                 timeSlotViewSettings: const TimeSlotViewSettings(
                     startHour: 7,
                     endHour: 19,
@@ -305,7 +329,12 @@ class _SchedulePageState extends State<SchedulePage> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 15, left: 3, right: 3),
         decoration: BoxDecoration(
-            color: MyColors.primary, borderRadius: BorderRadius.circular(7)),
+            color: (day.year == DateTime.now().year &&
+                    day.month == DateTime.now().month &&
+                    day.day == DateTime.now().day)
+                ? MyColors.primary
+                : const Color.fromARGB(255, 76, 78, 88).withOpacity(0.6),
+            borderRadius: BorderRadius.circular(7)),
         padding: const EdgeInsets.symmetric(vertical: 7),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
