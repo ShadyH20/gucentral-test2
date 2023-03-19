@@ -44,6 +44,8 @@ class Requests {
         prefs.setString('id', res['id']);
         var courses = jsonEncode(res['courses']);
         prefs.setString('courses', courses);
+        var schedule = jsonEncode(res['schedule']);
+        prefs.setString('schedule', schedule);
       }
       return res;
     } on Exception {
@@ -64,6 +66,11 @@ class Requests {
   static dynamic getCourses() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return jsonDecode(prefs.getString('courses')!);
+  }
+
+  static dynamic getSchedule() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return jsonDecode(prefs.getString('schedule')!);
   }
 
   static dynamic getTranscript(context, year) async {
@@ -111,4 +118,29 @@ class Requests {
       },
     );
   }
+}
+
+class Event {
+  final String title;
+  final String description;
+  final DateTime start;
+  final DateTime end;
+  final Color color;
+  final bool isAllDay;
+  String recurrence;
+  String location;
+
+  Event({
+    required this.title,
+    required this.description,
+    required this.start,
+    required this.end,
+    required this.color,
+    required this.isAllDay,
+    this.recurrence = "",
+    this.location = "",
+  });
+
+  @override
+  String toString() => "$description: $title";
 }
