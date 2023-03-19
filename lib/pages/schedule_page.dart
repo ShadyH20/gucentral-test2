@@ -182,34 +182,18 @@ class _SchedulePageState extends State<SchedulePage> {
           // ),
           Expanded(
             child: Container(
-              margin: const EdgeInsets.only(right: 30, left: 8),
+              margin: const EdgeInsets.only(left: 20, right: 25),
               child: SfCalendar(
                 controller: _controller,
                 view: CalendarView.day,
                 initialDisplayDate: DateTime.now(),
                 todayHighlightColor: MyColors.primary,
+                cellBorderColor: Colors.transparent,
                 viewHeaderHeight: 0,
                 headerHeight: 0,
                 showCurrentTimeIndicator: true,
-                selectionDecoration: const BoxDecoration(),
-                // timeRegionBuilder: (context, regionDetails) {
-                //   var timeRegion = regionDetails.region;
-                //   if (timeRegion.startTime != null &&
-                //       timeRegion.endTime != null &&
-                //       DateTime.now().isAfter(timeRegion.startTime) &&
-                //       DateTime.now().isBefore(timeRegion.endTime)) {
-                //     return Positioned(
-                //       // top: timeRegion.top,
-                //       // left: timeRegion.left,
-                //       // right: timeRegion.right,
-                //       child: Container(
-                //         height: 40,
-                //         color: Colors.red,
-                //       ),
-                //     );
-                //   }
-                //   return Container();
-                // },
+                selectionDecoration:
+                    const BoxDecoration(color: Colors.transparent),
                 onViewChanged: (details) {
                   setState(() {
                     _selectedDay = _controller.displayDate ?? _selectedDay;
@@ -221,7 +205,7 @@ class _SchedulePageState extends State<SchedulePage> {
                     timeInterval: Duration(hours: 1),
                     timeIntervalHeight: 70,
                     timeFormat: "k:mm",
-                    timeRulerSize: 70,
+                    timeRulerSize: 40,
                     timeTextStyle: TextStyle(
                         color: MyColors.secondary,
                         fontFamily: 'Outfit',
@@ -544,6 +528,7 @@ class _SchedulePageState extends State<SchedulePage> {
     return Container(
       width: details.bounds.width,
       height: details.bounds.height,
+      margin: const EdgeInsets.only(left: 15),
       padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
         color: getColor(),
