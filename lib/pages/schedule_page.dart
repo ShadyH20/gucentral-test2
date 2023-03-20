@@ -237,7 +237,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   : SfCalendar(
                       controller: _controller,
                       view: CalendarView.day,
-                      // viewNavigationMode: ViewNavigationMode.none,
+                      viewNavigationMode: ViewNavigationMode.none,
                       initialDisplayDate: DateTime.now(),
                       initialSelectedDate: DateTime.now(),
                       todayHighlightColor: MyColors.primary,
@@ -246,16 +246,15 @@ class _SchedulePageState extends State<SchedulePage> {
                       headerHeight: 0,
                       showCurrentTimeIndicator: true,
 
-                      selectionDecoration: const BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border(),
-                      ),
-                      onViewChanged: (details) {
-                        // setState(() {
-                        _selectedDay = _controller.displayDate ?? _selectedDay;
-                        // _controller.dispose();
-                        // });
-                      },
+                      selectionDecoration: BoxDecoration(
+						color: Colors.transparent,
+						border: Border(),
+					),
+                     //onViewChanged: (details) {
+                  //setState(() {
+                  //  _selectedDay = _controller.displayDate ?? _selectedDay;
+                  // });
+                //},
                       timeSlotViewSettings: const TimeSlotViewSettings(
                           startHour: 7,
                           endHour: 19,
