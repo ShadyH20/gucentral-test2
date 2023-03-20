@@ -84,6 +84,7 @@ flutter:
     - assets/images/home.svg
     - assets/images/deadline-new.svg
     - assets/images/arrow.svg
+    - assets/images/today.svg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

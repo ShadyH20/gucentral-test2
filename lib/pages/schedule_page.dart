@@ -12,6 +12,7 @@ import "package:gucentral/widgets/Requests.dart";
 import 'package:intl/intl.dart';
 import "package:table_calendar/table_calendar.dart";
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:flutter/src/widgets/framework.dart';
 
 import "../widgets/EventDataSource.dart";
 
@@ -40,14 +41,21 @@ class _SchedulePageState extends State<SchedulePage> {
   List<dynamic> schedule = [];
   Map<int, List<Event>> groupedEvents = {};
   late final ValueNotifier<List<Event>> _selectedEvents;
-  late CalendarController _controller;
+  final CalendarController _controller = CalendarController();
 
-  //   CalendarFormat _calendarFormat = CalendarFormat.month;
-  // DateTime _focusedDay = DateTime.now();
-  // DateTime? _selectedDay;
   _SchedulePageState() {
     initializeSchedulePage();
   }
+
+  initializeSchedulePage() async {
+    await getSchedule();
+    await createEvents();
+    _eventDataSource = EventDataSource(events);
+    print("Initialized Data Source");
+    groupedEvents = groupEvents(events);
+    // print("events today: ${groupedEvents[DateTime(2023, 3, 18)]}");
+  }
+
   getSchedule() async {
     schedule = await Requests.getSchedule();
     Requests.getCourses().then((courses) {
@@ -56,18 +64,11 @@ class _SchedulePageState extends State<SchedulePage> {
     });
   }
 
-  initializeSchedulePage() async {
-    await getSchedule();
-    await createEvents();
-    groupedEvents = groupEvents(events);
-    // print("events today: ${groupedEvents[DateTime(2023, 3, 18)]}");
-  }
-
   @override
   void initState() {
     super.initState();
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
-    _controller = CalendarController();
+    colorIndex = 0;
     // _timer =
     // Timer.periodic(const Duration(milliseconds: 500), (timer) => _update());
   }
@@ -105,10 +106,9 @@ class _SchedulePageState extends State<SchedulePage> {
                 setState(() {
                   _selectedDay = selectedDay;
                   _focusedDay = focusedDay;
-                  _selectedEvents.value = _getEventsForDay(selectedDay);
-                  _controller.selectedDate = selectedDay;
-                  _controller.displayDate = selectedDay;
+                  // _selectedEvents.value = _getEventsForDay(selectedDay);
                 });
+                _controller.displayDate = selectedDay;
                 // var dayEv = _getEventsForDay(selectedDay);
                 // print("Day ${selectedDay.weekday}");
                 // for (Event ev in dayEv) {
@@ -117,14 +117,14 @@ class _SchedulePageState extends State<SchedulePage> {
                 // }
               }
             },
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                // Call `setState()` when updating calendar format
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
+            // onFormatChanged: (format) {
+            //   if (_calendarFormat != format) {
+            //     // Call `setState()` when updating calendar format
+            //     setState(() {
+            //       _calendarFormat = format;
+            //     });
+            //   }
+            // },
             onPageChanged: (focusedDay) {
               // No need to call `setState()` here
               _focusedDay = focusedDay;
@@ -151,76 +151,66 @@ class _SchedulePageState extends State<SchedulePage> {
             },
           ),
           const SizedBox(height: 8),
-          // Expanded(
-          //   child: ValueListenableBuilder<List<Event>>(
-          //     valueListenable: _selectedEvents,
-          //     builder: (context, value, _) {
-          //       return ListView.builder(
-          //         itemCount: value.length,
-          //         itemBuilder: (context, index) {
-          //           return Container(
-          //             margin: const EdgeInsets.symmetric(
-          //               horizontal: 12.0,
-          //               vertical: 4.0,
-          //             ),
-          //             decoration: BoxDecoration(
-          //               border: Border.all(),
-          //               borderRadius: BorderRadius.circular(12.0),
-          //             ),
-          //             child:
-          //                 // eventBlock(value[index])
-          //                 ListTile(
-          //               onTap: () => print('${value[index]}'),
-          //               title: Text(
-          //                   '${value[index].description}\n${value[index].title}'),
-          //             ),
-          //           );
-          //         },
-          //       );
-          //     },
-          //   ),
-          // ),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 20, right: 25),
-              child: SfCalendar(
-                controller: _controller,
-                view: CalendarView.day,
-                initialDisplayDate: DateTime.now(),
-                todayHighlightColor: MyColors.primary,
-                cellBorderColor: Colors.transparent,
-                viewHeaderHeight: 0,
-                headerHeight: 0,
-                showCurrentTimeIndicator: true,
-                selectionDecoration:
-                    BoxDecoration(color: Colors.transparent,
-border: Border.all(color: Colors.transparent, width: 2),
-),
-                onViewChanged: (details) {
-                  setState(() {
-                    _selectedDay = _controller.displayDate ?? _selectedDay;
-                  });
-                },
-                timeSlotViewSettings: const TimeSlotViewSettings(
-                    startHour: 7,
-                    endHour: 19,
-                    timeInterval: Duration(hours: 1),
-                    timeIntervalHeight: 70,
-                    timeFormat: "k:mm",
-                    timeRulerSize: 40,
-                    timeTextStyle: TextStyle(
-                        color: MyColors.secondary,
-                        fontFamily: 'Outfit',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500),
-                    nonWorkingDays: <int>[
-                      DateTime.friday,
-                    ]),
-                dataSource: EventDataSource(events),
-                appointmentBuilder: appointmentBuilder,
-              ),
+              // color: MyColors.accent,
+              child: _eventDataSource
+                      .getVisibleAppointments(
+                          _controller.displayDate ?? DateTime.now(), '')
+                      .isEmpty
+                  ? const Align(
+                      alignment: FractionalOffset(0.5, 0.1),
+                      child: Text(
+                        "No Classes Today!",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: MyColors.secondary),
+                      ),
+                    )
+                  : SfCalendar(
+                      controller: _controller,
+                      view: CalendarView.day,
+                      // viewNavigationMode: ViewNavigationMode.none,
+                      initialDisplayDate: DateTime.now(),
+                      initialSelectedDate: DateTime.now(),
+                      todayHighlightColor: MyColors.primary,
+                      //       // cellBorderColor: Colors.transparent,
+                      viewHeaderHeight: 0,
+                      headerHeight: 0,
+                      showCurrentTimeIndicator: true,
+
+                      selectionDecoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(),
+                      ),
+                      onViewChanged: (details) {
+                        // setState(() {
+                        _selectedDay = _controller.displayDate ?? _selectedDay;
+                        // _controller.dispose();
+                        // });
+                      },
+                      timeSlotViewSettings: const TimeSlotViewSettings(
+                          startHour: 7,
+                          endHour: 19,
+                          timeInterval: Duration(hours: 1),
+                          timeIntervalHeight: 70,
+                          timeFormat: "h a",
+                          timeRulerSize: 40,
+                          timeTextStyle: TextStyle(
+                              color: MyColors.secondary,
+                              fontFamily: 'Outfit',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                          nonWorkingDays: <int>[
+                            DateTime.friday,
+                          ]),
+                      dataSource: EventDataSource(events),
+                      appointmentBuilder: appointmentBuilder,
+                    ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -252,7 +242,20 @@ border: Border.all(color: Colors.transparent, width: 2),
       ),
       actions: [
         IconButton(
-          // padding: EdgeInsets.symmetric(horizontal: 20.0),
+          icon: SvgPicture.asset(
+            "assets/images/today.svg",
+            height: 28,
+            color: MyColors.secondary,
+          ),
+          onPressed: () {
+            DateTime now = DateTime.now();
+            setState(() {
+              _selectedDay = DateTime.utc(now.year, now.month, now.day, 7, 45);
+            });
+            _controller.displayDate = _selectedDay;
+          },
+        ),
+        IconButton(
           icon: const Icon(
             Icons.add,
             color: MyColors.primary,
@@ -444,6 +447,7 @@ border: Border.all(color: Colors.transparent, width: 2),
   ];
 
   List<Event> events = [];
+  EventDataSource _eventDataSource = EventDataSource([]);
 
   DateTime getTime(int dayIndex, String timeString) {
     int hour = int.parse(timeString.split(":")[0]);
@@ -485,6 +489,7 @@ border: Border.all(color: Colors.transparent, width: 2),
       }
     }
     print("Events $events");
+    // _eventDataSource = EventDataSource(events);
   }
 
   Map<int, List<Event>> groupEvents(List<Event> events) {
