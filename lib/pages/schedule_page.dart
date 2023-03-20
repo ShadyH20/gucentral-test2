@@ -246,15 +246,15 @@ class _SchedulePageState extends State<SchedulePage> {
                       headerHeight: 0,
                       showCurrentTimeIndicator: true,
 
-                      selectionDecoration: BoxDecoration(
-						color: Colors.transparent,
-						border: Border(),
-					),
-                     //onViewChanged: (details) {
-                  //setState(() {
-                  //  _selectedDay = _controller.displayDate ?? _selectedDay;
-                  // });
-                //},
+                      selectionDecoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(),
+                      ),
+                      //onViewChanged: (details) {
+                      //setState(() {
+                      //  _selectedDay = _controller.displayDate ?? _selectedDay;
+                      // });
+                      //},
                       timeSlotViewSettings: const TimeSlotViewSettings(
                           startHour: 7,
                           endHour: 19,
