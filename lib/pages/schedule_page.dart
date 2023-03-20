@@ -181,10 +181,13 @@ class _SchedulePageState extends State<SchedulePage> {
                       headerHeight: 0,
                       showCurrentTimeIndicator: true,
 
-                      selectionDecoration: const BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border(),
-                      ),
+                      selectionDecoration: BoxDecoration(
+						color: Colors.transparent,
+						border: Border.all(
+						color: Colors.red, width: 2),
+						borderRadius: const BorderRadius.all(Radius.circular(4)),
+						shape: BoxShape.rectangle,
+					),
                      onViewChanged: (details) {
                   setState(() {
                     _selectedDay = _controller.displayDate ?? _selectedDay;
