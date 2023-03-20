@@ -183,16 +183,13 @@ class _SchedulePageState extends State<SchedulePage> {
 
                       selectionDecoration: BoxDecoration(
 						color: Colors.transparent,
-						border: Border.all(
-						color: Colors.red, width: 2),
-						borderRadius: const BorderRadius.all(Radius.circular(4)),
-						shape: BoxShape.rectangle,
+						border: Border(),
 					),
-                     onViewChanged: (details) {
-                  setState(() {
-                    _selectedDay = _controller.displayDate ?? _selectedDay;
-                  });
-                },
+                     //onViewChanged: (details) {
+                  //setState(() {
+                  //  _selectedDay = _controller.displayDate ?? _selectedDay;
+                  // });
+                //},
                       timeSlotViewSettings: const TimeSlotViewSettings(
                           startHour: 7,
                           endHour: 19,
