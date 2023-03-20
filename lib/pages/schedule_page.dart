@@ -20,6 +20,10 @@ extension DateTimeExtension on DateTime {
   DateTime getDateOnly() {
     return DateTime(year, month, day);
   }
+
+  DateTime at8am() {
+    return DateTime.utc(year, month, day, 7, 45);
+  }
 }
 
 class SchedulePage extends StatefulWidget {
@@ -96,7 +100,7 @@ class _SchedulePageState extends State<SchedulePage> {
             focusedDay: _selectedDay,
             calendarFormat: _calendarFormat,
             daysOfWeekVisible: false,
-            rowHeight: 100,
+            rowHeight: 90,
             selectedDayPredicate: (day) {
               return isSameDay(_selectedDay, day);
             },
@@ -105,26 +109,12 @@ class _SchedulePageState extends State<SchedulePage> {
                 // Call `setState()` when updating the selected day
                 setState(() {
                   _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
+                  // _focusedDay = focusedDay;
                   // _selectedEvents.value = _getEventsForDay(selectedDay);
                 });
-                _controller.displayDate = selectedDay;
-                // var dayEv = _getEventsForDay(selectedDay);
-                // print("Day ${selectedDay.weekday}");
-                // for (Event ev in dayEv) {
-                //   print(
-                //       "${ev.title} ${ev.description} : ${ev.start}-${ev.end}");
-                // }
+                _controller.displayDate = selectedDay.at8am();
               }
             },
-            // onFormatChanged: (format) {
-            //   if (_calendarFormat != format) {
-            //     // Call `setState()` when updating calendar format
-            //     setState(() {
-            //       _calendarFormat = format;
-            //     });
-            //   }
-            // },
             onPageChanged: (focusedDay) {
               // No need to call `setState()` here
               _focusedDay = focusedDay;
@@ -150,7 +140,82 @@ class _SchedulePageState extends State<SchedulePage> {
               CalendarFormat.week: 'Week',
             },
           ),
-          const SizedBox(height: 8),
+          //// TAB BUTTONS ////
+          Align(
+            alignment: Alignment.centerLeft,
+            child: FittedBox(
+              child: Container(
+                margin: const EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [
+                    BoxShadow(
+                        offset: Offset(0, 1.1),
+                        color: Colors.black26,
+                        spreadRadius: 0.6)
+                  ],
+                  color: MyColors.background,
+                ),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                        onTap: () {
+                          clickTabBtn("Deadline");
+                        },
+                        child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: getTabBackColor(0),
+                            ),
+                            child: SvgPicture.asset(
+                              "assets/images/deadline-new.svg",
+                              height: 20,
+                              color: getTabFrontColor(0),
+                            ))),
+                    Container(
+                      width: 5,
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          clickTabBtn("Q");
+                        },
+                        child: Container(
+                            alignment: Alignment.center,
+                            width: 28,
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: getTabBackColor(1),
+                            ),
+                            child: Text(
+                              "Q",
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w800,
+                                  color: getTabFrontColor(1)),
+                            ))),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          tabIndex == 0
+              ? Container(
+                  margin: const EdgeInsets.only(top: 5),
+                  height: 90,
+                  color: MyColors.accent,
+                )
+              : tabIndex == 1
+                  ? Container(
+                      margin: const EdgeInsets.only(top: 5),
+                      height: 90,
+                      color: MyColors.primaryVariant,
+                    )
+                  : Container(
+                      height: 10,
+                    ),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 20, right: 25),
@@ -248,9 +313,8 @@ class _SchedulePageState extends State<SchedulePage> {
             color: MyColors.secondary,
           ),
           onPressed: () {
-            DateTime now = DateTime.now();
             setState(() {
-              _selectedDay = DateTime.utc(now.year, now.month, now.day, 7, 45);
+              _selectedDay = DateTime.now().at8am();
             });
             _controller.displayDate = _selectedDay;
           },
@@ -428,6 +492,31 @@ class _SchedulePageState extends State<SchedulePage> {
 // ###########################
 // ######### METHODS #########
 // ###########################
+  int tabIndex = 2;
+  clickTabBtn(String btn) {
+    if (btn == "Q") {
+      setState(() {
+        tabIndex = tabIndex == 1 ? 2 : 1;
+      });
+    } else if (btn == "Deadline") {
+      setState(() {
+        tabIndex = tabIndex == 0 ? 2 : 0;
+      });
+    } else {
+      setState(() {
+        tabIndex = 2;
+      });
+    }
+  }
+
+  getTabBackColor(int index) {
+    return tabIndex == index ? MyColors.primary : Colors.black12;
+  }
+
+  getTabFrontColor(int index) {
+    return tabIndex == index ? MyColors.background : MyColors.secondary;
+  }
+
   Map<String, int> dayIndexMap = {
     'Monday': 1,
     'Tuesday': 2,
