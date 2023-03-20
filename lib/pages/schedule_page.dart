@@ -172,7 +172,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   : SfCalendar(
                       controller: _controller,
                       view: CalendarView.day,
-                      // viewNavigationMode: ViewNavigationMode.none,
+                      viewNavigationMode: ViewNavigationMode.none,
                       initialDisplayDate: DateTime.now(),
                       initialSelectedDate: DateTime.now(),
                       todayHighlightColor: MyColors.primary,
