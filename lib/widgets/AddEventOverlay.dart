@@ -48,7 +48,7 @@ class _AddEventOverlayState extends State<AddEventOverlay> {
                       backgroundColor: Colors.black12,
                       foregroundColor: MyColors.background,
                       title: Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
+                        padding: const EdgeInsets.only(bottom: 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
