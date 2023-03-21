@@ -48,7 +48,8 @@ class Requests {
         prefs.setString('schedule', schedule);
       }
       return res;
-    } on Exception {
+    } on Exception catch (e) {
+      print("exceptionn: ${e.toString()}");
       return null;
     }
   }

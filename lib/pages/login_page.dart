@@ -54,11 +54,18 @@ class _LoginPageState extends State<LoginPage> {
   bool userRemembered = false;
 
   void loginPressed() async {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      print("NOT VALID");
+      return;
+    }
+    _formKey.currentState?.save();
     setState(() {
       showLoading = true;
     });
 
     print("WILL SEND REQUEST NAAWW");
+    print("${usernameController.text}, ${passwordController.text}");
     var output = await Requests.login(
         context, usernameController.text, passwordController.text);
 
@@ -164,12 +171,15 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           Container(height: 5),
-                          TextField(
+                          TextFormField(
                             focusNode: _usernameFocusNode,
-                            textInputAction: TextInputAction.done,
+                            textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.text,
                             autofillHints: const [AutofillHints.username],
                             controller: usernameController,
+                            validator: (value) => value != null && value.isEmpty
+                                ? 'Username cannot be empty'
+                                : null,
                             style: const TextStyle(fontSize: 21),
                             textAlignVertical: TextAlignVertical.center,
                             decoration: InputDecoration(
@@ -212,17 +222,23 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             Container(height: 5),
-                            TextField(
+                            TextFormField(
                               focusNode: _passwordFocusNode,
                               autofillHints: const [AutofillHints.password],
                               obscureText: showPassword,
+                              textInputAction: TextInputAction.done,
                               enableSuggestions: false,
                               autocorrect: false,
                               controller: passwordController,
+                              validator: (value) =>
+                                  value != null && value.isEmpty
+                                      ? 'Password cannot be empty'
+                                      : null,
                               style: const TextStyle(fontSize: 21),
                               textAlignVertical: TextAlignVertical.center,
                               decoration: InputDecoration(
                                 suffixIcon: IconButton(
+                                  splashRadius: 5,
                                   icon: showPassword
                                       ? const Icon(Icons.visibility,
                                           color: MyColors.secondary)
@@ -275,7 +291,6 @@ class _LoginPageState extends State<LoginPage> {
                               backgroundColor: MyColors.secondary,
                             ),
                             onPressed: () {
-                              _formKey.currentState?.save();
                               loginPressed();
                             },
                             child: const Text(
