@@ -38,8 +38,8 @@ class _SchedulePageState extends State<SchedulePage> {
   String formattedTime = DateFormat('kk:mm::ss').format(DateTime.now());
   String hour = DateFormat('a').format(DateTime.now());
 
-  DateTime _selectedDay = DateTime.now();
-  late DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.now().at8am();
+  DateTime _focusedDay = DateTime.now().at8am();
   CalendarFormat _calendarFormat = CalendarFormat.week;
 
   Map<String, String> courseMap = {};
@@ -48,14 +48,16 @@ class _SchedulePageState extends State<SchedulePage> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   final CalendarController _controller = CalendarController();
 
-  _SchedulePageState() {
-    initializeSchedulePage();
-  }
+  late EventDataSource _quizDataSource;
+  late EventDataSource _deadlineDataSource;
 
   initializeSchedulePage() async {
     await getSchedule();
     await createEvents();
     _eventDataSource = EventDataSource(events);
+    _quizDataSource = EventDataSource(quizzes);
+    _deadlineDataSource = EventDataSource(deadlines);
+    _controller.displayDate = _selectedDay;
     print("Initialized Data Source");
     groupedEvents = groupEvents(events);
     // print("events today: ${groupedEvents[DateTime(2023, 3, 18)]}");
@@ -72,6 +74,10 @@ class _SchedulePageState extends State<SchedulePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await initializeSchedulePage();
+      setState(() {});
+    });
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
     colorIndex = 0;
   }
@@ -79,7 +85,7 @@ class _SchedulePageState extends State<SchedulePage> {
   // OverlayEntry? _overlayEntry;
 
   // void _showOverlay() {
-  //   // Store a reference to the OverlayEntry widget
+  //   // Store a refe OverlayEntry widget
   //   _overlayEntry = OverlayEntry(
   //     builder: (BuildContext context) => // ... add your overlay widget here
   //   );
@@ -109,10 +115,11 @@ class _SchedulePageState extends State<SchedulePage> {
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2080, 3, 14),
               startingDayOfWeek: StartingDayOfWeek.saturday,
-              focusedDay: _selectedDay,
+              // formatAnimationDuration: Duration(milliseconds: 500),
+              focusedDay: _focusedDay,
               calendarFormat: _calendarFormat,
               daysOfWeekVisible: _calendarFormat == CalendarFormat.month,
-              rowHeight: _calendarFormat == CalendarFormat.week ? 90 : 60,
+              rowHeight: _calendarFormat == CalendarFormat.week ? 75 : 50,
               selectedDayPredicate: (day) {
                 return isSameDay(_selectedDay, day);
               },
@@ -127,7 +134,9 @@ class _SchedulePageState extends State<SchedulePage> {
               },
               onPageChanged: (focusedDay) {
                 // No need to call `setState()` here
-                _focusedDay = focusedDay;
+                setState(() {
+                  _focusedDay = focusedDay;
+                });
               },
               onFormatChanged: (format) {
                 setState(() {
@@ -150,21 +159,28 @@ class _SchedulePageState extends State<SchedulePage> {
                 },
               ),
               calendarStyle: const CalendarStyle(
+                tablePadding: EdgeInsets.symmetric(vertical: 8),
                 outsideDaysVisible: true,
                 isTodayHighlighted: true,
               ),
-              headerStyle: HeaderStyle(
-                titleTextStyle:
-                    const TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
-                titleCentered: true,
-                titleTextFormatter: (date, locale) {
-                  return DateFormat("MMMM ''yy").format(date);
-                },
-                formatButtonShowsNext: false,
-              ),
+              headerVisible: false,
+              // headerStyle: HeaderStyle(
+              //   headerPadding:
+              //       const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              //   leftChevronVisible: false,
+              //   rightChevronVisible: false,
+              //   titleTextStyle:
+              //       const TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
+              //   titleTextFormatter: (date, locale) {
+              //     return DateFormat("MMMM ''yy").format(date);
+              //     // return "";
+              //   },
+              //   formatButtonShowsNext: false,
+              //   // formatButtonVisible: false,
+              // ),
               availableCalendarFormats: const {
-                CalendarFormat.week: 'Week',
                 CalendarFormat.month: 'Month',
+                CalendarFormat.week: 'Week',
               },
             ),
             //// TAB BUTTONS ////
@@ -232,8 +248,8 @@ class _SchedulePageState extends State<SchedulePage> {
             tabIndex == 0
                 ? Container(
                     margin: const EdgeInsets.only(top: 5),
-                    height: 90,
-                    color: MyColors.accent,
+                    height: 50,
+                    child: deadlineBuilder(),
                   )
                 : tabIndex == 1
                     ? Container(
@@ -241,18 +257,24 @@ class _SchedulePageState extends State<SchedulePage> {
                         height: 65,
                         child: quizBuilder(),
                       )
-                    : Container(
-                        height: 10,
-                      ),
+                    : Container(),
+            Container(
+              height: 10,
+            ),
 
             //// DAY VIEW ////
             Expanded(
               child: Container(
                 margin: const EdgeInsets.only(left: 20, right: 25),
-                // color: MyColors.accent,
+                decoration: BoxDecoration(
+                    border: _eventDataSource
+                            .getVisibleAppointments(
+                                _controller.displayDate!, '')
+                            .isEmpty
+                        ? const Border(top: BorderSide(color: Colors.black12))
+                        : null),
                 child: _eventDataSource
-                        .getVisibleAppointments(
-                            _controller.displayDate ?? DateTime.now(), '')
+                        .getVisibleAppointments(_controller.displayDate!, '')
                         .isEmpty
                     ? const Align(
                         alignment: FractionalOffset(0.5, 0.1),
@@ -313,6 +335,7 @@ class _SchedulePageState extends State<SchedulePage> {
 // ############################
 // ####### PAGE WIDGETS #######
 // ############################
+
   AppBar scheduleAppBar() {
     return AppBar(
       systemOverlayStyle: const SystemUiOverlayStyle(
@@ -324,10 +347,29 @@ class _SchedulePageState extends State<SchedulePage> {
       centerTitle: true,
       leadingWidth: 60.0,
       leading: const MenuWidget(),
-      title: const Text(
-        // DateFormat("MMMM").format(DateTime.now()),
-        "Schedule",
-        style: TextStyle(color: MyColors.primary),
+      title: TextButton(
+        onPressed: () {
+          setState(() {
+            _calendarFormat = _calendarFormat == CalendarFormat.week
+                ? CalendarFormat.month
+                : CalendarFormat.week;
+          });
+        },
+        style: ButtonStyle(
+            padding: const MaterialStatePropertyAll(EdgeInsets.all(5)),
+            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10))),
+            // splashFactory: NoSplash.splashFactory,
+            overlayColor: MaterialStateColor.resolveWith(
+                (states) => MyColors.primaryVariant.withOpacity(0.02))),
+        child: Text(
+          // DateFormat("MMMM").format(DateTime.now()),
+          DateFormat("MMMM").format(_focusedDay),
+          style: const TextStyle(
+              color: MyColors.primary,
+              fontWeight: FontWeight.w600,
+              fontSize: 30),
+        ),
       ),
       actions: [
         IconButton(
@@ -339,6 +381,7 @@ class _SchedulePageState extends State<SchedulePage> {
           onPressed: () {
             setState(() {
               _selectedDay = DateTime.now().at8am();
+              _focusedDay = _selectedDay;
             });
             _controller.displayDate = _selectedDay;
           },
@@ -363,38 +406,40 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   List<Widget> getDayIcons(DateTime date, bool isSelected) {
-    int rem = date.day % 3;
+    List<Appointment>? dayDeadlines =
+        _deadlineDataSource.getVisibleAppointments(date, '');
+    List<Appointment>? dayQuizzes =
+        _quizDataSource.getVisibleAppointments(date, '');
     Color color = isSelected ? MyColors.background : MyColors.primary;
+    double size = 12;
     Widget deadline = SvgPicture.asset(
       "assets/images/deadline-new.svg",
-      height: 15,
+      height: 12,
       color: color,
     );
-    if (rem == 1) {
-      return [
-        Container(
-          height: 15,
-        )
-      ];
+
+    List<Widget> icons = [];
+    if (dayDeadlines.isNotEmpty) {
+      icons.add(deadline);
     }
-    if (rem == 0) {
-      return [deadline];
-    }
-    return [
-      deadline,
-      Text(
+    if (dayQuizzes.isNotEmpty) {
+      icons.add(Text(
         "Q",
-        style: TextStyle(fontWeight: FontWeight.bold, color: color),
-      )
-    ];
+        style: TextStyle(
+            fontWeight: FontWeight.bold, color: color, fontSize: size),
+      ));
+    }
+
+    return icons;
   }
 
-  selectedDayBuilder(BuildContext context, DateTime day, DateTime focusedDay) {
+  selectedDayBuilder(BuildContext context, DateTime day, DateTime selectedDay) {
+    bool isWeek = _calendarFormat == CalendarFormat.week;
     return DefaultTextStyle(
       style: const TextStyle(color: MyColors.background),
       child: Container(
-        margin: _calendarFormat == CalendarFormat.week
-            ? const EdgeInsets.only(bottom: 15, left: 2, right: 2)
+        margin: isWeek
+            ? const EdgeInsets.only(left: 2, right: 2)
             : const EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
             color: (day.year == DateTime.now().year &&
@@ -403,25 +448,25 @@ class _SchedulePageState extends State<SchedulePage> {
                 ? MyColors.primary
                 : const Color.fromARGB(255, 76, 78, 88).withOpacity(0.6),
             borderRadius: BorderRadius.circular(7)),
-        padding: const EdgeInsets.symmetric(vertical: 7),
+        padding: EdgeInsets.symmetric(vertical: isWeek ? 7 : 2),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: getDayIcons(focusedDay, true),
+              children: getDayIcons(day, true),
             ),
             // Container(height: 5),
             Text(
-              '${focusedDay.day}',
+              '${day.day}',
               style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
                 // color: MyColors.background),
               ),
             ),
-            _calendarFormat == CalendarFormat.week
-                ? Text(DateFormat('EEE').format(focusedDay).toLowerCase())
+            isWeek
+                ? Text(DateFormat('EEE').format(day).toLowerCase())
                 : Container(),
           ],
         ),
@@ -430,67 +475,46 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   todayBuilder(BuildContext context, DateTime day, DateTime focusedDay) {
+    bool isWeek = _calendarFormat == CalendarFormat.week;
     return DefaultTextStyle(
       style: const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
-      child: Stack(
-        alignment: FractionalOffset.bottomCenter,
-        children: [
-          Container(
-            color: Colors.transparent,
-            margin: EdgeInsets.only(
-                bottom: _calendarFormat == CalendarFormat.week ? 15 : 0),
-            padding: const EdgeInsets.symmetric(vertical: 7),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: getDayIcons(day, false),
-                ),
-                // Container(height: 5),
-                Text(
-                  '${day.day}',
-                  style: const TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color:
-                          // Color.fromARGB(255, 255, 149, 0)
-                          MyColors.accent),
-                ),
-                _calendarFormat == CalendarFormat.week
-                    ? Text(DateFormat('EEE').format(day).toLowerCase())
-                    : Container(),
-              ],
+      child: Container(
+        color: Colors.transparent,
+        margin: const EdgeInsets.all(0),
+        padding: EdgeInsets.symmetric(vertical: isWeek ? 7 : 2),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: getDayIcons(day, false),
             ),
-          ),
-          _calendarFormat == CalendarFormat.week
-              ? const Positioned(
-                  bottom: -2,
-                  height: 30,
-                  child:
-                      //  Text(
-                      //   "today",
-                      //   style: TextStyle(fontSize: 15,),
-                      // )
-                      Icon(
-                    Icons.arrow_drop_up_rounded,
-                    size: 30,
-                    color: MyColors.primary,
-                  ),
-                )
-              : Container(),
-        ],
+            // Container(height: 5),
+            Text(
+              '${day.day}',
+              style: const TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color:
+                      // Color.fromARGB(255, 255, 149, 0)
+                      MyColors.accent),
+            ),
+            _calendarFormat == CalendarFormat.week
+                ? Text(DateFormat('EEE').format(day).toLowerCase())
+                : Container(),
+          ],
+        ),
       ),
     );
   }
 
   defaultDayBuilder(BuildContext context, DateTime date, DateTime dateTime) {
+    bool isWeek = _calendarFormat == CalendarFormat.week;
     return DefaultTextStyle(
       style: const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
       child: Container(
-        margin: EdgeInsets.only(
-            bottom: _calendarFormat == CalendarFormat.week ? 15 : 0),
-        padding: const EdgeInsets.symmetric(vertical: 7),
+        margin: EdgeInsets.all(0),
+        padding: EdgeInsets.symmetric(vertical: isWeek ? 7 : 2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -726,8 +750,8 @@ class _SchedulePageState extends State<SchedulePage> {
   ];
 
   Widget quizBuilder() {
-    List<Appointment>? dayQuizzes = EventDataSource(quizzes)
-        .getVisibleAppointments(_controller.displayDate ?? DateTime.now(), '');
+    List<Appointment>? dayQuizzes = _quizDataSource.getVisibleAppointments(
+        _controller.displayDate ?? DateTime.now(), '');
     return dayQuizzes.isEmpty
         ? const Center(
             child: Text(
@@ -800,6 +824,118 @@ class _SchedulePageState extends State<SchedulePage> {
                             ],
                           ),
                         ],
+                      )),
+                );
+              },
+            ),
+          );
+  }
+
+  List<Event> deadlines = [
+    Event(
+        title: "CSEN 604",
+        description: "Milestone I",
+        start: DateTime.now().at8am().add(const Duration(hours: 15)),
+        end: DateTime.now().at8am().add(const Duration(hours: 15)),
+        color: Colors.green,
+        // location: "H19",
+        isAllDay: false),
+    Event(
+        title: "CSEN 603",
+        description: "Milestone II",
+        start: DateTime.now(),
+        end: DateTime.now().at8am().add(const Duration(hours: 1, minutes: 30)),
+        color: Colors.green,
+        location: "Exam Hall 1",
+        isAllDay: false),
+    Event(
+        title: "CSEN 601",
+        description: "Teams Form",
+        start:
+            DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
+        end: DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
+        color: Colors.green,
+        // location: "Exam Hall 1",
+        isAllDay: false),
+  ];
+
+  Widget deadlineBuilder() {
+    List<Appointment>? dayDeadlines = _deadlineDataSource
+        .getVisibleAppointments(_controller.displayDate ?? DateTime.now(), '');
+    return dayDeadlines.isEmpty
+        ? const Center(
+            child: Text(
+              "No Deadlines Today!",
+              style: TextStyle(
+                  color: MyColors.secondary,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 20),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: ListView.builder(
+              // controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              // shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              itemCount: dayDeadlines.length,
+              itemBuilder: (BuildContext context, int index) {
+                Appointment event = dayDeadlines[index];
+                return Container(
+                  // width: 160,
+                  // height: 65,
+                  margin: const EdgeInsets.only(right: 10),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
+                  decoration: BoxDecoration(
+                    color: MyColors.primary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: DefaultTextStyle(
+                      style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: MyColors.background,
+                          fontFamily: 'Outfit'),
+                      child: IntrinsicWidth(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                // courseMap[event.subject] ?? "",
+                                courseMap[event.subject.split(' ').join('')] ??
+                                    "No Course Found",
+                                style: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w700),
+                              ),
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(event.notes.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
+                                  Container(width: 10),
+                                  Text(
+                                      DateFormat('h:mm a')
+                                          .format(event.endTime),
+                                      textAlign: TextAlign.end,
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                      )),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       )),
                 );
               },
