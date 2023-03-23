@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gucentral/widgets/Requests.dart';
 
 import '../pages/new_quiz.dart';
 import 'MyColors.dart';
@@ -21,14 +22,15 @@ class _AddEventOverlayState extends State<AddEventOverlay> {
     String result = await displayCupertino();
     print(result);
     if (result == "Quiz") {
-      _goToAddQuiz();
+      var res = await _goToAddQuiz();
+      print(res.toString());
     }
     // _showAddEventOverlay2();
   }
 
-  void _goToAddQuiz() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AddQuizPage()));
+  Future<Event> _goToAddQuiz() async {
+    return await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AddQuizPage(courses: [])));
   }
 
   void _showAddEventOverlay2() {

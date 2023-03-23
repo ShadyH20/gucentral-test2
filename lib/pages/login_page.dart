@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
     print("WILL SEND REQUEST NAAWW");
     print("${usernameController.text}, ${passwordController.text}");
     var output = await Requests.login(
-        context, usernameController.text, passwordController.text);
+        context, usernameController.text.trim(), passwordController.text);
 
     if (output != null) {
       if (output['success']) {

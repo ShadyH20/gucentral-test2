@@ -3,22 +3,20 @@
 import "dart:async";
 import "dart:convert";
 import "dart:ui";
+import "package:dropdown_button2/dropdown_button2.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/pages/new_quiz.dart";
-import "package:gucentral/widgets/AddEventOverlay.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import 'package:intl/intl.dart';
+import "package:rotating_icon_button/rotating_icon_button.dart";
 import "package:table_calendar/table_calendar.dart";
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/cupertino.dart';
-
 import "../widgets/EventDataSource.dart";
-import "FloatingPage.dart";
 
 extension DateTimeExtension on DateTime {
   DateTime getDateOnly() {
@@ -46,6 +44,7 @@ class _SchedulePageState extends State<SchedulePage> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
 
   Map<String, String> courseMap = {};
+  List<dynamic> courses = [];
   List<dynamic> schedule = [];
   Map<int, List<Event>> groupedEvents = {};
   late final ValueNotifier<List<Event>> _selectedEvents;
@@ -61,16 +60,15 @@ class _SchedulePageState extends State<SchedulePage> {
     _quizDataSource = EventDataSource(quizzes);
     _deadlineDataSource = EventDataSource(deadlines);
     _controller.displayDate = _selectedDay;
-    print("Initialized Data Source");
     groupedEvents = groupEvents(events);
     // print("events today: ${groupedEvents[DateTime(2023, 3, 18)]}");
   }
 
   getSchedule() async {
     schedule = await Requests.getSchedule();
-    Requests.getCourses().then((courses) {
-      courseMap = {for (var course in courses) course['code']: course['name']};
-      print("Course Map: $courseMap");
+    Requests.getCourses().then((coursesR) {
+      courseMap = {for (var course in coursesR) course['code']: course['name']};
+      courses = coursesR;
     });
   }
 
@@ -84,24 +82,6 @@ class _SchedulePageState extends State<SchedulePage> {
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
     colorIndex = 0;
   }
-
-  // OverlayEntry? _overlayEntry;
-
-  // void _showOverlay() {
-  //   // Store a refe OverlayEntry widget
-  //   _overlayEntry = OverlayEntry(
-  //     builder: (BuildContext context) => // ... add your overlay widget here
-  //   );
-
-  //   // Insert the OverlayEntry widget into the Overlay
-  //   Overlay.of(context)?.insert(_overlayEntry!);
-  // }
-
-  // void _hideOverlay() {
-  //   // Remove the OverlayEntry widget from the Overlay
-  //   _overlayEntry?.remove();
-  //   _overlayEntry = null;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -167,20 +147,6 @@ class _SchedulePageState extends State<SchedulePage> {
                 isTodayHighlighted: true,
               ),
               headerVisible: false,
-              // headerStyle: HeaderStyle(
-              //   headerPadding:
-              //       const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-              //   leftChevronVisible: false,
-              //   rightChevronVisible: false,
-              //   titleTextStyle:
-              //       const TextStyle(fontSize: 26, fontWeight: FontWeight.w600),
-              //   titleTextFormatter: (date, locale) {
-              //     return DateFormat("MMMM ''yy").format(date);
-              //     // return "";
-              //   },
-              //   formatButtonShowsNext: false,
-              //   // formatButtonVisible: false,
-              // ),
               availableCalendarFormats: const {
                 CalendarFormat.month: 'Month',
                 CalendarFormat.week: 'Week',
@@ -248,19 +214,20 @@ class _SchedulePageState extends State<SchedulePage> {
                 ),
               ),
             ),
-            tabIndex == 0
-                ? Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    height: 50,
-                    child: deadlineBuilder(),
-                  )
-                : tabIndex == 1
-                    ? Container(
-                        margin: const EdgeInsets.only(top: 5),
-                        height: 65,
-                        child: quizBuilder(),
-                      )
-                    : Container(),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              height: tabIndex == 0
+                  ? 50
+                  : tabIndex == 1
+                      ? 65
+                      : 0,
+              margin: tabIndex == 2 ? null : const EdgeInsets.only(top: 5),
+              child: tabIndex == 0
+                  ? deadlineBuilder()
+                  : tabIndex == 1
+                      ? quizBuilder()
+                      : null,
+            ),
             Container(
               height: 10,
             ),
@@ -276,20 +243,25 @@ class _SchedulePageState extends State<SchedulePage> {
                             .isEmpty
                         ? const Border(top: BorderSide(color: Colors.black12))
                         : null),
-                child: _eventDataSource
-                        .getVisibleAppointments(_controller.displayDate!, '')
-                        .isEmpty
-                    ? const Align(
-                        alignment: FractionalOffset(0.5, 0.1),
-                        child: Text(
-                          "No Classes Today!",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: MyColors.secondary),
-                        ),
-                      )
-                    : SfCalendar(
+                child: Column(
+                  children: [
+                    _eventDataSource
+                            .getVisibleAppointments(
+                                _controller.displayDate!, '')
+                            .isEmpty
+                        ? Container(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            child: const Text(
+                              "No Classes Today!",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  color: MyColors.secondary),
+                            ),
+                          )
+                        : Container(),
+                    Expanded(
+                      child: SfCalendar(
                         controller: _controller,
                         view: CalendarView.day,
                         viewNavigationMode: ViewNavigationMode.none,
@@ -327,6 +299,9 @@ class _SchedulePageState extends State<SchedulePage> {
                         dataSource: _eventDataSource,
                         appointmentBuilder: appointmentBuilder,
                       ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -378,7 +353,7 @@ class _SchedulePageState extends State<SchedulePage> {
         IconButton(
           icon: SvgPicture.asset(
             "assets/images/today.svg",
-            height: 28,
+            height: 26,
             color: MyColors.secondary,
           ),
           onPressed: () {
@@ -389,9 +364,9 @@ class _SchedulePageState extends State<SchedulePage> {
             _controller.displayDate = _selectedDay;
           },
         ),
-        AddEventOverlay(),
+        addDropdown(),
         Container(
-          width: 15,
+          width: 10,
         )
       ],
     );
@@ -431,6 +406,10 @@ class _SchedulePageState extends State<SchedulePage> {
         style: TextStyle(
             fontWeight: FontWeight.bold, color: color, fontSize: size),
       ));
+    }
+
+    if (icons.isEmpty) {
+      icons.add(Container(height: 12));
     }
 
     return icons;
@@ -629,7 +608,7 @@ class _SchedulePageState extends State<SchedulePage> {
         }
       }
     }
-    print("Events $events");
+    // print("Events $events");
     // _eventDataSource = EventDataSource(events);
   }
 
@@ -760,9 +739,10 @@ class _SchedulePageState extends State<SchedulePage> {
             child: Text(
               "No Quizzes Today!",
               style: TextStyle(
-                  color: MyColors.secondary,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20),
+                color: MyColors.secondary,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           )
         : Padding(
@@ -945,4 +925,188 @@ class _SchedulePageState extends State<SchedulePage> {
             ),
           );
   }
+
+  double addIconTurns = 0.0;
+  //// ADD EVENT DROPDOWN ////
+  addDropdown() {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton2(
+        customButton: AnimatedRotation(
+          turns: addIconTurns,
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.decelerate,
+          child: const Icon(
+            Icons.add_rounded,
+            color: MyColors.primary,
+            size: 35,
+          ),
+        ),
+        // iconStyleData: const IconStyleData(
+        //     icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
+        isExpanded: true,
+        value: dropdownValue,
+        style: const TextStyle(
+            // decoration: TextDecoration.underline,
+            color: Colors.black54,
+            fontFamily: 'Outfit',
+            fontSize: 18,
+            fontWeight: FontWeight.bold),
+        // dropdownColor: MyColors.secondary,
+        dropdownStyleData: DropdownStyleData(
+            openInterval: const Interval(0, .75, curve: Curves.easeIn),
+            elevation: 8,
+            offset: const Offset(0, 5),
+            width: 200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            )),
+        menuItemStyleData: const MenuItemStyleData(
+          height: 40,
+        ),
+        // underline: Container(
+        //   color: const Color(0),
+        // ),
+
+        onChanged: (String? value) async {
+          // This is called when the user selects an item.
+          setState(() {
+            dropdownValue = value!;
+          });
+          if (dropdownValue == "Quiz") {
+            var quiz = await goToAddQuiz();
+            // print(quiz.toString());
+            quizzes.add(quiz);
+            setState(() {});
+          }
+        },
+        onMenuStateChange: (isOpen) {
+          if (isOpen) {
+            setState(() {
+              addIconTurns += 3.0 / 8.0;
+            });
+          } else {
+            setState(() {
+              addIconTurns -= 3.0 / 8.0;
+            });
+          }
+        },
+        items: [
+          DropdownMenuItem(
+            value: "Quiz",
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  width: 20,
+                  child: const Text(
+                    "Q",
+                    style: TextStyle(color: MyColors.primary),
+                  ),
+                ),
+                Container(width: 10),
+                const Text("Add Quiz/Exam")
+              ],
+            ),
+          ),
+          DropdownMenuItem(
+            value: "Deadline",
+            child: Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/images/deadline-new.svg",
+                  width: 20,
+                  color: MyColors.primary,
+                  // height: 20,
+                ),
+                Container(width: 10),
+                const Text("Add Deadline")
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> showAddEventOverlay() async {
+    String result = await displayCupertino();
+    print(result);
+    if (result == "Quiz") {
+      var quiz = await goToAddQuiz();
+      print(quiz.toString());
+      quizzes.add(quiz);
+      setState(() {});
+    }
+  }
+
+  Future<Event> goToAddQuiz() async {
+    print("Schedule Page: $courses");
+    return await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddQuizPage(
+                  courses: courses,
+                )));
+  }
+
+  displayCupertino() async {
+    return await showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+          // title: const Text('Add Event'),
+          // message: const Text('Your options are '),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text("Q",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: MyColors.primary,
+                      )),
+                  SizedBox(width: 15),
+                  Text('New Quiz/Exam',
+                      style: TextStyle(color: MyColors.secondary)),
+                ],
+              ),
+              onPressed: () {
+                Navigator.pop(context, 'Quiz');
+              },
+            ),
+            CupertinoActionSheetAction(
+              child: Container(
+                // width: 150,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/images/deadline-new.svg",
+                      height: 20,
+                      color: MyColors.primary,
+                    ),
+                    SizedBox(width: 15),
+                    Text('New Deadline',
+                        style: TextStyle(color: MyColors.secondary)),
+                  ],
+                ),
+              ),
+              onPressed: () {
+                Navigator.pop(context, 'Deadline');
+              },
+            )
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            onPressed: () {
+              Navigator.pop(context, 'Cancel');
+            },
+            child: const Text('Cancel'),
+          )),
+    );
+  }
 }
+
+const List<String> list = ['Add Quiz/Exam', 'Add Deadline'];
+String? dropdownValue;

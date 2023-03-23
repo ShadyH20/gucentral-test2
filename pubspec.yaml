@@ -48,6 +48,7 @@ dependencies:
   intl: ^0.18.0
   table_calendar: ^3.0.9
   syncfusion_flutter_calendar: ^20.4.54
+  rotating_icon_button: ^1.0.0
 
 dev_dependencies:
   flutter_test:
