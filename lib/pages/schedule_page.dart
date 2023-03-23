@@ -941,8 +941,9 @@ class _SchedulePageState extends State<SchedulePage> {
             size: 35,
           ),
         ),
-        // iconStyleData: const IconStyleData(
-        //     icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
+        buttonStyleData: ButtonStyleData(
+            overlayColor:
+                MaterialStateColor.resolveWith((states) => Colors.transparent)),
         isExpanded: true,
         value: dropdownValue,
         style: const TextStyle(
