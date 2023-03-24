@@ -25,7 +25,6 @@ class TranscriptPage extends StatefulWidget {
   TranscriptPage({super.key});
 
   void hideGPA() {
-    print("HIDING");
     showGPA = false;
   }
 
@@ -39,6 +38,7 @@ class _TranscriptPageState extends State<TranscriptPage>
   final _scrollController = ScrollController();
 
   String gpa = "";
+  String last_option = "";
   bool showLoading = false;
   List<dynamic>? semesterGrades;
   bool tiltingBack = false;
@@ -81,7 +81,18 @@ class _TranscriptPageState extends State<TranscriptPage>
     if (prefs.containsKey('gpa')) {
       setState(() {
         gpa = prefs.getString('gpa')!;
+        last_option = prefs.getString('last_option')!;
       });
+
+      if (last_option != "") {
+        int batch = int.parse((usernameId[1] as String).split("-")[0]);
+        int firstYear = ((batch - 1) / 3 + 2003) as int;
+        int lastYear = int.parse(last_option.split("-")[0]);
+        while (firstYear <= lastYear) {
+          list.add("$firstYear-${firstYear + 1}");
+          firstYear++;
+        }
+      }
     }
     if (widget.firstAccess) {
       // updateTranscript();
@@ -442,10 +453,10 @@ class _TranscriptPageState extends State<TranscriptPage>
 
 const List<String> list = <String>[
   'Select A Year',
-  '2019-2020',
-  '2020-2021',
-  '2021-2022',
-  '2022-2023'
+  // '2019-2020',
+  // '2020-2021',
+  // '2021-2022',
+  // '2022-2023'
 ];
 
 String dropdownValue = list.first;
