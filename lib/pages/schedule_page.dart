@@ -974,7 +974,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                 Text("~ ${event.description.toString()} ~",
                                     style: const TextStyle(
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w900)),
+                                        fontWeight: FontWeight.w700)),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
