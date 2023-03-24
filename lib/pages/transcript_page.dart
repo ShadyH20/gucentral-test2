@@ -4,7 +4,6 @@ import "dart:convert";
 import "dart:ui";
 import "package:dropdown_button2/dropdown_button2.dart";
 import "package:flutter/material.dart";
-import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import 'package:data_table_2/data_table_2.dart';
@@ -70,8 +69,13 @@ class _TranscriptPageState extends State<TranscriptPage>
   void didChangeDependencies() async {
     super.didChangeDependencies();
     if (semesterGrades == null) {
-      initalizePage();
-      setState(() {});
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        initalizePage();
+        setState(() {});
+      });
+
+      // initalizePage();
+      // setState(() {});
     }
   }
 
@@ -82,17 +86,16 @@ class _TranscriptPageState extends State<TranscriptPage>
       setState(() {
         gpa = prefs.getString('gpa')!;
         last_option = prefs.getString('last_option')!;
-      });
-
-      if (last_option != "") {
-        int batch = int.parse((usernameId[1] as String).split("-")[0]);
-        int firstYear = ((batch - 1) / 3 + 2003) as int;
-        int lastYear = int.parse(last_option.split("-")[0]);
-        while (firstYear <= lastYear) {
-          list.add("$firstYear-${firstYear + 1}");
-          firstYear++;
+        if (last_option != "") {
+          int batch = int.parse((usernameId[1] as String).split("-")[0]);
+          int firstYear = ((batch - 1) / 3 + 2003).toInt();
+          int lastYear = int.parse(last_option.split("-")[0]);
+          while (firstYear <= lastYear) {
+            list.add("$firstYear-${firstYear + 1}");
+            firstYear++;
+          }
         }
-      }
+      });
     }
     if (widget.firstAccess) {
       // updateTranscript();
@@ -451,7 +454,7 @@ class _TranscriptPageState extends State<TranscriptPage>
 
 // DROPDOWN LIST CLASS
 
-const List<String> list = <String>[
+List<String> list = <String>[
   'Select A Year',
   // '2019-2020',
   // '2020-2021',
