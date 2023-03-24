@@ -30,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
   _LoginPageState() {
     checkCredsExist();
   }
-
   @override
   void initState() {
     super.initState();
@@ -45,6 +44,14 @@ class _LoginPageState extends State<LoginPage> {
                 builder: (context) => HomePageNavDrawer(gpa: "0.00")));
       }
     });
+  }
+
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
   }
 
   bool showPassword = true;
@@ -127,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
+                    Text(
                       "Welcome to",
                       style: TextStyle(
                         fontFamily: "Outfit",
@@ -161,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "Username",
                             style: TextStyle(
                               fontFamily: "Outfit",
@@ -193,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(7.5),
-                                  borderSide: const BorderSide(
+                                  borderSide: BorderSide(
                                       width: 2,
                                       color: MyColors.primaryVariant)),
                               contentPadding: const EdgeInsets.symmetric(
@@ -212,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Password",
                               style: TextStyle(
                                 fontFamily: "Outfit",
@@ -240,9 +247,9 @@ class _LoginPageState extends State<LoginPage> {
                                 suffixIcon: IconButton(
                                   splashRadius: 5,
                                   icon: showPassword
-                                      ? const Icon(Icons.visibility,
+                                      ? Icon(Icons.visibility,
                                           color: MyColors.secondary)
-                                      : const Icon(Icons.visibility_off,
+                                      : Icon(Icons.visibility_off,
                                           color: MyColors.secondary),
                                   onPressed: () {
                                     setState(() {
@@ -260,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(7.5),
-                                    borderSide: const BorderSide(
+                                    borderSide: BorderSide(
                                         width: 2,
                                         color: MyColors.primaryVariant)),
                                 contentPadding: const EdgeInsets.symmetric(
@@ -293,10 +300,10 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {
                               loginPressed();
                             },
-                            child: const Text(
+                            child: Text(
                               "Login",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
+                              style: TextStyle(
+                                  color: MyColors.background, fontSize: 18),
                             ),
                           )),
                   Container(height: 10),
@@ -312,7 +319,7 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 height: 10,
               ),
-              const Text(
+              Text(
                 "v1.0.5",
                 style: TextStyle(color: MyColors.secondary),
               )

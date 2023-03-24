@@ -20,10 +20,12 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    ColorScheme MyColors = Theme.of(context).colorScheme;
+
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.background,
         appBar: AppBar(
-          systemOverlayStyle: const SystemUiOverlayStyle(
+          systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: MyColors.background,
               statusBarIconBrightness: Brightness.dark,
               statusBarBrightness: Brightness.dark),
@@ -32,7 +34,7 @@ class _HomePageState extends State<HomePage>
           centerTitle: true,
           leadingWidth: 50.0,
           leading: const MenuWidget(),
-          title: const Text(
+          title: Text(
             "Home",
             style: TextStyle(color: MyColors.primary),
           ),
@@ -42,7 +44,7 @@ class _HomePageState extends State<HomePage>
               icon: SvgPicture.asset(
                 "assets/images/edit.svg",
                 height: 30,
-                // color: MyColors.secondary,
+                color: MyColors.secondary,
               ),
               onPressed: () {},
             ),
@@ -70,7 +72,7 @@ class _HomePageState extends State<HomePage>
               ),
               Container(height: 100.0),
               Container(
-                color: MyColors.accent,
+                color: MyColors.tertiary,
                 width: 300.0,
                 height: 300.0,
                 child: ListView(

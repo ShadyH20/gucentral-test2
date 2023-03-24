@@ -2,6 +2,7 @@
 
 import "dart:async";
 import "dart:convert";
+import "dart:math";
 import "dart:ui";
 import "package:dropdown_button2/dropdown_button2.dart";
 import "package:flutter/material.dart";
@@ -121,6 +122,8 @@ class _SchedulePageState extends State<SchedulePage> {
                   _focusedDay = focusedDay;
                 });
               },
+              formatAnimationDuration: const Duration(milliseconds: 500),
+              formatAnimationCurve: Curves.decelerate,
               onFormatChanged: (format) {
                 setState(() {
                   _calendarFormat = format;
@@ -153,63 +156,66 @@ class _SchedulePageState extends State<SchedulePage> {
               },
             ),
             //// TAB BUTTONS ////
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FittedBox(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 20),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                          offset: Offset(0, 1.1),
-                          color: Colors.black26,
-                          spreadRadius: 0.6)
-                    ],
-                    color: MyColors.background,
-                  ),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                          onTap: () {
-                            clickTabBtn("Deadline");
-                          },
-                          child: Container(
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: getTabBackColor(0),
-                              ),
-                              child: SvgPicture.asset(
-                                "assets/images/deadline-new.svg",
-                                height: 20,
-                                color: getTabFrontColor(0),
-                              ))),
-                      Container(
-                        width: 5,
-                      ),
-                      GestureDetector(
-                          onTap: () {
-                            clickTabBtn("Q");
-                          },
-                          child: Container(
-                              alignment: Alignment.center,
-                              width: 28,
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: getTabBackColor(1),
-                              ),
-                              child: Text(
-                                "Q",
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w800,
-                                    color: getTabFrontColor(1)),
-                              ))),
-                    ],
+            Container(
+              color: Colors.transparent,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: FittedBox(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                            offset: Offset(0, 1.1),
+                            color: Colors.black26,
+                            spreadRadius: 0.6)
+                      ],
+                      color: MyColors.background,
+                    ),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              clickTabBtn("Deadline");
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: getTabBackColor(0),
+                                ),
+                                child: SvgPicture.asset(
+                                  "assets/images/deadline-new.svg",
+                                  height: 20,
+                                  color: getTabFrontColor(0),
+                                ))),
+                        Container(
+                          width: 5,
+                        ),
+                        GestureDetector(
+                            onTap: () {
+                              clickTabBtn("Q");
+                            },
+                            child: Container(
+                                alignment: Alignment.center,
+                                width: 28,
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: getTabBackColor(1),
+                                ),
+                                child: Text(
+                                  "Q",
+                                  style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w800,
+                                      color: getTabFrontColor(1)),
+                                ))),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -276,6 +282,22 @@ class _SchedulePageState extends State<SchedulePage> {
                           color: Colors.transparent,
                           border: Border(),
                         ),
+                        onTap: (calendarTapDetails) {
+                          setState(() {
+                            // goToAddQuiz(
+                            //     eventToEdit:
+                            //         calendarTapDetails.appointments!.first);
+                            tappedEvent =
+                                calendarTapDetails.appointments!.first;
+                            alignment1 = editButtonsToggle
+                                ? const Alignment(-0.16, -2.7)
+                                : const Alignment(0, 0.8);
+                            alignment2 = editButtonsToggle
+                                ? const Alignment(0.16, -2.7)
+                                : const Alignment(0, 0.8);
+                            editButtonsToggle = !editButtonsToggle;
+                          });
+                        },
                         //onViewChanged: (details) {
                         //setState(() {
                         //  _selectedDay = _controller.displayDate ?? _selectedDay;
@@ -313,7 +335,8 @@ class _SchedulePageState extends State<SchedulePage> {
 // ############################
 // ####### PAGE WIDGETS #######
 // ############################
-
+  double monthButtonBottom = 0;
+  double changeViewBtnScale = 1;
   AppBar scheduleAppBar() {
     return AppBar(
       systemOverlayStyle: const SystemUiOverlayStyle(
@@ -331,6 +354,8 @@ class _SchedulePageState extends State<SchedulePage> {
             _calendarFormat = _calendarFormat == CalendarFormat.week
                 ? CalendarFormat.month
                 : CalendarFormat.week;
+            changeViewBtnScale =
+                _calendarFormat == CalendarFormat.month ? -1 : 1;
           });
         },
         style: ButtonStyle(
@@ -340,13 +365,42 @@ class _SchedulePageState extends State<SchedulePage> {
             // splashFactory: NoSplash.splashFactory,
             overlayColor: MaterialStateColor.resolveWith(
                 (states) => MyColors.primaryVariant.withOpacity(0.02))),
-        child: Text(
-          // DateFormat("MMMM").format(DateTime.now()),
-          DateFormat("MMMM").format(_focusedDay),
-          style: const TextStyle(
-              color: MyColors.primary,
-              fontWeight: FontWeight.w600,
-              fontSize: 30),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            children: [
+              Container(width: 20),
+              Text(
+                // DateFormat("MMMM").format(DateTime.now()),
+                DateFormat("MMMM").format(_focusedDay),
+                style: const TextStyle(
+                    color: MyColors.primary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 30),
+              ),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 600),
+                transform: Matrix4.rotationX(changeViewBtnScale < 0 ? pi : 0),
+                alignment: Alignment.center,
+                transformAlignment: Alignment.center,
+                child: const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: MyColors.secondary,
+                  size: 25,
+                ),
+              ),
+              // AnimatedScale(
+              //   scale: changeViewBtnScale,
+              //   curve: Curves.decelerate,
+              //   duration: Duration(milliseconds: 600),
+              //   child: const Icon(
+              //     Icons.keyboard_arrow_down_rounded,
+              //     color: MyColors.secondary,
+              //     size: 25,
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -647,60 +701,119 @@ class _SchedulePageState extends State<SchedulePage> {
     return res;
   }
 
+  Alignment alignment1 = const Alignment(0.0, 0.0);
+  Alignment alignment2 = const Alignment(0.0, 0.0);
+  bool editButtonsToggle = false;
+  dynamic tappedEvent =
+      Appointment(startTime: DateTime.now(), endTime: DateTime.now());
+
   Widget appointmentBuilder(
       BuildContext context, CalendarAppointmentDetails details) {
-    Appointment event = details.appointments.first;
+    Event event = details.appointments.first;
 
-    return Container(
-      width: details.bounds.width,
-      height: details.bounds.height,
-      margin: const EdgeInsets.only(left: 15),
-      padding: const EdgeInsets.all(11),
-      decoration: BoxDecoration(
-        color: getColor(),
-        borderRadius: BorderRadius.circular(13),
-      ),
-      child: DefaultTextStyle(
-          style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-              fontFamily: 'Outfit'),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+    return Stack(
+      children: [
+        AnimatedAlign(
+          curve: editButtonsToggle ? Curves.linear : Curves.decelerate,
+          alignment: tappedEvent == event ? alignment1 : const Alignment(0, 0),
+          duration: const Duration(milliseconds: 300),
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: const BoxDecoration(
+                color: MyColors.primary,
+                // borderRadius: BorderRadius.circular(50),
+                shape: BoxShape.circle),
+            child: IconButton(
+              color: MyColors.background,
+              icon: const Icon(Icons.edit)
+              //  SvgPicture.asset(
+              //   "assets/images/edit.svg",
+              //   // height: 30,
+              //   color: MyColors.background,
+              // )
+              ,
+              onPressed: () async {
+                var quiz = await goToAddQuiz();
+                if (quiz != null) {
+                  print("Quiz: ${quiz.toString()}");
+                  quizzes.add(quiz);
+                  setState(() {});
+                }
+              },
+            ),
+          ),
+        ),
+        AnimatedAlign(
+          curve: editButtonsToggle ? Curves.linear : Curves.decelerate,
+          alignment: tappedEvent == event ? alignment2 : const Alignment(0, 0),
+          duration: const Duration(milliseconds: 300),
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: const BoxDecoration(
+                color: MyColors.primary,
+                // borderRadius: BorderRadius.circular(50),
+                shape: BoxShape.circle),
+            child: IconButton(
+              color: MyColors.background,
+              icon: const Icon(Icons.delete_outline_rounded),
+              onPressed: () {},
+            ),
+          ),
+        ),
+        Container(
+          width: details.bounds.width,
+          height: details.bounds.height,
+          margin: const EdgeInsets.only(left: 15),
+          padding: const EdgeInsets.all(11),
+          decoration: BoxDecoration(
+            color: getColor(),
+            borderRadius: BorderRadius.circular(13),
+          ),
+          child: DefaultTextStyle(
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontFamily: 'Outfit'),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(event.notes.toString()),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      SvgPicture.asset(
-                        "assets/images/location.svg",
-                        height: 11,
-                        color: Colors.black,
+                      Text(event.description.toString()),
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/images/location.svg",
+                            height: 11,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(width: 3),
+                          Text(event.location ?? "No Loc")
+                        ],
                       ),
-                      const SizedBox(width: 3),
-                      Text(event.location ?? "No Loc")
                     ],
                   ),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      // courseMap[event.subject] ?? "",
+                      courseMap[event.title.split(' ').join('')] ??
+                          "No Course Found",
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Text(
+                      "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}")
                 ],
-              ),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  // courseMap[event.subject] ?? "",
-                  courseMap[event.subject.split(' ').join('')] ??
-                      "No Course Found",
-                  style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.w600),
-                ),
-              ),
-              Text(
-                  "${DateFormat('h:mm a').format(event.startTime)} - ${DateFormat('h:mm a').format(event.endTime)}")
-            ],
-          )),
+              )),
+        ),
+      ],
     );
   }
 
@@ -732,7 +845,7 @@ class _SchedulePageState extends State<SchedulePage> {
   ];
 
   Widget quizBuilder() {
-    List<Appointment>? dayQuizzes = _quizDataSource.getVisibleAppointments(
+    List<dynamic>? dayQuizzes = _quizDataSource.getVisibleAppointments(
         _controller.displayDate ?? DateTime.now(), '');
     return dayQuizzes.isEmpty
         ? const Center(
@@ -754,60 +867,138 @@ class _SchedulePageState extends State<SchedulePage> {
               physics: const BouncingScrollPhysics(),
               itemCount: dayQuizzes.length,
               itemBuilder: (BuildContext context, int index) {
-                Appointment event = dayQuizzes[index];
-                return Container(
-                  width: 190,
-                  // height: 65,
-                  margin: const EdgeInsets.only(right: 10),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
-                  decoration: BoxDecoration(
-                    color: MyColors.primary,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DefaultTextStyle(
-                      style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
+                Appointment app = dayQuizzes[index];
+                Event? event =
+                    _quizDataSource.convertAppointmentToObject(null, app);
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    AnimatedAlign(
+                      curve:
+                          editButtonsToggle ? Curves.linear : Curves.decelerate,
+                      alignment: tappedEvent == event
+                          ? alignment2
+                          : const Alignment(0, 0),
+                      duration: const Duration(milliseconds: 300),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                            color: MyColors.primary,
+                            // borderRadius: BorderRadius.circular(50),
+                            shape: BoxShape.circle),
+                        child: IconButton(
                           color: MyColors.background,
-                          fontFamily: 'Outfit'),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              // courseMap[event.subject] ?? "",
-                              courseMap[event.subject.split(' ').join('')] ??
-                                  "No Course Found",
-                              style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                          Text("~ ${event.notes.toString()} ~",
-                              style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w900)),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  "${DateFormat('h:mm a').format(event.startTime)} - ${DateFormat('h:mm a').format(event.endTime)}"),
-                              Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/images/location.svg",
-                                    height: 11,
-                                    color: MyColors.background,
+                          icon: const Icon(Icons.delete_outline_rounded),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ),
+                    AnimatedAlign(
+                      curve:
+                          editButtonsToggle ? Curves.linear : Curves.decelerate,
+                      alignment: tappedEvent == event
+                          ? alignment1
+                          : const Alignment(0, 0),
+                      duration: const Duration(milliseconds: 300),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: const BoxDecoration(
+                            color: MyColors.primary,
+                            // borderRadius: BorderRadius.circular(50),
+                            shape: BoxShape.circle),
+                        child: IconButton(
+                          color: MyColors.background,
+                          icon: const Icon(Icons.edit),
+                          onPressed: () async {
+                            //
+                          },
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        print("Will edit quiz: $event");
+                        var editedEvent = await goToAddQuiz(eventToEdit: event);
+                        print("Edited quiz: $editedEvent");
+                        if (editedEvent == null) return;
+
+                        quizzes.remove(event);
+                        quizzes.add(editedEvent);
+                        setState(() {});
+
+                        setState(() {
+                          tappedEvent = event;
+                          alignment1 = editButtonsToggle
+                              ? const Alignment(-0.16, -2.7)
+                              : const Alignment(0, 0.8);
+                          alignment2 = editButtonsToggle
+                              ? const Alignment(0.16, -2.7)
+                              : const Alignment(0, 0.8);
+                          editButtonsToggle = !editButtonsToggle;
+                        });
+                      },
+                      child: Container(
+                        width: 190,
+                        // height: 65,
+                        margin: const EdgeInsets.only(right: 10),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 6, horizontal: 9),
+                        decoration: BoxDecoration(
+                          color: MyColors.primary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DefaultTextStyle(
+                            style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: MyColors.background,
+                                fontFamily: 'Outfit'),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    // courseMap[event.subject] ?? "",
+                                    courseMap[
+                                            event!.title.split(' ').join('')] ??
+                                        "No Course Found",
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700),
                                   ),
-                                  const SizedBox(width: 3),
-                                  Text(event.location ?? "No Loc")
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
+                                ),
+                                Text("~ ${event.description.toString()} ~",
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w900)),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/images/location.svg",
+                                          height: 11,
+                                          color: MyColors.background,
+                                        ),
+                                        const SizedBox(width: 3),
+                                        Text(event.location ?? "No Loc")
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            )),
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
@@ -933,7 +1124,7 @@ class _SchedulePageState extends State<SchedulePage> {
       child: DropdownButton2(
         customButton: AnimatedRotation(
           turns: addIconTurns,
-          duration: const Duration(milliseconds: 600),
+          duration: const Duration(milliseconds: 400),
           curve: Curves.decelerate,
           child: const Icon(
             Icons.add_rounded,
@@ -954,7 +1145,7 @@ class _SchedulePageState extends State<SchedulePage> {
             fontWeight: FontWeight.bold),
         // dropdownColor: MyColors.secondary,
         dropdownStyleData: DropdownStyleData(
-            openInterval: const Interval(0, .75, curve: Curves.easeIn),
+            openInterval: const Interval(0, 1, curve: Curves.easeIn),
             elevation: 8,
             offset: const Offset(0, 5),
             width: 200,
@@ -975,9 +1166,11 @@ class _SchedulePageState extends State<SchedulePage> {
           });
           if (dropdownValue == "Quiz") {
             var quiz = await goToAddQuiz();
-            // print(quiz.toString());
-            quizzes.add(quiz);
-            setState(() {});
+            if (quiz != null) {
+              print("Quiz: ${quiz.toString()}");
+              quizzes.add(quiz);
+              setState(() {});
+            }
           }
         },
         onMenuStateChange: (isOpen) {
@@ -1036,19 +1229,31 @@ class _SchedulePageState extends State<SchedulePage> {
     if (result == "Quiz") {
       var quiz = await goToAddQuiz();
       print(quiz.toString());
-      quizzes.add(quiz);
+      if (quiz != null) {
+        quizzes.add(quiz);
+      }
       setState(() {});
     }
   }
 
-  Future<Event> goToAddQuiz() async {
-    print("Schedule Page: $courses");
-    return await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => AddQuizPage(
-                  courses: courses,
-                )));
+  Future<dynamic> goToAddQuiz({dynamic eventToEdit}) async {
+    if (eventToEdit != null) {
+      print("Event to edit: ${eventToEdit}, ${eventToEdit.runtimeType}");
+      return await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AddQuizPage(
+                    courses: courses,
+                    event: eventToEdit,
+                  )));
+    } else {
+      return await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AddQuizPage(
+                    courses: courses,
+                  )));
+    }
   }
 
   displayCupertino() async {

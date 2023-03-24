@@ -121,7 +121,7 @@ class Requests {
   }
 }
 
-class Event {
+class Event implements Comparable<Event> {
   final String title;
   final String description;
   final DateTime start;
@@ -144,4 +144,18 @@ class Event {
 
   @override
   String toString() => "$description: $title";
+
+  @override
+  int compareTo(Event other) {
+    if (title == other.title &&
+        description == other.description &&
+        start == other.start &&
+        end == other.end &&
+        isAllDay == other.isAllDay &&
+        location == other.location) {
+      return 0;
+    } else {
+      return start.difference(other.start).inMinutes;
+    }
+  }
 }

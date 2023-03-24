@@ -12,6 +12,14 @@ class EventDataSource extends CalendarDataSource {
   }
 
   @override
+  List<Appointment> getVisibleAppointments(
+      DateTime startDate, String calendarTimeZone,
+      [DateTime? endDate]) {
+    // TODO: implement getVisibleAppointments
+    return super.getVisibleAppointments(startDate, calendarTimeZone, endDate);
+  }
+
+  @override
   DateTime getStartTime(int index) {
     return _getEventData(index).start;
   }
@@ -59,5 +67,18 @@ class EventDataSource extends CalendarDataSource {
     }
 
     return eventData;
+  }
+
+  @override
+  Event? convertAppointmentToObject(
+      Object? customData, Appointment appointment) {
+    return Event(
+        title: appointment.subject,
+        description: appointment.notes ?? "",
+        start: appointment.startTime,
+        end: appointment.endTime,
+        color: appointment.color,
+        isAllDay: appointment.isAllDay,
+        location: appointment.location ?? "");
   }
 }
