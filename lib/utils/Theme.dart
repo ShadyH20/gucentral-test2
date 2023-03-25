@@ -12,10 +12,11 @@ class MyTheme {
   static const Color error = Color(0xFFB00020);
 
   static ThemeData lightTheme = ThemeData(
-    appBarTheme: const AppBarTheme(
-      systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: light, statusBarBrightness: Brightness.light),
-    ),
+    // appBarTheme: const AppBarTheme(
+    //   systemOverlayStyle: SystemUiOverlayStyle(
+    //       statusBarColor: light, statusBarBrightness: Brightness.light),
+    // ),
+    primaryColor: light,
     colorScheme: const ColorScheme(
         brightness: Brightness.light,
         // primary: Color.fromARGB(255, 223, 223, 223),
