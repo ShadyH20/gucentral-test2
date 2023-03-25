@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyTheme {
   static const Color orange = Color(0xFFF65F3E);
@@ -11,8 +12,13 @@ class MyTheme {
   static const Color error = Color(0xFFB00020);
 
   static ThemeData lightTheme = ThemeData(
+    appBarTheme: const AppBarTheme(
+      systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: light, statusBarBrightness: Brightness.light),
+    ),
     colorScheme: const ColorScheme(
         brightness: Brightness.light,
+        // primary: Color.fromARGB(255, 223, 223, 223),
         primary: orange,
         primaryVariant: orangeLight,
         onPrimary: light,

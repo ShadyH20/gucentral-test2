@@ -14,6 +14,7 @@ void main() {
       .then(
     (_) => runApp(MyApp()),
   );
+  // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
