@@ -269,10 +269,12 @@ class _SchedulePageState extends State<SchedulePage> {
                       child: SfCalendar(
                         controller: _controller,
                         view: CalendarView.day,
+
                         viewNavigationMode: ViewNavigationMode.none,
                         initialDisplayDate: DateTime.now(),
                         initialSelectedDate: DateTime.now(),
                         todayHighlightColor: MyColors.primary,
+                        // cellBorderColor: Colors.green,
                         //       // cellBorderColor: Colors.transparent,
                         viewHeaderHeight: 0,
                         headerHeight: 0,
@@ -281,6 +283,7 @@ class _SchedulePageState extends State<SchedulePage> {
                           color: Colors.transparent,
                           border: Border(),
                         ),
+                        // onViewChanged: ,
                         onTap: (calendarTapDetails) {
                           setState(() {
                             // goToAddQuiz(
