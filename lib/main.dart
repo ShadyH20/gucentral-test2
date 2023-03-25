@@ -9,13 +9,11 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: MyTheme.light));
 
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
-  //     .then(
-  // (_) =>
-  runApp(MyApp());
-  // ,
-  // );
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
+      .then(
+    (_) => runApp(MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
