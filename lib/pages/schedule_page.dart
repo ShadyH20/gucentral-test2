@@ -831,8 +831,11 @@ class _SchedulePageState extends State<SchedulePage> {
                           : const Text("")
                     ],
                   ),
-                  Text(
-                      "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}")
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                        "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
+                  )
                 ],
               )),
         ),
