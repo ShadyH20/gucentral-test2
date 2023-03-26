@@ -968,14 +968,19 @@ class _SchedulePageState extends State<SchedulePage> {
                       onTap: () async {
                         print("Will edit quiz: $event");
                         var editedEvent = await goToAddQuiz(eventToEdit: event);
-                        print("Edited quiz: $editedEvent");
-                        if (editedEvent == null) return;
+                        if (editedEvent is Event) {
+                          print("Edited quiz: $editedEvent");
+                          if (editedEvent == null) return;
 
-                        quizzes.remove(event);
-                        quizzes.add(editedEvent);
-                        _eventDataSource = EventDataSource(events + quizzes);
+                          quizzes.remove(event);
+                          quizzes.add(editedEvent);
+                          _eventDataSource = EventDataSource(events + quizzes);
 
-                        Requests.updateQuizzes(quizzes);
+                          Requests.updateQuizzes(quizzes);
+                        } else if (editedEvent is String &&
+                            editedEvent == 'Delete') {
+                          quizzes.remove(event);
+                        }
 
                         setState(() {});
 

@@ -174,15 +174,31 @@ class Event implements Comparable<Event> {
   String toString() => "$description: $title";
 
   @override
+  bool operator ==(Object other) {
+    if (other is Event) {
+      return title == other.title &&
+          description == other.description &&
+          start.isAtSameMomentAs(other.start) &&
+          end.isAtSameMomentAs(other.end) &&
+          isAllDay == other.isAllDay &&
+          location == other.location;
+    }
+    return false;
+  }
+
+  @override
   int compareTo(Event other) {
+    debugPrint("IN COMPARE TO EVENT: $this & $other");
     if (title == other.title &&
         description == other.description &&
-        start == other.start &&
-        end == other.end &&
+        start.isAtSameMomentAs(other.start) &&
+        end.isAtSameMomentAs(other.end) &&
         isAllDay == other.isAllDay &&
         location == other.location) {
+      debugPrint("THEY ARE EQUAL");
       return 0;
     } else {
+      debugPrint("THEY ARE NOT EQUAL");
       return start.difference(other.start).inMinutes;
     }
   }

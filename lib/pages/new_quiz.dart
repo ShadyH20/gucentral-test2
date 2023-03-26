@@ -108,25 +108,177 @@ class _AddQuizPageState extends State<AddQuizPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Column(
-                    children: [
-                      //// QUIZ TITLE ////
-                      Column(
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Form(
+              key: _formKey,
+              child: SizedBox(
+                // height: MediaQuery.of(context).size.height,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  // mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Column(
+                        children: [
+                          //// QUIZ TITLE ////
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Title",
+                                style: TextStyle(
+                                  fontFamily: "Outfit",
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: MyColors.secondary,
+                                ),
+                              ),
+                              Container(height: 5),
+                              TextFormField(
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                autofillHints: const [AutofillHints.username],
+                                controller: _quizTitleController,
+                                validator: (value) =>
+                                    value != null && value.isEmpty
+                                        ? 'Please enter a title'
+                                        : null,
+                                style: const TextStyle(fontSize: 18),
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: InputDecoration(
+                                  hintText: "Quiz ...",
+                                  hintStyle: TextStyle(
+                                      fontFamily: "Outfit",
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          MyColors.secondary.withOpacity(.15)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(7.5),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(7.5),
+                                      borderSide: const BorderSide(
+                                          width: 2,
+                                          color: MyColors.primaryVariant)),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 7, horizontal: 15),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          //// COURSE ////
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Course",
+                                style: TextStyle(
+                                  fontFamily: "Outfit",
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 20,
+                                  color: MyColors.secondary,
+                                ),
+                              ),
+                              Container(height: 5),
+                              DropdownButtonFormField2(
+                                value: _selectedValue,
+                                hint: const Text(
+                                  'Select A Course',
+                                ),
+                                decoration: InputDecoration(
+                                  constraints: BoxConstraints(),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(7.5),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(7.5),
+                                      borderSide: const BorderSide(
+                                          width: 2,
+                                          color: MyColors.primaryVariant)),
+                                  contentPadding:
+                                      const EdgeInsets.only(bottom: 5),
+                                ),
+                                isExpanded: true,
+                                buttonStyleData: const ButtonStyleData(
+                                    height: 40,
+                                    padding: EdgeInsets.symmetric(vertical: 5)),
+                                alignment: Alignment.centerLeft,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _selectedValue = value;
+                                  });
+                                },
+                                onSaved: (value) {
+                                  setState(() {
+                                    _selectedValue = value;
+                                  });
+                                },
+                                validator: (String? value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "    Please choose a course!";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                items: widget.courses.map((dynamic course) {
+                                  return DropdownMenuItem(
+                                    value: course['code'] as String,
+                                    child: Text(
+                                      course['name'] ?? "",
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const Padding(
+                      padding: EdgeInsets.only(top: 25, bottom: 15),
+                      child: Divider(
+                        thickness: 2,
+                      ),
+                    ),
+
+                    Column(
+                      children: [
+                        // Date picker
+                        datePicker(),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Divider(thickness: 1.5),
+                        ),
+                        fromPicker(),
+                        toPicker(),
+                      ],
+                    ),
+
+                    const Padding(
+                      padding: EdgeInsets.only(top: 25, bottom: 15),
+                      child: Divider(
+                        thickness: 2,
+                      ),
+                    ),
+
+                    //// LOCATION ////
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Title",
+                            "Location",
                             style: TextStyle(
                               fontFamily: "Outfit",
                               fontWeight: FontWeight.w500,
@@ -139,14 +291,14 @@ class _AddQuizPageState extends State<AddQuizPage> {
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.text,
                             autofillHints: const [AutofillHints.username],
-                            controller: _quizTitleController,
+                            controller: _locationController,
                             validator: (value) => value != null && value.isEmpty
-                                ? 'Please enter a title'
+                                ? 'Please enter a location'
                                 : null,
                             style: const TextStyle(fontSize: 18),
                             textAlignVertical: TextAlignVertical.center,
                             decoration: InputDecoration(
-                              hintText: "Quiz ...",
+                              hintText: "Location",
                               hintStyle: TextStyle(
                                   fontFamily: "Outfit",
                                   fontWeight: FontWeight.w500,
@@ -165,154 +317,50 @@ class _AddQuizPageState extends State<AddQuizPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
-                      //// COURSE ////
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Course",
-                            style: TextStyle(
-                              fontFamily: "Outfit",
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                              color: MyColors.secondary,
-                            ),
-                          ),
-                          Container(height: 5),
-                          DropdownButtonFormField2(
-                            value: _selectedValue,
-                            hint: const Text(
-                              'Select A Course',
-                            ),
-                            decoration: InputDecoration(
-                              constraints: BoxConstraints(),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7.5),
-                                  borderSide: const BorderSide(
-                                      width: 2,
-                                      color: MyColors.primaryVariant)),
-                              contentPadding: const EdgeInsets.only(bottom: 5),
-                            ),
-                            isExpanded: true,
-                            buttonStyleData: const ButtonStyleData(
-                                height: 40,
-                                padding: EdgeInsets.symmetric(vertical: 5)),
-                            alignment: Alignment.centerLeft,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedValue = value;
-                              });
-                            },
-                            onSaved: (value) {
-                              setState(() {
-                                _selectedValue = value;
-                              });
-                            },
-                            validator: (String? value) {
-                              if (value == null || value.isEmpty) {
-                                return "    Please choose a course!";
-                              } else {
-                                return null;
-                              }
-                            },
-                            items: widget.courses.map((dynamic course) {
-                              return DropdownMenuItem(
-                                value: course['code'] as String,
-                                child: Text(
-                                  course['name'] ?? "",
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                const Padding(
-                  padding: EdgeInsets.only(top: 25, bottom: 15),
-                  child: Divider(
-                    thickness: 2,
-                  ),
-                ),
-
-                Column(
-                  children: [
-                    // Date picker
-                    datePicker(),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Divider(thickness: 1.5),
                     ),
-                    fromPicker(),
-                    toPicker(),
                   ],
                 ),
-
-                const Padding(
-                  padding: EdgeInsets.only(top: 25, bottom: 15),
-                  child: Divider(
-                    thickness: 2,
-                  ),
-                ),
-
-                //// LOCATION ////
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Location",
-                        style: TextStyle(
-                          fontFamily: "Outfit",
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                          color: MyColors.secondary,
-                        ),
-                      ),
-                      Container(height: 5),
-                      TextFormField(
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.text,
-                        autofillHints: const [AutofillHints.username],
-                        controller: _locationController,
-                        validator: (value) => value != null && value.isEmpty
-                            ? 'Please enter a location'
-                            : null,
-                        style: const TextStyle(fontSize: 18),
-                        textAlignVertical: TextAlignVertical.center,
-                        decoration: InputDecoration(
-                          hintText: "Location",
-                          hintStyle: TextStyle(
-                              fontFamily: "Outfit",
-                              fontWeight: FontWeight.w500,
-                              color: MyColors.secondary.withOpacity(.15)),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(7.5),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(7.5),
-                              borderSide: const BorderSide(
-                                  width: 2, color: MyColors.primaryVariant)),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 7, horizontal: 15),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          //// DELETE BUTTON ////
+          // const SizedBox(height: 40),
+          widget.event == null
+              ? Container()
+              : Expanded(
+                  child: Container(
+                    alignment: FractionalOffset.bottomCenter,
+                    padding: const EdgeInsets.only(bottom: 50),
+                    width: 200,
+                    // height: double.infinity,
+                    child: TextButton(
+                      onPressed: () {
+                        onDeletePresed();
+                      },
+                      style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(10),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(7)),
+                          side: const BorderSide(color: MyColors.error)),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.delete_rounded,
+                              color: MyColors.error,
+                              size: 25,
+                            ),
+                            SizedBox(width: 5),
+                            Text(
+                              "Delete",
+                              style: TextStyle(
+                                  fontSize: 17, color: MyColors.error),
+                            ),
+                          ]),
+                    ),
+                  ),
+                ),
+        ],
       ),
     );
   }
@@ -335,6 +383,10 @@ class _AddQuizPageState extends State<AddQuizPage> {
       );
       Navigator.pop(context, quiz);
     }
+  }
+
+  onDeletePresed() {
+    Navigator.pop(context, 'Delete');
   }
 
   bool isDatePickerOpen = false;
