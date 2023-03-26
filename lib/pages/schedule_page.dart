@@ -91,7 +91,6 @@ class _SchedulePageState extends State<SchedulePage> {
             // AddEventOverlay(),
             TableCalendar(
               eventLoader: (day) => _getEventsForDay(day),
-              // enabledDayPredicate: (day) => day.weekday != dayIndexMap['Friday'],
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2080, 3, 14),
               startingDayOfWeek: StartingDayOfWeek.saturday,
@@ -773,71 +772,76 @@ class _SchedulePageState extends State<SchedulePage> {
               border: false
                   ? Border.all(color: MyColors.primary, width: 1.5)
                   : null),
-          child: DefaultTextStyle(
-              style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black,
-                  fontFamily: 'Outfit'),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+          child: ListView(
+            physics: const ClampingScrollPhysics(),
+            children: [
+              DefaultTextStyle(
+                  style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                      fontFamily: 'Outfit'),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(event.description.toString()),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SvgPicture.asset(
-                            "assets/images/location.svg",
-                            height: 11,
-                            color: Colors.black,
+                          Text(event.description.toString()),
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                "assets/images/location.svg",
+                                height: 11,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(width: 3),
+                              Text(event.location ?? "No Loc")
+                            ],
                           ),
-                          const SizedBox(width: 3),
-                          Text(event.location ?? "No Loc")
                         ],
                       ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 37,
-                          alignment: Alignment.centerLeft,
-                          child: AutoSizeText(
-                            overflow: TextOverflow.fade,
-                            courseMap[event.title.split(' ').join('')] ??
-                                "No Course",
-                            maxLines: 2,
-                            // wrapWords: true,
-                            softWrap: true,
-                            wrapWords: true,
-                            style: const TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w600),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 37,
+                              alignment: Alignment.centerLeft,
+                              child: AutoSizeText(
+                                overflow: TextOverflow.fade,
+                                courseMap[event.title.split(' ').join('')] ??
+                                    "No Course",
+                                maxLines: 2,
+                                // wrapWords: true,
+                                softWrap: true,
+                                wrapWords: true,
+                                style: const TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.w600),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
-                      // FLAG ICON
-                      isQuiz
-                          ? const Icon(
-                              Icons.flag_rounded,
-                              color: MyColors.error,
-                              size: 17,
-                            )
-                          : const Text("")
+                          // FLAG ICON
+                          isQuiz
+                              ? const Icon(
+                                  Icons.flag_rounded,
+                                  color: MyColors.error,
+                                  size: 17,
+                                )
+                              : const Text("")
+                        ],
+                      ),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                            "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
+                      )
                     ],
-                  ),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                        "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
-                  )
-                ],
-              )),
+                  )),
+            ],
+          ),
         ),
       ],
     );

@@ -185,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                             autofillHints: const [AutofillHints.username],
                             controller: usernameController,
                             validator: (value) => value != null && value.isEmpty
-                                ? 'Username cannot be empty'
+                                ? 'Please enter your username'
                                 : null,
                             style: const TextStyle(fontSize: 21),
                             textAlignVertical: TextAlignVertical.center,
@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                               controller: passwordController,
                               validator: (value) =>
                                   value != null && value.isEmpty
-                                      ? 'Password cannot be empty'
+                                      ? 'Please enter your password'
                                       : null,
                               style: const TextStyle(fontSize: 21),
                               textAlignVertical: TextAlignVertical.center,

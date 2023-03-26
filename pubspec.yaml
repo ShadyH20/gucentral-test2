@@ -21,12 +21,17 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.19.2 <3.0.0'
 
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
+
+
 dependencies:
   flutter:
     sdk: flutter
@@ -51,6 +56,9 @@ dependencies:
   rotating_icon_button: ^1.0.0
   auto_size_text: ^3.0.0
   simple_animations: ^5.0.0+3
+  flutter_form_builder: ^7.7.0
+  flutter_time_picker_spinner: ^2.0.0
+  date_picker_widget: ^0.0.4
 
 dev_dependencies:
   flutter_test:

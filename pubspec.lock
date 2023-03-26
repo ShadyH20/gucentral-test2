@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.12"
+  date_picker_widget:
+    dependency: "direct main"
+    description:
+      name: date_picker_widget
+      sha256: "2f94e6876c56be950d1c8a76788296ca05535eb887f72eb72cc8fd5c3c34ffdf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   dropdown_button2:
     dependency: "direct main"
     description:
@@ -118,6 +126,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_form_builder:
+    dependency: "direct main"
+    description:
+      name: flutter_form_builder
+      sha256: "9551c7379adc01a3a3a1100057396407c9534ea8adc937d14a0edd96fcd9e1dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.8.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -139,6 +155,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_time_picker_spinner:
+    dependency: "direct main"
+    description:
+      name: flutter_time_picker_spinner
+      sha256: "95600709910ad0cd5fcaec6c371dbe2e81a78989a9ee8c08a356433e2ccff041"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -172,10 +196,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: a3715e3bc90294e971cb7dc063fbf3cd9ee0ebf8604ffeafabd9e6f16abbdbe6
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.0"
+    version: "0.17.0"
   js:
     dependency: transitive
     description:
