@@ -9,7 +9,6 @@ import 'package:gucentral/widgets/Requests.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class AddQuizPage extends StatefulWidget {
   final List<dynamic> courses;
@@ -67,10 +66,12 @@ class _AddQuizPageState extends State<AddQuizPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: MyColors.primary,
+        foregroundColor: MyColors.secondary,
+        backgroundColor: MyColors.background,
+        elevation: 0,
         title: const Text(
           'Add Quiz',
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(fontSize: 25, color: MyColors.primary),
         ),
         actions: [
           TextButton.icon(
@@ -89,8 +90,8 @@ class _AddQuizPageState extends State<AddQuizPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
                 elevation: 0,
-                foregroundColor: MyColors.background,
-                backgroundColor: MyColors.primary,
+                foregroundColor: MyColors.secondary,
+                backgroundColor: MyColors.background,
                 shadowColor: Colors.transparent),
           ),
         ],
@@ -113,12 +114,12 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            "Quiz Title",
+                            "Title",
                             style: TextStyle(
                               fontFamily: "Outfit",
                               fontWeight: FontWeight.w500,
                               fontSize: 20,
-                              color: MyColors.primary,
+                              color: MyColors.secondary,
                             ),
                           ),
                           Container(height: 5),
@@ -164,7 +165,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                               fontFamily: "Outfit",
                               fontWeight: FontWeight.w500,
                               fontSize: 20,
-                              color: MyColors.primary,
+                              color: MyColors.secondary,
                             ),
                           ),
                           Container(height: 5),
@@ -174,12 +175,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                               'Select A Course',
                             ),
                             decoration: InputDecoration(
-                              // label: Text("Label"),
-                              // hintText: "Quiz X",
-                              // hintStyle: TextStyle(
-                              //     fontFamily: "Outfit",
-                              //     fontWeight: FontWeight.w500,
-                              //     color: MyColors.secondary.withOpacity(.15)),
+                              constraints: BoxConstraints(),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7.5),
                               ),
@@ -207,7 +203,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                             },
                             validator: (String? value) {
                               if (value == null || value.isEmpty) {
-                                return "Please choose a course!";
+                                return "    Please choose a course!";
                               } else {
                                 return null;
                               }
@@ -267,7 +263,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                           fontFamily: "Outfit",
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
-                          color: MyColors.primary,
+                          color: MyColors.secondary,
                         ),
                       ),
                       Container(height: 5),
@@ -418,7 +414,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                       color: _selectedDate.getDateOnly() ==
                               DateTime.now().getDateOnly()
                           ? MyColors.primary
-                          : MyColors.secondary,
+                          : Color.fromARGB(255, 76, 78, 88).withOpacity(0.7),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(5),
                     ),
