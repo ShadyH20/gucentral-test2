@@ -83,14 +83,24 @@ class Requests {
   }
 
   static List<Event> getQuizzes() {
+    debugPrint("Getting quizzes from prefs");
     if (prefs.containsKey('quizzes')) {
-      return jsonDecode(prefs.getString('quizzes')!);
+      debugPrint("Found quizzes");
+      var list = jsonDecode(prefs.getString('quizzes')!);
+      List<Event> quizzes = [];
+      for (var quiz in list) {
+        quizzes.add(Event.fromJson(quiz));
+      }
+      return quizzes;
     }
+    debugPrint("Didn't find quizzes!");
+
     return [];
   }
 
   static void updateQuizzes(List<Event> quizzes) {
     prefs.setString('quizzes', jsonEncode(quizzes));
+    debugPrint("d quizzes to: $quizzes");
   }
 
   static dynamic getTranscript(context, year) async {
@@ -175,5 +185,28 @@ class Event implements Comparable<Event> {
     } else {
       return start.difference(other.start).inMinutes;
     }
+  }
+
+  Event.fromJson(Map<String, dynamic> json)
+      : title = json['t'],
+        description = json['d'],
+        start = DateTime.parse(json['s']),
+        end = DateTime.parse(json['e']),
+        color = Color(json['c']),
+        isAllDay = json['i'],
+        recurrence = json['r'],
+        location = json['l'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      't': title,
+      'd': description,
+      's': start.toIso8601String(),
+      'e': end.toIso8601String(),
+      'c': color.value,
+      'i': isAllDay,
+      'r': recurrence,
+      'l': location
+    };
   }
 }
