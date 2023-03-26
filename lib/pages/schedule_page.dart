@@ -737,6 +737,8 @@ class _SchedulePageState extends State<SchedulePage> {
                 if (quiz != null) {
                   print("Quiz: ${quiz.toString()}");
                   quizzes.add(quiz);
+                  Requests.updateQuizzes(quizzes);
+
                   setState(() {});
                 }
               },
@@ -847,40 +849,41 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  List<Event> quizzes = [
-    Event(
-        title: "CSEN 601",
-        description: "Quiz 1",
-        start: DateTime.now()
-            .getDateOnly()
-            .add(const Duration(hours: 10, minutes: 30)),
-        end: DateTime.now()
-            .getDateOnly()
-            .add(const Duration(hours: 10, minutes: 30))
-            .add(const Duration(hours: 1, minutes: 30)),
-        color: Colors.green,
-        location: "H19",
-        isAllDay: false),
-    Event(
-        title: "CSEN 602",
-        description: "Quiz 1.2",
-        start: DateTime.now().at8am().add(const Duration(hours: 5)),
-        end: DateTime.now()
-            .at8am()
-            .add(const Duration(hours: 5))
-            .add(const Duration(hours: 1, minutes: 30)),
-        color: Colors.green,
-        location: "H19",
-        isAllDay: false),
-    Event(
-        title: "CSEN 603",
-        description: "Quiz 2",
-        start: DateTime.now(),
-        end: DateTime.now().add(Duration(hours: 1, minutes: 30)),
-        color: Colors.green,
-        location: "Exam Hall 1",
-        isAllDay: false),
-  ];
+  List<Event> quizzes = Requests.getQuizzes();
+  // [
+  // Event(
+  //     title: "CSEN 601",
+  //     description: "Quiz 1",
+  //     start: DateTime.now()
+  //         .getDateOnly()
+  //         .add(const Duration(hours: 10, minutes: 30)),
+  //     end: DateTime.now()
+  //         .getDateOnly()
+  //         .add(const Duration(hours: 10, minutes: 30))
+  //         .add(const Duration(hours: 1, minutes: 30)),
+  //     color: Colors.green,
+  //     location: "H19",
+  //     isAllDay: false),
+  // Event(
+  //     title: "CSEN 602",
+  //     description: "Quiz 1.2",
+  //     start: DateTime.now().at8am().add(const Duration(hours: 5)),
+  //     end: DateTime.now()
+  //         .at8am()
+  //         .add(const Duration(hours: 5))
+  //         .add(const Duration(hours: 1, minutes: 30)),
+  //     color: Colors.green,
+  //     location: "H19",
+  //     isAllDay: false),
+  // Event(
+  //     title: "CSEN 603",
+  //     description: "Quiz 2",
+  //     start: DateTime.now(),
+  //     end: DateTime.now().add(Duration(hours: 1, minutes: 30)),
+  //     color: Colors.green,
+  //     location: "Exam Hall 1",
+  //     isAllDay: false),
+  // ];
 
   Widget quizBuilder() {
     List<dynamic>? dayQuizzes = _quizDataSource.getVisibleAppointments(
@@ -966,6 +969,8 @@ class _SchedulePageState extends State<SchedulePage> {
                         quizzes.add(editedEvent);
                         _eventDataSource = EventDataSource(events + quizzes);
 
+                        Requests.updateQuizzes(quizzes);
+
                         setState(() {});
 
                         setState(() {
@@ -1046,31 +1051,31 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   List<Event> deadlines = [
-    Event(
-        title: "CSEN 604",
-        description: "Milestone I",
-        start: DateTime.now().at8am().add(const Duration(hours: 15)),
-        end: DateTime.now().at8am().add(const Duration(hours: 15)),
-        color: Colors.green,
-        // location: "H19",
-        isAllDay: false),
-    Event(
-        title: "CSEN 603",
-        description: "Milestone II",
-        start: DateTime.now(),
-        end: DateTime.now().at8am().add(const Duration(hours: 1, minutes: 30)),
-        color: Colors.green,
-        location: "Exam Hall 1",
-        isAllDay: false),
-    Event(
-        title: "CSEN 601",
-        description: "Teams Form",
-        start:
-            DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
-        end: DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
-        color: Colors.green,
-        // location: "Exam Hall 1",
-        isAllDay: false),
+    // Event(
+    //     title: "CSEN 604",
+    //     description: "Milestone I",
+    //     start: DateTime.now().at8am().add(const Duration(hours: 15)),
+    //     end: DateTime.now().at8am().add(const Duration(hours: 15)),
+    //     color: Colors.green,
+    //     // location: "H19",
+    //     isAllDay: false),
+    // Event(
+    //     title: "CSEN 603",
+    //     description: "Milestone II",
+    //     start: DateTime.now(),
+    //     end: DateTime.now().at8am().add(const Duration(hours: 1, minutes: 30)),
+    //     color: Colors.green,
+    //     location: "Exam Hall 1",
+    //     isAllDay: false),
+    // Event(
+    //     title: "CSEN 601",
+    //     description: "Teams Form",
+    //     start:
+    //         DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
+    //     end: DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
+    //     color: Colors.green,
+    //     // location: "Exam Hall 1",
+    //     isAllDay: false),
   ];
 
   Widget deadlineBuilder() {
@@ -1206,6 +1211,8 @@ class _SchedulePageState extends State<SchedulePage> {
               print("Quiz: ${quiz.toString()}");
               quizzes.add(quiz);
               _eventDataSource = EventDataSource(events + quizzes);
+              Requests.updateQuizzes(quizzes);
+
               setState(() {});
             }
           }

@@ -82,6 +82,17 @@ class Requests {
     return jsonDecode(prefs.getString('schedule')!);
   }
 
+  static List<Event> getQuizzes() {
+    if (prefs.containsKey('quizzes')) {
+      return jsonDecode(prefs.getString('quizzes')!);
+    }
+    return [];
+  }
+
+  static void updateQuizzes(List<Event> quizzes) {
+    prefs.setString('quizzes', jsonEncode(quizzes));
+  }
+
   static dynamic getTranscript(context, year) async {
     var out = getCreds();
     out['year'] = year;
