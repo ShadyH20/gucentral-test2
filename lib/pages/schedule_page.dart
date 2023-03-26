@@ -804,10 +804,9 @@ class _SchedulePageState extends State<SchedulePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        // width: MediaQuery.of(context). * .5,
-                        // alignment: Alignment.centerLeft,
                         child: Container(
                           height: 37,
+                          alignment: Alignment.centerLeft,
                           child: AutoSizeText(
                             overflow: TextOverflow.fade,
                             courseMap[event.title.split(' ').join('')] ??
@@ -821,12 +820,8 @@ class _SchedulePageState extends State<SchedulePage> {
                           ),
                         ),
                       ),
-                      // isQuiz
-                      //     ? const Text(
-                      //         "Q",
-                      //         style: TextStyle(color: MyColors.error),
-                      //       )
-                      //     : const Text(""),
+
+                      // FLAG ICON
                       isQuiz
                           ? const Icon(
                               Icons.flag_rounded,
