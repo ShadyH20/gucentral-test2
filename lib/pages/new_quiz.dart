@@ -589,6 +589,9 @@ class _AddQuizPageState extends State<AddQuizPage> {
                     alignment: Alignment.center,
                     children: [
                       TimePickerSpinner(
+                        time: DateTime.now().getDateOnly().add(Duration(
+                            hours: _selectedToTime.hour,
+                            minutes: _selectedToTime.minute)),
                         alignment: Alignment.center,
                         highlightedTextStyle: const TextStyle(fontSize: 25),
                         normalTextStyle: const TextStyle(

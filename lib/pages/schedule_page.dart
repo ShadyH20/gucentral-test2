@@ -766,18 +766,24 @@ class _SchedulePageState extends State<SchedulePage> {
         Container(
           width: details.bounds.width,
           height: details.bounds.height,
+          // constraints: BoxConstraints(),
+          // alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 7),
-          padding: const EdgeInsets.all(11),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
           decoration: BoxDecoration(
               color: getColor(),
               borderRadius: BorderRadius.circular(13),
               border: false
                   ? Border.all(color: MyColors.primary, width: 1.5)
                   : null),
-          child: ListView(
+          child: SingleChildScrollView(
+            // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            // padding: EdgeInsets.zero,
             physics: const ClampingScrollPhysics(),
-            children: [
-              DefaultTextStyle(
+            child: Container(
+              constraints:
+                  BoxConstraints(minHeight: details.bounds.height - 18),
+              child: DefaultTextStyle(
                   style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -842,7 +848,7 @@ class _SchedulePageState extends State<SchedulePage> {
                       )
                     ],
                   )),
-            ],
+            ),
           ),
         ),
       ],
