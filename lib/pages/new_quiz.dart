@@ -39,9 +39,9 @@ class _AddQuizPageState extends State<AddQuizPage> {
   late List<dynamic> courses;
 
   // Create variables to store the selected date and times
-  late DateTime _selectedDate = DateTime.now();
-  late TimeOfDay _selectedFromTime = TimeOfDay.now();
-  late TimeOfDay _selectedToTime = TimeOfDay.now();
+  late DateTime _selectedDate;
+  late TimeOfDay _selectedFromTime;
+  late TimeOfDay _selectedToTime;
 
   @override
   void initState() {
@@ -58,6 +58,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
       _locationController.text = widget.event!.location;
       _selectedValue = widget.event!.title.split(" ").join("");
     } else {
+      debugPrint("Init dates and timw to now");
       _selectedDate = DateTime.now();
       _selectedFromTime = TimeOfDay.now();
       _selectedToTime = TimeOfDay.now();
@@ -496,6 +497,9 @@ class _AddQuizPageState extends State<AddQuizPage> {
                     alignment: Alignment.center,
                     children: [
                       TimePickerSpinner(
+                        time: DateTime.now().getDateOnly().add(Duration(
+                            hours: _selectedFromTime.hour,
+                            minutes: _selectedFromTime.minute)),
                         alignment: Alignment.center,
                         highlightedTextStyle: const TextStyle(fontSize: 25),
                         normalTextStyle: const TextStyle(
