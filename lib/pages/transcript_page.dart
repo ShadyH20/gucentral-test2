@@ -386,30 +386,44 @@ class _TranscriptPageState extends State<TranscriptPage>
                                   offset: Offset(0, -2))
                             ],
                           ),
-                          child: DataTable(
-                            headingRowHeight: 0,
-                            showBottomBorder: true,
-                            dividerThickness: 2,
-                            // border: TableBorder(
-                            //     horizontalInside: BorderSide(
-                            //         color: MyColors.secondary
-                            //             .withOpacity(.5))),
-                            columnSpacing: 25,
-                            dataRowHeight: 30,
-                            horizontalMargin: 3,
-                            dataTextStyle: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13.5,
-                                letterSpacing: .1,
-                                color: MyColors.secondary),
-                            columns: const [
-                              DataColumn2(
-                                  label: Text('Course Name'),
-                                  size: ColumnSize.L),
-                              DataColumn(label: Text(' ')),
-                              DataColumn2(label: Text(''), numeric: true),
-                            ],
-                            rows: rows,
+                          child: LayoutBuilder(
+                            builder: (context, constrains) => DataTable(
+                              headingRowHeight: 0,
+                              showBottomBorder: true,
+                              dividerThickness: 2,
+                              // border: TableBorder(
+                              //     horizontalInside: BorderSide(
+                              //         color: MyColors.secondary
+                              //             .withOpacity(.5))),
+                              columnSpacing: 0,
+                              dataRowHeight: 30,
+                              horizontalMargin: 3,
+                              dataTextStyle: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.5,
+                                  letterSpacing: .1,
+                                  color: MyColors.secondary),
+                              columns: [
+                                DataColumn2(
+                                    label: SizedBox(
+                                        width:
+                                            (constrains.maxWidth - 10) * 0.85,
+                                        child: Text('Course Name')),
+                                    size: ColumnSize.L),
+                                DataColumn(
+                                    label: SizedBox(
+                                        width:
+                                            (constrains.maxWidth - 10) * 0.05,
+                                        child: Text(''))),
+                                DataColumn2(
+                                    label: SizedBox(
+                                        width:
+                                            (constrains.maxWidth - 10) * 0.05,
+                                        child: Text('')),
+                                    numeric: true),
+                              ],
+                              rows: rows,
+                            ),
                           ),
                         ),
                         Align(
@@ -495,7 +509,7 @@ class SemesterSkeleton extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: const [
-                                  Skeleton(width: 270, height: 15),
+                                  Skeleton(width: 290, height: 15),
                                   Skeleton(width: 25, height: 15),
                                   Skeleton(width: 25, height: 15),
                                 ]),

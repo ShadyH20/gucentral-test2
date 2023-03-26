@@ -10,6 +10,16 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+extension TimeOfDayExtension on TimeOfDay {
+  int compareTo(TimeOfDay other) {
+    if (hour < other.hour) return -1;
+    if (hour > other.hour) return 1;
+    if (minute < other.minute) return -1;
+    if (minute > other.minute) return 1;
+    return 0;
+  }
+}
+
 class AddQuizPage extends StatefulWidget {
   final List<dynamic> courses;
   final Event? event;
@@ -64,14 +74,15 @@ class _AddQuizPageState extends State<AddQuizPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: MyColors.background,
       appBar: AppBar(
         centerTitle: true,
         foregroundColor: MyColors.secondary,
         backgroundColor: MyColors.background,
         elevation: 0,
-        title: const Text(
-          'Add Quiz',
-          style: TextStyle(fontSize: 25, color: MyColors.primary),
+        title: Text(
+          '${widget.event == null ? 'Add' : 'Edit'} Quiz',
+          style: const TextStyle(fontSize: 25, color: MyColors.primary),
         ),
         actions: [
           TextButton.icon(
@@ -448,6 +459,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
             onPressed: () {
               setState(() {
                 isFromPickerOpened = !isFromPickerOpened;
+                isToPickerOpened = false;
               });
             },
             child: Container(
@@ -494,6 +506,10 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         onTimeChange: (time) {
                           setState(() {
                             _selectedFromTime = TimeOfDay.fromDateTime(time);
+                            if (_selectedToTime.compareTo(_selectedFromTime) <
+                                0) {
+                              _selectedToTime = _selectedFromTime;
+                            }
                           });
                         },
                       ),
@@ -532,6 +548,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
             onPressed: () {
               setState(() {
                 isToPickerOpened = !isToPickerOpened;
+                isFromPickerOpened = false;
               });
             },
             child: Container(
@@ -578,6 +595,10 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         onTimeChange: (time) {
                           setState(() {
                             _selectedToTime = TimeOfDay.fromDateTime(time);
+                            if (_selectedToTime.compareTo(_selectedFromTime) <
+                                0) {
+                              _selectedFromTime = _selectedToTime;
+                            }
                           });
                         },
                       ),
