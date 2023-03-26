@@ -34,10 +34,17 @@ class _HomePageState extends State<HomePage>
           centerTitle: true,
           leadingWidth: 50.0,
           leading: const MenuWidget(),
-          title: Text(
-            "Home",
-            style: TextStyle(color: MyColors.primary),
-          ),
+          title: Container(
+              padding: const EdgeInsets.only(top: 10),
+              child: SvgPicture.asset(
+                "assets/images/logo-text.svg",
+                height: 30,
+                color: MyColors.primary,
+              )),
+          // Text(
+          //   "Home",
+          //   style: TextStyle(color: MyColors.primary),
+          // ),
           actions: [
             IconButton(
               // padding: EdgeInsets.symmetric(horizontal: 20.0),

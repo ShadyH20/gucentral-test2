@@ -4,6 +4,7 @@ import "dart:async";
 import "dart:convert";
 import "dart:math";
 import "dart:ui";
+import "package:auto_size_text/auto_size_text.dart";
 import "package:dropdown_button2/dropdown_button2.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
@@ -53,32 +54,28 @@ class _SchedulePageState extends State<SchedulePage> {
   late EventDataSource _quizDataSource;
   late EventDataSource _deadlineDataSource;
 
-  initializeSchedulePage() async {
-    await getSchedule();
-    await createEvents();
-    _eventDataSource = EventDataSource(events);
+  initializeSchedulePage() {
+    getSchedule();
+    createEvents();
+    _eventDataSource = EventDataSource(events + quizzes);
     _quizDataSource = EventDataSource(quizzes);
     _deadlineDataSource = EventDataSource(deadlines);
     _controller.displayDate = _selectedDay;
     groupedEvents = groupEvents(events);
-    // print("events today: ${groupedEvents[DateTime(2023, 3, 18)]}");
   }
 
-  getSchedule() async {
-    schedule = await Requests.getSchedule();
-    Requests.getCourses().then((coursesR) {
-      courseMap = {for (var course in coursesR) course['code']: course['name']};
-      courses = coursesR;
-    });
+  getSchedule() {
+    schedule = Requests.getSchedule();
+    var coursesR = Requests.getCourses();
+    courseMap = {for (var course in coursesR) course['code']: course['name']};
+    courses = coursesR;
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await initializeSchedulePage();
-      setState(() {});
-    });
+    initializeSchedulePage();
+    setState(() {});
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
     colorIndex = 0;
   }
@@ -713,6 +710,7 @@ class _SchedulePageState extends State<SchedulePage> {
       BuildContext context, CalendarAppointmentDetails details) {
     Event event = details.appointments.first;
 
+    bool isQuiz = quizzes.contains(event);
     return Stack(
       children: [
         AnimatedAlign(
@@ -767,12 +765,14 @@ class _SchedulePageState extends State<SchedulePage> {
         Container(
           width: details.bounds.width,
           height: details.bounds.height,
-          margin: const EdgeInsets.only(left: 15),
+          margin: const EdgeInsets.only(left: 7),
           padding: const EdgeInsets.all(11),
           decoration: BoxDecoration(
-            color: getColor(),
-            borderRadius: BorderRadius.circular(13),
-          ),
+              color: getColor(),
+              borderRadius: BorderRadius.circular(13),
+              border: false
+                  ? Border.all(color: MyColors.primary, width: 1.5)
+                  : null),
           child: DefaultTextStyle(
               style: const TextStyle(
                   fontSize: 13,
@@ -800,15 +800,41 @@ class _SchedulePageState extends State<SchedulePage> {
                       ),
                     ],
                   ),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      // courseMap[event.subject] ?? "",
-                      courseMap[event.title.split(' ').join('')] ??
-                          "No Course Found",
-                      style: const TextStyle(
-                          fontSize: 22, fontWeight: FontWeight.w600),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        // width: MediaQuery.of(context). * .5,
+                        // alignment: Alignment.centerLeft,
+                        child: Container(
+                          height: 37,
+                          child: AutoSizeText(
+                            overflow: TextOverflow.fade,
+                            courseMap[event.title.split(' ').join('')] ??
+                                "No Course",
+                            maxLines: 2,
+                            // wrapWords: true,
+                            softWrap: true,
+                            wrapWords: true,
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ),
+                      // isQuiz
+                      //     ? const Text(
+                      //         "Q",
+                      //         style: TextStyle(color: MyColors.error),
+                      //       )
+                      //     : const Text(""),
+                      isQuiz
+                          ? const Icon(
+                              Icons.flag_rounded,
+                              color: MyColors.error,
+                              size: 17,
+                            )
+                          : const Text("")
+                    ],
                   ),
                   Text(
                       "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}")
@@ -821,10 +847,26 @@ class _SchedulePageState extends State<SchedulePage> {
 
   List<Event> quizzes = [
     Event(
-        title: "CSEN 604",
+        title: "CSEN 601",
         description: "Quiz 1",
-        start: DateTime.now(),
-        end: DateTime.now().add(Duration(hours: 1, minutes: 30)),
+        start: DateTime.now()
+            .getDateOnly()
+            .add(const Duration(hours: 10, minutes: 30)),
+        end: DateTime.now()
+            .getDateOnly()
+            .add(const Duration(hours: 10, minutes: 30))
+            .add(const Duration(hours: 1, minutes: 30)),
+        color: Colors.green,
+        location: "H19",
+        isAllDay: false),
+    Event(
+        title: "CSEN 602",
+        description: "Quiz 1.2",
+        start: DateTime.now().at8am().add(const Duration(hours: 5)),
+        end: DateTime.now()
+            .at8am()
+            .add(const Duration(hours: 5))
+            .add(const Duration(hours: 1, minutes: 30)),
         color: Colors.green,
         location: "H19",
         isAllDay: false),
@@ -905,7 +947,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         child: IconButton(
                           color: MyColors.background,
                           icon: const Icon(Icons.edit),
-                          onPressed: () async {
+                          onPressed: () {
                             //
                           },
                         ),
@@ -920,6 +962,8 @@ class _SchedulePageState extends State<SchedulePage> {
 
                         quizzes.remove(event);
                         quizzes.add(editedEvent);
+                        _eventDataSource = EventDataSource(events + quizzes);
+
                         setState(() {});
 
                         setState(() {
@@ -1149,10 +1193,6 @@ class _SchedulePageState extends State<SchedulePage> {
         menuItemStyleData: const MenuItemStyleData(
           height: 40,
         ),
-        // underline: Container(
-        //   color: const Color(0),
-        // ),
-
         onChanged: (String? value) async {
           // This is called when the user selects an item.
           setState(() {
@@ -1163,6 +1203,7 @@ class _SchedulePageState extends State<SchedulePage> {
             if (quiz != null) {
               print("Quiz: ${quiz.toString()}");
               quizzes.add(quiz);
+              _eventDataSource = EventDataSource(events + quizzes);
               setState(() {});
             }
           }
@@ -1217,18 +1258,18 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  Future<void> showAddEventOverlay() async {
-    String result = await displayCupertino();
-    print(result);
-    if (result == "Quiz") {
-      var quiz = await goToAddQuiz();
-      print(quiz.toString());
-      if (quiz != null) {
-        quizzes.add(quiz);
-      }
-      setState(() {});
-    }
-  }
+  // Future<void> showAddEventOverlay() async {
+  //   String result = await displayCupertino();
+  //   print(result);
+  //   if (result == "Quiz") {
+  //     var quiz = await goToAddQuiz();
+  //     print(quiz.toString());
+  //     if (quiz != null) {
+  //       quizzes.add(quiz);
+  //     }
+  //     setState(() {});
+  //   }
+  // }
 
   Future<dynamic> goToAddQuiz({dynamic eventToEdit}) async {
     if (eventToEdit != null) {

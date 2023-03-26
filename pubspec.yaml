@@ -49,6 +49,8 @@ dependencies:
   table_calendar: ^3.0.9
   syncfusion_flutter_calendar: ^20.4.54
   rotating_icon_button: ^1.0.0
+  auto_size_text: ^3.0.0
+  simple_animations: ^5.0.0+3
 
 dev_dependencies:
   flutter_test:

@@ -320,7 +320,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 10,
               ),
               Text(
-                "v1.0.5",
+                "v1.0.6",
                 style: TextStyle(color: MyColors.secondary),
               )
             ],

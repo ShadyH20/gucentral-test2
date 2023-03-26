@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
-
 import "HomePageNavDrawer.dart";
+
+late SharedPreferences prefs;
+Future<void> initiateSharedPreferences() async {
+  prefs = await SharedPreferences.getInstance();
+}
 
 class Requests {
   static const backendURL =
@@ -11,8 +15,10 @@ class Requests {
   static Uri transcriptURL = Uri.parse('$backendURL/transcript');
   static Uri loginURL = Uri.parse('$backendURL/login');
 
-  static Future<Map> getCreds() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  // static SharedPreferences prefs = getPrefs();
+
+  static Map getCreds() {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     var credentials = {};
     if (prefs.containsKey('username') && prefs.containsKey('password')) {
       credentials['username'] = prefs.getString('username');
@@ -36,7 +42,7 @@ class Requests {
 
       var res = jsonDecode(response.body);
       if (res['success']) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
+        // SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('username', username);
         prefs.setString('password', password);
         prefs.setString('gpa', res['gpa']);
@@ -56,28 +62,28 @@ class Requests {
     }
   }
 
-  static dynamic getIdName() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  static dynamic getIdName() {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return [prefs.getString('id'), prefs.getString('name')];
   }
 
-  static dynamic getUsernameId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  static dynamic getUsernameId() {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return [prefs.getString('username'), prefs.getString('id')];
   }
 
-  static dynamic getCourses() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  static dynamic getCourses() {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return jsonDecode(prefs.getString('courses')!);
   }
 
-  static dynamic getSchedule() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  static dynamic getSchedule() {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return jsonDecode(prefs.getString('schedule')!);
   }
 
   static dynamic getTranscript(context, year) async {
-    var out = await getCreds();
+    var out = getCreds();
     out['year'] = year;
     var body = jsonEncode(out);
 
@@ -86,7 +92,6 @@ class Requests {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       });
-
       return jsonDecode(response.body);
     } on Exception catch (e) {
       print("transcript exception $e");

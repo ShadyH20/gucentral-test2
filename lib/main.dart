@@ -3,9 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:gucentral/utils/Theme.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import "./pages/login_page.dart";
+import './widgets/Requests.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Shared Prefs
+  initiateSharedPreferences();
+
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: MyTheme.light));
 
