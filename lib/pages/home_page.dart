@@ -90,7 +90,10 @@ class _HomePageState extends State<HomePage>
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        "Hello, ${prefs.getString('name')!.split(" ")[0] ?? "Student"}!",
+                        (prefs.getString('name')!.split(" ")[0] ==
+                                "Abdelrahman")
+                            ? "Bodia"
+                            : "Hello, ${prefs.getString('name')!.split(" ")[0] ?? "Student"}!",
                         style: const TextStyle(
                             color: MyColors.secondary,
                             fontSize: 36,
