@@ -56,7 +56,6 @@ class _SettingsPageState extends State<SettingsPage> {
               // lightTheme: SettingsThemeData(
               //   settingsListBackground: Colors.transparent,
               //   settingsSectionBackground: Colors.black12,
-
               // ),
               sections: [
                 //// GENERAL SECTION ////
