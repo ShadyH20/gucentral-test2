@@ -16,19 +16,22 @@ void main() {
   //     const SystemUiOverlayStyle(statusBarColor: MyTheme.light));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  if (html.window.screen != null) {
-    if (html.window.screen!.orientation != null) {
-      html.window.screen!.orientation!.lock('portrait');
-    } else {
-      print("No orientation");
-    }
-  } else {
-    print("No screen");
-  }
+
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
       .then(
-    (_) => runApp(MyApp()),
+    (_) {
+      if (html.window.screen != null) {
+        if (html.window.screen!.orientation != null) {
+          html.window.screen!.orientation!.lock('portrait');
+        } else {
+          print("No orientation");
+        }
+      } else {
+        print("No screen");
+      }
+      runApp(const MyApp());
+    },
   );
   // runApp(MyApp());
 }
