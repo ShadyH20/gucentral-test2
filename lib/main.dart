@@ -11,9 +11,10 @@ void main() {
   // Initialize Shared Prefs
   initiateSharedPreferences();
 
-  SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(statusBarColor: MyTheme.light));
+  // SystemChrome.setSystemUIOverlayStyle(
+  //     const SystemUiOverlayStyle(statusBarColor: MyTheme.light));
 
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
       .then(
