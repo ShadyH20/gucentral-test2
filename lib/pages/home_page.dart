@@ -1,12 +1,15 @@
 import "dart:convert";
+import "dart:ui";
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "package:gucentral/widgets/Requests.dart";
 import "package:http/http.dart" as http;
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import "package:intl/intl.dart";
 // import 'package:navigation_drawer_animation/widet/menu_widget'
 
 class HomePage extends StatefulWidget {
@@ -20,7 +23,7 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
-    ColorScheme MyColors = Theme.of(context).colorScheme;
+    // ColorScheme MyColors = Theme.of(context).colorScheme;
 
     return Scaffold(
         backgroundColor: MyColors.background,
@@ -34,17 +37,20 @@ class _HomePageState extends State<HomePage>
           centerTitle: true,
           leadingWidth: 50.0,
           leading: const MenuWidget(),
-          title: Container(
-              padding: const EdgeInsets.only(top: 10),
-              child: SvgPicture.asset(
-                "assets/images/logo-text.svg",
-                height: 30,
-                color: MyColors.primary,
-              )),
-          // Text(
-          //   "Home",
-          //   style: TextStyle(color: MyColors.primary),
-          // ),
+          title:
+              // Container(
+              //     padding: const EdgeInsets.only(top: 15),
+              //     child: SvgPicture.asset(
+              //       "assets/images/logo-text.svg",
+              //       height: 35,
+              //       color: MyColors.primary,
+              //     )),
+              const Text(
+            "Home",
+            style: TextStyle(
+              color: MyColors.primary,
+            ),
+          ),
           actions: [
             IconButton(
               // padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -62,28 +68,176 @@ class _HomePageState extends State<HomePage>
         ),
         body: Container(
           width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           // color: Colors.red,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Hekki", style: TextStyle(color: Colors.red)),
-              Container(
-                width: 300.0,
-                height: 60.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    5.0,
+              const SizedBox(height: 30),
+              //// HELLO STUDENT ////
+              Row(
+                children: [
+                  Text(
+                    "Hello, ${prefs.getString('name')!.split(" ")[0] ?? "Student"}!",
+                    style: const TextStyle(
+                        color: MyColors.secondary,
+                        fontSize: 36,
+                        fontWeight: FontWeight.w800),
                   ),
-                  color: Colors.red,
-                ),
+                ],
               ),
-              Container(height: 100.0),
-              Container(
-                color: MyColors.tertiary,
-                width: 300.0,
-                height: 300.0,
-                child: ListView(
-                  children: [],
+              const SizedBox(height: 20),
+
+              //// THE 3 BOXES ////
+              Expanded(
+                  flex: 4,
+                  child: Column(
+                    children: [
+                      //// SUMMARY ////
+                      Expanded(
+                        flex: 3,
+                        child: Container(
+                          // height: 250,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              15.0,
+                            ),
+                            color: MyColors.primary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      Expanded(
+                        flex: 2,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //// NEXT WEEK QUIZZES ////
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    15.0,
+                                  ),
+                                  color: MyColors.secondary,
+                                ),
+                                child: DefaultTextStyle(
+                                  style: const TextStyle(
+                                      fontSize: 15, color: MyColors.background),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 11.0),
+                                    child: FittedBox(
+                                      child: Column(
+                                          // mainAxisAlignment:
+                                          // MainAxisAlignment.spaceBetween,
+                                          children: const [
+                                            Text(
+                                              "Next Week",
+                                            ),
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                "2",
+                                                textScaleFactor: 6,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                            Text("exams")
+                                          ]),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 25),
+                            //// CURRENT WEEK ////
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    15.0,
+                                  ),
+                                  color: MyColors.accent,
+                                ),
+                                child: Column(children: [
+                                  Expanded(
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: const [
+                                        Positioned(
+                                          top: 15,
+                                          child: Text(
+                                            "current week",
+                                          ),
+                                        ),
+                                        Positioned(
+                                          // right: 10,
+                                          child: Text("Week 5",
+                                              style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 47)),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ]),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                    ],
+                  )),
+
+              //// SCHEDULE ////
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      // height: 50,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text.rich(
+                          TextSpan(
+                            text: "Today, ",
+                            style: const TextStyle(
+                                color: MyColors.secondary,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700),
+                            children: [
+                              TextSpan(
+                                text: DateFormat("dd MMMM")
+                                    .format(DateTime.now()),
+                                style: const TextStyle(
+                                    // color: MyColors.background,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 10,
+                      child: Container(
+                        // height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.black.withOpacity(0.07),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
