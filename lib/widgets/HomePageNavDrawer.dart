@@ -24,14 +24,19 @@ class HomePageNavDrawer extends StatefulWidget {
 }
 
 class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
-  final List<Widget> pages = [
-    HomePage(),
-    CoursesPage(),
-    SchedulePage(),
-    SettingsPage(),
-    GradesPage(),
-    TranscriptPage()
-  ];
+  final GlobalKey<SchedulePageState> _scheduleKey =
+      GlobalKey<SchedulePageState>();
+
+  void callScheduleInit(bool val) {
+    // pages[getIndex(MenuItems.schedule)]
+    print("HomeDrawer: In callScheduleInit");
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     // Call your method here
+    _scheduleKey.currentState?.initializeSchedulePage();
+    //   });
+  }
+
+  late List<Widget> pages;
 
   int selectedIndex = 0;
   MenuItemlist currentItem = MenuItems.home;
@@ -54,7 +59,6 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       case MenuItems.transcript:
         {
           (pages[5] as TranscriptPage).hideGPA();
-          print("TRIED TO HIDE");
           return 5;
         }
 
@@ -70,6 +74,16 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   @override
   void initState() {
     super.initState();
+    pages = [
+      HomePage(),
+      CoursesPage(),
+      SchedulePage(
+        key: _scheduleKey,
+      ),
+      SettingsPage(callScheduleInit: callScheduleInit),
+      GradesPage(),
+      TranscriptPage()
+    ];
     _drawerController = ZoomDrawerController();
   }
 

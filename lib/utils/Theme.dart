@@ -12,26 +12,31 @@ class MyTheme {
   static const Color error = Color(0xFFB00020);
 
   static ThemeData lightTheme = ThemeData(
-    // appBarTheme: const AppBarTheme(
-    //   systemOverlayStyle: SystemUiOverlayStyle(
-    //       statusBarColor: light, statusBarBrightness: Brightness.light),
-    // ),
+    appBarTheme: const AppBarTheme(
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.bold,
+          color: orange,
+          fontFamily: 'Outfit',
+        )),
     primaryColor: light,
     colorScheme: const ColorScheme(
-        brightness: Brightness.light,
-        // primary: Color.fromARGB(255, 223, 223, 223),
-        primary: orange,
-        primaryVariant: orangeLight,
-        onPrimary: light,
-        secondary: darkGrey,
-        onSecondary: light,
-        tertiary: yellow,
-        error: error,
-        onError: light,
-        background: light,
-        onBackground: darkGrey,
-        surface: orange,
-        onSurface: darkGrey),
+      brightness: Brightness.light,
+      // primary: Color.fromARGB(255, 223, 223, 223),
+      primary: orange,
+      primaryVariant: orangeLight,
+      onPrimary: light,
+      secondary: darkGrey,
+      onSecondary: light,
+      tertiary: yellow,
+      error: error,
+      onError: light,
+      background: light,
+      onBackground: darkGrey,
+      surface: orange,
+      onSurface: darkGrey,
+    ),
     fontFamily: 'Outfit',
     textTheme: const TextTheme(
       displayLarge: TextStyle(

@@ -55,9 +55,9 @@ class _HomePageState extends State<HomePage>
               //     )),
               const Text(
             "Home",
-            style: TextStyle(
-              color: MyColors.primary,
-            ),
+            // style: TextStyle(
+            //   color: MyColors.primary,
+            // ),
           ),
           actions: [
             IconButton(
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage>
                         (prefs.getString('name')!.split(" ")[0] ==
                                 "Abdelrahman")
                             ? "Hello, Bodia!"
-                            : "Hello, ${prefs.getString('name')!.split(" ")[0] ?? "Student"}!",
+                            : "Hello, ${prefs.getString('first_name')! ?? "Student"}!",
                         style: const TextStyle(
                             color: MyColors.secondary,
                             fontSize: 36,

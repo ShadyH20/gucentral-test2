@@ -29,21 +29,30 @@ extension DateTimeExtension on DateTime {
   }
 }
 
+List<Color> colors = const [
+  Color(0xffdbf2fd),
+  Color(0xffECDBFD),
+  Color(0xffFDDBDB),
+  Color(0xffFDFADB)
+];
+
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
 
   @override
-  State<SchedulePage> createState() => _SchedulePageState();
+  State<SchedulePage> createState() => SchedulePageState();
 }
 
-class _SchedulePageState extends State<SchedulePage> {
+class SchedulePageState extends State<SchedulePage> {
   String formattedTime = DateFormat('kk:mm::ss').format(DateTime.now());
   String hour = DateFormat('a').format(DateTime.now());
 
   DateTime _selectedDay = DateTime.now().at8am();
   DateTime _focusedDay = DateTime.now().at8am();
   CalendarFormat _calendarFormat = CalendarFormat.week;
+  bool is24h = false;
 
+  late List<String> timeSlots;
   Map<String, String> courseMap = {};
   List<dynamic> courses = [];
   List<dynamic> schedule = [];
@@ -55,6 +64,7 @@ class _SchedulePageState extends State<SchedulePage> {
   late EventDataSource _deadlineDataSource;
 
   initializeSchedulePage() {
+    setTimeSlots();
     getSchedule();
     createEvents();
     _eventDataSource = EventDataSource(events + quizzes);
@@ -62,6 +72,7 @@ class _SchedulePageState extends State<SchedulePage> {
     _deadlineDataSource = EventDataSource(deadlines);
     _controller.displayDate = _selectedDay;
     groupedEvents = groupEvents(events);
+    setState(() {});
   }
 
   getSchedule() {
@@ -71,8 +82,10 @@ class _SchedulePageState extends State<SchedulePage> {
     courses = coursesR;
   }
 
+  bool delayed3rd = prefs.getBool('delayed_3rd') ?? false;
   @override
   void initState() {
+    print('SchedulePage: INITSTATE');
     super.initState();
     initializeSchedulePage();
     setState(() {});
@@ -80,8 +93,29 @@ class _SchedulePageState extends State<SchedulePage> {
     colorIndex = 0;
   }
 
+  void setTimeSlots() {
+    bool delayed = prefs.getBool('delayed_3rd') ?? false;
+
+    timeSlots = [
+      '8:15-9:45',
+      '10:00-11:30',
+      delayed ? '12:00-13:30' : '11:45-13:15',
+      '13:45-15:15',
+      '15:45-17:15'
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (prefs.getBool('delayed_3rd') != null &&
+        prefs.getBool('delayed_3rd') != delayed3rd) {
+      print("DETECTED CHANGE IN DELAYED 3rd");
+      delayed3rd = prefs.getBool('delayed_3rd')!;
+      initializeSchedulePage();
+    }
+
+    is24h = prefs.getBool('is_24h') ?? false;
+
     return Material(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -301,19 +335,19 @@ class _SchedulePageState extends State<SchedulePage> {
                         //  _selectedDay = _controller.displayDate ?? _selectedDay;
                         // });
                         //},
-                        timeSlotViewSettings: const TimeSlotViewSettings(
+                        timeSlotViewSettings: TimeSlotViewSettings(
                             startHour: 7,
                             endHour: 19,
                             timeInterval: Duration(hours: 1),
                             timeIntervalHeight: 65,
-                            timeFormat: "h a",
+                            timeFormat: is24h ? "k:mm" : "h a",
                             timeRulerSize: 40,
-                            timeTextStyle: TextStyle(
+                            timeTextStyle: const TextStyle(
                                 color: MyColors.secondary,
                                 fontFamily: 'Outfit',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500),
-                            nonWorkingDays: <int>[
+                            nonWorkingDays: const <int>[
                               DateTime.friday,
                             ]),
                         dataSource: EventDataSource(events + quizzes),
@@ -612,14 +646,6 @@ class _SchedulePageState extends State<SchedulePage> {
     'Sunday': 7,
   };
 
-  List<String> timeSlots = [
-    '8:15-9:45',
-    '10:00-11:30',
-    '11:45-13:15',
-    '13:45-15:15',
-    '15:45-17:15'
-  ];
-
   List<Event> events = [];
   EventDataSource _eventDataSource = EventDataSource([]);
 
@@ -633,6 +659,7 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   createEvents() {
+    events = [];
     for (int i = 0; i < schedule.length; i++) {
       String day = schedule[i][0];
       int dayIndex = dayIndexMap[day]!;
@@ -686,12 +713,7 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   int colorIndex = 0;
-  List<Color> colors = const [
-    Color(0xffdbf2fd),
-    Color(0xffECDBFD),
-    Color(0xffFDDBDB),
-    Color(0xffFDFADB)
-  ];
+
   getColor() {
     var res = colors[colorIndex];
     colorIndex++;
@@ -854,7 +876,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                              "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
+                              "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}"),
                         )
                       ],
                     )),
