@@ -155,13 +155,18 @@ class _TranscriptPageState extends State<TranscriptPage>
                 padding: const EdgeInsets.all(10),
                 // width: 380,
                 height: 350,
-                child: Column(
-                  children: [
-                    (semesterGrades == null || semesterGrades!.isEmpty)
+                child: showLoading
+                    ? ListView.separated(
+                        itemBuilder: (context, index) =>
+                            const SemesterSkeleton(),
+                        separatorBuilder: (context, index) =>
+                            Container(height: 25),
+                        itemCount: 2,
+                        shrinkWrap: true,
+                      )
+                    : (semesterGrades == null || semesterGrades!.isEmpty)
                         ? const Text("Nothing Here!")
                         : Expanded(child: createTables()),
-                  ],
-                ),
                 // ),
               ),
             ),
@@ -324,142 +329,131 @@ class _TranscriptPageState extends State<TranscriptPage>
   Widget createTables() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
-      child: showLoading
-          ? ListView.separated(
-              itemBuilder: (context, index) => const SemesterSkeleton(),
-              separatorBuilder: (context, index) => Container(height: 25),
-              itemCount: 2,
-              shrinkWrap: true,
-            )
-          : ListView.separated(
-              controller: _scrollController,
-              shrinkWrap: true,
-              physics: const BouncingScrollPhysics(),
-              separatorBuilder: (context, index) => Container(height: 15),
-              itemCount: semesterGrades != null ? semesterGrades!.length : 0,
-              itemBuilder: (BuildContext context, int index) {
-                var semester = semesterGrades?[index];
-                var semesterName = semester[0];
-                var courseGrades = semester[1];
+      child: ListView.separated(
+        controller: _scrollController,
+        shrinkWrap: true,
+        physics: const BouncingScrollPhysics(),
+        separatorBuilder: (context, index) => Container(height: 15),
+        itemCount: semesterGrades != null ? semesterGrades!.length : 0,
+        itemBuilder: (BuildContext context, int index) {
+          var semester = semesterGrades?[index];
+          var semesterName = semester[0];
+          var courseGrades = semester[1];
 
-                // Create a list of DataRows for each course grade
-                var rows = <DataRow>[
-                  for (var grade in courseGrades.take(courseGrades.length - 1))
-                    DataRow(cells: [
-                      DataCell(Text(grade[0])), // Course name
-                      DataCell(ImageFiltered(
-                          enabled: !showGPA,
-                          imageFilter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          //sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
-                          child: Text(grade[1]))), // Grade
-                      DataCell(Text(grade[2].toString())), // Credits
-                    ])
-                ];
+          // Create a list of DataRows for each course grade
+          var rows = <DataRow>[
+            for (var grade in courseGrades.take(courseGrades.length - 1))
+              DataRow(cells: [
+                DataCell(Text(grade[0])), // Course name
+                DataCell(ImageFiltered(
+                    enabled: !showGPA,
+                    imageFilter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    //sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
+                    child: Text(grade[1]))), // Grade
+                DataCell(Text(grade[2].toString())), // Credits
+              ])
+          ];
 
-                // Create a DataTable for the current semester
-                return Column(
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: Text(
-                        semesterName ?? "",
-                        style: const TextStyle(
-                            color: MyColors.primary,
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold),
+          // Create a DataTable for the current semester
+          return Column(
+            children: [
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  semesterName ?? "",
+                  style: const TextStyle(
+                      color: MyColors.primary,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(height: 5),
+              Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        25.0,
                       ),
-                    ),
-                    Container(height: 5),
-                    Column(
-                      children: [
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              25.0,
-                            ),
-                            color: MyColors.background,
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: MyColors.primary,
-                                  offset: Offset(0, -2))
-                            ],
-                          ),
-                          child: LayoutBuilder(
-                            builder: (context, constrains) => DataTable(
-                              headingRowHeight: 0,
-                              showBottomBorder: true,
-                              dividerThickness: 2,
-                              // border: TableBorder(
-                              //     horizontalInside: BorderSide(
-                              //         color: MyColors.secondary
-                              //             .withOpacity(.5))),
-                              columnSpacing: 0,
-                              dataRowHeight: 30,
-                              horizontalMargin: 3,
-                              dataTextStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13.5,
-                                  letterSpacing: .1,
-                                  color: MyColors.secondary),
-                              columns: [
-                                DataColumn2(
-                                    label: SizedBox(
-                                        width:
-                                            (constrains.maxWidth - 10) * 0.85,
-                                        child: Text('Course Name')),
-                                    size: ColumnSize.L),
-                                DataColumn(
-                                    label: SizedBox(
-                                        width:
-                                            (constrains.maxWidth - 10) * 0.05,
-                                        child: Text(''))),
-                                DataColumn2(
-                                    label: SizedBox(
-                                        width:
-                                            (constrains.maxWidth - 10) * 0.05,
-                                        child: Text('')),
-                                    numeric: true),
-                              ],
-                              rows: rows,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: const FractionalOffset(0.96, 0.0),
-                          child: ImageFiltered(
-                            imageFilter: showGPA
-                                ? ImageFilter.blur()
-                                : ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                            child: Text.rich(
-                              // textAlign: TextAlign.end,
-                              TextSpan(
-                                text: courseGrades[courseGrades.length - 1][0]
-                                    .toString(),
-                                style: const TextStyle(
-                                    color: MyColors.secondary,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w900),
-                                children: const [
-                                  TextSpan(
-                                    text: "GPA",
-                                    style: TextStyle(
-                                        // color: MyColors.background,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                      color: MyColors.background,
+                      boxShadow: const [
+                        BoxShadow(
+                            color: MyColors.primary, offset: Offset(0, -2))
                       ],
                     ),
-                  ],
-                );
-              },
-            ),
+                    child: LayoutBuilder(
+                      builder: (context, constrains) => DataTable(
+                        headingRowHeight: 0,
+                        showBottomBorder: true,
+                        dividerThickness: 2,
+                        // border: TableBorder(
+                        //     horizontalInside: BorderSide(
+                        //         color: MyColors.secondary
+                        //             .withOpacity(.5))),
+                        columnSpacing: 0,
+                        dataRowHeight: 30,
+                        horizontalMargin: 3,
+                        dataTextStyle: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.5,
+                            letterSpacing: .1,
+                            color: MyColors.secondary),
+                        columns: [
+                          DataColumn2(
+                              label: SizedBox(
+                                  width: (constrains.maxWidth - 10) * 0.85,
+                                  child: Text('Course Name')),
+                              size: ColumnSize.L),
+                          DataColumn(
+                              label: SizedBox(
+                                  width: (constrains.maxWidth - 10) * 0.05,
+                                  child: Text(''))),
+                          DataColumn2(
+                              label: SizedBox(
+                                  width: (constrains.maxWidth - 10) * 0.05,
+                                  child: Text('')),
+                              numeric: true),
+                        ],
+                        rows: rows,
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: const FractionalOffset(0.96, 0.0),
+                    child: ImageFiltered(
+                      imageFilter: showGPA
+                          ? ImageFilter.blur()
+                          : ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                      child: Text.rich(
+                        // textAlign: TextAlign.end,
+                        TextSpan(
+                          text: courseGrades[courseGrades.length - 1][0]
+                              .toString(),
+                          style: const TextStyle(
+                              color: MyColors.secondary,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900),
+                          children: const [
+                            TextSpan(
+                              text: "GPA",
+                              style: TextStyle(
+                                  // color: MyColors.background,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
