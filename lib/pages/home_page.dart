@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage>
                       child: Text(
                         (prefs.getString('name')!.split(" ")[0] ==
                                 "Abdelrahman")
-                            ? "Bodia"
+                            ? "Hello, Bodia!"
                             : "Hello, ${prefs.getString('name')!.split(" ")[0] ?? "Student"}!",
                         style: const TextStyle(
                             color: MyColors.secondary,
