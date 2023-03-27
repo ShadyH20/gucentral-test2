@@ -63,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsSection(
                   title: const Text(
                     'General',
-                    style: TextStyle(fontSize: 25, color: MyColors.secondary),
+                    style: TextStyle(fontSize: 22, color: MyColors.secondary),
                     softWrap: true,
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
@@ -78,7 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsSection(
                   title: const Text(
                     'Schedule',
-                    style: TextStyle(fontSize: 25, color: MyColors.secondary),
+                    style: TextStyle(fontSize: 22, color: MyColors.secondary),
                     softWrap: true,
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
@@ -91,8 +91,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 //// SECURITY SECTION ////
                 SettingsSection(
                   title: const Text(
-                    'Schedule',
-                    style: TextStyle(fontSize: 25, color: MyColors.secondary),
+                    'Security',
+                    style: TextStyle(fontSize: 22, color: MyColors.secondary),
                     softWrap: true,
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
@@ -132,7 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   //// TILE TITLE TEXT STYLE ////
   final TextStyle titleTS = const TextStyle(
-      color: MyColors.secondary, fontWeight: FontWeight.w500, fontSize: 21);
+      color: MyColors.secondary, fontWeight: FontWeight.w500, fontSize: 20);
 
   static const keyTheme = 'key-theme';
   buildDarkMode() {
@@ -352,7 +352,7 @@ class IconBuilder extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: const Border.fromBorderSide(
               BorderSide(color: MyColors.primaryVariant))),
-      child: Icon(icon, color: MyColors.secondary.withOpacity(0.9), size: 25),
+      child: Icon(icon, color: MyColors.secondary.withOpacity(0.9), size: 20),
     );
   }
 }
