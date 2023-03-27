@@ -4,7 +4,6 @@ import 'package:gucentral/utils/Theme.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import "./pages/login_page.dart";
 import './widgets/Requests.dart';
-import 'dart:html' as html;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,20 +15,10 @@ void main() {
   //     const SystemUiOverlayStyle(statusBarColor: MyTheme.light));
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
       .then(
     (_) {
-      if (html.window.screen != null) {
-        if (html.window.screen!.orientation != null) {
-          html.window.screen!.orientation!.lock('portrait');
-        } else {
-          print("No orientation");
-        }
-      } else {
-        print("No screen");
-      }
       runApp(const MyApp());
     },
   );

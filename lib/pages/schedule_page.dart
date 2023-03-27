@@ -316,7 +316,7 @@ class _SchedulePageState extends State<SchedulePage> {
                             nonWorkingDays: <int>[
                               DateTime.friday,
                             ]),
-                        dataSource: _eventDataSource,
+                        dataSource: EventDataSource(events + quizzes),
                         appointmentBuilder: appointmentBuilder,
                       ),
                     ),
@@ -408,6 +408,8 @@ class _SchedulePageState extends State<SchedulePage> {
             height: 26,
             color: MyColors.secondary,
           ),
+          splashRadius: 15,
+          tooltip: "Today",
           onPressed: () {
             setState(() {
               _selectedDay = DateTime.now().at8am();

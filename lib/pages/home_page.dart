@@ -4,6 +4,8 @@ import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:gucentral/pages/schedule_page.dart";
+import "package:gucentral/widgets/EventDataSource.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
@@ -21,6 +23,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     // ColorScheme MyColors = Theme.of(context).colorScheme;
@@ -76,12 +84,21 @@ class _HomePageState extends State<HomePage>
               //// HELLO STUDENT ////
               Row(
                 children: [
-                  Text(
-                    "Hello, ${prefs.getString('name')!.split(" ")[0] ?? "Student"}!",
-                    style: const TextStyle(
-                        color: MyColors.secondary,
-                        fontSize: 36,
-                        fontWeight: FontWeight.w800),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        "Hello, ${prefs.getString('name')!.split(" ")[0] ?? "Student"}!",
+                        style: const TextStyle(
+                            color: MyColors.secondary,
+                            fontSize: 36,
+                            fontWeight: FontWeight.w800),
+                        textAlign: TextAlign.start,
+                        maxLines: 1,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -131,21 +148,22 @@ class _HomePageState extends State<HomePage>
                                       child: Column(
                                           // mainAxisAlignment:
                                           // MainAxisAlignment.spaceBetween,
-                                          children: const [
-                                            Text(
-                                              "Next Week",
+                                          children: [
+                                            const Text(
+                                              "This Week",
                                             ),
                                             FittedBox(
                                               fit: BoxFit.scaleDown,
                                               child: Text(
-                                                "2",
+                                                getNumberOfQuizzesThisWeek(),
                                                 textScaleFactor: 6,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   fontWeight: FontWeight.w700,
                                                 ),
                                               ),
                                             ),
-                                            Text("exams")
+                                            Text(
+                                                "exam${nQuizzesThisWeek == 1 ? "" : "s"}")
                                           ]),
                                     ),
                                   ),
@@ -245,6 +263,29 @@ class _HomePageState extends State<HomePage>
         ));
   }
 
+  int nQuizzesThisWeek = 0;
   @override
   bool get wantKeepAlive => true;
+
+  getNumberOfQuizzesThisWeek() {
+    var allQuizzes = Requests.getQuizzes();
+    var dataSource = EventDataSource(allQuizzes);
+    var quizzesThisWeek = dataSource.getVisibleAppointments(
+        DateTime.now(), "", findLastDateOfTheWeek(DateTime.now()));
+    setState(() {
+      nQuizzesThisWeek = quizzesThisWeek.length;
+    });
+    return "${quizzesThisWeek.length}";
+  }
+
+  DateTime findLastDateOfTheWeek(DateTime dateTime) {
+    int daysToadd = DateTime.saturday - dateTime.weekday;
+    if (daysToadd == -1) {
+      daysToadd = 6;
+    }
+    return dateTime
+        .getDateOnly()
+        .add(Duration(days: daysToadd))
+        .subtract(const Duration(minutes: 1));
+  }
 }
