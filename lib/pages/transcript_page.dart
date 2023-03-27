@@ -155,7 +155,8 @@ class _TranscriptPageState extends State<TranscriptPage>
                 padding: const EdgeInsets.all(10),
                 // width: 380,
                 height: 350,
-                child: showLoading
+child: Column(children:[
+                    showLoading
                     ? ListView.separated(
                         itemBuilder: (context, index) =>
                             const SemesterSkeleton(),
@@ -167,6 +168,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                     : (semesterGrades == null || semesterGrades!.isEmpty)
                         ? const Text("Nothing Here!")
                         : Expanded(child: createTables()),
+],),
                 // ),
               ),
             ),
