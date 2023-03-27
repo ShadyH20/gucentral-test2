@@ -1,12 +1,10 @@
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:flutter_settings_screens/flutter_settings_screens.dart";
 import "package:gucentral/pages/schedule_page%20copy.dart";
 import "package:gucentral/pages/schedule_page.dart";
 import "package:gucentral/pages/settings/semester_range.dart";
 import "package:gucentral/utils/local_auth_api.dart";
-// import "package:flutter_settings_screens/flutter_settings_screens.dart";
 // import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";

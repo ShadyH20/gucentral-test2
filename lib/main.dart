@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:gucentral/utils/Theme.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import "./pages/login_page.dart";
@@ -20,9 +19,7 @@ void main() {
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
       .then(
     (_) {
-      Settings.init(cacheProvider: SharePreferenceCache()).then((_) {
-        runApp(const MyApp());
-      });
+      runApp(const MyApp());
     },
   );
   // runApp(MyApp());
