@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "login_page",
       theme: MyTheme.lightTheme,
       darkTheme: MyTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.light,
       routes: {
         "login_page": (context) => LoginPage(key: key),
         // "home_page": (context) => HomePageNavDrawer(
