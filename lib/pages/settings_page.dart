@@ -245,7 +245,7 @@ class _SettingsPageState extends State<SettingsPage> {
         style: titleTS,
       ),
       description:
-          const Text('If your 3rd slot starts at 12:00 pm instead of 11:45 pm'),
+          const Text('If your 3rd slot starts at 12:00 pm instead of 11:45 am'),
       initialValue: prefs.getBool('delayed_3rd') ?? false,
       onToggle: (value) {
         setState(() {

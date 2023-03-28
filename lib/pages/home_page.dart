@@ -110,7 +110,9 @@ class _HomePageState extends State<HomePage>
               //// THE 3 BOXES ////
               Expanded(
                   flex: 4,
-                  child: Column(
+                  child: Padding(
+padding: const EdgeInsets.symmetric(horizontal: 10),
+child: Column(
                     children: [
                       //// SUMMARY ////
                       Expanded(
@@ -125,7 +127,7 @@ class _HomePageState extends State<HomePage>
                           ),
                         ),
                       ),
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 20),
                       Expanded(
                         flex: 2,
                         child: Row(
@@ -173,7 +175,7 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 25),
+                            const SizedBox(width: 20),
                             //// CURRENT WEEK ////
                             Expanded(
                               flex: 2,
@@ -215,7 +217,7 @@ class _HomePageState extends State<HomePage>
                       ),
                       const SizedBox(height: 25),
                     ],
-                  )),
+                  )),),
 
               //// SCHEDULE ////
               Expanded(
