@@ -108,7 +108,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         menuScreen: Builder(
           builder: (context) => MenuPage(
               currentItem: currentItem,
-              onSelecteItem: (item) async {
+              onSelectedItem: (item) async {
                 if (item == MenuItems.login) {
                   // Clear SharedPrefs
                   SharedPreferences prefs =

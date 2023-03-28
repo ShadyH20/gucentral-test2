@@ -1,0 +1,21 @@
+const labels = [
+  'The timetable works efficiently as far as my activities are concerned',
+  'Any changes in the course or teaching have been communicated effectively ',
+  'The course  is well organized and is running smoothly ',
+  'The required amount of work for this course is adequate',
+  'I have received sufficient advice and support with my studies ',
+  'I have been able to contact staff when I needed to ',
+  'Good advice was available when I needed to make study choices',
+  'The library resources and services are good enough for my needs',
+  'I have been able to access general IT resources when I needed to',
+  'I have been able to access specialized equipment, facilities or room when I needed to ',
+  'The course has helped me present myself with confidence',
+  'My communication skills have improved',
+  'As a result of the course, I feel confident in tackling unfamiliar problems',
+  'The criteria used in marking have been clear in advance',
+  'Assessment arrangements and marking have been fair',
+  'Feedback on my work has been prompt',
+  'I have received detailed comments on my work',
+  'Feedback on my work has helped me clarify things I did not understand.',
+  'Overall, I am satisfied with the quality of the course.'
+];

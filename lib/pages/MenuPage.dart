@@ -9,8 +9,9 @@ import '../widgets/MeduItemList.dart';
 
 class MenuPage extends StatefulWidget {
   MenuItemlist currentItem;
-  ValueChanged<MenuItemlist> onSelecteItem;
-  MenuPage({super.key, required this.currentItem, required this.onSelecteItem});
+  ValueChanged<MenuItemlist> onSelectedItem;
+  MenuPage(
+      {super.key, required this.currentItem, required this.onSelectedItem});
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -157,12 +158,28 @@ class _MenuPageState extends State<MenuPage> {
         ),
       ]);
     } else {
+      bool isComingSoon = comingSoon(item.title);
       return ListTileTheme(
         contentPadding: const EdgeInsets.symmetric(horizontal: 0),
         selectedColor: MyColors.background,
         textColor: MyColors.background.withOpacity(0.5),
         iconColor: MyColors.background.withOpacity(0.5),
         child: ListTile(
+          enabled: !isComingSoon,
+          trailing: isComingSoon
+              ? Padding(
+                  padding: const EdgeInsets.all(0),
+                  child: Text(
+                    'Coming Soon!',
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: MyColors.background.withOpacity(0.8),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12),
+                  ),
+                )
+              : null,
           dense: true,
           visualDensity: const VisualDensity(vertical: 1),
           // selectedTileColor: Colors.white,
@@ -179,10 +196,14 @@ class _MenuPageState extends State<MenuPage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          onTap: () => widget.onSelecteItem(item),
+          onTap: () => widget.onSelectedItem(item),
         ),
       );
     }
+  }
+
+  bool comingSoon(String title) {
+    return title == 'Courses' || title == 'Grades' || title == 'Map';
   }
 }
 
