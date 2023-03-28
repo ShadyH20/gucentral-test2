@@ -56,6 +56,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
     var resp = await Requests.getCoursesToEval();
     if (resp['success']) {
       setState(() {
+        dropdownCourseValue = "-1";
         coursesToEval = [
           {'name': 'Choose a course', 'value': '-1'}
         ];
@@ -100,11 +101,11 @@ class _EvaluatePageState extends State<EvaluatePage> {
                         borderRadius: BorderRadius.circular(13)),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton2(
+                        enableFeedback: true,
                         iconStyleData: const IconStyleData(
                             icon: Icon(Icons.arrow_drop_down_outlined),
                             iconSize: 30),
                         isExpanded: true,
-
                         value: dropdownCourseValue,
                         style: const TextStyle(
                             // decoration: TextDecoration.underline,
@@ -126,7 +127,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
                             dropdownCourseValue = courseVal!;
                           });
                           if (dropdownCourseValue != coursesToEval.first) {
-                            print("$dropdownCourseValue chosen");
+                            debugPrint("$dropdownCourseValue chosen");
                             courseChosen(courseVal);
                             // widget.transcript.updateTranscript(value!);
                           }
@@ -135,7 +136,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
                             .map<DropdownMenuItem>((dynamic course) {
                           return DropdownMenuItem(
                             value: course['value'],
-                            child: Text(course['name']),
+                            child: buildCourseName(course['name']),
                           );
                         }).toList(),
                       ),
@@ -206,12 +207,17 @@ class _EvaluatePageState extends State<EvaluatePage> {
   }
 
   void courseChosen(course) async {
-    debugPrint("IN COURSE CHOSEN");
+    setState(() => loading = true);
     var resp = await Requests.checkEvaluated(course);
     var alreadyEvaluated = !resp['success'];
-    debugPrint("we back $resp");
-    if (alreadyEvaluated) {
-      showSnackBar(context, resp['message'], duration: Duration(seconds: 7));
-    }
+    setState(() => loading = false);
+    showSnackBar(context, resp['message'], duration: Duration(seconds: 7));
+  }
+
+  buildCourseName(String course) {
+    var courseSplit = course.split(' ');
+    var name = courseSplit.sublist(0, courseSplit.length - 2).join(" ");
+    var code = courseSplit.sublist(courseSplit.length - 3).join(" ");
+    return Text(course);
   }
 }
