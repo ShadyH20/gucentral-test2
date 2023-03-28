@@ -207,6 +207,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
   }
 
   void courseChosen(course) async {
+    if (course == "-1") return;
     setState(() => loading = true);
     var resp = await Requests.checkEvaluated(course);
     var alreadyEvaluated = !resp['success'];
@@ -215,9 +216,20 @@ class _EvaluatePageState extends State<EvaluatePage> {
   }
 
   buildCourseName(String course) {
+    if (course == coursesToEval[0]['name']) {
+      return Text(course);
+    }
     var courseSplit = course.split(' ');
     var name = courseSplit.sublist(0, courseSplit.length - 2).join(" ");
-    var code = courseSplit.sublist(courseSplit.length - 3).join(" ");
-    return Text(course);
+    var code = courseSplit.sublist(courseSplit.length - 2).join(" ");
+    return Row(
+      children: [
+        Expanded(child: Text(code)),
+        Expanded(flex: 2, child: Text(name)),
+      ],
+    );
+    Text.rich(TextSpan(text: "$name ", children: [
+      TextSpan(text: code, style: TextStyle(color: MyColors.primaryVariant))
+    ]));
   }
 }
