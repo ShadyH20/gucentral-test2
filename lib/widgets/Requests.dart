@@ -3,6 +3,7 @@ import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
 import "HomePageNavDrawer.dart";
+import "MyColors.dart";
 
 late SharedPreferences prefs;
 Future<void> initiateSharedPreferences() async {
@@ -14,6 +15,8 @@ class Requests {
       'https://gucentralbackend-production.up.railway.app';
   static Uri transcriptURL = Uri.parse('$backendURL/transcript');
   static Uri loginURL = Uri.parse('$backendURL/login');
+  static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
+  static Uri checkEvalURL = Uri.parse('$backendURL/checkEvaluated');
 
   // static SharedPreferences prefs = getPrefs();
 
@@ -115,6 +118,41 @@ class Requests {
       return jsonDecode(response.body);
     } on Exception catch (e) {
       print("transcript exception $e");
+      return null;
+    }
+  }
+
+  static getCoursesToEval() async {
+    var creds = getCreds();
+    var body = jsonEncode(creds);
+
+    try {
+      var response = await http.post(coursesEvalURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      return jsonDecode(response.body);
+    } on Exception catch (e) {
+      print("Courses to eval exception $e");
+      return null;
+    }
+  }
+
+  static checkEvaluated(String course) async {
+    var out = getCreds();
+    out['course'] = course;
+    var body = jsonEncode(out);
+
+    try {
+      var response = await http.post(checkEvalURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      return jsonDecode(response.body);
+    } on Exception catch (e) {
+      print("Courses to eval exception $e");
       return null;
     }
   }
@@ -224,4 +262,26 @@ class Event implements Comparable<Event> {
       'l': location
     };
   }
+}
+
+void showSnackBar(BuildContext context, String text,
+    {Duration duration = const Duration(seconds: 4)}) {
+  final snackBar = SnackBar(
+    duration: duration,
+    behavior: SnackBarBehavior.floating,
+    elevation: 7,
+    backgroundColor: Color.fromARGB(255, 113, 118, 121),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    width: MediaQuery.of(context).size.width * 0.8,
+    content: Text(
+      text,
+      textAlign: TextAlign.center,
+      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+    ),
+    showCloseIcon: true,
+    closeIconColor: MyColors.background,
+  );
+  // Find the ScaffoldMessenger in the widget tree
+  // and use it to show a SnackBar.
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }

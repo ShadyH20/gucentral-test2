@@ -43,13 +43,22 @@ class _MenuPageState extends State<MenuPage> {
               children: <Widget>[
                 Expanded(
                   flex: 9,
-                  child: SizedBox(
+                  child: Padding(
                     // color: MyColors.accent,
-                    width: 200,
-                    child: Wrap(
-                      spacing: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 35),
+                    child: Column(
                       children: [
+                        buildMenuItem(MenuItems.profile),
+                        const Spacer(),
                         ...MenuItems.all.map(buildMenuItem).toList(),
+                        const Spacer(),
+                        const Divider(
+                          color: MyColors.background,
+                          thickness: 3,
+                        ),
+                        buildMenuItem(MenuItems.settings),
+                        buildMenuItem(MenuItems.login),
+                        const Spacer(flex: 2)
                       ],
                     ),
                   ),
@@ -138,13 +147,6 @@ class _MenuPageState extends State<MenuPage> {
               ),
               // ),
             ),
-            // const Divider(
-            //   color: MyColors.background,
-            //   thickness: 3,
-            // ),
-            const SizedBox(
-              height: 25,
-            )
           ],
         ),
       );
@@ -174,8 +176,9 @@ class _MenuPageState extends State<MenuPage> {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
                     style: TextStyle(
+                        fontStyle: FontStyle.italic,
                         color: MyColors.background.withOpacity(0.8),
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         fontSize: 12),
                   ),
                 )
@@ -217,17 +220,19 @@ class MenuItems {
   static const schedule = MenuItemlist('Schedule');
   static const map = MenuItemlist('Map');
   static const settings = MenuItemlist('Settings', Icons.settings);
+  static const evaluate = MenuItemlist('Evaluate');
   static const seperator = MenuItemlist('Seperator');
   static final all = <MenuItemlist>[
-    profile,
+    // profile,
     home,
     grades,
     courses,
     schedule,
     transcript,
+    evaluate,
     map,
-    seperator,
-    settings,
-    login
+    // seperator,
+    // settings,
+    // login
   ];
 }

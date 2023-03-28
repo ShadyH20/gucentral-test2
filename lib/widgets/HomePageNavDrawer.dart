@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:gucentral/pages/evaluate_page.dart';
 import 'package:gucentral/pages/home_page.dart';
 import 'package:gucentral/pages/login_page.dart';
 import 'package:gucentral/pages/courses_page.dart';
@@ -61,6 +62,8 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
           (pages[5] as TranscriptPage).hideGPA();
           return 5;
         }
+      case MenuItems.evaluate:
+        return 6;
 
       // case MenuItems.login:
       //   return const LoginPage();
@@ -77,12 +80,11 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
     pages = [
       HomePage(),
       CoursesPage(),
-      SchedulePage(
-        key: _scheduleKey,
-      ),
+      SchedulePage(key: _scheduleKey),
       SettingsPage(callScheduleInit: callScheduleInit),
       GradesPage(),
-      TranscriptPage()
+      TranscriptPage(),
+      EvaluatePage()
     ];
     _drawerController = ZoomDrawerController();
   }
