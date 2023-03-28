@@ -46,7 +46,6 @@ class Requests {
         prefs.setString('username', username);
         prefs.setString('password', password);
         prefs.setString('gpa', res['gpa']);
-        prefs.setString('last_option', res['last_option']);
         prefs.setString('name', res['name']);
         prefs.setString('first_name', res['name'].toString().split(' ')[0]);
         prefs.setString('id', res['id']);

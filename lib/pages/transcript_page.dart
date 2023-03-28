@@ -38,7 +38,6 @@ class _TranscriptPageState extends State<TranscriptPage>
   final _scrollController = ScrollController();
 
   String gpa = "";
-  String last_option = "";
   bool showLoading = false;
   List<dynamic>? semesterGrades;
   bool tiltingBack = false;
@@ -86,11 +85,13 @@ class _TranscriptPageState extends State<TranscriptPage>
     if (prefs.containsKey('gpa')) {
       setState(() {
         gpa = prefs.getString('gpa')!;
-        last_option = prefs.getString('last_option')!;
-        if (last_option != "") {
+        int currYear = DateTime.now().year;
+        String lastOption = "$currYear-${currYear + 1}";
+        if (lastOption != "") {
           int batch = int.parse((usernameId[1] as String).split("-")[0]);
           int firstYear = ((batch - 1) / 3 + 2003).toInt();
-          int lastYear = int.parse(last_option.split("-")[0]);
+          int lastYear = int.parse(lastOption.split("-")[0]);
+          list = ['Select A Year'];
           while (firstYear <= lastYear) {
             list.add("$firstYear-${firstYear + 1}");
             firstYear++;
@@ -155,20 +156,22 @@ class _TranscriptPageState extends State<TranscriptPage>
                 padding: const EdgeInsets.all(10),
                 // width: 380,
                 height: 350,
-child: Column(children:[
+                child: Column(
+                  children: [
                     showLoading
-                    ? ListView.separated(
-                        itemBuilder: (context, index) =>
-                            const SemesterSkeleton(),
-                        separatorBuilder: (context, index) =>
-                            Container(height: 25),
-                        itemCount: 2,
-                        shrinkWrap: true,
-                      )
-                    : (semesterGrades == null || semesterGrades!.isEmpty)
-                        ? const Text("Nothing Here!")
-                        : Expanded(child: createTables()),
-],),
+                        ? ListView.separated(
+                            itemBuilder: (context, index) =>
+                                const SemesterSkeleton(),
+                            separatorBuilder: (context, index) =>
+                                Container(height: 25),
+                            itemCount: 2,
+                            shrinkWrap: true,
+                          )
+                        : (semesterGrades == null || semesterGrades!.isEmpty)
+                            ? const Text("Nothing Here!")
+                            : Expanded(child: createTables()),
+                  ],
+                ),
                 // ),
               ),
             ),
@@ -222,7 +225,9 @@ child: Column(children:[
             color: MyColors.secondary,
           ),
           onPressed: () {
-            updateTranscript(dropdownValue);
+            if (dropdownValue != list.first) {
+              updateTranscript(dropdownValue);
+            }
           },
         ),
         Container(
@@ -523,13 +528,7 @@ class SemesterSkeleton extends StatelessWidget {
 
 // DROPDOWN LIST CLASS
 
-List<String> list = <String>[
-  'Select A Year',
-  // '2019-2020',
-  // '2020-2021',
-  // '2021-2022',
-  // '2022-2023'
-];
+List<String> list = <String>[];
 
 String dropdownValue = list.first;
 
