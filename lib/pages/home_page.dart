@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage>
                           ),
                         ),
                       ),
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 20),
                       Expanded(
                         flex: 2,
                         child: Row(
@@ -173,7 +173,7 @@ class _HomePageState extends State<HomePage>
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 25),
+                            const SizedBox(width: 20),
                             //// CURRENT WEEK ////
                             Expanded(
                               flex: 2,
