@@ -23,7 +23,9 @@ extension TimeOfDayExtension on TimeOfDay {
 class AddQuizPage extends StatefulWidget {
   final List<dynamic> courses;
   final Event? event;
-  const AddQuizPage({super.key, required this.courses, this.event});
+  final DateTime? initialDate;
+  const AddQuizPage(
+      {super.key, required this.courses, this.event, this.initialDate});
 
   @override
   _AddQuizPageState createState() => _AddQuizPageState();
@@ -59,7 +61,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
       _selectedValue = widget.event!.title.split(" ").join("");
     } else {
       debugPrint("Init dates and timw to now");
-      _selectedDate = DateTime.now();
+      _selectedDate = widget.initialDate ?? DateTime.now();
       _selectedFromTime = TimeOfDay.now();
       _selectedToTime = TimeOfDay.now();
     }
@@ -438,6 +440,8 @@ class _AddQuizPageState extends State<AddQuizPage> {
             onPressed: () {
               setState(() {
                 isDatePickerOpen = !isDatePickerOpen;
+                isToPickerOpened = false;
+                isFromPickerOpened = false;
               });
             },
             child: Padding(
@@ -551,6 +555,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
               setState(() {
                 isFromPickerOpened = !isFromPickerOpened;
                 isToPickerOpened = false;
+                isDatePickerOpen = false;
               });
             },
             child: Container(
@@ -595,6 +600,8 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         normalTextStyle: const TextStyle(
                             fontSize: 20, color: Colors.black54),
                         is24HourMode: false,
+                        isForce2Digits: true,
+                        minutesInterval: 5,
                         itemHeight: 40,
                         spacing: 20,
                         onTimeChange: (time) {
@@ -642,6 +649,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
             onPressed: () {
               setState(() {
                 isToPickerOpened = !isToPickerOpened;
+                isDatePickerOpen = false;
                 isFromPickerOpened = false;
               });
             },
@@ -687,6 +695,8 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         normalTextStyle: const TextStyle(
                             fontSize: 20, color: Colors.black54),
                         is24HourMode: false,
+                        isForce2Digits: true,
+                        minutesInterval: 5,
                         itemHeight: 40,
                         spacing: 20,
                         onTimeChange: (time) {

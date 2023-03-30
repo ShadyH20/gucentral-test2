@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
 import 'package:gucentral/utils/Theme.dart';
+import 'package:gucentral/widgets/HomePageNavDrawer.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import "./pages/login_page.dart";
 import './widgets/Requests.dart';
@@ -34,12 +36,34 @@ class MyApp extends StatelessWidget {
       title: 'GUCentral',
       // home: const LoginPage(),
       debugShowCheckedModeBanner: false,
-      initialRoute: "login_page",
+      initialRoute: "/login",
       theme: MyTheme.lightTheme,
       darkTheme: MyTheme.darkTheme,
       themeMode: ThemeMode.light,
+      onGenerateRoute: (settings) {
+        // If you push the PassArguments route
+        if (settings.name == '/evaluate') {
+          // Cast the arguments to the correct
+          // type: ScreenArguments.
+          final args = settings.arguments as Map;
+
+          // Then, extract the required data from
+          // the arguments and pass the data to the
+          // correct screen.
+          return MaterialPageRoute(
+            builder: (context) {
+              return EvaluateACourse(course: args);
+            },
+          );
+        }
+      },
       routes: {
-        "login_page": (context) => LoginPage(key: key),
+        "/login": (context) => LoginPage(key: key),
+        // "/evaluate": (context) => EvaluateACourse(key: key),
+        "/home": (context) => HomePageNavDrawer(
+              key: key,
+              gpa: "",
+            ),
         // "home_page": (context) => HomePageNavDrawer(
         //       key: key,
         //       gpa: "",

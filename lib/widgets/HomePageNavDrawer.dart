@@ -117,8 +117,8 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
                       await SharedPreferences.getInstance();
                   prefs.clear();
                   // Navigate to login page
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const LoginPage()));
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/login', (route) => false);
                 }
                 setState(() {
                   currentItem = item;

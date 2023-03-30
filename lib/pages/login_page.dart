@@ -71,19 +71,21 @@ class _LoginPageState extends State<LoginPage> {
       showLoading = true;
     });
 
-    print("WILL SEND REQUEST NAAWW");
-    // print("${usernameController.text}, ${passwordController.text}");
+    // print("WILL SEND REQUEST NAAWW");
     var output = await Requests.login(
         context, usernameController.text.trim(), passwordController.text);
 
     if (output != null) {
       if (output['success']) {
         // ignore: use_build_context_synchronously
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePageNavDrawer(gpa: output['gpa'])),
-        );
+        // push the "home" path to the navigator
+        Navigator.pushNamed(context, "/home", arguments: output['gpa']);
+
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => HomePageNavDrawer(gpa: output['gpa'])),
+        // );
       }
     }
     setState(() {

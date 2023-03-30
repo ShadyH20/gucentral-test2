@@ -17,6 +17,7 @@ class Requests {
   static Uri loginURL = Uri.parse('$backendURL/login');
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
   static Uri checkEvalURL = Uri.parse('$backendURL/checkEvaluated');
+  static Uri evaluateCourseURL = Uri.parse('$backendURL/evaluateCourse');
 
   // static SharedPreferences prefs = getPrefs();
 
@@ -85,9 +86,7 @@ class Requests {
   }
 
   static List<Event> getQuizzes() {
-    debugPrint("Getting quizzes from prefs");
     if (prefs.containsKey('quizzes')) {
-      debugPrint("Found quizzes");
       var list = jsonDecode(prefs.getString('quizzes')!);
       List<Event> quizzes = [];
       for (var quiz in list) {
@@ -95,14 +94,12 @@ class Requests {
       }
       return quizzes;
     }
-    debugPrint("Didn't find quizzes!");
 
     return [];
   }
 
   static void updateQuizzes(List<Event> quizzes) {
     prefs.setString('quizzes', jsonEncode(quizzes));
-    debugPrint("d quizzes to: $quizzes");
   }
 
   static dynamic getTranscript(context, year) async {
@@ -153,7 +150,35 @@ class Requests {
       return jsonDecode(response.body);
     } on Exception catch (e) {
       print("Courses to eval exception $e");
-      return null;
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
+  static evaluateCourse(
+      course, List<int> radio1vals, List radio2vals, String remark) async {
+    var out = getCreds();
+    out['course'] = course;
+    out['radio1'] = radio1vals;
+    out['radio2'] = radio2vals;
+    out['remark'] = remark;
+    var body = jsonEncode(out);
+
+    try {
+      var response = await http.post(evaluateCourseURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      return jsonDecode(response.body);
+    } on Exception catch (e) {
+      print("Courses to eval exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
     }
   }
 

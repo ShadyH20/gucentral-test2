@@ -67,9 +67,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
                   tiles: <SettingsTile>[
-                    buildChangeName(),
                     buildDarkMode(),
                     buildTimeFormat(),
+                    buildChangeName(),
                   ],
                 ),
 
@@ -82,8 +82,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
                   tiles: <SettingsTile>[
-                    build3rdSlot(),
                     buildSemStartEnd(),
+                    build3rdSlot(),
                   ],
                 ),
 
@@ -273,13 +273,13 @@ class _SettingsPageState extends State<SettingsPage> {
           color: MyColors.primaryVariant,
           icon: Icons.date_range_rounded),
       title: Text(
-        "Semester Range",
+        "Semester Start & End",
         style: titleTS,
       ),
 
       /// DISABLED ///
-      enabled: false,
-      description: const Text("When the current semester starts and ends"),
+      // enabled: false,
+      // description: const Text("When the current semester starts and ends"),
       onPressed: (context) {
         Navigator.push(
             context,

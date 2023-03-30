@@ -316,9 +316,6 @@ class SchedulePageState extends State<SchedulePage> {
                         // onViewChanged: ,
                         onTap: (calendarTapDetails) {
                           setState(() {
-                            // goToAddQuiz(
-                            //     eventToEdit:
-                            //         calendarTapDetails.appointments!.first);
                             tappedEvent =
                                 calendarTapDetails.appointments!.first;
                             alignment1 = editButtonsToggle
@@ -1248,7 +1245,7 @@ class SchedulePageState extends State<SchedulePage> {
             dropdownValue = value!;
           });
           if (dropdownValue == "Quiz") {
-            var quiz = await goToAddQuiz();
+            var quiz = await goToAddQuiz(initialDate: _selectedDay);
             if (quiz != null) {
               print("Quiz: ${quiz.toString()}");
               quizzes.add(quiz);
@@ -1322,9 +1319,9 @@ class SchedulePageState extends State<SchedulePage> {
   //   }
   // }
 
-  Future<dynamic> goToAddQuiz({dynamic eventToEdit}) async {
+  Future<dynamic> goToAddQuiz(
+      {dynamic eventToEdit, DateTime? initialDate}) async {
     if (eventToEdit != null) {
-      print("Event to edit: ${eventToEdit}, ${eventToEdit.runtimeType}");
       return await Navigator.push(
           context,
           MaterialPageRoute(
@@ -1338,6 +1335,7 @@ class SchedulePageState extends State<SchedulePage> {
           MaterialPageRoute(
               builder: (context) => AddQuizPage(
                     courses: courses,
+                    initialDate: initialDate,
                   )));
     }
   }
