@@ -99,6 +99,7 @@ flutter:
     - assets/images/deadline-new.svg
     - assets/images/arrow.svg
     - assets/images/today.svg
+    - assets/sounds/notification.mp3
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
