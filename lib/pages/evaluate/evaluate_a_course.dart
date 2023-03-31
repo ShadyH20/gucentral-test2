@@ -59,6 +59,8 @@ class EvaluateACourse extends StatefulWidget {
 
 class _EvaluateACourseState extends State<EvaluateACourse> {
   final _formKey = GlobalKey<FormState>();
+  final _fieldKeys =
+      List.generate(labels.length + labels2.length, (index) => GlobalKey());
 
   List<int> radio1Vals = List.filled(labels.length, 0);
   @override
@@ -257,6 +259,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
         children: List.generate(
       labels.length,
       (index) => FormBuilderField(
+        key: _fieldKeys[index],
         name: "Radio",
         focusNode: index == 0 ? _focusRadio : null,
         validator: (value) {
@@ -317,6 +320,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
         children: List.generate(
       3,
       (index) => FormField(
+        key: _fieldKeys[labels.length + index],
         validator: (value) {
           return radio2Vals[index] == 0 ? "Required" : null;
         },

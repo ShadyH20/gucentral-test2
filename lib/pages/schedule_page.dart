@@ -107,9 +107,9 @@ class SchedulePageState extends State<SchedulePage> {
 
   @override
   Widget build(BuildContext context) {
+    // If delayed 3rd changed, update the schedule
     if (prefs.getBool('delayed_3rd') != null &&
         prefs.getBool('delayed_3rd') != delayed3rd) {
-      print("DETECTED CHANGE IN DELAYED 3rd");
       delayed3rd = prefs.getBool('delayed_3rd')!;
       initializeSchedulePage();
     }

@@ -1,8 +1,8 @@
-import "dart:convert";
-import "dart:html";
+// ignore: avoid_web_libraries_in_flutter
+// import "dart:html";
 import "dart:ui" as ui;
+import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/material.dart";
-import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/pages/schedule_page.dart";
@@ -10,10 +10,8 @@ import "package:gucentral/widgets/EventDataSource.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
-import "package:http/http.dart" as http;
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import "package:intl/intl.dart";
-import 'package:flutter_ad_manager_web/flutter_ad_manager_web.dart';
+// import 'package:flutter_ad_manager_web/flutter_ad_manager_web.dart';
 
 // import 'package:navigation_drawer_animation/widet/menu_widget'
 
@@ -49,20 +47,21 @@ class _HomePageState extends State<HomePage>
 
   Widget adsenseAdsView() {
     // ignore: undefined_prefixed_name
-    ui.platformViewRegistry.registerViewFactory(
-        'adViewType',
-        (int viewID) => IFrameElement()
-          ..width = '320'
-          ..height = '100'
-          ..src = 'adview.html'
-          ..style.border = 'none');
+    // ui.platformViewRegistry.registerViewFactory(
+    //     'adViewType',
+    //     (int viewID) => IFrameElement()
+    //       ..width = '320'
+    //       ..height = '100'
+    //       ..src = 'adview.html'
+    //       ..style.border = 'none');
 
-    return SizedBox(
+    return Container(
       height: 100.0,
       width: 320.0,
-      child: HtmlElementView(
-        viewType: 'adViewType',
-      ),
+      decoration: BoxDecoration(border: Border.all()),
+      // child: HtmlElementView(
+      //   viewType: 'adViewType',
+      // ),
     );
   }
 
@@ -72,14 +71,14 @@ class _HomePageState extends State<HomePage>
 
     return Scaffold(
         backgroundColor: MyColors.background,
-        bottomNavigationBar: FlutterAdManagerWeb(
-          adUnitCode: adUnitCode,
-          // debug: true,
-          width: MediaQuery.of(context).size.width,
-          height: 70,
-        ),
+        // bottomNavigationBar: FlutterAdManagerWeb(
+        //   adUnitCode: adUnitCode,
+        //   // debug: true,
+        //   width: MediaQuery.of(context).size.width,
+        //   height: 70,
+        // ),
         appBar: AppBar(
-          systemOverlayStyle: SystemUiOverlayStyle(
+          systemOverlayStyle: const SystemUiOverlayStyle(
               statusBarColor: MyColors.background,
               statusBarIconBrightness: Brightness.dark,
               statusBarBrightness: Brightness.dark),
@@ -98,9 +97,6 @@ class _HomePageState extends State<HomePage>
               //     )),
               const Text(
             "Home",
-            // style: TextStyle(
-            //   color: MyColors.primary,
-            // ),
           ),
           actions: [
             IconButton(
@@ -110,7 +106,29 @@ class _HomePageState extends State<HomePage>
                 height: 30,
                 color: MyColors.secondary,
               ),
-              onPressed: () {},
+              onPressed: () {
+                /// REQUEST NOTIFICATIONS PERMISSION
+                AwesomeNotifications()
+                    .isNotificationAllowed()
+                    .then((isAllowed) {
+                  print(
+                      "Notifications are ${isAllowed ? "allowed" : "not allowed"}");
+                  if (!isAllowed) {
+                    // This is just a basic example. For real apps, you must show some
+                    // friendly dialog box before call the request method.
+                    // This is very important to not harm the user experience
+                    AwesomeNotifications()
+                        .requestPermissionToSendNotifications();
+                  }
+                  AwesomeNotifications().createNotification(
+                      content: NotificationContent(
+                          id: 10,
+                          channelKey: 'basic_channel',
+                          title: 'Welcom to GUCentral!',
+                          body: 'We hope you enjoy our app!',
+                          actionType: ActionType.Default));
+                });
+              },
             ),
             Container(
               width: 10,
@@ -167,7 +185,7 @@ class _HomePageState extends State<HomePage>
                               ),
                               color: MyColors.primary,
                             ),
-                            child: adsenseAdsView(),
+                            // child: adsenseAdsView(),
                           ),
                         ),
                         const SizedBox(height: 20),
