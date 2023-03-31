@@ -43,6 +43,7 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <script src="script.js" defer></script>
 
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9217063481962107"
      crossorigin="anonymous"></script>
@@ -70,6 +71,9 @@
 </script>
 
   <script>
+    const registration = await navigator.serviceWorker.register('serviceworker.js',{scope: './'});
+
+    const result = await window.Notification.requestPermission();
     window.addEventListener('load', function(ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({

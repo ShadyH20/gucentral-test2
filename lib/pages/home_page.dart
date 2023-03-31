@@ -11,6 +11,7 @@ import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
+import 'dart:js' as js;
 // import 'package:flutter_ad_manager_web/flutter_ad_manager_web.dart';
 
 // import 'package:navigation_drawer_animation/widet/menu_widget'
@@ -128,6 +129,10 @@ class _HomePageState extends State<HomePage>
                           body: 'We hope you enjoy our app!',
                           actionType: ActionType.Default));
                 });
+
+                var granted = js.context.callMethod('showNotification',
+                    ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
+                print("Granted: $granted");
               },
             ),
             Container(
