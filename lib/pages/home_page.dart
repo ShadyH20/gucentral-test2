@@ -12,7 +12,24 @@ import "package:gucentral/widgets/Requests.dart";
 import "package:http/http.dart" as http;
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import "package:intl/intl.dart";
+import 'package:flutter_ad_manager_web/flutter_ad_manager_web.dart';
+
 // import 'package:navigation_drawer_animation/widet/menu_widget'
+
+String adUnitCode = '''
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9217063481962107"
+     crossorigin="anonymous"></script>
+<!-- HorizontalAds -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9217063481962107"
+     data-ad-slot="9500486818"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+''';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,6 +52,12 @@ class _HomePageState extends State<HomePage>
 
     return Scaffold(
         backgroundColor: MyColors.background,
+        bottomNavigationBar: FlutterAdManagerWeb(
+          adUnitCode: adUnitCode,
+          debug: true,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width * 0.15,
+        ),
         appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: MyColors.background,
@@ -109,115 +132,117 @@ class _HomePageState extends State<HomePage>
 
               //// THE 3 BOXES ////
               Expanded(
-                  flex: 4,
-                  child: Padding(
-padding: const EdgeInsets.symmetric(horizontal: 10),
-child: Column(
-                    children: [
-                      //// SUMMARY ////
-                      Expanded(
-                        flex: 3,
-                        child: Container(
-                          // height: 250,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              15.0,
+                flex: 4,
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: [
+                        //// SUMMARY ////
+                        Expanded(
+                          flex: 3,
+                          child: Container(
+                            // height: 250,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                15.0,
+                              ),
+                              color: MyColors.primary,
                             ),
-                            color: MyColors.primary,
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            //// NEXT WEEK QUIZZES ////
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    15.0,
+                        const SizedBox(height: 20),
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              //// NEXT WEEK QUIZZES ////
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                      15.0,
+                                    ),
+                                    color: MyColors.secondary,
                                   ),
-                                  color: MyColors.secondary,
-                                ),
-                                child: DefaultTextStyle(
-                                  style: const TextStyle(
-                                      fontSize: 15, color: MyColors.background),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 11.0),
-                                    child: FittedBox(
-                                      child: Column(
-                                          // mainAxisAlignment:
-                                          // MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            const Text(
-                                              "This Week",
-                                            ),
-                                            FittedBox(
-                                              fit: BoxFit.scaleDown,
-                                              child: Text(
-                                                getNumberOfQuizzesThisWeek(),
-                                                textScaleFactor: 6,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.w700,
+                                  child: DefaultTextStyle(
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        color: MyColors.background),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 11.0),
+                                      child: FittedBox(
+                                        child: Column(
+                                            // mainAxisAlignment:
+                                            // MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              const Text(
+                                                "This Week",
+                                              ),
+                                              FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  getNumberOfQuizzesThisWeek(),
+                                                  textScaleFactor: 6,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
                                                 ),
                                               ),
+                                              Text(
+                                                  "exam${nQuizzesThisWeek == 1 ? "" : "s"}")
+                                            ]),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              //// CURRENT WEEK ////
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                      15.0,
+                                    ),
+                                    color: MyColors.accent,
+                                  ),
+                                  child: Column(children: [
+                                    Expanded(
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: const [
+                                          Positioned(
+                                            top: 15,
+                                            child: Text(
+                                              "current week",
                                             ),
-                                            Text(
-                                                "exam${nQuizzesThisWeek == 1 ? "" : "s"}")
-                                          ]),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            //// CURRENT WEEK ////
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(
-                                    15.0,
-                                  ),
-                                  color: MyColors.accent,
-                                ),
-                                child: Column(children: [
-                                  Expanded(
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: const [
-                                        Positioned(
-                                          top: 15,
-                                          child: Text(
-                                            "current week",
                                           ),
-                                        ),
-                                        Positioned(
-                                          // right: 10,
-                                          child: Text("Week 5",
-                                              style: TextStyle(
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 47)),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ]),
+                                          Positioned(
+                                            // right: 10,
+                                            child: Text("Week 5",
+                                                style: TextStyle(
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 47)),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  ]),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 25),
-                    ],
-                  )),),
+                        const SizedBox(height: 25),
+                      ],
+                    )),
+              ),
 
               //// SCHEDULE ////
               Expanded(
