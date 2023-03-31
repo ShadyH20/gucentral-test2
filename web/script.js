@@ -7,7 +7,7 @@ async function requestNotPermission() {
     if(result === 'granted') {
         granted = true;
     }
-    await registration.showNotification(message, { body: body, sound:'assets/sounds/notification.mp3' },);
+    await registration.showNotification(message, { body: body},);
     return granted;
 
     
