@@ -134,11 +134,11 @@ class _HomePageState extends State<HomePage>
                 if (granted) {
                   js.context.callMethod('showNotification',
                       ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
-                  await Future.delayed(const Duration(seconds: 7));
-                  js.context.callMethod('showNotification', [
-                    'Welcome to GUCentral!',
-                    'This is a delayed notification!'
-                  ]);
+                  // await Future.delayed(const Duration(seconds: 7));
+                  // js.context.callMethod('showNotification', [
+                  //   'Welcome to GUCentral!',
+                  //   'This is a delayed notification!'
+                  // ]);
                 }
                 print("Granted: $granted");
               },
