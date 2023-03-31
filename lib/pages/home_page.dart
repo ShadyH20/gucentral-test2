@@ -57,7 +57,9 @@ class _HomePageState extends State<HomePage>
           ..src = 'adview.html'
           ..style.border = 'none');
 
-    return Expanded(
+    return SizedBox(
+      height: 100.0,
+      width: 320.0,
       child: HtmlElementView(
         viewType: 'adViewType',
       ),
