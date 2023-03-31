@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage>
                 height: 30,
                 color: MyColors.secondary,
               ),
-              onPressed: () {
+              onPressed: () async {
                 /// REQUEST NOTIFICATIONS PERMISSION
                 AwesomeNotifications()
                     .isNotificationAllowed()
@@ -134,6 +134,11 @@ class _HomePageState extends State<HomePage>
                 if (granted) {
                   js.context.callMethod('showNotification',
                       ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
+                  await Future.delayed(const Duration(seconds: 7));
+                  js.context.callMethod('showNotification', [
+                    'Welcome to GUCentral!',
+                    'This is a delayed notification!'
+                  ]);
                 }
                 print("Granted: $granted");
               },
