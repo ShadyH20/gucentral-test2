@@ -130,8 +130,11 @@ class _HomePageState extends State<HomePage>
                           actionType: ActionType.Default));
                 });
 
-                var granted = js.context.callMethod('showNotification',
-                    ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
+                var granted = js.context.callMethod('requestNotPermission');
+                if (granted) {
+                  js.context.callMethod('showNotification',
+                      ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
+                }
                 print("Granted: $granted");
               },
             ),
