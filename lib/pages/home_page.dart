@@ -1,5 +1,6 @@
 import "dart:convert";
-import "dart:ui";
+import "dart:html";
+import "dart:ui" as ui;
 import "package:flutter/material.dart";
 import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
@@ -44,6 +45,23 @@ class _HomePageState extends State<HomePage>
   void didChangeDependencies() {
     super.didChangeDependencies();
     setState(() {});
+  }
+
+  Widget adsenseAdsView() {
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(
+        'adViewType',
+        (int viewID) => IFrameElement()
+          ..width = '320'
+          ..height = '100'
+          ..src = 'adview.html'
+          ..style.border = 'none');
+
+    return Expanded(
+      child: HtmlElementView(
+        viewType: 'adViewType',
+      ),
+    );
   }
 
   @override
@@ -100,7 +118,6 @@ class _HomePageState extends State<HomePage>
         body: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          // color: Colors.red,
           child: Column(
             children: [
               const SizedBox(height: 30),
@@ -148,6 +165,7 @@ class _HomePageState extends State<HomePage>
                               ),
                               color: MyColors.primary,
                             ),
+                            child: adsenseAdsView(),
                           ),
                         ),
                         const SizedBox(height: 20),

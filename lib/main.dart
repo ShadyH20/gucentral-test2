@@ -33,10 +33,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (kReleaseMode) {
-      print("Release Mode");
-    } else
-      print("NOT Release Mode");
     return MaterialApp(
       title: 'GUCentral',
       // home: const LoginPage(),
