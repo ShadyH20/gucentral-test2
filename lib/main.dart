@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
@@ -32,6 +33,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (kReleaseMode) {
+      print("Release Mode");
+    } else
+      print("NOT Release Mode");
     return MaterialApp(
       title: 'GUCentral',
       // home: const LoginPage(),
