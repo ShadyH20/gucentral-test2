@@ -7,14 +7,14 @@ async function requestNotPermission() {
     if(result === 'granted') {
         granted = true;
     }
-    await registration.showNotification(message, { body: body},);
     return granted;
-
+    
     
 }
 
 async function showNotification(message, body) {
     if (granted) {
         //type cast registration to ServiceWorkerRegistration
+        await registration.showNotification(message, { body: body, sound:'assets/sounds/notification.mp3' },);
     }
 }
