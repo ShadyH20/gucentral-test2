@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage>
         backgroundColor: MyColors.background,
         bottomNavigationBar: FlutterAdManagerWeb(
           adUnitCode: adUnitCode,
-          debug: true,
+          // debug: true,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.width * 0.15,
         ),
