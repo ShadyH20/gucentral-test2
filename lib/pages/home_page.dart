@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage>
           adUnitCode: adUnitCode,
           // debug: true,
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width * 0.15,
+          height: 70,
         ),
         appBar: AppBar(
           systemOverlayStyle: SystemUiOverlayStyle(
