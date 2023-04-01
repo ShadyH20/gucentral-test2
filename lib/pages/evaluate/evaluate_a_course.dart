@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -84,8 +85,27 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 30),
+              const Text(
+                'Evaluating',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Container(
+                alignment: Alignment.center,
+                child: buildCourseName(widget.course['name']),
+              ),
               const SizedBox(
-                height: 40,
+                height: 30,
+              ),
+
+              buildAutoFill(),
+
+              const SizedBox(
+                height: 10,
               ),
 
               /// THE FIRST 19 RATINGS ///
@@ -113,7 +133,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(15)),
                     child: submitting
-                        ? CircularProgressIndicator()
+                        ? const CircularProgressIndicator()
                         : ElevatedButton(
                             onPressed: () {
                               postEvaluation();
@@ -308,7 +328,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                     height: 60,
                     child: Divider(thickness: 2),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
       ),
@@ -418,7 +438,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(15.0),
           child: TextFormField(
               controller: _remarkController,
               maxLines: 6,
@@ -476,4 +496,116 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
   }
 
   bool submitting = false;
+
+  buildCourseName(course) {
+    var courseSplit = course.split(' ');
+    var name = courseSplit.sublist(0, courseSplit.length - 2).join(" ");
+    var code = courseSplit.sublist(courseSplit.length - 2).join(" ");
+
+    // add a seperator after the course name
+    return FittedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            code,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: MyColors.secondary,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            name,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: MyColors.secondary,
+            ),
+          ),
+        ],
+        // const Divider()
+      ),
+    );
+  }
+
+  var autoFillRating = 0;
+  buildAutoFill() {
+    // this will return a row containing a dropdown to select a rating from the 6 options
+    // and an apply to all button
+    return SizedBox(
+      height: 40,
+      // width: 180,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          DropdownButton2(
+            buttonStyleData: ButtonStyleData(
+                height: 35,
+                padding: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: MyColors.secondary.withOpacity(0.7),
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    color: MyColors.background)),
+            underline: Container(
+              color: Colors.transparent,
+            ),
+            dropdownStyleData: const DropdownStyleData(
+                padding: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12)),
+                )),
+            // isDense: true,
+            value: autoFillRating,
+            items: const [
+                  DropdownMenuItem(
+                    value: 0,
+                    child: Text("Choose Rating"),
+                  ),
+                ] +
+                List.generate(
+                  6,
+                  (index) => DropdownMenuItem(
+                    value: index + 1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        sentimentIcons[index],
+                        const SizedBox(width: 8),
+                        Text(values[index])
+                      ],
+                    ),
+                  ),
+                ),
+            onChanged: (value) {
+              setState(() {
+                autoFillRating = value as int;
+              });
+            },
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            height: 32,
+            child: ElevatedButton(
+              onPressed: () {
+                if (autoFillRating != 0) {
+                  setState(() {
+                    radio1Vals = List.filled(radio1Vals.length, autoFillRating);
+                  });
+                }
+              },
+              child: const Text("Apply to All"),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
