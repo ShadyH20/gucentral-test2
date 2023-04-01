@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
 
 import '../../widgets/MyColors.dart';
 import '../../widgets/Requests.dart';
@@ -48,13 +49,13 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              height: double.infinity,
-              child: Column(
+      body: Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: double.infinity,
+        child: loading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
                 children: [
                   const SizedBox(height: 30),
                   const Text(
@@ -124,27 +125,44 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                         }).toList(),
                       ),
                     ),
-                  )
+                  ),
+
+                  /// if the user has chosen a course to evaluate
+                  Expanded(
+                    child: isCourseLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : isCourseLoaded
+                            ? EvaluateACourse(course: dropdownCourseValue)
+                            : const SizedBox(),
+                  ),
+                  //
+                  // EvaluateACourse(course: dropdownCourseValue)
                 ],
               ),
-            ),
+      ),
     );
   }
 
+  bool isCourseLoading = false;
+  bool isCourseLoaded = false;
   void courseChosen(course) async {
     if (course['value'] == "-1") return;
-    setState(() => loading = true);
+    setState(() => isCourseLoading = true);
+    // setState(() => loading = true);
     var resp = await Requests.checkEvaluated(course['value']);
     var alreadyEvaluated = !resp['success'];
-    setState(() => loading = false);
+    setState(() {
+      isCourseLoading = false;
+      isCourseLoaded = !alreadyEvaluated;
+    });
     if (alreadyEvaluated) {
-      showSnackBar(context, resp['message'], duration: Duration(seconds: 7));
-    } else {
-      // do i need to define the route in the main.dart file? answer in the next comment
-      // : yes
-      // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, '/evaluate', arguments: course);
+      showSnackBar(context, resp['message'],
+          duration: const Duration(seconds: 7));
     }
+    // else {
+    //   // ignore: use_build_context_synchronously
+    //   // Navigator.pushNamed(context, '/evaluate', arguments: course);
+    // }
   }
 
   buildCourseName(String course) {
