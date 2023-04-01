@@ -57,7 +57,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   const Text(
                     "Courses To Evaluate",
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
@@ -126,6 +126,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                       ),
                     ),
                   ),
+                  SizedBox(height: isCourseLoaded ? 10 : 0),
 
                   /// if the user has chosen a course to evaluate
                   Expanded(

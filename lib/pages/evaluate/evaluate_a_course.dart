@@ -99,7 +99,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
               //   child: buildCourseName(widget.course['name']),
               // ),
               const SizedBox(
-                height: 30,
+                height: 10,
               ),
               // Align(
               //   alignment: Alignment.centerRight,
@@ -555,9 +555,11 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Tooltip(
-            message: 'Choose a rating to autofill all fields!',
+            textAlign: TextAlign.center,
+            message: 'Choose a rating to autofill all fields!\nUse wisely ;)',
             verticalOffset: 15,
             triggerMode: TooltipTriggerMode.tap,
+            showDuration: const Duration(seconds: 3),
             child: Icon(
               Icons.info_outline,
               size: 25,
