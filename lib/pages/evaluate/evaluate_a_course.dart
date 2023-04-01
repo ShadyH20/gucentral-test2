@@ -80,96 +80,99 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
       //     style: TextStyle(fontWeight: FontWeight.w500),
       //   ),
       // ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // const SizedBox(height: 30),
-              // const Text(
-              //   'Evaluating',
-              //   style: TextStyle(
-              //     fontSize: 20,
-              //     fontWeight: FontWeight.w500,
-              //   ),
-              // ),
-              // const SizedBox(height: 10),
-              // Container(
-              //   alignment: Alignment.center,
-              //   child: buildCourseName(widget.course['name']),
-              // ),
-              const SizedBox(
-                height: 10,
+      body: isDone
+          ? null
+          : Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // const SizedBox(height: 30),
+                    // const Text(
+                    //   'Evaluating',
+                    //   style: TextStyle(
+                    //     fontSize: 20,
+                    //     fontWeight: FontWeight.w500,
+                    //   ),
+                    // ),
+                    // const SizedBox(height: 10),
+                    // Container(
+                    //   alignment: Alignment.center,
+                    //   child: buildCourseName(widget.course['name']),
+                    // ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: Container(
+                    //     margin: const EdgeInsets.only(right: 20),
+                    //     child: const Text(
+                    //       'Choose a rating to autofill for all fields!',
+                    //       style: TextStyle(
+                    //         fontSize: 20,
+                    //         fontWeight: FontWeight.w500,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    buildAutoFill(),
+
+                    const SizedBox(
+                      height: 10,
+                    ),
+
+                    /// THE FIRST 19 RATINGS ///
+                    buildRadios1(),
+
+                    // DIVIDER //
+                    buildDoubleLine(),
+
+                    /// LAST 3 RATINGS ///
+                    buildRadios2(),
+
+                    // DIVIDER //
+                    buildDoubleLine(),
+
+                    /// REMARK TEXTAREA ////
+                    buildRemark(),
+
+                    /// POST EVALUATION BUTTON ///
+                    const SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 40),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15)),
+                          child: submitting
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    postEvaluation();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    enableFeedback: true,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 15),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    // fixedSize:
+                                    //     Size(MediaQuery.of(context).size.width * 0.5, 50),
+                                    textStyle: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  child: const Text("Post Evaluation"),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              // Align(
-              //   alignment: Alignment.centerRight,
-              //   child: Container(
-              //     margin: const EdgeInsets.only(right: 20),
-              //     child: const Text(
-              //       'Choose a rating to autofill for all fields!',
-              //       style: TextStyle(
-              //         fontSize: 20,
-              //         fontWeight: FontWeight.w500,
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              buildAutoFill(),
-
-              const SizedBox(
-                height: 10,
-              ),
-
-              /// THE FIRST 19 RATINGS ///
-              buildRadios1(),
-
-              // DIVIDER //
-              buildDoubleLine(),
-
-              /// LAST 3 RATINGS ///
-              buildRadios2(),
-
-              // DIVIDER //
-              buildDoubleLine(),
-
-              /// REMARK TEXTAREA ////
-              buildRemark(),
-
-              /// POST EVALUATION BUTTON ///
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 40),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                    child: submitting
-                        ? const CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: () {
-                              postEvaluation();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              enableFeedback: true,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              // fixedSize:
-                              //     Size(MediaQuery.of(context).size.width * 0.5, 50),
-                              textStyle: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            child: const Text("Post Evaluation"),
-                          ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -483,8 +486,8 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
     );
   }
 
+  bool isDone = false;
   postEvaluation() async {
-    print("IM PRESSED");
     bool isValid = _formKey.currentState!.validate();
     // _focusRadio.requestFocus();
     print("Form valid: $isValid");
@@ -504,6 +507,11 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
         submitting = false;
       });
       showSnackBar(context, res['message']);
+      if (res['success'] ?? false) {
+        setState(() {
+          isDone = true;
+        });
+      }
     }
   }
 
