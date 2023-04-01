@@ -32,7 +32,11 @@ class _EvaluatePageState extends State<EvaluatePage> {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: evaluateAppBar(),
-        bottomNavigationBar: buildBottomNavBar(),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          color: Color.fromARGB(255, 250, 250, 250),
+          child: buildBottomNavBar(),
+        ),
         body: LazyLoadIndexedStack(
           index: pageIndex,
           children: [
@@ -46,22 +50,26 @@ class _EvaluatePageState extends State<EvaluatePage> {
 
   BottomNavigationBar buildBottomNavBar() {
     return BottomNavigationBar(
+      elevation: 0,
+
+      // type: BottomNavigationBarType.shifting,
+      unselectedItemColor: MyColors.secondary,
+      showUnselectedLabels: true,
       currentIndex: pageIndex,
       onTap: (value) {
         setState(() {
           pageIndex = value;
         });
       },
-      iconSize: 30,
+      iconSize: 40,
       selectedIconTheme: const IconThemeData(size: 40),
-      unselectedFontSize: 16,
-      selectedFontSize: 20,
+      unselectedFontSize: 22,
+      selectedFontSize: 22,
       items: const [
         BottomNavigationBarItem(
-            icon: Icon(Icons.sticky_note_2_outlined),
-            label: "Evaluate Courses"),
+            icon: Icon(Icons.sticky_note_2_outlined), label: "Courses"),
         BottomNavigationBarItem(
-            icon: Icon(Icons.people_rounded), label: "Evaluate Academics"),
+            icon: Icon(Icons.people_rounded), label: "Academics"),
       ],
     );
   }

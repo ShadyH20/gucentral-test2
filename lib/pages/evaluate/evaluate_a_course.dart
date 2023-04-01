@@ -68,40 +68,52 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.background,
-      appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: MyColors.background,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.dark),
-        backgroundColor: MyColors.background,
-        foregroundColor: MyColors.secondary,
-        title: const Text(
-          "Evaluate a Course",
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-      ),
+      // appBar: AppBar(
+      //   systemOverlayStyle: const SystemUiOverlayStyle(
+      //       statusBarColor: MyColors.background,
+      //       statusBarIconBrightness: Brightness.dark,
+      //       statusBarBrightness: Brightness.dark),
+      //   backgroundColor: MyColors.background,
+      //   foregroundColor: MyColors.secondary,
+      //   title: const Text(
+      //     "Evaluate a Course",
+      //     style: TextStyle(fontWeight: FontWeight.w500),
+      //   ),
+      // ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 30),
-              const Text(
-                'Evaluating',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                alignment: Alignment.center,
-                child: buildCourseName(widget.course['name']),
-              ),
+              // const SizedBox(height: 30),
+              // const Text(
+              //   'Evaluating',
+              //   style: TextStyle(
+              //     fontSize: 20,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              // ),
+              // const SizedBox(height: 10),
+              // Container(
+              //   alignment: Alignment.center,
+              //   child: buildCourseName(widget.course['name']),
+              // ),
               const SizedBox(
                 height: 30,
               ),
-
+              // Align(
+              //   alignment: Alignment.centerRight,
+              //   child: Container(
+              //     margin: const EdgeInsets.only(right: 20),
+              //     child: const Text(
+              //       'Choose a rating to autofill for all fields!',
+              //       style: TextStyle(
+              //         fontSize: 20,
+              //         fontWeight: FontWeight.w500,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               buildAutoFill(),
 
               const SizedBox(
@@ -542,7 +554,23 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          Tooltip(
+            message: 'Choose a rating to autofill all fields!',
+            verticalOffset: 15,
+            triggerMode: TooltipTriggerMode.tap,
+            child: Icon(
+              Icons.info_outline,
+              size: 25,
+              color: MyColors.secondary.withOpacity(0.7),
+            ),
+          ),
+          const SizedBox(width: 5),
           DropdownButton2(
+            iconStyleData: const IconStyleData(
+              icon: Icon(Icons.arrow_drop_down_rounded),
+            ),
+            // isExpanded: true,
+            // menuItemStyleData: MenuItemStyleData(padding: EdgeInsets.zero),
             buttonStyleData: ButtonStyleData(
                 height: 35,
                 padding: EdgeInsets.zero,
@@ -567,20 +595,23 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
             items: const [
                   DropdownMenuItem(
                     value: 0,
-                    child: Text("Choose Rating"),
+                    child: IntrinsicWidth(child: Text("Choose Rating")),
                   ),
                 ] +
                 List.generate(
                   6,
                   (index) => DropdownMenuItem(
                     value: index + 1,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        sentimentIcons[index],
-                        const SizedBox(width: 8),
-                        Text(values[index])
-                      ],
+                    child: IntrinsicWidth(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          sentimentIcons[index],
+                          const SizedBox(width: 8),
+                          Text(values[index],
+                              style: const TextStyle(fontSize: 14)),
+                        ],
+                      ),
                     ),
                   ),
                 ),
