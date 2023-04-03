@@ -184,23 +184,21 @@ class _MenuPageState extends State<MenuPage> {
           title: Stack(
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Text(
-                  item.title,
-                  maxLines: 1,
-                  // overflow: TextOverflow,
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                    fontFamily: "Outfit",
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+              Text(
+                item.title,
+                maxLines: 1,
+                // overflow: TextOverflow,
+                textAlign: TextAlign.start,
+                style: const TextStyle(
+                  fontFamily: "Outfit",
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               isComingSoon
                   ? Positioned(
-                      top: 10,
                       bottom: 10,
+                      // top: 0,
                       right: 0,
                       child: Text(
                         'Coming Soon',
