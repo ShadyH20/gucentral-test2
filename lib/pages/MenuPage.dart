@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/widgets/MyColors.dart';
@@ -168,21 +169,11 @@ class _MenuPageState extends State<MenuPage> {
         iconColor: MyColors.background.withOpacity(0.5),
         child: ListTile(
           enabled: !isComingSoon,
-          trailing: isComingSoon
-              ? Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: Text(
-                    'Coming Soon!',
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: MyColors.background.withOpacity(0.8),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12),
-                  ),
-                )
-              : null,
+          // i need the trailing to shrink to accomodate for the width of the title
+          // how can i do that? answer in the next comment
+          // hello? answer? anyone?
+          // i want to shrink the trailing widget so that the title does not overflow
+
           dense: true,
           visualDensity: const VisualDensity(vertical: 1),
           // selectedTileColor: Colors.white,
@@ -190,14 +181,39 @@ class _MenuPageState extends State<MenuPage> {
           selected: widget.currentItem == item,
           minLeadingWidth: 0,
           leading: item.icon != null ? Icon(item.icon) : null,
-          title: Text(
-            item.title,
-            textAlign: TextAlign.start,
-            style: const TextStyle(
-              fontFamily: "Outfit",
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
+          title: Stack(
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  item.title,
+                  maxLines: 1,
+                  // overflow: TextOverflow,
+                  textAlign: TextAlign.start,
+                  style: const TextStyle(
+                    fontFamily: "Outfit",
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              isComingSoon
+                  ? Positioned(
+                      top: 10,
+                      bottom: 10,
+                      right: 0,
+                      child: Text(
+                        'Coming Soon',
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: MyColors.background.withOpacity(0.8),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11),
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
           onTap: () => widget.onSelectedItem(item),
         ),

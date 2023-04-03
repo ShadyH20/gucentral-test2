@@ -127,59 +127,50 @@ class _TranscriptPageState extends State<TranscriptPage>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: transcriptAppBar(),
-      body: Container(
-        // color: MyColors.accent,
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: double.infinity,
-        child:
-            // showLoading
-            // ? loading()
-            // :
-            Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-          // #####################
-          // #### ACTUAL PAGE ####
-          // #####################
-          children: [
-            Container(),
-            profile(),
-            // Container(height: 10),
-            cumulativeGPA(),
-            // Container(height: 30),
-            DropdownButtonYears(transcript: this),
-            Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                // width: 380,
-                height: 350,
-                child: Column(
-                  children: [
-                    showLoading
-                        ? ListView.separated(
-                            itemBuilder: (context, index) =>
-                                const SemesterSkeleton(),
-                            separatorBuilder: (context, index) =>
-                                Container(height: 25),
-                            itemCount: 2,
-                            shrinkWrap: true,
-                          )
-                        : (semesterGrades == null || semesterGrades!.isEmpty)
-                            ? const Text("Nothing Here!")
-                            : Expanded(child: createTables()),
-                  ],
-                ),
-                // ),
+        // #####################
+        // #### ACTUAL PAGE ####
+        // #####################
+        children: [
+          const Spacer(),
+          profile(),
+          const Spacer(),
+          cumulativeGPA(),
+          const Spacer(),
+          DropdownButtonYears(transcript: this),
+          const Spacer(),
+          Expanded(
+            flex: 8,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              // width: 380,
+              // height: 350,
+              child: Column(
+                children: [
+                  showLoading
+                      ? ListView.separated(
+                          itemBuilder: (context, index) =>
+                              const SemesterSkeleton(),
+                          separatorBuilder: (context, index) =>
+                              Container(height: 25),
+                          itemCount: 2,
+                          shrinkWrap: true,
+                        )
+                      : (semesterGrades == null || semesterGrades!.isEmpty)
+                          ? const Text("Nothing Here!")
+                          : Expanded(child: createTables()),
+                ],
               ),
+              // ),
             ),
-            // Container(
-            //   height: 30,
-            // )
-          ],
-        ),
+          ),
+          // Container(
+          //   height: 30,
+          // )
+        ],
       ),
     );
   }
@@ -411,16 +402,16 @@ class _TranscriptPageState extends State<TranscriptPage>
                           DataColumn2(
                               label: SizedBox(
                                   width: (constrains.maxWidth - 10) * 0.85,
-                                  child: Text('Course Name')),
+                                  child: const Text('Course Name')),
                               size: ColumnSize.L),
                           DataColumn(
                               label: SizedBox(
                                   width: (constrains.maxWidth - 10) * 0.05,
-                                  child: Text(''))),
+                                  child: const Text(''))),
                           DataColumn2(
                               label: SizedBox(
                                   width: (constrains.maxWidth - 10) * 0.05,
-                                  child: Text('')),
+                                  child: const Text('')),
                               numeric: true),
                         ],
                         rows: rows,
@@ -568,7 +559,7 @@ class _DropdownButtonYearsState extends State<DropdownButtonYears> {
             borderRadius: BorderRadius.circular(10),
           )),
           underline: Container(
-            color: const Color(0),
+            color: Colors.transparent,
           ),
 
           onChanged: (String? value) {

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/pages/evaluate/evaluate_courses.dart';
 import 'package:gucentral/widgets/Requests.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
+import 'package:transitioned_indexed_stack/transitioned_indexed_stack.dart';
 
 import '../widgets/MenuWidget.dart';
 import '../widgets/MyColors.dart';
@@ -34,16 +35,19 @@ class _EvaluatePageState extends State<EvaluatePage> {
         appBar: evaluateAppBar(),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.only(bottom: 10.0),
-          color: Color.fromARGB(255, 250, 250, 250),
+          color: const Color.fromARGB(255, 250, 250, 250),
           child: buildBottomNavBar(),
         ),
-        body: LazyLoadIndexedStack(
+        body: SlideIndexedStack(
+          // endSlideOffset: const Offset(0.0, 0),
+          beginSlideOffset: Offset(pageIndex == 0 ? 1.0 : -1.0, 0.0),
+          // curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 250),
+          // LazyLoadIndexedStack(
           index: pageIndex,
-          children: [
+          children: const [
             EvaluateCourses(),
-            Container(
-              child: Center(child: Text("Evaluate Academics")),
-            )
+            Center(child: Text("Evaluate Academics"))
           ],
         ));
   }

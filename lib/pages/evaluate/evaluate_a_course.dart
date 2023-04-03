@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gucentral/pages/schedule_page.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import 'package:gucentral/widgets/Requests.dart';
+import 'package:jumping_dot/jumping_dot.dart';
 
 const labels = [
   'The timetable works efficiently as far as my activities are concerned',
@@ -101,7 +103,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                     //   child: buildCourseName(widget.course['name']),
                     // ),
                     const SizedBox(
-                      height: 10,
+                      height: 25,
                     ),
                     // Align(
                     //   alignment: Alignment.centerRight,
@@ -119,7 +121,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                     buildAutoFill(),
 
                     const SizedBox(
-                      height: 10,
+                      height: 25,
                     ),
 
                     /// THE FIRST 19 RATINGS ///
@@ -146,26 +148,41 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                           margin: const EdgeInsets.only(bottom: 40),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15)),
-                          child: submitting
-                              ? const CircularProgressIndicator()
-                              : ElevatedButton(
-                                  onPressed: () {
-                                    postEvaluation();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    enableFeedback: true,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              postEvaluation();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              enableFeedback: true,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              // fixedSize:
+                              //     Size(MediaQuery.of(context).size.width * 0.5, 50),
+                              textStyle: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            child: submitting
+                                ? Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 15),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    // fixedSize:
-                                    //     Size(MediaQuery.of(context).size.width * 0.5, 50),
-                                    textStyle: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  child: const Text("Post Evaluation"),
-                                ),
+                                        horizontal: 15.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Text("Posting "),
+                                        JumpingDots(
+                                          color: Colors.white,
+                                          radius: 6,
+                                          animationDuration:
+                                              Duration(milliseconds: 250),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                : const Text("Post Evaluation"),
+                          ),
                         ),
                       ],
                     ),
@@ -206,7 +223,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -305,7 +322,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
           children: [
             Padding(
               padding:
-                  EdgeInsets.symmetric(horizontal: field.hasError ? 5 : 15),
+                  EdgeInsets.symmetric(horizontal: field.hasError ? 5 : 20),
               child: Row(
                 children: [
                   field.hasError && !field.isValid
@@ -322,7 +339,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                     child: Text(
                       '${index + 1}.  ${labels[index]}',
                       style: const TextStyle(
-                        fontSize: 18.0,
+                        fontSize: 15.0,
                         fontWeight: FontWeight.w500,
                         color: MyColors.secondary,
                       ),
@@ -331,10 +348,13 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                 ],
               ),
             ),
-            Row(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: _buildRadioButtons1(index),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: _buildRadioButtons1(index),
+              ),
             ),
 
             // SEPERATOR
@@ -363,7 +383,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
                   field.hasError && !field.isValid
@@ -382,9 +402,9 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                       overflow: TextOverflow.visible,
                       labels2[index],
                       style: const TextStyle(
-                        fontSize: 18.0,
+                        fontSize: 17.0,
                         // height: 0.9,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                         color: MyColors.secondary,
 
                         // letterSpacing: 0.5,
@@ -486,35 +506,6 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
     );
   }
 
-  bool isDone = false;
-  postEvaluation() async {
-    bool isValid = _formKey.currentState!.validate();
-    // _focusRadio.requestFocus();
-    print("Form valid: $isValid");
-    if (!isValid) {
-      showSnackBar(context, "Please fill out all the required fields.");
-    } else {
-      print(widget.course);
-      print("Radio 1: $radio1Vals");
-      print("Radio 2: $radio2Vals");
-      print("Remark: ${_remarkController.text}");
-      setState(() {
-        submitting = true;
-      });
-      var res = await Requests.evaluateCourse(widget.course['value'],
-          radio1Vals, radio2Vals, _remarkController.text);
-      setState(() {
-        submitting = false;
-      });
-      showSnackBar(context, res['message']);
-      if (res['success'] ?? false) {
-        setState(() {
-          isDone = true;
-        });
-      }
-    }
-  }
-
   bool submitting = false;
 
   buildCourseName(course) {
@@ -556,97 +547,155 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
   buildAutoFill() {
     // this will return a row containing a dropdown to select a rating from the 6 options
     // and an apply to all button
-    return SizedBox(
-      height: 40,
-      // width: 180,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Tooltip(
-            textAlign: TextAlign.center,
-            message: 'Choose a rating to autofill all fields!\nUse wisely ;)',
-            verticalOffset: 15,
-            triggerMode: TooltipTriggerMode.tap,
-            showDuration: const Duration(seconds: 3),
-            child: Icon(
-              Icons.info_outline,
-              size: 25,
-              color: MyColors.secondary.withOpacity(0.7),
-            ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Tooltip(
+          textAlign: TextAlign.center,
+          message: 'Choose a rating to autofill all fields!\nUse wisely ;)',
+          verticalOffset: 15,
+          triggerMode: TooltipTriggerMode.tap,
+          showDuration: const Duration(seconds: 3),
+          child: Icon(
+            Icons.info_outline,
+            size: 25,
+            color: MyColors.secondary.withOpacity(0.7),
           ),
-          const SizedBox(width: 5),
-          DropdownButton2(
-            iconStyleData: const IconStyleData(
-              icon: Icon(Icons.arrow_drop_down_rounded),
-            ),
-            // isExpanded: true,
-            // menuItemStyleData: MenuItemStyleData(padding: EdgeInsets.zero),
-            buttonStyleData: ButtonStyleData(
-                height: 35,
+        ),
+        const SizedBox(width: 5),
+        SizedBox(
+          height: 35,
+          width: 125,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+              iconStyleData: const IconStyleData(
+                icon: Icon(Icons.arrow_drop_down_rounded),
+              ),
+              isExpanded: true,
+              menuItemStyleData: const MenuItemStyleData(
+                padding: EdgeInsets.only(left: 10, right: 5),
+              ),
+              buttonStyleData: ButtonStyleData(
                 padding: EdgeInsets.zero,
                 decoration: BoxDecoration(
-                    border: Border.all(
-                      color: MyColors.secondary.withOpacity(0.7),
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    color: MyColors.background)),
-            underline: Container(
-              color: Colors.transparent,
-            ),
-            dropdownStyleData: const DropdownStyleData(
-                padding: EdgeInsets.zero,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12)),
-                )),
-            // isDense: true,
-            value: autoFillRating,
-            items: const [
-                  DropdownMenuItem(
-                    value: 0,
-                    child: IntrinsicWidth(child: Text("Choose Rating")),
-                  ),
-                ] +
-                List.generate(
-                  6,
-                  (index) => DropdownMenuItem(
-                    value: index + 1,
-                    child: IntrinsicWidth(
+                  border:
+                      Border.all(color: MyColors.secondary.withOpacity(0.7)),
+                  borderRadius: BorderRadius.circular(7),
+                ),
+              ),
+              dropdownStyleData: const DropdownStyleData(
+                  padding: EdgeInsets.zero,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(12),
+                        bottomRight: Radius.circular(12)),
+                  )),
+              value: autoFillRating,
+              items: const [
+                    DropdownMenuItem(
+                        value: 0,
+                        child: IntrinsicWidth(
+                          child: Text("Choose Rating",
+                              style: TextStyle(fontSize: 13)),
+                        )),
+                  ] +
+                  List.generate(
+                    6,
+                    (index) => DropdownMenuItem(
+                      // alignment: Alignment.centerLeft,
+                      value: index + 1,
                       child: Row(
-                        mainAxisSize: MainAxisSize.min,
+                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           sentimentIcons[index],
                           const SizedBox(width: 8),
-                          Text(values[index],
-                              style: const TextStyle(fontSize: 14)),
+                          Expanded(
+                            child: Text(
+                              values[index],
+                              maxLines: 2,
+                              softWrap: true,
+                              style: const TextStyle(fontSize: 13),
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
-                ),
-            onChanged: (value) {
-              setState(() {
-                autoFillRating = value as int;
-              });
-            },
-          ),
-          const SizedBox(width: 10),
-          SizedBox(
-            height: 32,
-            child: ElevatedButton(
-              onPressed: () {
-                if (autoFillRating != 0) {
-                  setState(() {
-                    radio1Vals = List.filled(radio1Vals.length, autoFillRating);
-                  });
-                }
+              onChanged: (value) {
+                setState(() {
+                  autoFillRating = value as int;
+                });
               },
-              child: const Text("Apply to All"),
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          height: 35,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: MyColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(7),
+              ),
+            ),
+            onPressed: () {
+              if (autoFillRating != 0) {
+                setState(() {
+                  radio1Vals = List.filled(radio1Vals.length, autoFillRating);
+                });
+              }
+            },
+            child: const Text("Apply to All"),
+          ),
+        ),
+        const SizedBox(width: 15),
+      ],
     );
+  }
+
+  bool isDone = false;
+  postEvaluation() async {
+    setState(() {
+      submitting = true;
+    });
+    await Future.delayed(Duration(seconds: 3));
+
+    setState(() {
+      submitting = false;
+    });
+
+    bool isValid = _formKey.currentState!.validate();
+    // _focusRadio.requestFocus();
+    print("Form valid: $isValid");
+    if (!isValid) {
+      showSnackBar(context, "Please fill out all the required fields.");
+    } else {
+      print(widget.course);
+      print("Radio 1: $radio1Vals");
+      print("Radio 2: $radio2Vals");
+      print("Remark: ${_remarkController.text}");
+      setState(() {
+        submitting = true;
+      });
+      // var res = await Requests.evaluateCourse(widget.course['value'],
+      //     radio1Vals, radio2Vals, _remarkController.text);
+      Map<String, dynamic> res = {
+        'success': true,
+        'message': 'Evaluationnnnnnnnn submitted successfully!'
+      };
+      Future.delayed(Duration(seconds: 4));
+
+      setState(() {
+        submitting = false;
+      });
+      showSnackBar(context, res['message']);
+      if (res['success'] ?? false) {
+        setState(() {
+          isDone = true;
+        });
+      }
+    }
   }
 }

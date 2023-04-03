@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
+import 'package:http/http.dart';
+import 'package:ntlm/ntlm.dart';
 
 import '../../widgets/MyColors.dart';
 import '../../widgets/Requests.dart';
@@ -66,22 +70,14 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     // width: ,
-                    height: 70,
+                    height: 55,
                     padding: const EdgeInsets.only(left: 10),
                     decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 230, 230, 230),
                         borderRadius: BorderRadius.circular(13)),
                     child: DropdownButtonHideUnderline(
-                      // i got this error: Failed assertion: line 968 pos 11: 'items == null ||
-                      // items.isEmpty ||
-                      // value == null ||
-                      // items.where((DropdownMenuItem<T> item) {
-                      //       return item.value == value;
-                      //     }).length ==
-                      //     1'
-                      // tell me in the next comment how to fix it
                       child: DropdownButton2(
-                        enableFeedback: true,
+                        // enableFeedback: true,
                         iconStyleData: const IconStyleData(
                           icon: Padding(
                             padding: EdgeInsets.only(right: 5),
@@ -186,4 +182,27 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
     //   TextSpan(text: code, style: TextStyle(color: MyColors.primaryVariant))
     // ]));
   }
+
+  // void testLogin() async {
+  //   print("test login");
+  //   NTLMClient client = NTLMClient(
+  //     domain: "",
+  //     workstation: "LAPTOP",
+  //     username: '${prefs.getString('username')}@student.guc.edu.eg',
+  //     password: prefs.getString('password'),
+  //   );
+  //   print(client.username);
+  //   print(client.password);
+  //   String basicAuth =
+  //       'Basic ' + base64.encode(utf8.encode('$username:$password'));
+  //   print(basicAuth);
+
+  //   Response r = await get(
+  //       Uri.parse('https://cms.guc.edu.eg/apps/student/HomePageStn.aspx'),
+  //       headers: <String, String>{'authorization': basicAuth});
+  //   print(r.statusCode);
+  //   print(r.body);
+
+  //   var res = await client.get(Uri.parse('https://student.guc.edu.eg/'));
+  // }
 }
