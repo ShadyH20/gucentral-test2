@@ -657,14 +657,14 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
 
   bool isDone = false;
   postEvaluation() async {
-    setState(() {
-      submitting = true;
-    });
-    await Future.delayed(Duration(seconds: 3));
+    // setState(() {
+    //   submitting = true;
+    // });
+    // await Future.delayed(Duration(seconds: 3));
 
-    setState(() {
-      submitting = false;
-    });
+    // setState(() {
+    //   submitting = false;
+    // });
 
     bool isValid = _formKey.currentState!.validate();
     // _focusRadio.requestFocus();

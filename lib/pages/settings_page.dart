@@ -9,7 +9,7 @@ import "package:gucentral/utils/local_auth_api.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:settings_ui/settings_ui.dart";
-
+import "../utils/SharedPrefs.dart";
 import "../widgets/Requests.dart";
 
 class SettingsPage extends StatefulWidget {

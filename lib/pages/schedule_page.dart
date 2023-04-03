@@ -18,6 +18,7 @@ import "package:table_calendar/table_calendar.dart";
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter/cupertino.dart';
 import "../widgets/EventDataSource.dart";
+import "../utils/SharedPrefs.dart";
 
 extension DateTimeExtension on DateTime {
   DateTime getDateOnly() {
@@ -64,6 +65,7 @@ class SchedulePageState extends State<SchedulePage> {
   late EventDataSource _deadlineDataSource;
 
   initializeSchedulePage() {
+    _controller.displayDate = DateTime.now().at8am();
     setTimeSlots();
     getSchedule();
     createEvents();
@@ -77,6 +79,7 @@ class SchedulePageState extends State<SchedulePage> {
 
   getSchedule() {
     schedule = Requests.getSchedule();
+    print("Schedule is: $schedule");
     var coursesR = Requests.getCourses();
     courseMap = {for (var course in coursesR) course['code']: course['name']};
     courses = coursesR;
@@ -285,7 +288,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 _controller.displayDate!, '')
                             .isEmpty
                         ? Container(
-                            padding: EdgeInsets.symmetric(vertical: 15),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
                             child: const Text(
                               "No Classes Today!",
                               style: TextStyle(
@@ -335,7 +338,7 @@ class SchedulePageState extends State<SchedulePage> {
                         timeSlotViewSettings: TimeSlotViewSettings(
                             startHour: 7,
                             endHour: 19,
-                            timeInterval: Duration(hours: 1),
+                            timeInterval: const Duration(hours: 1),
                             timeIntervalHeight: 65,
                             timeFormat: is24h ? "k:mm" : "h a",
                             timeRulerSize: 40,
@@ -347,7 +350,8 @@ class SchedulePageState extends State<SchedulePage> {
                             nonWorkingDays: const <int>[
                               DateTime.friday,
                             ]),
-                        dataSource: EventDataSource(events + quizzes),
+                        dataSource:
+                            EventDataSource(events + quizzes + examEvents),
                         appointmentBuilder: appointmentBuilder,
                       ),
                     ),
@@ -433,6 +437,17 @@ class SchedulePageState extends State<SchedulePage> {
         ),
       ),
       actions: [
+        loadingExamSched
+            ? CircularProgressIndicator()
+            : IconButton(
+                icon: const Icon(Icons.schedule_rounded,
+                    color: MyColors.secondary, size: 30),
+                splashRadius: 15,
+                tooltip: "Exam Schedule",
+                onPressed: () {
+                  getExamSchedule();
+                },
+              ),
         IconButton(
           icon: SvgPicture.asset(
             "assets/images/today.svg",
@@ -473,6 +488,8 @@ class SchedulePageState extends State<SchedulePage> {
         _deadlineDataSource.getVisibleAppointments(date, '');
     List<Appointment>? dayQuizzes =
         _quizDataSource.getVisibleAppointments(date, '');
+    List<Appointment>? dayExams =
+        EventDataSource(examEvents).getVisibleAppointments(date, '');
     Color color = isSelected ? MyColors.background : MyColors.primary;
     double size = 12;
     Widget deadline = SvgPicture.asset(
@@ -485,7 +502,7 @@ class SchedulePageState extends State<SchedulePage> {
     if (dayDeadlines.isNotEmpty) {
       icons.add(deadline);
     }
-    if (dayQuizzes.isNotEmpty) {
+    if (dayQuizzes.isNotEmpty || dayExams.isNotEmpty) {
       icons.add(Text(
         "Q",
         style: TextStyle(
@@ -580,7 +597,7 @@ class SchedulePageState extends State<SchedulePage> {
     return DefaultTextStyle(
       style: const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
       child: Container(
-        margin: EdgeInsets.all(0),
+        margin: const EdgeInsets.all(0),
         padding: EdgeInsets.symmetric(vertical: isWeek ? 7 : 2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -681,6 +698,7 @@ class SchedulePageState extends State<SchedulePage> {
               color: Colors.lightBlue,
               isAllDay: false,
               recurrence: "FREQ=DAILY;INTERVAL=7",
+              recurrenceExceptionDates: [],
               location: eventLocation);
           events.add(event);
         }
@@ -733,7 +751,12 @@ class SchedulePageState extends State<SchedulePage> {
         .getDateOnly()
         .add(Duration(hours: event.end.hour, minutes: event.end.minute)));
 
-    bool isQuiz = quizzes.contains(event);
+    var dayExams =
+        EventDataSource(examEvents).getVisibleAppointments(details.date, "");
+    bool isExamDay = dayExams.isNotEmpty && !examEvents.contains(event);
+    bool isQuiz = quizzes.contains(event) || examEvents.contains(event);
+    EventDataSource dataSource = EventDataSource(events);
+    // dataSource.appointments!.remove(details.appointments.first);
     return Stack(
       children: [
         // AnimatedAlign(
@@ -821,22 +844,29 @@ class SchedulePageState extends State<SchedulePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(event.description.toString()),
-                            Row(
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/images/location.svg",
-                                  height: 11,
-                                  color: Colors.black,
+                        // only wrap if it will overflow
+                        SizedBox(
+                          width: details.bounds.width - 20,
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            runSpacing: 5,
+                            children: [
+                              Text(event.description.toString()),
+                              FittedBox(
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/images/location.svg",
+                                      height: 11,
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(width: 3),
+                                    Text(event.location ?? "No Loc")
+                                  ],
                                 ),
-                                const SizedBox(width: 3),
-                                Text(event.location ?? "No Loc")
-                              ],
-                            ),
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -886,44 +916,13 @@ class SchedulePageState extends State<SchedulePage> {
   }
 
   List<Event> quizzes = Requests.getQuizzes();
-  // [
-  // Event(
-  //     title: "CSEN 601",
-  //     description: "Quiz 1",
-  //     start: DateTime.now()
-  //         .getDateOnly()
-  //         .add(const Duration(hours: 10, minutes: 30)),
-  //     end: DateTime.now()
-  //         .getDateOnly()
-  //         .add(const Duration(hours: 10, minutes: 30))
-  //         .add(const Duration(hours: 1, minutes: 30)),
-  //     color: Colors.green,
-  //     location: "H19",
-  //     isAllDay: false),
-  // Event(
-  //     title: "CSEN 602",
-  //     description: "Quiz 1.2",
-  //     start: DateTime.now().at8am().add(const Duration(hours: 5)),
-  //     end: DateTime.now()
-  //         .at8am()
-  //         .add(const Duration(hours: 5))
-  //         .add(const Duration(hours: 1, minutes: 30)),
-  //     color: Colors.green,
-  //     location: "H19",
-  //     isAllDay: false),
-  // Event(
-  //     title: "CSEN 603",
-  //     description: "Quiz 2",
-  //     start: DateTime.now(),
-  //     end: DateTime.now().add(Duration(hours: 1, minutes: 30)),
-  //     color: Colors.green,
-  //     location: "Exam Hall 1",
-  //     isAllDay: false),
-  // ];
 
   Widget quizBuilder() {
-    List<dynamic>? dayQuizzes = _quizDataSource.getVisibleAppointments(
-        _controller.displayDate ?? DateTime.now(), '');
+    List<dynamic>? dayQuizzes =
+        _quizDataSource.getVisibleAppointments(_controller.displayDate!, '') +
+            EventDataSource(examEvents)
+                .getVisibleAppointments(_controller.displayDate!, '');
+    ;
     return dayQuizzes.isEmpty
         ? const Center(
             child: Text(
@@ -1059,24 +1058,28 @@ class SchedulePageState extends State<SchedulePage> {
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w700)),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                        "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/images/location.svg",
-                                          height: 11,
-                                          color: MyColors.background,
-                                        ),
-                                        const SizedBox(width: 3),
-                                        Text(event.location ?? "No Loc")
-                                      ],
-                                    ),
-                                  ],
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
+                                      const SizedBox(width: 5),
+                                      Row(
+                                        children: [
+                                          SvgPicture.asset(
+                                            "assets/images/location.svg",
+                                            height: 11,
+                                            color: MyColors.background,
+                                          ),
+                                          const SizedBox(width: 3),
+                                          Text(event.location ?? "No Loc")
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             )),
@@ -1089,33 +1092,7 @@ class SchedulePageState extends State<SchedulePage> {
           );
   }
 
-  List<Event> deadlines = [
-    // Event(
-    //     title: "CSEN 604",
-    //     description: "Milestone I",
-    //     start: DateTime.now().at8am().add(const Duration(hours: 15)),
-    //     end: DateTime.now().at8am().add(const Duration(hours: 15)),
-    //     color: Colors.green,
-    //     // location: "H19",
-    //     isAllDay: false),
-    // Event(
-    //     title: "CSEN 603",
-    //     description: "Milestone II",
-    //     start: DateTime.now(),
-    //     end: DateTime.now().at8am().add(const Duration(hours: 1, minutes: 30)),
-    //     color: Colors.green,
-    //     location: "Exam Hall 1",
-    //     isAllDay: false),
-    // Event(
-    //     title: "CSEN 601",
-    //     description: "Teams Form",
-    //     start:
-    //         DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
-    //     end: DateTime.now().add(const Duration(days: 1, hours: 1, minutes: 30)),
-    //     color: Colors.green,
-    //     // location: "Exam Hall 1",
-    //     isAllDay: false),
-  ];
+  List<Event> deadlines = [];
 
   Widget deadlineBuilder() {
     List<Appointment>? dayDeadlines = _deadlineDataSource
@@ -1376,8 +1353,8 @@ class SchedulePageState extends State<SchedulePage> {
                       height: 20,
                       color: MyColors.primary,
                     ),
-                    SizedBox(width: 15),
-                    Text('New Deadline',
+                    const SizedBox(width: 15),
+                    const Text('New Deadline',
                         style: TextStyle(color: MyColors.secondary)),
                   ],
                 ),
@@ -1395,6 +1372,71 @@ class SchedulePageState extends State<SchedulePage> {
             child: const Text('Cancel'),
           )),
     );
+  }
+
+  bool loadingExamSched = false;
+  List<dynamic> examSchedule =
+      jsonDecode(prefs.getString(SharedPrefs.examSched) ?? '[]');
+  void getExamSchedule() {
+    setState(() {
+      loadingExamSched = true;
+    });
+
+    Requests.getExamSchedule().then((result) {
+      setState(() {
+        loadingExamSched = false;
+      });
+      if (result != null) {
+        print(result);
+      }
+
+      if (!result['success']) {
+        showSnackBar(context, 'An error ocurred! Please try again.');
+      } else {
+        setState(() {
+          examSchedule = result['exam_sched'];
+        });
+        createExamEvents();
+      }
+    });
+  }
+
+  List<Event> examEvents = [];
+  void createExamEvents() {
+    List<Event> exams = [];
+    List<DateTime> dates = [];
+    // here is an example for an exam: {course_name: CSEN601, exam_day: [Monday], exam_date: [10 - April - 2023], start_time: [12:30:00 PM], end_time: [2:30:00 PM], hall: [C7.02], seat: B8}
+    for (var exam in examSchedule) {
+      // var examDay = exam['exam_day'][0];
+      var examDate = exam['exam_date'][0];
+      var startTime = exam['start_time'][0];
+      var endTime = exam['end_time'][0];
+      var hall = exam['hall'][0];
+      var seat = exam['seat'];
+      var courseName = exam['course_name'];
+
+      DateFormat dateFormat = DateFormat('dd - MMMM - yyyy h:mm:ss a');
+
+      var examDateTime = dateFormat.parse(examDate + ' ' + startTime);
+      var examEndDateTime = dateFormat.parse(examDate + ' ' + endTime);
+      // print('Start time: $examDateTime');
+      var examEvent = Event(
+          title: courseName,
+          description: 'Midterm',
+          location: '$seat in $hall',
+          start: examDateTime,
+          end: examEndDateTime,
+          color: MyColors.primary,
+          isAllDay: false);
+      exams.add(examEvent);
+      dates.add(examDateTime);
+    }
+    examEvents = exams;
+    setState(() {});
+
+    for (Event event in events) {
+      event.setRecurrenceExceptionDates(dates);
+    }
   }
 }
 

@@ -69,21 +69,21 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     /// REQUEST NOTIFICATIONS PERMISSION
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      print("Notifications are ${isAllowed ? "allowed" : "not allowed"}");
-      if (!isAllowed) {
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    //   print("Notifications are ${isAllowed ? "allowed" : "not allowed"}");
+    //   if (!isAllowed) {
+    //     // This is just a basic example. For real apps, you must show some
+    //     // friendly dialog box before call the request method.
+    //     // This is very important to not harm the user experience
+    //     AwesomeNotifications().requestPermissionToSendNotifications();
+    //   }
+    // });
     _formKey.currentState?.save();
     setState(() {
       showLoading = true;
     });
 
-    // print("WILL SEND REQUEST NAAWW");
+    print("WILL SEND REQUEST NAAWW");
     var output = await Requests.login(
         context, usernameController.text.trim(), passwordController.text);
 

@@ -11,7 +11,8 @@ import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
-import 'dart:js' as js;
+import "../utils/SharedPrefs.dart";
+// import 'dart:js' as js;
 // import 'package:flutter_ad_manager_web/flutter_ad_manager_web.dart';
 
 // import 'package:navigation_drawer_animation/widet/menu_widget'
@@ -102,11 +103,16 @@ class _HomePageState extends State<HomePage>
           actions: [
             IconButton(
               // padding: EdgeInsets.symmetric(horizontal: 20.0),
-              icon: SvgPicture.asset(
-                "assets/images/edit.svg",
-                height: 30,
+              icon: Icon(
+                Icons.notifications_rounded,
+                size: 30,
                 color: MyColors.secondary,
               ),
+              // SvgPicture.asset(
+              //   "assets/images/edit.svg",
+              //   height: 30,
+              //   color: MyColors.secondary,
+              // ),
               onPressed: () async {
                 /// REQUEST NOTIFICATIONS PERMISSION
                 AwesomeNotifications()
@@ -130,17 +136,17 @@ class _HomePageState extends State<HomePage>
                           actionType: ActionType.Default));
                 });
 
-                var granted = js.context.callMethod('requestNotPermission');
-                if (granted) {
-                  js.context.callMethod('showNotification',
-                      ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
-                  // await Future.delayed(const Duration(seconds: 7));
-                  // js.context.callMethod('showNotification', [
-                  //   'Welcome to GUCentral!',
-                  //   'This is a delayed notification!'
-                  // ]);
-                }
-                print("Granted: $granted");
+                // var granted = js.context.callMethod('requestNotPermission');
+                // if (granted) {
+                //   js.context.callMethod('showNotification',
+                //       ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
+                //   // await Future.delayed(const Duration(seconds: 7));
+                //   // js.context.callMethod('showNotification', [
+                //   //   'Welcome to GUCentral!',
+                //   //   'This is a delayed notification!'
+                //   // ]);
+                // }
+                // print("Granted: $granted");
               },
             ),
             Container(

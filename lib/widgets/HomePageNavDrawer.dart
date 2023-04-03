@@ -124,7 +124,8 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
                   currentItem = item;
                   selectedIndex = getIndex(item);
                 });
-                ZoomDrawer.of(context)!.close();
+                // ignore: use_build_context_synchronously
+                ZoomDrawer.of(context)!.close() ?? false;
               }),
         ),
       ));

@@ -108,17 +108,28 @@ class _TranscriptPageState extends State<TranscriptPage>
   }
 
   void updateTranscript(String year) async {
+    // loading
     setState(() {
       showLoading = true;
     });
+
+    // get the transcript
     var output = await Requests.getTranscript(context, year);
     setState(() {
       showLoading = false;
-      // widget.gpa = "3.14";
-      semesterGrades = output['transcript'];
-      // print("Set state: $semesterGrades");
     });
-    // build(context);
+
+    print(output);
+    // if success if false
+    if (!output['success']) {
+      showSnackBar(context, 'An error ocurred! Please try again.');
+      return;
+    }
+
+    // if success is true
+    setState(() {
+      semesterGrades = output['transcript'];
+    });
   }
 
   @override
@@ -127,50 +138,52 @@ class _TranscriptPageState extends State<TranscriptPage>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: transcriptAppBar(),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-        // #####################
-        // #### ACTUAL PAGE ####
-        // #####################
-        children: [
-          const Spacer(),
-          profile(),
-          const Spacer(),
-          cumulativeGPA(),
-          const Spacer(),
-          DropdownButtonYears(transcript: this),
-          const Spacer(),
-          Expanded(
-            flex: 8,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              // width: 380,
-              // height: 350,
-              child: Column(
-                children: [
-                  showLoading
-                      ? ListView.separated(
-                          itemBuilder: (context, index) =>
-                              const SemesterSkeleton(),
-                          separatorBuilder: (context, index) =>
-                              Container(height: 25),
-                          itemCount: 2,
-                          shrinkWrap: true,
-                        )
-                      : (semesterGrades == null || semesterGrades!.isEmpty)
-                          ? const Text("Nothing Here!")
-                          : Expanded(child: createTables()),
-                ],
+      body: SizedBox(
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          // #####################
+          // #### ACTUAL PAGE ####
+          // #####################
+          children: [
+            const Spacer(),
+            profile(),
+            const Spacer(),
+            cumulativeGPA(),
+            const Spacer(),
+            DropdownButtonYears(transcript: this),
+            const Spacer(),
+            Expanded(
+              flex: 8,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                // width: 380,
+                // height: 350,
+                child: Column(
+                  children: [
+                    showLoading
+                        ? ListView.separated(
+                            itemBuilder: (context, index) =>
+                                const SemesterSkeleton(),
+                            separatorBuilder: (context, index) =>
+                                Container(height: 25),
+                            itemCount: 2,
+                            shrinkWrap: true,
+                          )
+                        : (semesterGrades == null || semesterGrades!.isEmpty)
+                            ? const Text("Nothing Here!")
+                            : Expanded(child: createTables()),
+                  ],
+                ),
+                // ),
               ),
-              // ),
             ),
-          ),
-          // Container(
-          //   height: 30,
-          // )
-        ],
+            // Container(
+            //   height: 30,
+            // )
+          ],
+        ),
       ),
     );
   }

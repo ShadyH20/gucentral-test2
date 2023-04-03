@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
+import "../utils/SharedPrefs.dart";
 import "HomePageNavDrawer.dart";
 import "MyColors.dart";
-
-late SharedPreferences prefs;
-Future<void> initiateSharedPreferences() async {
-  prefs = await SharedPreferences.getInstance();
-}
 
 class Requests {
   static const backendURL =
@@ -18,6 +14,7 @@ class Requests {
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
   static Uri checkEvalURL = Uri.parse('$backendURL/checkEvaluated');
   static Uri evaluateCourseURL = Uri.parse('$backendURL/evaluateCourse');
+  static Uri examSchedURL = Uri.parse('$backendURL/examSched');
 
   // static SharedPreferences prefs = getPrefs();
 
@@ -115,7 +112,10 @@ class Requests {
       return jsonDecode(response.body);
     } on Exception catch (e) {
       print("transcript exception $e");
-      return null;
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
     }
   }
 
@@ -182,6 +182,31 @@ class Requests {
     }
   }
 
+  static getExamSchedule() async {
+    var creds = getCreds();
+    var body = jsonEncode(creds);
+
+    try {
+      var response = await http.post(examSchedURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      var schedule = jsonDecode(response.body);
+      if (schedule['success']) {
+        prefs.setString(
+            SharedPrefs.examSched, jsonEncode(schedule['exam_sched']));
+      }
+      return schedule;
+    } on Exception catch (e) {
+      print("Exam schedule exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
   Future<void> _showMyDialog(context) async {
     return showDialog<void>(
       context: context,
@@ -211,6 +236,7 @@ class Requests {
   }
 }
 
+//// EVENT CLASS ////
 class Event implements Comparable<Event> {
   final String title;
   final String description;
@@ -219,6 +245,7 @@ class Event implements Comparable<Event> {
   final Color color;
   final bool isAllDay;
   String recurrence;
+  List<DateTime> recurrenceExceptionDates;
   String location;
 
   Event({
@@ -229,8 +256,13 @@ class Event implements Comparable<Event> {
     required this.color,
     required this.isAllDay,
     this.recurrence = "",
+    this.recurrenceExceptionDates = const [],
     this.location = "",
   });
+
+  setRecurrenceExceptionDates(List<DateTime> dates) {
+    recurrenceExceptionDates = dates;
+  }
 
   @override
   String toString() => "$description: $title";
@@ -273,6 +305,8 @@ class Event implements Comparable<Event> {
         color = Color(json['c']),
         isAllDay = json['i'],
         recurrence = json['r'],
+        recurrenceExceptionDates =
+            (json['re'] as List).map((e) => DateTime.parse(e)).toList(),
         location = json['l'];
 
   Map<String, dynamic> toJson() {
@@ -284,6 +318,7 @@ class Event implements Comparable<Event> {
       'c': color.value,
       'i': isAllDay,
       'r': recurrence,
+      're': recurrenceExceptionDates.map((e) => e.toIso8601String()).toList(),
       'l': location
     };
   }

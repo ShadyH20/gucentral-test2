@@ -55,6 +55,11 @@ class EventDataSource extends CalendarDataSource {
   }
 
   @override
+  List<DateTime>? getRecurrenceExceptionDates(int index) {
+    return _getEventData(index).recurrenceExceptionDates;
+  }
+
+  @override
   String? getLocation(int index) {
     return _getEventData(index).location;
   }
