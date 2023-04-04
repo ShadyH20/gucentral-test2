@@ -103,7 +103,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         mainScreenTapClose: true,
         menuBackgroundColor: MyColors.primary,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
-        mainScreen: LazyLoadIndexedStack(
+        mainScreen: IndexedStack(
           index: selectedIndex,
           children: pages,
         ),

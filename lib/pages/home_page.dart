@@ -2,6 +2,7 @@
 // import "dart:html";
 import "dart:ui" as ui;
 import "package:awesome_notifications/awesome_notifications.dart";
+import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -12,6 +13,8 @@ import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
 import "../utils/SharedPrefs.dart";
+//import Notifications.dart from the web directory
+import '../utils/Notifications.dart';
 // import 'dart:js' as js;
 // import 'package:flutter_ad_manager_web/flutter_ad_manager_web.dart';
 
@@ -136,17 +139,10 @@ class _HomePageState extends State<HomePage>
                           actionType: ActionType.Default));
                 });
 
-                // var granted = js.context.callMethod('requestNotPermission');
-                // if (granted) {
-                //   js.context.callMethod('showNotification',
-                //       ['Welcome to GUCentral!', 'We hope you enjoy our app!']);
-                //   // await Future.delayed(const Duration(seconds: 7));
-                //   // js.context.callMethod('showNotification', [
-                //   //   'Welcome to GUCentral!',
-                //   //   'This is a delayed notification!'
-                //   // ]);
-                // }
-                // print("Granted: $granted");
+                if (kIsWeb) {
+                  MyNotification.sendNotification(
+                      'Welcome to GUCentral!', 'We hope you enjoy our app!');
+                }
               },
             ),
             Container(

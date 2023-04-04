@@ -68,18 +68,19 @@ class SchedulePageState extends State<SchedulePage> {
     _controller.displayDate = DateTime.now().at8am();
     setTimeSlots();
     getSchedule();
+
     createEvents();
     _eventDataSource = EventDataSource(events + quizzes);
     _quizDataSource = EventDataSource(quizzes);
     _deadlineDataSource = EventDataSource(deadlines);
     _controller.displayDate = _selectedDay;
     groupedEvents = groupEvents(events);
+    getExamSchedule();
     setState(() {});
   }
 
   getSchedule() {
     schedule = Requests.getSchedule();
-    print("Schedule is: $schedule");
     var coursesR = Requests.getCourses();
     courseMap = {for (var course in coursesR) course['code']: course['name']};
     courses = coursesR;
@@ -88,7 +89,6 @@ class SchedulePageState extends State<SchedulePage> {
   bool delayed3rd = prefs.getBool('delayed_3rd') ?? false;
   @override
   void initState() {
-    print('SchedulePage: INITSTATE');
     super.initState();
     initializeSchedulePage();
     setState(() {});
@@ -438,16 +438,21 @@ class SchedulePageState extends State<SchedulePage> {
       ),
       actions: [
         loadingExamSched
-            ? CircularProgressIndicator()
-            : IconButton(
-                icon: const Icon(Icons.schedule_rounded,
-                    color: MyColors.secondary, size: 30),
-                splashRadius: 15,
-                tooltip: "Exam Schedule",
-                onPressed: () {
-                  getExamSchedule();
-                },
-              ),
+            ? Center(
+                child: SizedBox(
+                    height: 25, width: 25, child: CircularProgressIndicator()),
+              )
+            : Container(),
+        // IconButton(
+        //     icon: const Icon(Icons.schedule_rounded,
+        //         color: MyColors.secondary, size: 30),
+        //     splashRadius: 15,
+        //     tooltip: "Exam Schedule",
+        //     onPressed: () {
+        //       getExamSchedule();
+        //     },
+        //   ),
+        SizedBox(width: 10),
         IconButton(
           icon: SvgPicture.asset(
             "assets/images/today.svg",
@@ -753,7 +758,8 @@ class SchedulePageState extends State<SchedulePage> {
 
     var dayExams =
         EventDataSource(examEvents).getVisibleAppointments(details.date, "");
-    bool isExamDay = dayExams.isNotEmpty && !examEvents.contains(event);
+    // bool isExamDay = dayExams.isNotEmpty;
+    bool isExam = examEvents.contains(event);
     bool isQuiz = quizzes.contains(event) || examEvents.contains(event);
     EventDataSource dataSource = EventDataSource(events);
     // dataSource.appointments!.remove(details.appointments.first);
@@ -853,15 +859,28 @@ class SchedulePageState extends State<SchedulePage> {
                             children: [
                               Text(event.description.toString()),
                               FittedBox(
-                                child: Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    SvgPicture.asset(
-                                      "assets/images/location.svg",
-                                      height: 11,
-                                      color: Colors.black,
+                                    isExam
+                                        ? Text(
+                                            'Seat ${event.location.split(' in ')[0]}',
+                                            textAlign: TextAlign.justify,
+                                          )
+                                        : Container(),
+                                    Row(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/images/location.svg",
+                                          height: 11,
+                                          color: Colors.black,
+                                        ),
+                                        const SizedBox(width: 3),
+                                        Text(isExam
+                                            ? event.location.split(' in ')[1]
+                                            : event.location ?? "No Loc")
+                                      ],
                                     ),
-                                    const SizedBox(width: 3),
-                                    Text(event.location ?? "No Loc")
                                   ],
                                 ),
                               ),
@@ -1259,7 +1278,7 @@ class SchedulePageState extends State<SchedulePage> {
                   ),
                 ),
                 Container(width: 10),
-                const Text("Add Quiz/Exam")
+                const Text("Add Quiz/Test")
               ],
             ),
           ),
@@ -1391,13 +1410,13 @@ class SchedulePageState extends State<SchedulePage> {
       }
 
       if (!result['success']) {
-        showSnackBar(context, 'An error ocurred! Please try again.');
+        showSnackBar(context, 'Could not get exam schedule.');
       } else {
         setState(() {
           examSchedule = result['exam_sched'];
         });
-        createExamEvents();
       }
+      createExamEvents();
     });
   }
 
@@ -1405,7 +1424,6 @@ class SchedulePageState extends State<SchedulePage> {
   void createExamEvents() {
     List<Event> exams = [];
     List<DateTime> dates = [];
-    // here is an example for an exam: {course_name: CSEN601, exam_day: [Monday], exam_date: [10 - April - 2023], start_time: [12:30:00 PM], end_time: [2:30:00 PM], hall: [C7.02], seat: B8}
     for (var exam in examSchedule) {
       // var examDay = exam['exam_day'][0];
       var examDate = exam['exam_date'][0];
@@ -1440,5 +1458,5 @@ class SchedulePageState extends State<SchedulePage> {
   }
 }
 
-const List<String> list = ['Add Quiz/Exam', 'Add Deadline'];
+const List<String> list = ['Add Quiz/Test', 'Add Deadline'];
 String? dropdownValue;
