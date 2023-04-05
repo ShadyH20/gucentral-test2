@@ -235,6 +235,7 @@ class MenuItems {
   static const map = MenuItemlist('Map');
   static const settings = MenuItemlist('Settings', Icons.settings);
   static const evaluate = MenuItemlist('Evaluate');
+  static const attendance = MenuItemlist('Attendance');
   static const seperator = MenuItemlist('Seperator');
   static final all = <MenuItemlist>[
     // profile,
@@ -242,6 +243,7 @@ class MenuItems {
     grades,
     courses,
     schedule,
+    attendance,
     transcript,
     evaluate,
     map,

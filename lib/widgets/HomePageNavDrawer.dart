@@ -14,6 +14,7 @@ import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/MenuPage.dart';
+import '../pages/attendance_page.dart';
 import 'MeduItemList.dart';
 
 class HomePageNavDrawer extends StatefulWidget {
@@ -64,6 +65,8 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         }
       case MenuItems.evaluate:
         return 6;
+      case MenuItems.attendance:
+        return 7;
 
       // case MenuItems.login:
       //   return const LoginPage();
@@ -78,13 +81,14 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   void initState() {
     super.initState();
     pages = [
-      HomePage(),
-      CoursesPage(),
+      const HomePage(),
+      const CoursesPage(),
       SchedulePage(key: _scheduleKey),
       SettingsPage(callScheduleInit: callScheduleInit),
-      GradesPage(),
+      const GradesPage(),
       TranscriptPage(),
-      EvaluatePage()
+      const EvaluatePage(),
+      const AttendancePage(),
     ];
     _drawerController = ZoomDrawerController();
   }

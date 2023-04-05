@@ -19,6 +19,7 @@ class SharedPrefs {
   static const schedule = 'schedule';
   static const quizzes = 'quizzes';
   static const examSched = 'exam_sched';
+  static const attendance = 'att:';
 
   static getString(String key) {
     return prefs.getString(key);

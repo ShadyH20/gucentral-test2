@@ -15,6 +15,7 @@ class Requests {
   static Uri checkEvalURL = Uri.parse('$backendURL/checkEvaluated');
   static Uri evaluateCourseURL = Uri.parse('$backendURL/evaluateCourse');
   static Uri examSchedURL = Uri.parse('$backendURL/examSched');
+  static Uri attendanceURL = Uri.parse('$backendURL/attendance');
 
   // static SharedPreferences prefs = getPrefs();
 
@@ -205,6 +206,39 @@ class Requests {
         'message': 'An error ocurred! Please try again.'
       };
     }
+  }
+
+  static getAttendance(String course) async {
+    var out = getCreds();
+    out['course'] = course;
+    var body = jsonEncode(out);
+
+    try {
+      var response = await http.post(attendanceURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      var attendance = jsonDecode(response.body);
+      if (attendance['success']) {
+        prefs.setString('${SharedPrefs.examSched}$course',
+            jsonEncode(attendance['attendance']));
+      }
+      return attendance;
+    } on Exception catch (e) {
+      print("Attendance exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
+  static getAttendanceSaved(String course) {
+    if (prefs.containsKey('${SharedPrefs.examSched}$course')) {
+      return jsonDecode(prefs.getString('${SharedPrefs.examSched}$course')!);
+    }
+    return [];
   }
 
   Future<void> _showMyDialog(context) async {
