@@ -90,11 +90,8 @@ class _AttendancePageState extends State<AttendancePage> {
                           setState(() {
                             dropdownCourseValue = course;
                           });
-                          if (dropdownCourseValue != courses.first) {
-                            debugPrint("$dropdownCourseValue chosen");
-                            courseChosen(course);
-                            // widget.transcript.updateTranscript(value!);
-                          }
+                          debugPrint("$dropdownCourseValue chosen");
+                          courseChosen(course);
                         },
                         items: courses.map<DropdownMenuItem>((dynamic course) {
                           return DropdownMenuItem(
@@ -280,8 +277,8 @@ class _AttendancePageState extends State<AttendancePage> {
             ),
           ),
           const SizedBox(width: 25),
-          Expanded(
-            flex: 3,
+          Container(
+            width: 95,
             child: Column(
               children: [
                 Container(
