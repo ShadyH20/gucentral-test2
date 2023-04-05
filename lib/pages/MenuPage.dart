@@ -94,7 +94,7 @@ class _MenuPageState extends State<MenuPage> {
                           ],
                           color: MyColors.secondary,
                           borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(25),
+                            topLeft: Radius.circular(25),
                             bottomRight: Radius.circular(25),
                           )),
                       padding: const EdgeInsets.all(42),
