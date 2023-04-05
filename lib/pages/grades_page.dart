@@ -23,7 +23,7 @@ class _GradesPageState extends State<GradesPage> {
         backgroundColor: Colors.white,
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: MyColors.background,
+              statusBarColor: MyColors.primary,
               statusBarIconBrightness: Brightness.dark,
               statusBarBrightness: Brightness.dark),
           elevation: 0,

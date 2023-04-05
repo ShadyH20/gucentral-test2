@@ -18,7 +18,7 @@ class MenuWidget extends StatelessWidget {
         onPressed: () {
           if (ZoomDrawer.of(context) != null) {
             ZoomDrawer.of(context)!.toggle();
-            Statusbarz.instance.refresh();
+            // Statusbarz.instance.refresh();
           }
           // Scaffold.of(context).openDrawer();
         },

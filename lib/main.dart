@@ -41,9 +41,10 @@ void main() {
       debug: true);
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
+    statusBarColor: MyColors.primary,
     statusBarBrightness: Brightness.dark,
     statusBarIconBrightness: Brightness.light,
+    systemStatusBarContrastEnforced: false,
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

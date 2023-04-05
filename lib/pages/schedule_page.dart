@@ -372,7 +372,7 @@ class SchedulePageState extends State<SchedulePage> {
   AppBar scheduleAppBar() {
     return AppBar(
       systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: MyColors.background,
+          statusBarColor: MyColors.primary,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark),
       elevation: 0,

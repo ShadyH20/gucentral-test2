@@ -127,6 +127,11 @@ class _LoginPageState extends State<LoginPage> {
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+          appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: MyColors.background,
+            ),
+          ),
           resizeToAvoidBottomInset: false,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,

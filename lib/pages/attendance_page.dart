@@ -172,7 +172,7 @@ class _AttendancePageState extends State<AttendancePage> {
   attendanceAppBar() {
     return AppBar(
       systemOverlayStyle: const SystemUiOverlayStyle(
-          statusBarColor: MyColors.background,
+          statusBarColor: MyColors.primary,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark),
       elevation: 0,
