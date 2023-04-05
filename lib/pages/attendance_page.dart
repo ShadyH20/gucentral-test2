@@ -121,27 +121,39 @@ class _AttendancePageState extends State<AttendancePage> {
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
   void courseChosen(course) async {
-    print(course);
+    setState(() {
+      startAnimation = false;
+    });
     setState(() {
       isCourseLoading = true;
       attendanceList = Requests.getAttendanceSaved(course['code']);
     });
+    // Future.delayed(const Duration(milliseconds: 500)).then((value) {
+    //   setState(() {
+    //     startAnimation = true;
+    //   });
+    // });
     var resp = await Requests.getAttendance(course['code']);
     var success = resp['success'];
     setState(() {
       isCourseLoading = false;
       isCourseLoaded = success;
-      attendanceList = resp['attendance'];
     });
     if (!success) {
       showSnackBar(context, 'An error ocurred! Please try again.',
           duration: const Duration(seconds: 7));
+      return;
     }
-    print(attendanceList);
-    // else {
-    //   // ignore: use_build_context_synchronously
-    //   // Navigator.pushNamed(context, '/evaluate', arguments: course);
-    // }
+    setState(() {
+      List arr = resp['attendance'];
+      if (attendanceList.length != arr.length) {
+        startAnimation = true;
+      }
+      attendanceList = resp['attendance'];
+    });
+    setState(() {
+      startAnimation = true;
+    });
   }
 
   buildCourseName(dynamic course) {
@@ -202,12 +214,24 @@ class _AttendancePageState extends State<AttendancePage> {
     );
   }
 
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   buildAttendance() {
+    // return AnimatedList(
+    //   key: _listKey,
+    //   initialItemCount: attendanceList.length,
+    //   itemBuilder: (context, index, animation) {
+    //     var attendance = attendanceList[attendanceList.length - 1 - index];
+    //     var item = buildAttendanceItem(attendance, animation);
+    //     _listKey.currentState!
+    //         .insertItem(index, duration: const Duration(milliseconds: 500));
+    //     return item;
+    //   },
+    // );
     return ListView.builder(
       itemCount: attendanceList.length,
       itemBuilder: (context, index) {
         var attendance = attendanceList[attendanceList.length - 1 - index];
-        return buildAttendanceItem(attendance);
+        return buildAttendanceItem(attendance, index);
       },
     );
   }
@@ -303,7 +327,8 @@ class _AttendancePageState extends State<AttendancePage> {
     );
   }
 
-  buildAttendanceItem(attendance) {
+  bool startAnimation = false;
+  buildAttendanceItem(attendance, int index) {
     var attendanceType = attendance['type'];
     var attendanceDate = attendance['date'];
     var attendanceSlot = attendance['slot'];
@@ -314,9 +339,13 @@ class _AttendancePageState extends State<AttendancePage> {
         : attendanceStatus == 'Absent'
             ? [const Color(0xfffa9d9d), const Color(0xff5a3232)]
             : [MyColors.secondary, MyColors.secondary];
-    return Container(
+    return AnimatedContainer(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+      curve: Curves.easeInOut,
+      duration: Duration(milliseconds: 400 + (index * 100)),
+      transform: Matrix4.translationValues(
+          startAnimation ? 0 : MediaQuery.of(context).size.width, 0, 0),
       decoration: BoxDecoration(
           color: attendanceStatusColor[0],
           borderRadius: BorderRadius.circular(13),

@@ -220,6 +220,7 @@ class Requests {
       });
 
       var attendance = jsonDecode(response.body);
+      print('attendance: $attendance');
       if (attendance['success']) {
         prefs.setString('${SharedPrefs.examSched}$course',
             jsonEncode(attendance['attendance']));

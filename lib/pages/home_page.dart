@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage>
         // ),
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
-              statusBarColor: MyColors.background,
+              statusBarColor: Colors.transparent,
               statusBarIconBrightness: Brightness.dark,
               statusBarBrightness: Brightness.dark),
           elevation: 0,
