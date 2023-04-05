@@ -206,7 +206,7 @@ class _TranscriptPageState extends State<TranscriptPage>
       leading: const MenuWidget(),
       title: const Text(
         "Transcript",
-        style: TextStyle(color: MyColors.primary),
+        style: TextStyle(color: MyColors.primaryVariant),
       ),
       actions: [
         IconButton(

@@ -35,7 +35,7 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) => Theme(
         data: ThemeData.dark(),
         child: Scaffold(
-          backgroundColor: MyColors.primary,
+          backgroundColor: MyColors.primaryVariant,
           body: Container(
             // color: MyColors.accent,
             width: double.infinity,
