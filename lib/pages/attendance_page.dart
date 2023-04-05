@@ -70,7 +70,7 @@ class _AttendancePageState extends State<AttendancePage> {
                         ),
                         isExpanded: true,
                         value: dropdownCourseValue,
-                        hint: Text('Choose A Course'),
+                        hint: const Text('Choose A Course'),
                         style: const TextStyle(
                             // decoration: TextDecoration.underline,
                             color: Colors.black54,
@@ -206,14 +206,14 @@ class _AttendancePageState extends State<AttendancePage> {
     return ListView.builder(
       itemCount: attendanceList.length,
       itemBuilder: (context, index) {
-        var attendance = attendanceList[index];
+        var attendance = attendanceList[attendanceList.length - 1 - index];
         return buildAttendanceItem(attendance);
       },
     );
   }
 
 // this is an attendance item: {"attendance": "Attended","date": "2023.02.22","type": "Practical","slot": "3rd"}
-  buildAttendanceItem(attendance) {
+  buildAttendanceItem2(attendance) {
     var attendanceType = attendance['type'];
     var attendanceDate = attendance['date'];
     var attendanceSlot = attendance['slot'];
@@ -277,7 +277,7 @@ class _AttendancePageState extends State<AttendancePage> {
             ),
           ),
           const SizedBox(width: 25),
-          Container(
+          SizedBox(
             width: 95,
             child: Column(
               children: [
@@ -303,12 +303,83 @@ class _AttendancePageState extends State<AttendancePage> {
     );
   }
 
+  buildAttendanceItem(attendance) {
+    var attendanceType = attendance['type'];
+    var attendanceDate = attendance['date'];
+    var attendanceSlot = attendance['slot'];
+    var attendanceId = attendance['id'];
+    var attendanceStatus = attendance['attendance'];
+    var attendanceStatusColor = attendanceStatus == 'Attended'
+        ? [const Color(0xffa3fa9d), const Color(0xff355a32)]
+        : attendanceStatus == 'Absent'
+            ? [const Color(0xfffa9d9d), const Color(0xff5a3232)]
+            : [MyColors.secondary, MyColors.secondary];
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
+      decoration: BoxDecoration(
+          color: attendanceStatusColor[0],
+          borderRadius: BorderRadius.circular(13),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ]),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // ATTENDANCE ID //
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(
+              attendanceId,
+              style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.black.withOpacity(0.3),
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  '$attendanceType | $attendanceSlot slot',
+                  style: TextStyle(
+                      color: attendanceStatusColor[1],
+                      fontSize: 11,
+                      fontWeight: FontWeight.w200),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  parseDate(attendanceDate),
+                  style: TextStyle(
+                      color: attendanceStatusColor[1],
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  attendanceStatus,
+                  style: TextStyle(
+                      color: attendanceStatusColor[1],
+                      fontSize: 11,
+                      fontWeight: FontWeight.w200),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   String parseDate(attendanceDate) {
     var date = DateFormat('yyyy.MM.dd').parse(attendanceDate);
-    // var day = date.day;
-    // var month = date.month;
-    // var year = date.year;
-    var res = DateFormat('EEE, d MMMM').format(date);
+    var res = DateFormat('EEEE, MMMM d, yyyy').format(date);
     return res;
   }
 }
