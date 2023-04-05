@@ -10,6 +10,7 @@ class Requests {
   static const backendURL =
       'https://gucentralbackend-production.up.railway.app';
   static Uri transcriptURL = Uri.parse('$backendURL/transcript');
+  static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
   static Uri loginURL = Uri.parse('$backendURL/login');
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
   static Uri checkEvalURL = Uri.parse('$backendURL/checkEvaluated');
@@ -27,6 +28,26 @@ class Requests {
       credentials['password'] = prefs.getString('password');
     }
     return credentials;
+  }
+
+  static Future<bool> checkCreds(username, password) async {
+    var body = jsonEncode({
+      'username': username,
+      'password': password,
+    });
+    // print("WILL SEND REQUEST NAAWW");
+
+    try {
+      var response = await http.post(checkCredsURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+      var res = jsonDecode(response.body);
+      return res['success'];
+    } catch (e) {
+      print("Check Creds Exception: ${e.toString()}");
+      return false;
+    }
   }
 
   static dynamic login(context, username, password) async {

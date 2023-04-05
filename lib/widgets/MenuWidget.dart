@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:statusbarz/statusbarz.dart';
 
 import 'MyColors.dart';
 
@@ -17,6 +18,7 @@ class MenuWidget extends StatelessWidget {
         onPressed: () {
           if (ZoomDrawer.of(context) != null) {
             ZoomDrawer.of(context)!.toggle();
+            Statusbarz.instance.refresh();
           }
           // Scaffold.of(context).openDrawer();
         },
