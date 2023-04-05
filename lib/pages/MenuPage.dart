@@ -35,8 +35,21 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) => Theme(
         data: ThemeData.dark(),
         child: Scaffold(
-          backgroundColor: MyColors.primaryVariant,
+          backgroundColor: MyColors.background,
           body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color.fromARGB(255, 255, 165, 87),
+                    MyColors.primaryVariant,
+                    MyColors.primary
+                  ]),
+              borderRadius: BorderRadius.horizontal(
+                right: Radius.circular(25),
+              ),
+            ),
             // color: MyColors.accent,
             width: double.infinity,
             child: Column(
@@ -72,16 +85,17 @@ class _MenuPageState extends State<MenuPage> {
                       // height: 150,
                       decoration: const BoxDecoration(
                           boxShadow: [
-                            BoxShadow(
-                                color: MyColors.background,
-                                offset: Offset(-30, 30)),
-                            BoxShadow(
-                                color: MyColors.secondary,
-                                offset: Offset(30, 30))
+                            // BoxShadow(
+                            //     color: MyColors.background,
+                            //     offset: Offset(-30, 30)),
+                            // BoxShadow(
+                            //     color: MyColors.secondary,
+                            //     offset: Offset(30, 30))
                           ],
                           color: MyColors.secondary,
-                          borderRadius: BorderRadius.horizontal(
-                            left: Radius.circular(25),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            bottomRight: Radius.circular(25),
                           )),
                       padding: const EdgeInsets.all(42),
                       width: double.infinity,
