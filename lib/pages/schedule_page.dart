@@ -302,7 +302,6 @@ class SchedulePageState extends State<SchedulePage> {
                       child: SfCalendar(
                         controller: _controller,
                         view: CalendarView.day,
-
                         viewNavigationMode: ViewNavigationMode.none,
                         initialDisplayDate: DateTime.now(),
                         initialSelectedDate: DateTime.now(),

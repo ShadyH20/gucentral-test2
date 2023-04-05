@@ -134,6 +134,90 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                   const EdgeInsets.symmetric(horizontal: 15.0),
                               child: Column(
                                 children: [
+                                  //// COURSE ////
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Course",
+                                        style: TextStyle(
+                                          fontFamily: "Outfit",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 20,
+                                          color: MyColors.secondary,
+                                        ),
+                                      ),
+                                      Container(height: 5),
+                                      DropdownButtonFormField2(
+                                        value: _selectedValue,
+                                        hint: const Text(
+                                          'Select A Course',
+                                        ),
+                                        decoration: InputDecoration(
+                                          constraints: const BoxConstraints(),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(7.5),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(7.5),
+                                              borderSide: const BorderSide(
+                                                  width: 2,
+                                                  color:
+                                                      MyColors.primaryVariant)),
+                                          contentPadding:
+                                              const EdgeInsets.only(bottom: 5),
+                                        ),
+                                        isExpanded: true,
+                                        buttonStyleData: const ButtonStyleData(
+                                            height: 40,
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5)),
+                                        dropdownStyleData:
+                                            const DropdownStyleData(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10)),
+                                          ),
+                                        ),
+                                        alignment: Alignment.centerLeft,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedValue = value;
+                                          });
+                                        },
+                                        onSaved: (value) {
+                                          setState(() {
+                                            _selectedValue = value;
+                                          });
+                                        },
+                                        validator: (String? value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "    Please choose a course!";
+                                          } else {
+                                            return null;
+                                          }
+                                        },
+                                        items: widget.courses
+                                            .map((dynamic course) {
+                                          return DropdownMenuItem(
+                                            value: course['code'] as String,
+                                            child: Text(
+                                              course['name'] ?? "",
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 12),
+
                                   //// QUIZ TITLE ////
                                   Column(
                                     mainAxisAlignment:
@@ -166,7 +250,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                         textAlignVertical:
                                             TextAlignVertical.center,
                                         decoration: InputDecoration(
-                                          hintText: "Quiz ...",
+                                          hintText: "e.g. Quiz 1",
                                           hintStyle: TextStyle(
                                               fontFamily: "Outfit",
                                               fontWeight: FontWeight.w500,
@@ -187,80 +271,6 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                               const EdgeInsets.symmetric(
                                                   vertical: 7, horizontal: 15),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 12),
-                                  //// COURSE ////
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Course",
-                                        style: TextStyle(
-                                          fontFamily: "Outfit",
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 20,
-                                          color: MyColors.secondary,
-                                        ),
-                                      ),
-                                      Container(height: 5),
-                                      DropdownButtonFormField2(
-                                        value: _selectedValue,
-                                        hint: const Text(
-                                          'Select A Course',
-                                        ),
-                                        decoration: InputDecoration(
-                                          constraints: BoxConstraints(),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(7.5),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(7.5),
-                                              borderSide: const BorderSide(
-                                                  width: 2,
-                                                  color:
-                                                      MyColors.primaryVariant)),
-                                          contentPadding:
-                                              const EdgeInsets.only(bottom: 5),
-                                        ),
-                                        isExpanded: true,
-                                        buttonStyleData: const ButtonStyleData(
-                                            height: 40,
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 5)),
-                                        alignment: Alignment.centerLeft,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedValue = value;
-                                          });
-                                        },
-                                        onSaved: (value) {
-                                          setState(() {
-                                            _selectedValue = value;
-                                          });
-                                        },
-                                        validator: (String? value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "    Please choose a course!";
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        items: widget.courses
-                                            .map((dynamic course) {
-                                          return DropdownMenuItem(
-                                            value: course['code'] as String,
-                                            child: Text(
-                                              course['name'] ?? "",
-                                            ),
-                                          );
-                                        }).toList(),
                                       ),
                                     ],
                                   ),
@@ -329,7 +339,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                     style: const TextStyle(fontSize: 18),
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
-                                      hintText: "Location",
+                                      hintText: "e.g. Exam Hall 1",
                                       hintStyle: TextStyle(
                                           fontFamily: "Outfit",
                                           fontWeight: FontWeight.w500,
@@ -520,7 +530,8 @@ class _AddQuizPageState extends State<AddQuizPage> {
                       color: _selectedDate.getDateOnly() ==
                               DateTime.now().getDateOnly()
                           ? MyColors.primary
-                          : Color.fromARGB(255, 76, 78, 88).withOpacity(0.7),
+                          : const Color.fromARGB(255, 76, 78, 88)
+                              .withOpacity(0.7),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.circular(5),
                     ),
