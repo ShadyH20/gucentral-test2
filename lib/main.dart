@@ -40,12 +40,12 @@ void main() {
       ],
       debug: true);
 
-  // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-  //   statusBarColor: MyColors.primary,
-  //   statusBarBrightness: Brightness.dark,
-  //   statusBarIconBrightness: Brightness.light,
-  //   systemStatusBarContrastEnforced: false,
-  // ));
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.green,
+    statusBarBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.light,
+    systemStatusBarContrastEnforced: false,
+  ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
@@ -104,8 +104,7 @@ class MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           initialRoute: "/login",
           theme: MyTheme.lightTheme,
-          darkTheme:
-              MyTheme.darkTheme.copyWith(primaryColor: MyTheme.darkerGrey),
+          darkTheme: MyTheme.darkTheme,
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
           onGenerateRoute: (settings) {
             // If you push the PassArguments route

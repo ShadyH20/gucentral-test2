@@ -52,7 +52,7 @@ class MyTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
-    primaryColor: Color.fromARGB(255, 0, 77, 112),
+    primaryColor: Color.fromARGB(255, 112, 0, 0),
     colorScheme: const ColorScheme(
         brightness: Brightness.dark,
         primary: orange,
@@ -70,7 +70,7 @@ class MyTheme {
     fontFamily: 'Outfit',
     appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarBrightness: Brightness.light,
+            statusBarBrightness: Brightness.dark,
             statusBarColor: darkerGrey,
             statusBarIconBrightness: Brightness.light,
             systemNavigationBarContrastEnforced: false),
