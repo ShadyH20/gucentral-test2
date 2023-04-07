@@ -103,7 +103,9 @@ class MyAppState extends State<MyApp> {
           // home: const LoginPage(),
           debugShowCheckedModeBanner: false,
           initialRoute: "/login",
-          theme: MyTheme.lightTheme,
+          theme: isDarkMode
+              ? MyTheme.lightTheme.copyWith(primaryColor: MyTheme.yellow)
+              : MyTheme.lightTheme,
           darkTheme: MyTheme.darkTheme,
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
           onGenerateRoute: (settings) {
