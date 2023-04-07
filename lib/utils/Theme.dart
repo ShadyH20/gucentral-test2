@@ -52,6 +52,7 @@ class MyTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
+    primaryColor: darkGrey,
     colorScheme: const ColorScheme(
         brightness: Brightness.dark,
         primary: orange,

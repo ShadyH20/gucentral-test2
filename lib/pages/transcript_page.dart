@@ -654,7 +654,9 @@ class Skeleton extends StatelessWidget {
       height: height,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.08),
+          color: MyApp.isDarkMode.value
+              ? Colors.white.withOpacity(0.08)
+              : Colors.black.withOpacity(0.08),
           borderRadius: BorderRadius.circular(16)),
     );
   }
