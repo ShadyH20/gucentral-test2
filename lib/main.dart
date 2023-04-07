@@ -104,7 +104,8 @@ class MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           initialRoute: "/login",
           theme: isDarkMode
-              ? MyTheme.lightTheme.copyWith(primaryColor: MyTheme.yellow)
+              ? MyTheme.lightTheme
+                  .copyWith(primaryColor: MyTheme.darkTheme.primaryColor)
               : MyTheme.lightTheme,
           darkTheme: MyTheme.darkTheme,
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,

@@ -23,7 +23,7 @@ class MyTheme {
           color: orange,
           fontFamily: 'Outfit',
         )),
-    primaryColor: Colors.lightBlue,
+    primaryColor: light,
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
       // primary: Color.fromARGB(255, 223, 223, 223),
@@ -52,7 +52,7 @@ class MyTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
-    primaryColor: Color.fromARGB(255, 112, 0, 0),
+    primaryColor: darkerGrey,
     colorScheme: const ColorScheme(
         brightness: Brightness.dark,
         primary: orange,
