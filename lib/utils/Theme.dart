@@ -23,7 +23,7 @@ class MyTheme {
           color: orange,
           fontFamily: 'Outfit',
         )),
-    primaryColor: light,
+    primaryColor: Colors.lightBlue,
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
       // primary: Color.fromARGB(255, 223, 223, 223),

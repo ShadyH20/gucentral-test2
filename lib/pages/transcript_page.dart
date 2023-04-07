@@ -190,10 +190,10 @@ class _TranscriptPageState extends State<TranscriptPage>
   // ####### APP BAR #######
   AppBar transcriptAppBar() {
     return AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: MyColors.background,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark),
+      // systemOverlayStyle: SystemUiOverlayStyle(
+      //     statusBarColor: MyColors.background,
+      //     statusBarIconBrightness: Brightness.dark,
+      //     statusBarBrightness: Brightness.dark),
       elevation: 0,
       backgroundColor: MyColors.background,
       centerTitle: true,
