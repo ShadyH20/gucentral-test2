@@ -44,6 +44,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,12 +66,6 @@ class _HomePageState extends State<HomePage>
       prefs.setBool("loading", false);
       menuPageKey.currentState?.setState(() {});
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    setState(() {});
   }
 
   Widget adsenseAdsView() {
@@ -190,7 +192,7 @@ class _HomePageState extends State<HomePage>
                       fit: BoxFit.scaleDown,
                       child: Text(
                         "Hello, ${prefs.getString('first_name')! ?? "Student"}!",
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: MyColors.secondary,
                             fontSize: 36,
                             fontWeight: FontWeight.w800),
@@ -238,12 +240,12 @@ class _HomePageState extends State<HomePage>
                                     borderRadius: BorderRadius.circular(
                                       15.0,
                                     ),
-                                    color: MyColors.secondary,
+                                    color: MyColors.surface,
                                   ),
                                   child: DefaultTextStyle(
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 15,
-                                        color: MyColors.background),
+                                        color: MyColors.onSurface),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 11.0),
@@ -253,7 +255,7 @@ class _HomePageState extends State<HomePage>
                                             // MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Text(
-                                                "This Week",
+                                                "this week",
                                               ),
                                               FittedBox(
                                                 fit: BoxFit.scaleDown,
@@ -282,7 +284,7 @@ class _HomePageState extends State<HomePage>
                                     borderRadius: BorderRadius.circular(
                                       15.0,
                                     ),
-                                    color: MyColors.accent,
+                                    color: MyColors.tertiary,
                                   ),
                                   child: Column(children: [
                                     Expanded(
@@ -302,7 +304,7 @@ class _HomePageState extends State<HomePage>
                                                     decoration: TextDecoration
                                                         .underline,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 47)),
+                                                    fontSize: 43)),
                                           )
                                         ],
                                       ),
@@ -331,7 +333,7 @@ class _HomePageState extends State<HomePage>
                         child: Text.rich(
                           TextSpan(
                             text: "Today, ",
-                            style: const TextStyle(
+                            style: TextStyle(
                                 color: MyColors.secondary,
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700),
@@ -355,7 +357,7 @@ class _HomePageState extends State<HomePage>
                         // height: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: Colors.black.withOpacity(0.07),
+                          color: MyColors.secondary.withOpacity(0.07),
                         ),
                       ),
                     ),

@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import "package:table_calendar/table_calendar.dart";
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter/cupertino.dart';
+import "../main.dart";
 import "../widgets/EventDataSource.dart";
 import "../utils/SharedPrefs.dart";
 
@@ -86,6 +87,14 @@ class SchedulePageState extends State<SchedulePage> {
     courses = coursesR;
   }
 
+// ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   bool delayed3rd = prefs.getBool('delayed_3rd') ?? false;
   @override
   void initState() {
@@ -123,7 +132,7 @@ class SchedulePageState extends State<SchedulePage> {
       child: ScaffoldMessenger(
         child: Builder(builder: (context) {
           return Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: MyColors.background,
             appBar: scheduleAppBar(),
             body: Column(
               children: [
@@ -133,6 +142,7 @@ class SchedulePageState extends State<SchedulePage> {
                   firstDay: DateTime.utc(2010, 10, 16),
                   lastDay: DateTime.utc(2080, 3, 14),
                   startingDayOfWeek: StartingDayOfWeek.saturday,
+
                   // formatAnimationDuration: Duration(milliseconds: 500),
                   focusedDay: _focusedDay,
                   calendarFormat: _calendarFormat,
@@ -201,10 +211,12 @@ class SchedulePageState extends State<SchedulePage> {
                             vertical: 4, horizontal: 2),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: const [
+                          boxShadow: [
                             BoxShadow(
                                 offset: Offset(0, 1.1),
-                                color: Colors.black26,
+                                color: MyApp.isDarkMode.value
+                                    ? Colors.white24
+                                    : Colors.black26,
                                 spreadRadius: 0.6)
                           ],
                           color: MyColors.background,
@@ -281,8 +293,11 @@ class SchedulePageState extends State<SchedulePage> {
                                 .getVisibleAppointments(
                                     _controller.displayDate!, '')
                                 .isEmpty
-                            ? const Border(
-                                top: BorderSide(color: Colors.black12))
+                            ? Border(
+                                top: BorderSide(
+                                    color: MyApp.isDarkMode.value
+                                        ? Colors.white12
+                                        : Colors.black12))
                             : null),
                     child: Column(
                       children: [
@@ -293,7 +308,7 @@ class SchedulePageState extends State<SchedulePage> {
                             ? Container(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 15),
-                                child: const Text(
+                                child: Text(
                                   "No Classes Today!",
                                   style: TextStyle(
                                       fontSize: 18,
@@ -345,7 +360,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 timeIntervalHeight: 65,
                                 timeFormat: is24h ? "k:mm" : "h a",
                                 timeRulerSize: 40,
-                                timeTextStyle: const TextStyle(
+                                timeTextStyle: TextStyle(
                                     color: MyColors.secondary,
                                     fontFamily: 'Outfit',
                                     fontSize: 14,
@@ -377,7 +392,7 @@ class SchedulePageState extends State<SchedulePage> {
   double changeViewBtnScale = 1;
   AppBar scheduleAppBar() {
     return AppBar(
-      systemOverlayStyle: const SystemUiOverlayStyle(
+      systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: MyColors.primary,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark),
@@ -411,8 +426,8 @@ class SchedulePageState extends State<SchedulePage> {
               Text(
                 // DateFormat("MMMM").format(DateTime.now()),
                 DateFormat("MMMM").format(_focusedDay),
-                style: const TextStyle(
-                    color: MyColors.primary,
+                style: TextStyle(
+                    color: Theme.of(context).appBarTheme.titleTextStyle!.color,
                     fontWeight: FontWeight.w600,
                     fontSize: 30),
               ),
@@ -421,9 +436,11 @@ class SchedulePageState extends State<SchedulePage> {
                 transform: Matrix4.rotationX(changeViewBtnScale < 0 ? pi : 0),
                 alignment: Alignment.center,
                 transformAlignment: Alignment.center,
-                child: const Icon(
+                child: Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: MyColors.secondary,
+                  color: MyApp.isDarkMode.value
+                      ? MyColors.primary
+                      : MyColors.secondary,
                   size: 25,
                 ),
               ),
@@ -443,7 +460,7 @@ class SchedulePageState extends State<SchedulePage> {
       ),
       actions: [
         loadingExamSched
-            ? Center(
+            ? const Center(
                 child: SizedBox(
                     height: 25, width: 25, child: CircularProgressIndicator()),
               )
@@ -457,7 +474,7 @@ class SchedulePageState extends State<SchedulePage> {
         //       getExamSchedule();
         //     },
         //   ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         IconButton(
           icon: SvgPicture.asset(
             "assets/images/today.svg",
@@ -530,7 +547,7 @@ class SchedulePageState extends State<SchedulePage> {
   selectedDayBuilder(BuildContext context, DateTime day, DateTime selectedDay) {
     bool isWeek = _calendarFormat == CalendarFormat.week;
     return DefaultTextStyle(
-      style: const TextStyle(color: MyColors.background),
+      style: TextStyle(color: MyColors.background),
       child: Container(
         margin: isWeek
             ? const EdgeInsets.only(left: 2, right: 2)
@@ -540,7 +557,9 @@ class SchedulePageState extends State<SchedulePage> {
                     day.month == DateTime.now().month &&
                     day.day == DateTime.now().day)
                 ? MyColors.primary
-                : const Color.fromARGB(255, 76, 78, 88).withOpacity(0.6),
+                : MyApp.isDarkMode.value
+                    ? const Color.fromARGB(255, 163, 168, 188).withOpacity(0.6)
+                    : const Color.fromARGB(255, 76, 78, 88).withOpacity(0.6),
             borderRadius: BorderRadius.circular(7)),
         padding: EdgeInsets.symmetric(vertical: isWeek ? 7 : 2),
         child: Column(
@@ -556,7 +575,7 @@ class SchedulePageState extends State<SchedulePage> {
               style: const TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
-                // color: MyColors.background),
+                // color: MyColors.background
               ),
             ),
             isWeek
@@ -586,12 +605,12 @@ class SchedulePageState extends State<SchedulePage> {
             // Container(height: 5),
             Text(
               '${day.day}',
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                   color:
                       // Color.fromARGB(255, 255, 149, 0)
-                      MyColors.accent),
+                      MyColors.tertiary),
             ),
             _calendarFormat == CalendarFormat.week
                 ? Text(DateFormat('EEE').format(day).toLowerCase())
@@ -605,7 +624,10 @@ class SchedulePageState extends State<SchedulePage> {
   defaultDayBuilder(BuildContext context, DateTime date, DateTime dateTime) {
     bool isWeek = _calendarFormat == CalendarFormat.week;
     return DefaultTextStyle(
-      style: const TextStyle(color: Color.fromARGB(255, 95, 95, 95)),
+      style: TextStyle(
+          color: MyApp.isDarkMode.value
+              ? const Color.fromARGB(255, 176, 176, 176)
+              : const Color.fromARGB(255, 95, 95, 95)),
       child: Container(
         margin: const EdgeInsets.all(0),
         padding: EdgeInsets.symmetric(vertical: isWeek ? 7 : 2),
@@ -653,7 +675,11 @@ class SchedulePageState extends State<SchedulePage> {
   }
 
   getTabBackColor(int index) {
-    return tabIndex == index ? MyColors.primary : Colors.black12;
+    return tabIndex == index
+        ? MyColors.primary
+        : MyApp.isDarkMode.value
+            ? Colors.white12
+            : Colors.black12;
   }
 
   getTabFrontColor(int index) {
@@ -916,7 +942,7 @@ class SchedulePageState extends State<SchedulePage> {
 
                             // FLAG ICON
                             isQuiz
-                                ? const Icon(
+                                ? Icon(
                                     Icons.flag_rounded,
                                     color: MyColors.error,
                                     size: 17,
@@ -948,7 +974,7 @@ class SchedulePageState extends State<SchedulePage> {
                 .getVisibleAppointments(_controller.displayDate!, '');
     ;
     return dayQuizzes.isEmpty
-        ? const Center(
+        ? Center(
             child: Text(
               "No Quizzes Today!",
               style: TextStyle(
@@ -983,7 +1009,7 @@ class SchedulePageState extends State<SchedulePage> {
                       child: Container(
                         width: 40,
                         height: 40,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                             color: MyColors.primary,
                             // borderRadius: BorderRadius.circular(50),
                             shape: BoxShape.circle),
@@ -1004,7 +1030,7 @@ class SchedulePageState extends State<SchedulePage> {
                       child: Container(
                         width: 40,
                         height: 40,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                             color: MyColors.primary,
                             // borderRadius: BorderRadius.circular(50),
                             shape: BoxShape.circle),
@@ -1057,7 +1083,7 @@ class SchedulePageState extends State<SchedulePage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: DefaultTextStyle(
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
                                 color: MyColors.background,
@@ -1122,7 +1148,7 @@ class SchedulePageState extends State<SchedulePage> {
     List<Appointment>? dayDeadlines = _deadlineDataSource
         .getVisibleAppointments(_controller.displayDate ?? DateTime.now(), '');
     return dayDeadlines.isEmpty
-        ? const Center(
+        ? Center(
             child: Text(
               "No Deadlines Today!",
               style: TextStyle(
@@ -1152,7 +1178,7 @@ class SchedulePageState extends State<SchedulePage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: DefaultTextStyle(
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: MyColors.background,
@@ -1211,7 +1237,7 @@ class SchedulePageState extends State<SchedulePage> {
           turns: addIconTurns,
           duration: const Duration(milliseconds: 400),
           curve: Curves.decelerate,
-          child: const Icon(
+          child: Icon(
             Icons.add_rounded,
             color: MyColors.primary,
             size: 35,
@@ -1277,7 +1303,7 @@ class SchedulePageState extends State<SchedulePage> {
                 Container(
                   alignment: Alignment.center,
                   width: 20,
-                  child: const Text(
+                  child: Text(
                     "Q",
                     style: TextStyle(color: MyColors.primary),
                   ),
@@ -1339,63 +1365,6 @@ class SchedulePageState extends State<SchedulePage> {
                     initialDate: initialDate,
                   )));
     }
-  }
-
-  displayCupertino() async {
-    return await showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-          // title: const Text('Add Event'),
-          // message: const Text('Your options are '),
-          actions: <Widget>[
-            CupertinoActionSheetAction(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text("Q",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        color: MyColors.primary,
-                      )),
-                  SizedBox(width: 15),
-                  Text('New Quiz/Exam',
-                      style: TextStyle(color: MyColors.secondary)),
-                ],
-              ),
-              onPressed: () {
-                Navigator.pop(context, 'Quiz');
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: Container(
-                // width: 150,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/images/deadline-new.svg",
-                      height: 20,
-                      color: MyColors.primary,
-                    ),
-                    const SizedBox(width: 15),
-                    const Text('New Deadline',
-                        style: TextStyle(color: MyColors.secondary)),
-                  ],
-                ),
-              ),
-              onPressed: () {
-                Navigator.pop(context, 'Deadline');
-              },
-            )
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            isDefaultAction: true,
-            onPressed: () {
-              Navigator.pop(context, 'Cancel');
-            },
-            child: const Text('Cancel'),
-          )),
-    );
   }
 
   bool loadingExamSched = false;

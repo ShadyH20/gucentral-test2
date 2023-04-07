@@ -6,6 +6,7 @@ import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
 import 'package:http/http.dart';
 import 'package:ntlm/ntlm.dart';
 
+import '../../main.dart';
 import '../../widgets/MyColors.dart';
 import '../../widgets/Requests.dart';
 
@@ -17,6 +18,14 @@ class EvaluateCourses extends StatefulWidget {
 }
 
 class _EvaluateCoursesState extends State<EvaluateCourses> {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   bool loading = false;
   List coursesToEval = [];
 
@@ -54,7 +63,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
     return ScaffoldMessenger(
       child: Builder(builder: (context) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: MyColors.background,
           body: Container(
             alignment: Alignment.center,
             width: double.infinity,
@@ -76,7 +85,9 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                         height: 55,
                         padding: const EdgeInsets.only(left: 10),
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 230, 230, 230),
+                            color: MyApp.isDarkMode.value
+                                ? MyColors.surface
+                                : const Color.fromARGB(255, 230, 230, 230),
                             borderRadius: BorderRadius.circular(13)),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton2(
@@ -90,9 +101,11 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                             ),
                             isExpanded: true,
                             value: dropdownCourseValue,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 // decoration: TextDecoration.underline,
-                                color: Colors.black54,
+                                color: MyApp.isDarkMode.value
+                                    ? Colors.white70
+                                    : Colors.black54,
                                 fontFamily: 'Outfit',
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),

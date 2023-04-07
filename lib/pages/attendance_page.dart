@@ -4,15 +4,12 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
-import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:ntlm/ntlm.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../widgets/MyColors.dart';
 import '../../widgets/Requests.dart';
+import '../main.dart';
 import '../widgets/MenuWidget.dart';
 
 class AttendancePage extends StatefulWidget {
@@ -36,6 +33,14 @@ class _AttendancePageState extends State<AttendancePage> {
     _refreshController.refreshCompleted();
   }
 
+// ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -49,7 +54,7 @@ class _AttendancePageState extends State<AttendancePage> {
       child: Builder(builder: (context) {
         return Scaffold(
           appBar: attendanceAppBar(),
-          backgroundColor: Colors.white,
+          backgroundColor: MyColors.background,
           body: Container(
             alignment: Alignment.center,
             width: double.infinity,
@@ -70,7 +75,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         height: 55,
                         padding: const EdgeInsets.only(left: 10),
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 230, 230, 230),
+                            color: MyApp.isDarkMode.value
+                                ? MyColors.surface
+                                : const Color.fromARGB(255, 230, 230, 230),
                             borderRadius: BorderRadius.circular(13)),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton2(
@@ -85,9 +92,11 @@ class _AttendancePageState extends State<AttendancePage> {
                             isExpanded: true,
                             value: dropdownCourseValue,
                             hint: const Text('Choose A Course'),
-                            style: const TextStyle(
+                            style: TextStyle(
                                 // decoration: TextDecoration.underline,
-                                color: Colors.black54,
+                                color: MyApp.isDarkMode.value
+                                    ? Colors.white70
+                                    : Colors.black54,
                                 fontFamily: 'Outfit',
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
@@ -97,7 +106,7 @@ class _AttendancePageState extends State<AttendancePage> {
                               borderRadius: BorderRadius.circular(10),
                             )),
                             underline: Container(
-                              color: const Color(0),
+                              color: Colors.transparent,
                             ),
                             onChanged: (course) {
                               // This is called when the user selects an item.
@@ -188,7 +197,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
   attendanceAppBar() {
     return AppBar(
-      systemOverlayStyle: const SystemUiOverlayStyle(
+      systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: MyColors.primary,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark),
@@ -197,10 +206,10 @@ class _AttendancePageState extends State<AttendancePage> {
       centerTitle: true,
       leadingWidth: 60.0,
       leading: const MenuWidget(),
-      title: const Text(
+      title: Text(
         "Attendance",
         // textScaleFactor: 0.95,
-        style: TextStyle(color: MyColors.primary),
+        // style: TextStyle(color: MyColors.primary),
       ),
       actions: [
         isCourseLoading
@@ -251,7 +260,7 @@ class _AttendancePageState extends State<AttendancePage> {
         await courseChosen(context, dropdownCourseValue);
         _refreshController.refreshCompleted();
       },
-      header: const WaterDropHeader(
+      header: WaterDropHeader(
         waterDropColor: MyColors.primary,
         complete: Icon(
           Icons.check,
@@ -317,7 +326,7 @@ class _AttendancePageState extends State<AttendancePage> {
                   children: [
                     Text(
                       parseDate(attendanceDate),
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: MyColors.primary,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
@@ -325,7 +334,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     const SizedBox(height: 5),
                     Text(
                       attendanceSlot + ' slot',
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: MyColors.primary,
                           fontSize: 16,
                           fontWeight: FontWeight.w500),
@@ -335,7 +344,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 const SizedBox(height: 5),
                 Text(
                   attendanceType,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: MyColors.primary,
                       fontSize: 16,
                       fontWeight: FontWeight.w500),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
+import "../main.dart";
 import "../utils/SharedPrefs.dart";
 import "HomePageNavDrawer.dart";
 import "MyColors.dart";
@@ -429,13 +430,18 @@ void showSnackBar(BuildContext context, String text,
     duration: duration,
     behavior: SnackBarBehavior.floating,
     elevation: 7,
-    backgroundColor: Color.fromARGB(255, 113, 118, 121),
+    backgroundColor: MyApp.isDarkMode.value
+        ? Theme.of(context).colorScheme.surface
+        : Color.fromARGB(255, 113, 118, 121),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
     width: MediaQuery.of(context).size.width * 0.8,
     content: Text(
       text,
       textAlign: TextAlign.center,
-      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+      style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
+          color: Theme.of(context).colorScheme.secondary),
     ),
     showCloseIcon: true,
     closeIconColor: MyColors.background,

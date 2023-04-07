@@ -9,7 +9,9 @@ import "package:gucentral/utils/local_auth_api.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:settings_ui/settings_ui.dart";
+import "../main.dart";
 import "../utils/SharedPrefs.dart";
+import "../utils/Theme.dart";
 import "../widgets/Requests.dart";
 
 class SettingsPage extends StatefulWidget {
@@ -23,13 +25,26 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   static bool timeFormatIs24 = false;
+// ignore: non_constant_identifier_names
+  ColorScheme MyColors = MyTheme.lightTheme.colorScheme;
+  //// TILE TITLE TEXT STYLE ////
+  late TextStyle titleTS;
+  @override
+  void initState() {
+    super.initState();
+    titleTS = TextStyle(fontWeight: FontWeight.w400, fontSize: 20);
+  }
 
   @override
   Widget build(BuildContext context) {
+    MyColors = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyApp.isDarkMode.value
+          ? MyColors.background
+          : const Color(0xfff3f3fa),
       appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
+        systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: MyColors.background,
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.dark),
@@ -40,10 +55,9 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: const MenuWidget(),
         title: const Text(
           "Settings",
-          style: TextStyle(color: MyColors.primary),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         // color: Colors.red,
         child: ListView(
@@ -57,10 +71,13 @@ class _SettingsPageState extends State<SettingsPage> {
               //   settingsListBackground: Colors.transparent,
               //   settingsSectionBackground: Colors.black12,
               // ),
+              darkTheme: SettingsThemeData(
+                  titleTextColor: Colors.white,
+                  tileDescriptionTextColor: Colors.white70),
               sections: [
                 //// GENERAL SECTION ////
                 SettingsSection(
-                  title: const Text(
+                  title: Text(
                     'General',
                     style: TextStyle(fontSize: 22, color: MyColors.secondary),
                     softWrap: true,
@@ -75,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                 //// SCHEDULE SECTION ////
                 SettingsSection(
-                  title: const Text(
+                  title: Text(
                     'Schedule',
                     style: TextStyle(fontSize: 22, color: MyColors.secondary),
                     softWrap: true,
@@ -89,7 +106,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                 //// SECURITY SECTION ////
                 SettingsSection(
-                  title: const Text(
+                  title: Text(
                     'Security',
                     style: TextStyle(fontSize: 22, color: MyColors.secondary),
                     softWrap: true,
@@ -129,10 +146,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  //// TILE TITLE TEXT STYLE ////
-  final TextStyle titleTS = const TextStyle(
-      color: MyColors.secondary, fontWeight: FontWeight.w500, fontSize: 20);
-
   static const keyTheme = 'key-theme';
   buildDarkMode() {
     return SettingsTile.switchTile(
@@ -145,11 +158,12 @@ class _SettingsPageState extends State<SettingsPage> {
       initialValue: prefs.getBool('dark_mode') ?? false,
 
       /// DISABLED
-      enabled: false,
+      // enabled: false,
 
       onToggle: (value) {
         setState(() {
           prefs.setBool('dark_mode', value);
+          // mainKey.currentState!.setDarkMode(value);
         });
       },
       trailing: Switch.adaptive(
@@ -158,6 +172,9 @@ class _SettingsPageState extends State<SettingsPage> {
         onChanged: (value) {
           setState(() {
             prefs.setBool('dark_mode', value);
+            print(mainKey.toString());
+            MyApp.isDarkMode.value = value;
+            // mainKey.currentState!.setDarkMode(value);
           });
         },
       ),
@@ -181,9 +198,9 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       // onPressed: (context) => ,
       initialValue: prefs.getBool('is_24h') ?? false,
-      leading: const IconBuilder(
+      leading: IconBuilder(
         icon: Icons.access_time_filled,
-        color: MyColors.primaryVariant,
+        color: MyColors.primary,
         // MyColors.accent,
       ),
       title: Text(
@@ -198,8 +215,8 @@ class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController _nameController = TextEditingController();
   buildChangeName() {
     return SettingsTile(
-      leading: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 0.0),
+      leading: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 0.0),
         child: IconBuilder(
             color: MyColors.primaryVariant, icon: Icons.person_2_rounded),
       ),
@@ -235,7 +252,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   build3rdSlot() {
     return SettingsTile.switchTile(
-      leading: const IconBuilder(
+      leading: IconBuilder(
         color: MyColors.primaryVariant,
         // Colors.blue[300]!,
         icon: Icons.edit_calendar_rounded,
@@ -268,7 +285,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   buildSemStartEnd() {
     return SettingsTile.navigation(
-      leading: const IconBuilder(
+      leading: IconBuilder(
           // color: Color.fromARGB(255, 100, 57, 255),
           color: MyColors.primaryVariant,
           icon: Icons.date_range_rounded),
@@ -292,7 +309,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   buildLockApp() {
     return SettingsTile.switchTile(
-      leading: const IconBuilder(
+      leading: IconBuilder(
         color: MyColors.primaryVariant,
         // Colors.blue[300]!,
         icon: Icons.fingerprint,
@@ -351,7 +368,9 @@ class IconBuilder extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           border: const Border.fromBorderSide(
               BorderSide(color: MyColors.primaryVariant))),
-      child: Icon(icon, color: MyColors.secondary.withOpacity(0.9), size: 20),
+      child: Icon(icon,
+          color: Theme.of(context).colorScheme.secondary.withOpacity(0.9),
+          size: 20),
     );
   }
 }

@@ -13,7 +13,7 @@ class MenuWidget extends StatelessWidget {
         icon: SvgPicture.asset(
           "assets/images/nav-bar.svg",
           height: 15,
-          color: MyColors.secondary,
+          color: Theme.of(context).colorScheme.secondary,
         ),
         padding: const EdgeInsets.only(left: 20),
         onPressed: () {

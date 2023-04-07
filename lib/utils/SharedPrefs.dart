@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "package:gucentral/main.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
@@ -42,3 +43,4 @@ class SharedPrefs {
 }
 
 final GlobalKey<MenuPageState> menuPageKey = GlobalKey();
+final GlobalKey<MyAppState> mainKey = GlobalKey();

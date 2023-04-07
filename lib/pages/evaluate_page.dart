@@ -7,6 +7,7 @@ import 'package:gucentral/widgets/Requests.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:transitioned_indexed_stack/transitioned_indexed_stack.dart';
 
+import '../main.dart';
 import '../widgets/MenuWidget.dart';
 import '../widgets/MyColors.dart';
 
@@ -18,6 +19,14 @@ class EvaluatePage extends StatefulWidget {
 }
 
 class _EvaluatePageState extends State<EvaluatePage> {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   int pageIndex = 0;
 
   var pages = [];
@@ -31,11 +40,14 @@ class _EvaluatePageState extends State<EvaluatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: MyColors.background,
         appBar: evaluateAppBar(),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.only(bottom: 10.0),
-          color: const Color.fromARGB(255, 250, 250, 250),
+          color: MyApp.isDarkMode.value
+              ? MyColors.surface
+              // const Color.fromARGB(255, 45, 45, 45)
+              : const Color.fromARGB(255, 250, 250, 250),
           child: buildBottomNavBar(),
         ),
         body: SlideIndexedStack(
@@ -55,9 +67,11 @@ class _EvaluatePageState extends State<EvaluatePage> {
   BottomNavigationBar buildBottomNavBar() {
     return BottomNavigationBar(
       elevation: 0,
-
+      backgroundColor: MyApp.isDarkMode.value ? MyColors.surface : null,
       // type: BottomNavigationBarType.shifting,
       unselectedItemColor: MyColors.secondary,
+      selectedItemColor: MyColors.primary,
+      // selectedLabelStyle: TextStyle(color: MyColors.primary),
       showUnselectedLabels: true,
       currentIndex: pageIndex,
       onTap: (value) {
@@ -65,10 +79,10 @@ class _EvaluatePageState extends State<EvaluatePage> {
           pageIndex = value;
         });
       },
-      iconSize: 40,
-      selectedIconTheme: const IconThemeData(size: 40),
-      unselectedFontSize: 22,
-      selectedFontSize: 22,
+      iconSize: 33,
+      selectedIconTheme: const IconThemeData(size: 33),
+      unselectedFontSize: 20,
+      selectedFontSize: 20,
       items: const [
         BottomNavigationBarItem(
             icon: Icon(Icons.sticky_note_2_outlined), label: "Courses"),
@@ -80,7 +94,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
 
   evaluateAppBar() {
     return AppBar(
-      systemOverlayStyle: const SystemUiOverlayStyle(
+      systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: MyColors.primary,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark),
@@ -89,10 +103,10 @@ class _EvaluatePageState extends State<EvaluatePage> {
       centerTitle: true,
       leadingWidth: 60.0,
       leading: const MenuWidget(),
-      title: const Text(
+      title: Text(
         "Evaluate",
         // textScaleFactor: 0.95,
-        style: TextStyle(color: MyColors.primary),
+        // style: TextStyle(color: MyColors.primary),
       ),
       actions: [
         IconButton(

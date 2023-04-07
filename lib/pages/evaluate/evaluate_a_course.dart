@@ -61,6 +61,14 @@ class EvaluateACourse extends StatefulWidget {
 }
 
 class _EvaluateACourseState extends State<EvaluateACourse> {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _fieldKeys =
       List.generate(labels.length + labels2.length, (index) => GlobalKey());
@@ -343,7 +351,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                   Flexible(
                     child: Text(
                       '${index + 1}.  ${labels[index]}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 15.0,
                         fontWeight: FontWeight.w500,
                         color: MyColors.secondary,
@@ -406,7 +414,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                       softWrap: true,
                       overflow: TextOverflow.visible,
                       labels2[index],
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 17.0,
                         // height: 0.9,
                         fontWeight: FontWeight.w400,
@@ -466,7 +474,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
   buildRemark() {
     return Column(
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 15),
           child: Text(
             'Course critique (e.g. likes, dislikes) and suggestions for improvement',
@@ -489,8 +497,8 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                          color: MyColors.primaryVariant, width: 2),
+                      borderSide:
+                          BorderSide(color: MyColors.primaryVariant, width: 2),
                       borderRadius: BorderRadius.circular(12)))),
         )
       ],
@@ -526,7 +534,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
           Text(
             code,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: MyColors.secondary,
@@ -536,7 +544,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
           Text(
             name,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               color: MyColors.secondary,
@@ -553,7 +561,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
     // this will return a row containing a dropdown to select a rating from the 6 options
     // and an apply to all button
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Tooltip(
           textAlign: TextAlign.center,
@@ -578,7 +586,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
               ),
               isExpanded: true,
               menuItemStyleData: const MenuItemStyleData(
-                padding: EdgeInsets.only(left: 10, right: 5),
+                padding: EdgeInsets.only(left: 15),
               ),
               buttonStyleData: ButtonStyleData(
                 padding: EdgeInsets.zero,

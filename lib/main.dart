@@ -61,13 +61,20 @@ class MyApp extends StatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
+  static final ValueNotifier<bool> isDarkMode =
+      ValueNotifier(prefs.getBool('dark_mode') ?? false);
+
+  static ColorScheme MyColors = isDarkMode.value
+      ? MyTheme.darkTheme.colorScheme
+      : MyTheme.lightTheme.colorScheme;
+
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MyApp> createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   @override
   void initState() {
     // Only after at least the action method is set, the notification events are delivered
@@ -85,43 +92,50 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: MyApp.navigatorKey,
-      title: 'GUCentral',
-      // home: const LoginPage(),
-      debugShowCheckedModeBanner: false,
-      initialRoute: "/login",
-      theme: MyTheme.lightTheme,
-      darkTheme: MyTheme.darkTheme,
-      themeMode: ThemeMode.light,
-      onGenerateRoute: (settings) {
-        // If you push the PassArguments route
-        if (settings.name == '/evaluate') {
-          // Cast the arguments to the correct
-          // type: ScreenArguments.
-          final args = settings.arguments as Map;
+    MyApp.MyColors = Theme.of(context).colorScheme;
+    return ValueListenableBuilder<bool>(
+      valueListenable: MyApp.isDarkMode,
+      builder: (context, isDarkMode, child) {
+        return MaterialApp(
+          key: mainKey,
+          navigatorKey: MyApp.navigatorKey,
+          title: 'GUCentral',
+          // home: const LoginPage(),
+          debugShowCheckedModeBanner: false,
+          initialRoute: "/login",
+          theme: MyTheme.lightTheme,
+          darkTheme: MyTheme.darkTheme,
+          themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          onGenerateRoute: (settings) {
+            // If you push the PassArguments route
+            if (settings.name == '/evaluate') {
+              // Cast the arguments to the correct
+              // type: ScreenArguments.
+              final args = settings.arguments as Map;
 
-          // Then, extract the required data from
-          // the arguments and pass the data to the
-          // correct screen.
-          return MaterialPageRoute(
-            builder: (context) {
-              return EvaluateACourse(course: args);
-            },
-          );
-        }
-      },
-      routes: {
-        "/login": (context) => LoginPage(),
-        // "/evaluate": (context) => EvaluateACourse(key: key),
-        "/home": (context) => HomePageNavDrawer(
-              gpa: "",
-            ),
-        // "home_page": (context) => HomePageNavDrawer(
-        //       key: key,
-        //       gpa: "",
-        //     )
-        // "transcript_page": (context) => TranscriptPage(key: key),
+              // Then, extract the required data from
+              // the arguments and pass the data to the
+              // correct screen.
+              return MaterialPageRoute(
+                builder: (context) {
+                  return EvaluateACourse(course: args);
+                },
+              );
+            }
+          },
+          routes: {
+            "/login": (context) => LoginPage(),
+            // "/evaluate": (context) => EvaluateACourse(key: key),
+            "/home": (context) => HomePageNavDrawer(
+                  gpa: "",
+                ),
+            // "home_page": (context) => HomePageNavDrawer(
+            //       key: key,
+            //       gpa: "",
+            //     )
+            // "transcript_page": (context) => TranscriptPage(key: key),
+          },
+        );
       },
     );
   }

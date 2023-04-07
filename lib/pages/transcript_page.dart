@@ -10,11 +10,10 @@ import 'package:data_table_2/data_table_2.dart';
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import 'package:simple_animations/simple_animations.dart';
-// import "package:sensors_plus/sensors_plus.dart";
-// // import 'package:sensors_plus_web/sensors_plus_web.dart';
 import 'package:all_sensors/all_sensors.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
+import "../main.dart";
 import "../utils/SharedPrefs.dart";
 import "../widgets/Requests.dart";
 
@@ -37,6 +36,13 @@ class TranscriptPage extends StatefulWidget {
 class _TranscriptPageState extends State<TranscriptPage>
     with AutomaticKeepAliveClientMixin {
   final _scrollController = ScrollController();
+
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
 
   String gpa = "";
   bool showLoading = false;
@@ -122,7 +128,7 @@ class _TranscriptPageState extends State<TranscriptPage>
     return ScaffoldMessenger(
       child: Builder(builder: (context) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: MyColors.background,
           appBar: transcriptAppBar(),
           body: SizedBox(
             width: double.infinity,
@@ -184,7 +190,7 @@ class _TranscriptPageState extends State<TranscriptPage>
   // ####### APP BAR #######
   AppBar transcriptAppBar() {
     return AppBar(
-      systemOverlayStyle: const SystemUiOverlayStyle(
+      systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: MyColors.background,
           statusBarIconBrightness: Brightness.dark,
           statusBarBrightness: Brightness.dark),
@@ -193,9 +199,9 @@ class _TranscriptPageState extends State<TranscriptPage>
       centerTitle: true,
       leadingWidth: 60.0,
       leading: const MenuWidget(),
-      title: const Text(
+      title: Text(
         "Transcript",
-        style: TextStyle(color: MyColors.primary),
+        // style: TextStyle(color: MyColors.primary),
       ),
       actions: [
         IconButton(
@@ -241,14 +247,14 @@ class _TranscriptPageState extends State<TranscriptPage>
           20.0,
         ),
         color: MyColors.background,
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
               color: MyColors.primary, offset: Offset(0, 2), spreadRadius: 0.3)
         ],
       ),
       child: Column(
         children: [
-          const Text(
+          Text(
             "Cumulative",
             style: TextStyle(
                 fontSize: 24,
@@ -263,7 +269,7 @@ class _TranscriptPageState extends State<TranscriptPage>
               child: Text.rich(
                 TextSpan(
                   text: gpa,
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: MyColors.secondary,
                       fontSize: 72,
                       fontWeight: FontWeight.w800),
@@ -361,7 +367,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                 fit: BoxFit.fitWidth,
                 child: Text(
                   semesterName ?? "",
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: MyColors.primary,
                       fontSize: 25,
                       fontWeight: FontWeight.bold),
@@ -378,7 +384,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                         25.0,
                       ),
                       color: MyColors.background,
-                      boxShadow: const [
+                      boxShadow: [
                         BoxShadow(
                             color: MyColors.primary, offset: Offset(0, -2))
                       ],
@@ -395,7 +401,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                         columnSpacing: 0,
                         dataRowHeight: 30,
                         horizontalMargin: 3,
-                        dataTextStyle: const TextStyle(
+                        dataTextStyle: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13.5,
                             letterSpacing: .1,
@@ -431,7 +437,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                         TextSpan(
                           text: courseGrades[courseGrades.length - 1][0]
                               .toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: MyColors.secondary,
                               fontSize: 17,
                               fontWeight: FontWeight.w900),
@@ -466,7 +472,9 @@ class _TranscriptPageState extends State<TranscriptPage>
       height: 40,
       padding: const EdgeInsets.only(left: 10),
       decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 230, 230, 230),
+          color: MyApp.isDarkMode.value
+              ? MyColors.surface
+              : const Color.fromARGB(255, 230, 230, 230),
           borderRadius: BorderRadius.circular(10)),
       child: DropdownButtonHideUnderline(
         child: DropdownButton2(
@@ -474,8 +482,8 @@ class _TranscriptPageState extends State<TranscriptPage>
               icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
           isExpanded: true,
           value: dropdownValue,
-          style: const TextStyle(
-              color: Colors.black54,
+          style: TextStyle(
+              color: MyApp.isDarkMode.value ? Colors.white70 : Colors.black54,
               fontFamily: 'Outfit',
               fontSize: 18,
               fontWeight: FontWeight.bold),
@@ -506,12 +514,12 @@ class _TranscriptPageState extends State<TranscriptPage>
   }
 
   loading() {
-    return const SizedBox(
+    return SizedBox(
       width: 70,
       height: 70,
       child: CircularProgressIndicator(
         strokeWidth: 7,
-        color: MyColors.accent,
+        color: MyColors.tertiary,
         backgroundColor: MyColors.primary,
       ),
     );

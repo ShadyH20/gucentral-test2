@@ -35,6 +35,14 @@ class MenuPageState extends State<MenuPage> {
     });
   }
 
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   bool loaded = false;
   @override
   Widget build(BuildContext context) {
@@ -51,16 +59,16 @@ class MenuPageState extends State<MenuPage> {
     return Scaffold(
       backgroundColor: MyColors.background,
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color.fromARGB(255, 255, 165, 87),
+                const Color.fromARGB(255, 255, 165, 87),
                 MyColors.primaryVariant,
                 MyColors.primary
               ]),
-          borderRadius: BorderRadius.horizontal(
+          borderRadius: const BorderRadius.horizontal(
             right: Radius.circular(25),
           ),
         ),
@@ -81,7 +89,7 @@ class MenuPageState extends State<MenuPage> {
                     ...MenuItems.all.map(buildMenuItem).toList(),
                     const Spacer(),
                     const Divider(
-                      color: MyColors.background,
+                      color: Colors.white,
                       thickness: 3,
                     ),
                     buildMenuItem(MenuItems.settings),
@@ -97,17 +105,9 @@ class MenuPageState extends State<MenuPage> {
                 alignment: FractionalOffset.bottomCenter,
                 child: Container(
                   // height: 150,
-                  decoration: const BoxDecoration(
-                      boxShadow: [
-                        // BoxShadow(
-                        //     color: MyColors.background,
-                        //     offset: Offset(-30, 30)),
-                        // BoxShadow(
-                        //     color: MyColors.secondary,
-                        //     offset: Offset(30, 30))
-                      ],
-                      color: MyColors.secondary,
-                      borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                      color: MyColors.surface,
+                      borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(25),
                       )),
                   padding: const EdgeInsets.all(42),
@@ -184,7 +184,7 @@ class MenuPageState extends State<MenuPage> {
       return Column(children: [
         Container(height: 40),
         const Divider(
-          color: MyColors.background,
+          color: Colors.white,
           thickness: 3,
         ),
       ]);
@@ -192,9 +192,9 @@ class MenuPageState extends State<MenuPage> {
       bool isComingSoon = comingSoon(item.title);
       return ListTileTheme(
         contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-        selectedColor: MyColors.background,
-        textColor: MyColors.background.withOpacity(0.5),
-        iconColor: MyColors.background.withOpacity(0.5),
+        selectedColor: Colors.white,
+        textColor: Colors.white.withOpacity(0.5),
+        iconColor: Colors.white.withOpacity(0.5),
         // change disabled tiles color
 
         child: ListTile(
@@ -230,7 +230,7 @@ class MenuPageState extends State<MenuPage> {
                         maxLines: 1,
                         style: TextStyle(
                             fontStyle: FontStyle.italic,
-                            color: MyColors.background.withOpacity(0.8),
+                            color: Colors.white.withOpacity(0.8),
                             fontWeight: FontWeight.w600,
                             fontSize: 11),
                       ),

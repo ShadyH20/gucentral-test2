@@ -36,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    prefs.clear();
     checkCredsExist().then((userRemembered) {
       userRemembered = this.userRemembered;
       print("User Remembered? $userRemembered");
@@ -331,7 +330,7 @@ class _LoginPageState extends State<LoginPage> {
                 height: 10,
               ),
               Text(
-                "v1.0.7",
+                "v1.0.8",
                 style: TextStyle(color: MyColors.secondary),
               )
             ],
