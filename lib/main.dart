@@ -104,7 +104,8 @@ class MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           initialRoute: "/login",
           theme: MyTheme.lightTheme,
-          darkTheme: MyTheme.darkTheme,
+          darkTheme:
+              MyTheme.darkTheme.copyWith(primaryColor: MyTheme.darkerGrey),
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
           onGenerateRoute: (settings) {
             // If you push the PassArguments route
