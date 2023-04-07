@@ -36,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    prefs.clear();
     checkCredsExist().then((userRemembered) {
       userRemembered = this.userRemembered;
       print("User Remembered? $userRemembered");
