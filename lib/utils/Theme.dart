@@ -7,6 +7,7 @@ class MyTheme {
   static const Color darkGrey = Color(0xFF272932);
   static const Color darkerGreyOld = Color.fromARGB(255, 16, 17, 17);
   static const Color darkerGrey = Color.fromARGB(255, 15, 15, 15);
+  static const Color darkerGrey2 = Color(0xFF141518);
   static const Color yellow = Color(0xFFffc857);
   static const Color yellowDark = Color.fromARGB(255, 40, 40, 40);
   // static const Color secondaryVariant = Color(0xFF018786);
@@ -52,7 +53,7 @@ class MyTheme {
   );
 
   static ThemeData darkTheme = ThemeData(
-    primaryColor: darkerGreyOld,
+    // primaryColor: darkerGreyOld,
     colorScheme: const ColorScheme(
         brightness: Brightness.dark,
         primary: orange,
@@ -63,7 +64,7 @@ class MyTheme {
         tertiary: yellow,
         error: error,
         onError: light,
-        background: darkerGreyOld,
+        background: darkerGrey2,
         onBackground: light,
         surface: darkGrey,
         onSurface: light),
