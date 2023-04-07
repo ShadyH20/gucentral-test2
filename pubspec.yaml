@@ -68,6 +68,12 @@ dependencies:
   statusbarz: ^1.0.13
   pull_to_refresh: ^2.0.0
   flutter_staggered_animations: ^1.1.1
+  flutter_native_splash: ^2.2.19
+
+flutter_native_splash:
+  color: "#141518"
+  image: assets/images/main-logo.png
+
 
 
 dev_dependencies:
@@ -96,6 +102,7 @@ flutter:
   assets:
     - assets/images/logo-text.svg
     - assets/images/main-logo.svg
+    - assets/images/main-logo.png
     - assets/images/nav-bar.svg
     - assets/images/profile.svg
     - assets/images/edit.svg
