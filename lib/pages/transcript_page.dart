@@ -147,7 +147,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                 buildDropdown(),
                 const Spacer(),
                 Expanded(
-                  flex: 8,
+                  flex: 10,
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     // width: 380,
@@ -199,7 +199,7 @@ class _TranscriptPageState extends State<TranscriptPage>
       centerTitle: true,
       leadingWidth: 60.0,
       leading: const MenuWidget(),
-      title: Text(
+      title: const Text(
         "Transcript",
         // style: TextStyle(color: MyColors.primary),
       ),

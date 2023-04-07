@@ -37,31 +37,41 @@ class _EvaluatePageState extends State<EvaluatePage> {
     super.initState();
   }
 
+  PageController pageController = PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: MyColors.background,
-        appBar: evaluateAppBar(),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.only(bottom: 10.0),
-          color: MyApp.isDarkMode.value
-              ? MyColors.surface
-              // const Color.fromARGB(255, 45, 45, 45)
-              : const Color.fromARGB(255, 250, 250, 250),
-          child: buildBottomNavBar(),
-        ),
-        body: SlideIndexedStack(
-          // endSlideOffset: const Offset(0.0, 0),
-          beginSlideOffset: Offset(pageIndex == 0 ? 1.0 : -1.0, 0.0),
-          // curve: Curves.easeInOut,
-          duration: const Duration(milliseconds: 250),
-          // LazyLoadIndexedStack(
-          index: pageIndex,
-          children: const [
-            EvaluateCourses(),
-            Center(child: Text("Evaluate Academics"))
-          ],
-        ));
+      backgroundColor: MyColors.background,
+      appBar: evaluateAppBar(),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        color: MyApp.isDarkMode.value
+            ? MyColors.surface
+            // const Color.fromARGB(255, 45, 45, 45)
+            : const Color.fromARGB(255, 250, 250, 250),
+        child: buildBottomNavBar(),
+      ),
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
+        children: const [
+          EvaluateCourses(),
+          Center(child: Text("Evaluate Academics"))
+        ],
+      ),
+      // SlideIndexedStack(
+      //   // endSlideOffset: const Offset(0.0, 0),
+      //   beginSlideOffset: Offset(pageIndex == 0 ? -1.0 : 1.0, 0.0),
+      //   // curve: Curves.easeInOut,
+      //   duration: const Duration(milliseconds: 250),
+      //   // LazyLoadIndexedStack(
+      //   index: pageIndex,
+      //   children: const [
+      //     EvaluateCourses(),
+      //     Center(child: Text("Evaluate Academics"))
+      //   ],
+      // ),
+    );
   }
 
   BottomNavigationBar buildBottomNavBar() {
@@ -77,6 +87,9 @@ class _EvaluatePageState extends State<EvaluatePage> {
       onTap: (value) {
         setState(() {
           pageIndex = value;
+          pageController.animateToPage(value,
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut);
         });
       },
       iconSize: 33,
