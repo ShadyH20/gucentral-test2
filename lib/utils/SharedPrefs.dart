@@ -3,6 +3,8 @@ import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
 
+import "../pages/MenuPage.dart";
+
 late SharedPreferences prefs;
 Future<void> initiateSharedPreferences() async {
   prefs = await SharedPreferences.getInstance();
@@ -20,6 +22,7 @@ class SharedPrefs {
   static const quizzes = 'quizzes';
   static const examSched = 'exam_sched';
   static const attendance = 'att:';
+  static const firstAccess = 'first_access';
 
   static getString(String key) {
     return prefs.getString(key);
@@ -37,3 +40,5 @@ class SharedPrefs {
     prefs.setBool(key, value);
   }
 }
+
+final GlobalKey<MenuPageState> menuPageKey = GlobalKey();

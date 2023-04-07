@@ -45,6 +45,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   @override
+  void initState() {
+    super.initState();
+    initializeEverything();
+  }
+
+  bool loadingEverything = true;
+  void initializeEverything() async {
+    await Requests.initializeEverything();
+    setState(() {
+      loadingEverything = false;
+      prefs.setBool("loading", false);
+      menuPageKey.currentState?.setState(() {});
+    });
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     setState(() {});
@@ -104,47 +120,55 @@ class _HomePageState extends State<HomePage>
             "Home",
           ),
           actions: [
-            IconButton(
-              // padding: EdgeInsets.symmetric(horizontal: 20.0),
-              icon: Icon(
-                Icons.notifications_rounded,
-                size: 30,
-                color: MyColors.secondary,
-              ),
-              // SvgPicture.asset(
-              //   "assets/images/edit.svg",
-              //   height: 30,
-              //   color: MyColors.secondary,
-              // ),
-              onPressed: () async {
-                /// REQUEST NOTIFICATIONS PERMISSION
-                AwesomeNotifications()
-                    .isNotificationAllowed()
-                    .then((isAllowed) {
-                  print(
-                      "Notifications are ${isAllowed ? "allowed" : "not allowed"}");
-                  if (!isAllowed) {
-                    // This is just a basic example. For real apps, you must show some
-                    // friendly dialog box before call the request method.
-                    // This is very important to not harm the user experience
-                    AwesomeNotifications()
-                        .requestPermissionToSendNotifications();
-                  }
-                  AwesomeNotifications().createNotification(
-                      content: NotificationContent(
-                          id: 10,
-                          channelKey: 'basic_channel',
-                          title: 'Welcom to GUCentral!',
-                          body: 'We hope you enjoy our app!',
-                          actionType: ActionType.Default));
-                });
+            loadingEverything
+                ? const Center(
+                    child: SizedBox(
+                      width: 25,
+                      height: 25,
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : IconButton(
+                    // padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    icon: Icon(
+                      Icons.notifications_rounded,
+                      size: 30,
+                      color: MyColors.secondary,
+                    ),
+                    // SvgPicture.asset(
+                    //   "assets/images/edit.svg",
+                    //   height: 30,
+                    //   color: MyColors.secondary,
+                    // ),
+                    onPressed: () async {
+                      /// REQUEST NOTIFICATIONS PERMISSION
+                      AwesomeNotifications()
+                          .isNotificationAllowed()
+                          .then((isAllowed) {
+                        print(
+                            "Notifications are ${isAllowed ? "allowed" : "not allowed"}");
+                        if (!isAllowed) {
+                          // This is just a basic example. For real apps, you must show some
+                          // friendly dialog box before call the request method.
+                          // This is very important to not harm the user experience
+                          AwesomeNotifications()
+                              .requestPermissionToSendNotifications();
+                        }
+                        AwesomeNotifications().createNotification(
+                            content: NotificationContent(
+                                id: 10,
+                                channelKey: 'basic_channel',
+                                title: 'Welcom to GUCentral!',
+                                body: 'We hope you enjoy our app!',
+                                actionType: ActionType.Default));
+                      });
 
-                if (kIsWeb) {
-                  MyNotification.sendNotification(
-                      'Welcome to GUCentral!', 'We hope you enjoy our app!');
-                }
-              },
-            ),
+                      if (kIsWeb) {
+                        MyNotification.sendNotification('Welcome to GUCentral!',
+                            'We hope you enjoy our app!');
+                      }
+                    },
+                  ),
             Container(
               width: 10,
             )
@@ -165,10 +189,7 @@ class _HomePageState extends State<HomePage>
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        (prefs.getString('name')!.split(" ")[0] ==
-                                "Abdelrahman")
-                            ? "Hello, Bodia!"
-                            : "Hello, ${prefs.getString('first_name')! ?? "Student"}!",
+                        "Hello, ${prefs.getString('first_name')! ?? "Student"}!",
                         style: const TextStyle(
                             color: MyColors.secondary,
                             fontSize: 36,

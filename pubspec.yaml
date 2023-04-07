@@ -66,6 +66,8 @@ dependencies:
   jumping_dot: ^0.0.4
   transitioned_indexed_stack: ^1.0.2
   statusbarz: ^1.0.13
+  pull_to_refresh: ^2.0.0
+  flutter_staggered_animations: ^1.1.1
 
 
 dev_dependencies:

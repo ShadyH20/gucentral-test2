@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:ntlm/ntlm.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../widgets/MyColors.dart';
 import '../../widgets/Requests.dart';
@@ -24,6 +26,16 @@ class _AttendancePageState extends State<AttendancePage> {
   bool loading = false;
   List courses = [];
 
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -33,86 +45,91 @@ class _AttendancePageState extends State<AttendancePage> {
   var dropdownCourseValue;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: attendanceAppBar(),
-      backgroundColor: Colors.white,
-      body: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: double.infinity,
-        child: loading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  const SizedBox(height: 20),
-                  // const Text(
-                  //   "Courses To Evaluate",
-                  //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-                  // ),
-                  // const SizedBox(height: 15),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    // width: ,
-                    height: 55,
-                    padding: const EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 230, 230, 230),
-                        borderRadius: BorderRadius.circular(13)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        // enableFeedback: true,
-                        iconStyleData: const IconStyleData(
-                          icon: Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: Icon(Icons.arrow_drop_down_outlined),
+    return ScaffoldMessenger(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          appBar: attendanceAppBar(),
+          backgroundColor: Colors.white,
+          body: Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: double.infinity,
+            child: loading
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      // const Text(
+                      //   "Courses To Evaluate",
+                      //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                      // ),
+                      // const SizedBox(height: 15),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        // width: ,
+                        height: 55,
+                        padding: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 230, 230, 230),
+                            borderRadius: BorderRadius.circular(13)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            // enableFeedback: true,
+                            iconStyleData: const IconStyleData(
+                              icon: Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.arrow_drop_down_outlined),
+                              ),
+                              iconSize: 30,
+                            ),
+                            isExpanded: true,
+                            value: dropdownCourseValue,
+                            hint: const Text('Choose A Course'),
+                            style: const TextStyle(
+                                // decoration: TextDecoration.underline,
+                                color: Colors.black54,
+                                fontFamily: 'Outfit',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            // dropdownColor: MyColors.secondary,
+                            dropdownStyleData: DropdownStyleData(
+                                decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
+                            underline: Container(
+                              color: const Color(0),
+                            ),
+                            onChanged: (course) {
+                              // This is called when the user selects an item.
+                              setState(() {
+                                dropdownCourseValue = course;
+                              });
+                              debugPrint("$dropdownCourseValue chosen");
+                              courseChosen(context, course);
+                            },
+                            items:
+                                courses.map<DropdownMenuItem>((dynamic course) {
+                              return DropdownMenuItem(
+                                value: course,
+                                child: buildCourseName(course),
+                              );
+                            }).toList(),
                           ),
-                          iconSize: 30,
                         ),
-                        isExpanded: true,
-                        value: dropdownCourseValue,
-                        hint: const Text('Choose A Course'),
-                        style: const TextStyle(
-                            // decoration: TextDecoration.underline,
-                            color: Colors.black54,
-                            fontFamily: 'Outfit',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                        // dropdownColor: MyColors.secondary,
-                        dropdownStyleData: DropdownStyleData(
-                            decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        )),
-                        underline: Container(
-                          color: const Color(0),
-                        ),
-                        onChanged: (course) {
-                          // This is called when the user selects an item.
-                          setState(() {
-                            dropdownCourseValue = course;
-                          });
-                          debugPrint("$dropdownCourseValue chosen");
-                          courseChosen(course);
-                        },
-                        items: courses.map<DropdownMenuItem>((dynamic course) {
-                          return DropdownMenuItem(
-                            value: course,
-                            child: buildCourseName(course),
-                          );
-                        }).toList(),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: isCourseLoaded ? 10 : 0),
+                      SizedBox(height: isCourseLoaded ? 10 : 0),
 
-                  /// if the user has chosen a course to evaluate
-                  Expanded(
-                    child: buildAttendance(),
+                      /// if the user has chosen a course to evaluate
+                      Expanded(
+                        child: buildAttendance(),
+                      ),
+                      //
+                      // EvaluateACourse(course: dropdownCourseValue)
+                    ],
                   ),
-                  //
-                  // EvaluateACourse(course: dropdownCourseValue)
-                ],
-              ),
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -120,7 +137,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
-  void courseChosen(course) async {
+  Future<void> courseChosen(context, course) async {
     setState(() {
       startAnimation = false;
     });
@@ -141,7 +158,7 @@ class _AttendancePageState extends State<AttendancePage> {
     });
     if (!success) {
       showSnackBar(context, 'An error ocurred! Please try again.',
-          duration: const Duration(seconds: 7));
+          duration: const Duration(seconds: 5));
       return;
     }
     setState(() {
@@ -227,12 +244,38 @@ class _AttendancePageState extends State<AttendancePage> {
     //     return item;
     //   },
     // );
-    return ListView.builder(
-      itemCount: attendanceList.length,
-      itemBuilder: (context, index) {
-        var attendance = attendanceList[attendanceList.length - 1 - index];
-        return buildAttendanceItem(attendance, index);
+    return SmartRefresher(
+      controller: _refreshController,
+      enablePullDown: true,
+      onRefresh: () async {
+        await courseChosen(context, dropdownCourseValue);
+        _refreshController.refreshCompleted();
       },
+      header: const WaterDropHeader(
+        waterDropColor: MyColors.primary,
+        complete: Icon(
+          Icons.check,
+          color: MyColors.primary,
+        ),
+      ),
+      child: AnimationLimiter(
+        child: ListView.builder(
+          itemCount: attendanceList.length,
+          itemBuilder: (context, index) {
+            var attendance = attendanceList[attendanceList.length - 1 - index];
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 200),
+              child: SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(
+                  child: buildAttendanceItem(attendance, index),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 
@@ -339,13 +382,9 @@ class _AttendancePageState extends State<AttendancePage> {
         : attendanceStatus == 'Absent'
             ? [const Color(0xfffa9d9d), const Color(0xff5a3232)]
             : [MyColors.secondary, MyColors.secondary];
-    return AnimatedContainer(
+    return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
-      curve: Curves.easeInOut,
-      duration: Duration(milliseconds: 400 + (index * 100)),
-      transform: Matrix4.translationValues(
-          startAnimation ? 0 : MediaQuery.of(context).size.width, 0, 0),
       decoration: BoxDecoration(
           color: attendanceStatusColor[0],
           borderRadius: BorderRadius.circular(13),
@@ -379,7 +418,7 @@ class _AttendancePageState extends State<AttendancePage> {
                   '$attendanceType | $attendanceSlot slot',
                   style: TextStyle(
                       color: attendanceStatusColor[1],
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: FontWeight.w200),
                 ),
                 const SizedBox(height: 2),
@@ -387,7 +426,7 @@ class _AttendancePageState extends State<AttendancePage> {
                   parseDate(attendanceDate),
                   style: TextStyle(
                       color: attendanceStatusColor[1],
-                      fontSize: 16,
+                      fontSize: 17,
                       fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 2),
@@ -395,7 +434,7 @@ class _AttendancePageState extends State<AttendancePage> {
                   attendanceStatus,
                   style: TextStyle(
                       color: attendanceStatusColor[1],
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: FontWeight.w200),
                 ),
               ],

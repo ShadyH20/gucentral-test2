@@ -35,7 +35,6 @@ class Requests {
       'username': username,
       'password': password,
     });
-    // print("WILL SEND REQUEST NAAWW");
 
     try {
       var response = await http.post(checkCredsURL, body: body, headers: {
@@ -43,7 +42,18 @@ class Requests {
         'Accept': 'application/json'
       });
       var res = jsonDecode(response.body);
-      return res['success'];
+      var success = res['success'];
+      if (success) {
+        prefs.setString(SharedPrefs.username, username);
+        prefs.setString(SharedPrefs.password, password);
+        prefs.setString(SharedPrefs.id, res['id']);
+        prefs.setString(SharedPrefs.name, res['name']);
+        prefs.setString(
+            SharedPrefs.firstName, res['name'].toString().split(' ')[0]);
+
+        prefs.setBool(SharedPrefs.firstAccess, true);
+      }
+      return success;
     } catch (e) {
       print("Check Creds Exception: ${e.toString()}");
       return false;
@@ -82,6 +92,39 @@ class Requests {
       print("exceptionn: ${e.toString()}");
       return null;
     }
+  }
+
+  static dynamic initializeEverything() async {
+    if (prefs.getBool(SharedPrefs.firstAccess) ?? false) {
+      prefs.setBool(SharedPrefs.firstAccess, false);
+      prefs.setBool("loading", true);
+
+      var body = jsonEncode(getCreds());
+
+      try {
+        var response = await http.post(loginURL, body: body, headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        });
+
+        var res = jsonDecode(response.body);
+        if (res['success']) {
+          prefs.setString('gpa', res['gpa']);
+          prefs.setString('name', res['name']);
+          prefs.setString('first_name', res['name'].toString().split(' ')[0]);
+          prefs.setString('id', res['id']);
+          var courses = jsonEncode(res['courses']);
+          prefs.setString('courses', courses);
+          var schedule = jsonEncode(res['schedule']);
+          prefs.setString('schedule', schedule);
+        }
+        return res;
+      } on Exception catch (e) {
+        print("Login exception: ${e.toString()}");
+        return null;
+      }
+    }
+    return null;
   }
 
   static dynamic getIdName() {

@@ -15,6 +15,7 @@ import 'package:simple_animations/simple_animations.dart';
 import 'package:all_sensors/all_sensors.dart';
 import "package:shared_preferences/shared_preferences.dart";
 
+import "../utils/SharedPrefs.dart";
 import "../widgets/Requests.dart";
 
 bool showGPA = false;
@@ -42,13 +43,14 @@ class _TranscriptPageState extends State<TranscriptPage>
   List<dynamic>? semesterGrades;
   bool tiltingBack = false;
 
-  _TranscriptPageState() {
-    getUsernameId();
-  }
-
   @override
   void initState() {
     super.initState();
+    getUsernameId();
+    if (semesterGrades == null) {
+      initalizePage();
+      setState(() {});
+    }
 
     gyroscopeEvents?.listen((GyroscopeEvent event) {
       if (event.x > 2.0) {
@@ -65,39 +67,22 @@ class _TranscriptPageState extends State<TranscriptPage>
     });
   }
 
-  @override
-  void didChangeDependencies() async {
-    super.didChangeDependencies();
-    if (semesterGrades == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        initalizePage();
-        setState(() {});
-      });
-
-      // initalizePage();
-      // setState(() {});
-    }
-  }
-
-  void initalizePage() async {
+  void initalizePage() {
     // print("Initialize transcript, 2D array: $semesterGrades");
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey('gpa')) {
-      setState(() {
-        gpa = prefs.getString('gpa')!;
-        int currYear = DateTime.now().year;
-        String lastOption = "$currYear-${currYear + 1}";
-        if (lastOption != "") {
-          int batch = int.parse((usernameId[1] as String).split("-")[0]);
-          int firstYear = ((batch - 1) / 3 + 2003).toInt();
-          int lastYear = int.parse(lastOption.split("-")[0]);
-          list = ['Select A Year'];
-          while (firstYear <= lastYear) {
-            list.add("$firstYear-${firstYear + 1}");
-            firstYear++;
-          }
+      gpa = prefs.getString('gpa')!;
+      int currYear = DateTime.now().year;
+      String lastOption = "$currYear-${currYear + 1}";
+      if (lastOption != "") {
+        int batch = int.parse((usernameId[1] as String).split("-")[0]);
+        int firstYear = ((batch - 1) / 3 + 2003).toInt();
+        int lastYear = int.parse(lastOption.split("-")[0]);
+        list = [];
+        while (firstYear <= lastYear) {
+          list.add("$firstYear-${firstYear + 1}");
+          firstYear++;
         }
-      });
+      }
     }
     if (widget.firstAccess) {
       // updateTranscript();
@@ -119,7 +104,6 @@ class _TranscriptPageState extends State<TranscriptPage>
       showLoading = false;
     });
 
-    print(output);
     // if success if false
     if (!output['success']) {
       showSnackBar(context, 'An error ocurred! Please try again.');
@@ -135,56 +119,61 @@ class _TranscriptPageState extends State<TranscriptPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: transcriptAppBar(),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // crossAxisAlignment: CrossAxisAlignment.center,
-          // #####################
-          // #### ACTUAL PAGE ####
-          // #####################
-          children: [
-            const Spacer(),
-            profile(),
-            const Spacer(),
-            cumulativeGPA(),
-            const Spacer(),
-            DropdownButtonYears(transcript: this),
-            const Spacer(),
-            Expanded(
-              flex: 8,
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                // width: 380,
-                // height: 350,
-                child: Column(
-                  children: [
-                    showLoading
-                        ? ListView.separated(
-                            itemBuilder: (context, index) =>
-                                const SemesterSkeleton(),
-                            separatorBuilder: (context, index) =>
-                                Container(height: 25),
-                            itemCount: 2,
-                            shrinkWrap: true,
-                          )
-                        : (semesterGrades == null || semesterGrades!.isEmpty)
-                            ? const Text("Nothing Here!")
-                            : Expanded(child: createTables()),
-                  ],
+    return ScaffoldMessenger(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          appBar: transcriptAppBar(),
+          body: SizedBox(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              // #####################
+              // #### ACTUAL PAGE ####
+              // #####################
+              children: [
+                const Spacer(),
+                profile(),
+                const Spacer(),
+                cumulativeGPA(),
+                const Spacer(),
+                buildDropdown(),
+                const Spacer(),
+                Expanded(
+                  flex: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    // width: 380,
+                    // height: 350,
+                    child: Column(
+                      children: [
+                        showLoading
+                            ? ListView.separated(
+                                itemBuilder: (context, index) =>
+                                    const SemesterSkeleton(),
+                                separatorBuilder: (context, index) =>
+                                    Container(height: 25),
+                                itemCount: 2,
+                                shrinkWrap: true,
+                              )
+                            : (semesterGrades == null ||
+                                    semesterGrades!.isEmpty)
+                                ? const Text("Nothing Here!")
+                                : Expanded(child: createTables()),
+                      ],
+                    ),
+                    // ),
+                  ),
                 ),
-                // ),
-              ),
+                // Container(
+                //   height: 30,
+                // )
+              ],
             ),
-            // Container(
-            //   height: 30,
-            // )
-          ],
-        ),
-      ),
+          ),
+        );
+      }),
     );
   }
 
@@ -229,8 +218,8 @@ class _TranscriptPageState extends State<TranscriptPage>
             color: MyColors.secondary,
           ),
           onPressed: () {
-            if (dropdownValue != list.first) {
-              updateTranscript(dropdownValue);
+            if (dropdownValue != "") {
+              updateTranscript(dropdownValue ?? "");
             }
           },
         ),
@@ -298,8 +287,8 @@ class _TranscriptPageState extends State<TranscriptPage>
 
   // ####### PROFILE #######
   List<dynamic> usernameId = [];
-  getUsernameId() async {
-    var out = await Requests.getUsernameId();
+  getUsernameId() {
+    var out = Requests.getUsernameId();
     setState(() {
       usernameId = out;
     });
@@ -468,6 +457,54 @@ class _TranscriptPageState extends State<TranscriptPage>
     );
   }
 
+  late List<String> list;
+
+  String? dropdownValue;
+  buildDropdown() {
+    return Container(
+      width: 180,
+      height: 40,
+      padding: const EdgeInsets.only(left: 10),
+      decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 230, 230, 230),
+          borderRadius: BorderRadius.circular(10)),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton2(
+          iconStyleData: const IconStyleData(
+              icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
+          isExpanded: true,
+          value: dropdownValue,
+          style: const TextStyle(
+              color: Colors.black54,
+              fontFamily: 'Outfit',
+              fontSize: 18,
+              fontWeight: FontWeight.bold),
+          dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          )),
+          underline: Container(
+            color: Colors.transparent,
+          ),
+          hint: const Text("Select A Year"),
+          onChanged: (String? value) {
+            // This is called when the user selects an item.
+            setState(() {
+              dropdownValue = value!;
+            });
+            updateTranscript(value!);
+          },
+          items: list.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Center(child: Text(value)),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
   loading() {
     return const SizedBox(
       width: 70,
@@ -532,69 +569,66 @@ class SemesterSkeleton extends StatelessWidget {
 
 // DROPDOWN LIST CLASS
 
-List<String> list = <String>[];
+// class DropdownButtonYears extends StatefulWidget {
+//   _TranscriptPageState transcript;
+//   DropdownButtonYears({super.key, required this.transcript});
 
-String dropdownValue = list.first;
+//   @override
+//   State<DropdownButtonYears> createState() => _DropdownButtonYearsState();
+// }
 
-class DropdownButtonYears extends StatefulWidget {
-  _TranscriptPageState transcript;
-  DropdownButtonYears({super.key, required this.transcript});
+// class _DropdownButtonYearsState extends State<DropdownButtonYears> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       width: 180,
+//       height: 40,
+//       padding: const EdgeInsets.only(left: 10),
+//       decoration: BoxDecoration(
+//           color: const Color.fromARGB(255, 230, 230, 230),
+//           borderRadius: BorderRadius.circular(10)),
+//       child: DropdownButtonHideUnderline(
+//         child: DropdownButton2(
+//           iconStyleData: const IconStyleData(
+//               icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
+//           isExpanded: true,
+//           value: dropdownValue,
+//           style: const TextStyle(
+//               // decoration: TextDecoration.underline,
+//               color: Colors.black54,
+//               fontFamily: 'Outfit',
+//               fontSize: 18,
+//               fontWeight: FontWeight.bold),
+//           // dropdownColor: MyColors.secondary,
+//           dropdownStyleData: DropdownStyleData(
+//               decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(10),
+//           )),
+//           underline: Container(
+//             color: Colors.transparent,
+//           ),
+//           hint: const Text("Select A Year"),
 
-  @override
-  State<DropdownButtonYears> createState() => _DropdownButtonYearsState();
-}
-
-class _DropdownButtonYearsState extends State<DropdownButtonYears> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 180,
-      height: 40,
-      padding: const EdgeInsets.only(left: 10),
-      decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 230, 230, 230),
-          borderRadius: BorderRadius.circular(10)),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton2(
-          iconStyleData: const IconStyleData(
-              icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
-          isExpanded: true,
-          value: dropdownValue,
-          style: const TextStyle(
-              // decoration: TextDecoration.underline,
-              color: Colors.black54,
-              fontFamily: 'Outfit',
-              fontSize: 18,
-              fontWeight: FontWeight.bold),
-          // dropdownColor: MyColors.secondary,
-          dropdownStyleData: DropdownStyleData(
-              decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          )),
-          underline: Container(
-            color: Colors.transparent,
-          ),
-
-          onChanged: (String? value) {
-            // This is called when the user selects an item.
-            setState(() {
-              dropdownValue = value!;
-            });
-            if (dropdownValue != list.first) {
-              widget.transcript.updateTranscript(value!);
-            }
-          },
-          items: list.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Center(child: Text(value)),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-}
+//           onChanged: (String? value) {
+//             // This is called when the user selects an item.
+//             setState(() {
+//               dropdownValue = value!;
+//             });
+//             if (dropdownValue != list.first) {
+//               widget.transcript.updateTranscript(value!);
+//             }
+//           },
+//           items: list.map<DropdownMenuItem<String>>((String value) {
+//             return DropdownMenuItem<String>(
+//               value: value,
+//               child: Center(child: Text(value)),
+//             );
+//           }).toList(),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class Skeleton extends StatelessWidget {
   const Skeleton({

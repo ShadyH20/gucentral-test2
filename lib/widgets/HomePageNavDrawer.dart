@@ -9,6 +9,7 @@ import 'package:gucentral/pages/schedule_page.dart';
 import 'package:gucentral/pages/settings_page.dart';
 import 'package:gucentral/pages/grades_page.dart';
 import 'package:gucentral/pages/transcript_page.dart';
+import 'package:gucentral/utils/SharedPrefs.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/MenuPage.dart';
 import '../pages/attendance_page.dart';
 import 'MeduItemList.dart';
+import 'Requests.dart';
 
 class HomePageNavDrawer extends StatefulWidget {
   final String gpa;
@@ -77,6 +79,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
     }
   }
 
+  bool loadingEverything = false;
   @override
   void initState() {
     super.initState();
@@ -108,12 +111,13 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         mainScreenTapClose: true,
         menuBackgroundColor: MyColors.primaryVariant,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
-        mainScreen: IndexedStack(
+        mainScreen: LazyLoadIndexedStack(
           index: selectedIndex,
           children: pages,
         ),
         menuScreen: Builder(
           builder: (context) => MenuPage(
+              key: menuPageKey,
               currentItem: currentItem,
               onSelectedItem: (item) async {
                 if (item == MenuItems.login) {

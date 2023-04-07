@@ -63,79 +63,84 @@ class _EvaluateAcademicState extends State<EvaluateAcademic> {
   List<int> radio1Vals = List.filled(labels.length, 0);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyColors.background,
-      appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: MyColors.background,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.dark),
-        backgroundColor: MyColors.background,
-        foregroundColor: MyColors.secondary,
-        title: const Text(
-          "Evaluate a Course",
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 40,
-              ),
-
-              /// THE FIRST 19 RATINGS ///
-              buildRadios1(),
-
-              // DIVIDER //
-              buildDoubleLine(),
-
-              /// LAST 3 RATINGS ///
-              buildRadios2(),
-
-              // DIVIDER //
-              buildDoubleLine(),
-
-              /// REMARK TEXTAREA ////
-              buildRemark(),
-
-              /// POST EVALUATION BUTTON ///
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+    return ScaffoldMessenger(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          backgroundColor: MyColors.background,
+          appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: MyColors.background,
+                statusBarIconBrightness: Brightness.dark,
+                statusBarBrightness: Brightness.dark),
+            backgroundColor: MyColors.background,
+            foregroundColor: MyColors.secondary,
+            title: const Text(
+              "Evaluate a Course",
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          body: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 40),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                    child: submitting
-                        ? CircularProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: () {
-                              postEvaluation();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              enableFeedback: true,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 15),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              // fixedSize:
-                              //     Size(MediaQuery.of(context).size.width * 0.5, 50),
-                              textStyle: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            child: const Text("Post Evaluation"),
-                          ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+
+                  /// THE FIRST 19 RATINGS ///
+                  buildRadios1(),
+
+                  // DIVIDER //
+                  buildDoubleLine(),
+
+                  /// LAST 3 RATINGS ///
+                  buildRadios2(),
+
+                  // DIVIDER //
+                  buildDoubleLine(),
+
+                  /// REMARK TEXTAREA ////
+                  buildRemark(),
+
+                  /// POST EVALUATION BUTTON ///
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 40),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15)),
+                        child: submitting
+                            ? CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  postEvaluation();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  enableFeedback: true,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 15),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  // fixedSize:
+                                  //     Size(MediaQuery.of(context).size.width * 0.5, 50),
+                                  textStyle: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                child: const Text("Post Evaluation"),
+                              ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 

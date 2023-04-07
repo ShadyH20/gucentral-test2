@@ -13,6 +13,8 @@ import "package:gucentral/widgets/Requests.dart";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
 
+import "../utils/SharedPrefs.dart";
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -34,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    prefs.clear();
     checkCredsExist().then((userRemembered) {
       userRemembered = this.userRemembered;
       print("User Remembered? $userRemembered");
@@ -73,21 +76,19 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     print("WILL SEND REQUEST NAAWW");
-    var output = await Requests.login(
-        context, usernameController.text.trim(), passwordController.text);
+    var output = await Requests.checkCreds(
+        usernameController.text.trim(), passwordController.text);
 
-    if (output != null) {
-      if (output['success']) {
-        // ignore: use_build_context_synchronously
-        // push the "home" path to the navigator
-        Navigator.pushNamed(context, "/home", arguments: output['gpa']);
+    if (output) {
+      // ignore: use_build_context_synchronously
+      // push the "home" path to the navigator
+      Navigator.pushNamed(context, "/home");
 
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) => HomePageNavDrawer(gpa: output['gpa'])),
-        // );
-      }
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => HomePageNavDrawer(gpa: output['gpa'])),
+      // );
     }
     setState(() {
       showLoading = false;
@@ -127,11 +128,6 @@ class _LoginPageState extends State<LoginPage> {
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
-          appBar: AppBar(
-            systemOverlayStyle: SystemUiOverlayStyle(
-              statusBarColor: MyColors.background,
-            ),
-          ),
           resizeToAvoidBottomInset: false,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,

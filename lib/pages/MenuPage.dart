@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import 'package:gucentral/widgets/Requests.dart';
 
+import '../utils/SharedPrefs.dart';
 import '../widgets/MeduItemList.dart';
 
 class MenuPage extends StatefulWidget {
@@ -15,102 +16,115 @@ class MenuPage extends StatefulWidget {
       {super.key, required this.currentItem, required this.onSelectedItem});
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  State<MenuPage> createState() => MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
-  List<dynamic> idName = [];
+class MenuPageState extends State<MenuPage> {
+  late List<String> idName;
 
-  _MenuPageState() {
+  @override
+  void initState() {
+    super.initState();
     getIdName();
   }
-  getIdName() async {
-    var out = await Requests.getIdName();
+
+  getIdName() {
+    var out = Requests.getIdName();
     setState(() {
       idName = out;
     });
   }
 
+  bool loaded = false;
   @override
-  Widget build(BuildContext context) => Theme(
-        data: ThemeData.dark(),
-        child: Scaffold(
-          backgroundColor: MyColors.background,
-          body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Color.fromARGB(255, 255, 165, 87),
-                    MyColors.primaryVariant,
-                    MyColors.primary
-                  ]),
-              borderRadius: BorderRadius.horizontal(
-                right: Radius.circular(25),
-              ),
-            ),
-            // color: MyColors.accent,
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  flex: 9,
-                  child: Padding(
-                    // color: MyColors.accent,
-                    padding: const EdgeInsets.symmetric(horizontal: 35),
-                    child: Column(
-                      children: [
-                        buildMenuItem(MenuItems.profile),
-                        const Spacer(),
-                        ...MenuItems.all.map(buildMenuItem).toList(),
-                        const Spacer(),
-                        const Divider(
-                          color: MyColors.background,
-                          thickness: 3,
-                        ),
-                        buildMenuItem(MenuItems.settings),
-                        buildMenuItem(MenuItems.login),
-                        const Spacer(flex: 2)
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: Container(
-                      // height: 150,
-                      decoration: const BoxDecoration(
-                          boxShadow: [
-                            // BoxShadow(
-                            //     color: MyColors.background,
-                            //     offset: Offset(-30, 30)),
-                            // BoxShadow(
-                            //     color: MyColors.secondary,
-                            //     offset: Offset(30, 30))
-                          ],
-                          color: MyColors.secondary,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25),
-                            bottomRight: Radius.circular(25),
-                          )),
-                      padding: const EdgeInsets.all(42),
-                      width: double.infinity,
-                      child: SvgPicture.asset(
-                        "assets/images/main-logo.svg",
-                        // height: 70,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
+  Widget build(BuildContext context) {
+    // if (!loaded) {
+    //   var loading = prefs.getBool('loading') ?? true;
+    //   if (!loading) {
+    //     setState(() {
+    //       loaded = true;
+    //     });
+    //     getIdName();
+    //   }
+    //   setState(() {});
+    // }
+    return Scaffold(
+      backgroundColor: MyColors.background,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(255, 255, 165, 87),
+                MyColors.primaryVariant,
+                MyColors.primary
+              ]),
+          borderRadius: BorderRadius.horizontal(
+            right: Radius.circular(25),
           ),
         ),
-      );
+        // color: MyColors.accent,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              flex: 9,
+              child: Padding(
+                // color: MyColors.accent,
+                padding: const EdgeInsets.symmetric(horizontal: 35),
+                child: Column(
+                  children: [
+                    buildMenuItem(MenuItems.profile),
+                    const Spacer(),
+                    ...MenuItems.all.map(buildMenuItem).toList(),
+                    const Spacer(),
+                    const Divider(
+                      color: MyColors.background,
+                      thickness: 3,
+                    ),
+                    buildMenuItem(MenuItems.settings),
+                    buildMenuItem(MenuItems.login),
+                    const Spacer(flex: 2)
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Container(
+                  // height: 150,
+                  decoration: const BoxDecoration(
+                      boxShadow: [
+                        // BoxShadow(
+                        //     color: MyColors.background,
+                        //     offset: Offset(-30, 30)),
+                        // BoxShadow(
+                        //     color: MyColors.secondary,
+                        //     offset: Offset(30, 30))
+                      ],
+                      color: MyColors.secondary,
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(25),
+                      )),
+                  padding: const EdgeInsets.all(42),
+                  width: double.infinity,
+                  child: SvgPicture.asset(
+                    "assets/images/main-logo.svg",
+                    // height: 70,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget buildMenuItem(MenuItemlist item) {
     if (item.title == "Profile") {
       return Container(
@@ -143,7 +157,7 @@ class _MenuPageState extends State<MenuPage> {
                   fit: BoxFit.scaleDown,
                   alignment: FractionalOffset.centerLeft,
                   child: Text(
-                    idName[1].toString().split(" ").sublist(0, 2).join(" "),
+                    "${idName[1].split(" ")[0]} ${idName[1].split(" ")[1]}",
                     style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -181,15 +195,12 @@ class _MenuPageState extends State<MenuPage> {
         selectedColor: MyColors.background,
         textColor: MyColors.background.withOpacity(0.5),
         iconColor: MyColors.background.withOpacity(0.5),
-        child: ListTile(
-          enabled: !isComingSoon,
-          // i need the trailing to shrink to accomodate for the width of the title
-          // how can i do that? answer in the next comment
-          // hello? answer? anyone?
-          // i want to shrink the trailing widget so that the title does not overflow
+        // change disabled tiles color
 
+        child: ListTile(
+          // enabled: !isComingSoon,
           dense: true,
-          visualDensity: const VisualDensity(vertical: 1),
+          visualDensity: const VisualDensity(vertical: 0.2),
           // selectedTileColor: Colors.white,
           // textColor: MyColors.background.withOpacity(0.5),
           selected: widget.currentItem == item,
@@ -227,7 +238,10 @@ class _MenuPageState extends State<MenuPage> {
                   : Container(),
             ],
           ),
-          onTap: () => widget.onSelectedItem(item),
+          onTap: () {
+            if (isComingSoon) return;
+            widget.onSelectedItem(item);
+          },
         ),
       );
     }

@@ -51,92 +51,97 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
   var dropdownCourseValue;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: double.infinity,
-        child: loading
-            ? const Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Courses To Evaluate",
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-                  ),
-                  const SizedBox(height: 15),
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    // width: ,
-                    height: 55,
-                    padding: const EdgeInsets.only(left: 10),
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 230, 230, 230),
-                        borderRadius: BorderRadius.circular(13)),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        // enableFeedback: true,
-                        iconStyleData: const IconStyleData(
-                          icon: Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: Icon(Icons.arrow_drop_down_outlined),
-                          ),
-                          iconSize: 30,
-                        ),
-                        isExpanded: true,
-                        value: dropdownCourseValue,
-                        style: const TextStyle(
-                            // decoration: TextDecoration.underline,
-                            color: Colors.black54,
-                            fontFamily: 'Outfit',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
-                        // dropdownColor: MyColors.secondary,
-                        dropdownStyleData: DropdownStyleData(
-                            decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        )),
-                        underline: Container(
-                          color: const Color(0),
-                        ),
-                        onChanged: (course) {
-                          // This is called when the user selects an item.
-                          setState(() {
-                            dropdownCourseValue = course;
-                          });
-                          if (dropdownCourseValue != coursesToEval.first) {
-                            debugPrint("$dropdownCourseValue chosen");
-                            courseChosen(course);
-                            // widget.transcript.updateTranscript(value!);
-                          }
-                        },
-                        items: coursesToEval
-                            .map<DropdownMenuItem>((dynamic course) {
-                          return DropdownMenuItem(
-                            value: course,
-                            child: buildCourseName(course['name']),
-                          );
-                        }).toList(),
+    return ScaffoldMessenger(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          backgroundColor: Colors.white,
+          body: Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: double.infinity,
+            child: loading
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Courses To Evaluate",
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.w500),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: isCourseLoaded ? 10 : 0),
+                      const SizedBox(height: 15),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        // width: ,
+                        height: 55,
+                        padding: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 230, 230, 230),
+                            borderRadius: BorderRadius.circular(13)),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            // enableFeedback: true,
+                            iconStyleData: const IconStyleData(
+                              icon: Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.arrow_drop_down_outlined),
+                              ),
+                              iconSize: 30,
+                            ),
+                            isExpanded: true,
+                            value: dropdownCourseValue,
+                            style: const TextStyle(
+                                // decoration: TextDecoration.underline,
+                                color: Colors.black54,
+                                fontFamily: 'Outfit',
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            // dropdownColor: MyColors.secondary,
+                            dropdownStyleData: DropdownStyleData(
+                                decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                            )),
+                            underline: Container(
+                              color: const Color(0),
+                            ),
+                            onChanged: (course) {
+                              // This is called when the user selects an item.
+                              setState(() {
+                                dropdownCourseValue = course;
+                              });
+                              if (dropdownCourseValue != coursesToEval.first) {
+                                debugPrint("$dropdownCourseValue chosen");
+                                courseChosen(course);
+                                // widget.transcript.updateTranscript(value!);
+                              }
+                            },
+                            items: coursesToEval
+                                .map<DropdownMenuItem>((dynamic course) {
+                              return DropdownMenuItem(
+                                value: course,
+                                child: buildCourseName(course['name']),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: isCourseLoaded ? 10 : 0),
 
-                  /// if the user has chosen a course to evaluate
-                  Expanded(
-                    child: isCourseLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : isCourseLoaded
-                            ? EvaluateACourse(course: dropdownCourseValue)
-                            : const SizedBox(),
+                      /// if the user has chosen a course to evaluate
+                      Expanded(
+                        child: isCourseLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : isCourseLoaded
+                                ? EvaluateACourse(course: dropdownCourseValue)
+                                : const SizedBox(),
+                      ),
+                      //
+                      // EvaluateACourse(course: dropdownCourseValue)
+                    ],
                   ),
-                  //
-                  // EvaluateACourse(course: dropdownCourseValue)
-                ],
-              ),
-      ),
+          ),
+        );
+      }),
     );
   }
 

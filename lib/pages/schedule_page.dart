@@ -120,246 +120,252 @@ class SchedulePageState extends State<SchedulePage> {
     is24h = prefs.getBool('is_24h') ?? false;
 
     return Material(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: scheduleAppBar(),
-        body: Column(
-          children: [
-            // AddEventOverlay(),
-            TableCalendar(
-              eventLoader: (day) => _getEventsForDay(day),
-              firstDay: DateTime.utc(2010, 10, 16),
-              lastDay: DateTime.utc(2080, 3, 14),
-              startingDayOfWeek: StartingDayOfWeek.saturday,
-              // formatAnimationDuration: Duration(milliseconds: 500),
-              focusedDay: _focusedDay,
-              calendarFormat: _calendarFormat,
-              daysOfWeekVisible: _calendarFormat == CalendarFormat.month,
-              rowHeight: _calendarFormat == CalendarFormat.week ? 75 : 50,
-              selectedDayPredicate: (day) {
-                return isSameDay(_selectedDay, day);
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                if (!isSameDay(_selectedDay, selectedDay)) {
-                  // Call `setState()` when updating the selected day
-                  setState(() {
-                    _selectedDay = selectedDay;
-                  });
-                  _controller.displayDate = selectedDay.at8am();
-                }
-              },
-              onPageChanged: (focusedDay) {
-                // No need to call `setState()` here
-                setState(() {
-                  _focusedDay = focusedDay;
-                });
-              },
-              formatAnimationDuration: const Duration(milliseconds: 500),
-              formatAnimationCurve: Curves.decelerate,
-              onFormatChanged: (format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              },
-              calendarBuilders: CalendarBuilders(
-                defaultBuilder: (context, date, _) =>
-                    defaultDayBuilder(context, date, _),
-                selectedBuilder: (context, day, focusedDay) =>
-                    selectedDayBuilder(context, day, focusedDay),
-                todayBuilder: (context, day, focusedDay) =>
-                    todayBuilder(context, day, focusedDay),
-                markerBuilder: (context, day, events) => Container(),
-                dowBuilder: (context, day) {
-                  return Text(
-                    DateFormat("EEE").format(day).toLowerCase(),
-                    textAlign: TextAlign.center,
-                  );
-                },
-              ),
-              calendarStyle: const CalendarStyle(
-                tablePadding: EdgeInsets.symmetric(vertical: 8),
-                outsideDaysVisible: true,
-                isTodayHighlighted: true,
-              ),
-              headerVisible: false,
-              availableCalendarFormats: const {
-                CalendarFormat.month: 'Month',
-                CalendarFormat.week: 'Week',
-              },
-            ),
-            //// TAB BUTTONS ////
-            Container(
-              color: Colors.transparent,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: FittedBox(
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                            offset: Offset(0, 1.1),
-                            color: Colors.black26,
-                            spreadRadius: 0.6)
-                      ],
-                      color: MyColors.background,
-                    ),
-                    child: Row(
-                      children: [
-                        GestureDetector(
-                            onTap: () {
-                              clickTabBtn("Deadline");
-                            },
-                            child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: getTabBackColor(0),
-                                ),
-                                child: SvgPicture.asset(
-                                  "assets/images/deadline-new.svg",
-                                  height: 20,
-                                  color: getTabFrontColor(0),
-                                ))),
-                        Container(
-                          width: 5,
+      child: ScaffoldMessenger(
+        child: Builder(builder: (context) {
+          return Scaffold(
+            backgroundColor: Colors.white,
+            appBar: scheduleAppBar(),
+            body: Column(
+              children: [
+                // AddEventOverlay(),
+                TableCalendar(
+                  eventLoader: (day) => _getEventsForDay(day),
+                  firstDay: DateTime.utc(2010, 10, 16),
+                  lastDay: DateTime.utc(2080, 3, 14),
+                  startingDayOfWeek: StartingDayOfWeek.saturday,
+                  // formatAnimationDuration: Duration(milliseconds: 500),
+                  focusedDay: _focusedDay,
+                  calendarFormat: _calendarFormat,
+                  daysOfWeekVisible: _calendarFormat == CalendarFormat.month,
+                  rowHeight: _calendarFormat == CalendarFormat.week ? 75 : 50,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(_selectedDay, day);
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    if (!isSameDay(_selectedDay, selectedDay)) {
+                      // Call `setState()` when updating the selected day
+                      setState(() {
+                        _selectedDay = selectedDay;
+                      });
+                      _controller.displayDate = selectedDay.at8am();
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    // No need to call `setState()` here
+                    setState(() {
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  formatAnimationDuration: const Duration(milliseconds: 500),
+                  formatAnimationCurve: Curves.decelerate,
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
+                  calendarBuilders: CalendarBuilders(
+                    defaultBuilder: (context, date, _) =>
+                        defaultDayBuilder(context, date, _),
+                    selectedBuilder: (context, day, focusedDay) =>
+                        selectedDayBuilder(context, day, focusedDay),
+                    todayBuilder: (context, day, focusedDay) =>
+                        todayBuilder(context, day, focusedDay),
+                    markerBuilder: (context, day, events) => Container(),
+                    dowBuilder: (context, day) {
+                      return Text(
+                        DateFormat("EEE").format(day).toLowerCase(),
+                        textAlign: TextAlign.center,
+                      );
+                    },
+                  ),
+                  calendarStyle: const CalendarStyle(
+                    tablePadding: EdgeInsets.symmetric(vertical: 8),
+                    outsideDaysVisible: true,
+                    isTodayHighlighted: true,
+                  ),
+                  headerVisible: false,
+                  availableCalendarFormats: const {
+                    CalendarFormat.month: 'Month',
+                    CalendarFormat.week: 'Week',
+                  },
+                ),
+                //// TAB BUTTONS ////
+                Container(
+                  color: Colors.transparent,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: FittedBox(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 20),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                                offset: Offset(0, 1.1),
+                                color: Colors.black26,
+                                spreadRadius: 0.6)
+                          ],
+                          color: MyColors.background,
                         ),
-                        GestureDetector(
-                            onTap: () {
-                              clickTabBtn("Q");
-                            },
-                            child: Container(
-                                alignment: Alignment.center,
-                                width: 28,
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: getTabBackColor(1),
-                                ),
-                                child: Text(
-                                  "Q",
+                        child: Row(
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  clickTabBtn("Deadline");
+                                },
+                                child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: getTabBackColor(0),
+                                    ),
+                                    child: SvgPicture.asset(
+                                      "assets/images/deadline-new.svg",
+                                      height: 20,
+                                      color: getTabFrontColor(0),
+                                    ))),
+                            Container(
+                              width: 5,
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  clickTabBtn("Q");
+                                },
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    width: 28,
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: getTabBackColor(1),
+                                    ),
+                                    child: Text(
+                                      "Q",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w800,
+                                          color: getTabFrontColor(1)),
+                                    ))),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 500),
+                  height: tabIndex == 0
+                      ? 50
+                      : tabIndex == 1
+                          ? 65
+                          : 0,
+                  margin: tabIndex == 2 ? null : const EdgeInsets.only(top: 5),
+                  child: tabIndex == 0
+                      ? deadlineBuilder()
+                      : tabIndex == 1
+                          ? quizBuilder()
+                          : null,
+                ),
+                Container(
+                  height: 10,
+                ),
+
+                //// DAY VIEW ////
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 20, right: 25),
+                    decoration: BoxDecoration(
+                        border: _eventDataSource
+                                .getVisibleAppointments(
+                                    _controller.displayDate!, '')
+                                .isEmpty
+                            ? const Border(
+                                top: BorderSide(color: Colors.black12))
+                            : null),
+                    child: Column(
+                      children: [
+                        _eventDataSource
+                                .getVisibleAppointments(
+                                    _controller.displayDate!, '')
+                                .isEmpty
+                            ? Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                child: const Text(
+                                  "No Classes Today!",
                                   style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w800,
-                                      color: getTabFrontColor(1)),
-                                ))),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: MyColors.secondary),
+                                ),
+                              )
+                            : Container(),
+                        Expanded(
+                          child: SfCalendar(
+                            controller: _controller,
+                            view: CalendarView.day,
+                            viewNavigationMode: ViewNavigationMode.none,
+                            initialDisplayDate: DateTime.now(),
+                            initialSelectedDate: DateTime.now(),
+                            todayHighlightColor: MyColors.primary,
+                            // cellBorderColor: Colors.green,
+                            //       // cellBorderColor: Colors.transparent,
+                            viewHeaderHeight: 0,
+                            headerHeight: 0,
+                            showCurrentTimeIndicator: true,
+                            selectionDecoration: const BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border(),
+                            ),
+                            // onViewChanged: ,
+                            onTap: (calendarTapDetails) {
+                              setState(() {
+                                tappedEvent =
+                                    calendarTapDetails.appointments!.first;
+                                alignment1 = editButtonsToggle
+                                    ? const Alignment(-0.16, -2.7)
+                                    : const Alignment(0, 0.8);
+                                alignment2 = editButtonsToggle
+                                    ? const Alignment(0.16, -2.7)
+                                    : const Alignment(0, 0.8);
+                                editButtonsToggle = !editButtonsToggle;
+                              });
+                            },
+                            //onViewChanged: (details) {
+                            //setState(() {
+                            //  _selectedDay = _controller.displayDate ?? _selectedDay;
+                            // });
+                            //},
+                            timeSlotViewSettings: TimeSlotViewSettings(
+                                startHour: 7,
+                                endHour: 19,
+                                timeInterval: const Duration(hours: 1),
+                                timeIntervalHeight: 65,
+                                timeFormat: is24h ? "k:mm" : "h a",
+                                timeRulerSize: 40,
+                                timeTextStyle: const TextStyle(
+                                    color: MyColors.secondary,
+                                    fontFamily: 'Outfit',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                                nonWorkingDays: const <int>[
+                                  DateTime.friday,
+                                ]),
+                            dataSource:
+                                EventDataSource(events + quizzes + examEvents),
+                            appointmentBuilder: appointmentBuilder,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 500),
-              height: tabIndex == 0
-                  ? 50
-                  : tabIndex == 1
-                      ? 65
-                      : 0,
-              margin: tabIndex == 2 ? null : const EdgeInsets.only(top: 5),
-              child: tabIndex == 0
-                  ? deadlineBuilder()
-                  : tabIndex == 1
-                      ? quizBuilder()
-                      : null,
-            ),
-            Container(
-              height: 10,
-            ),
-
-            //// DAY VIEW ////
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(left: 20, right: 25),
-                decoration: BoxDecoration(
-                    border: _eventDataSource
-                            .getVisibleAppointments(
-                                _controller.displayDate!, '')
-                            .isEmpty
-                        ? const Border(top: BorderSide(color: Colors.black12))
-                        : null),
-                child: Column(
-                  children: [
-                    _eventDataSource
-                            .getVisibleAppointments(
-                                _controller.displayDate!, '')
-                            .isEmpty
-                        ? Container(
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            child: const Text(
-                              "No Classes Today!",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: MyColors.secondary),
-                            ),
-                          )
-                        : Container(),
-                    Expanded(
-                      child: SfCalendar(
-                        controller: _controller,
-                        view: CalendarView.day,
-                        viewNavigationMode: ViewNavigationMode.none,
-                        initialDisplayDate: DateTime.now(),
-                        initialSelectedDate: DateTime.now(),
-                        todayHighlightColor: MyColors.primary,
-                        // cellBorderColor: Colors.green,
-                        //       // cellBorderColor: Colors.transparent,
-                        viewHeaderHeight: 0,
-                        headerHeight: 0,
-                        showCurrentTimeIndicator: true,
-                        selectionDecoration: const BoxDecoration(
-                          color: Colors.transparent,
-                          border: Border(),
-                        ),
-                        // onViewChanged: ,
-                        onTap: (calendarTapDetails) {
-                          setState(() {
-                            tappedEvent =
-                                calendarTapDetails.appointments!.first;
-                            alignment1 = editButtonsToggle
-                                ? const Alignment(-0.16, -2.7)
-                                : const Alignment(0, 0.8);
-                            alignment2 = editButtonsToggle
-                                ? const Alignment(0.16, -2.7)
-                                : const Alignment(0, 0.8);
-                            editButtonsToggle = !editButtonsToggle;
-                          });
-                        },
-                        //onViewChanged: (details) {
-                        //setState(() {
-                        //  _selectedDay = _controller.displayDate ?? _selectedDay;
-                        // });
-                        //},
-                        timeSlotViewSettings: TimeSlotViewSettings(
-                            startHour: 7,
-                            endHour: 19,
-                            timeInterval: const Duration(hours: 1),
-                            timeIntervalHeight: 65,
-                            timeFormat: is24h ? "k:mm" : "h a",
-                            timeRulerSize: 40,
-                            timeTextStyle: const TextStyle(
-                                color: MyColors.secondary,
-                                fontFamily: 'Outfit',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500),
-                            nonWorkingDays: const <int>[
-                              DateTime.friday,
-                            ]),
-                        dataSource:
-                            EventDataSource(events + quizzes + examEvents),
-                        appointmentBuilder: appointmentBuilder,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }

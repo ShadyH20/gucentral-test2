@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:statusbarz/statusbarz.dart';
 
+import '../utils/SharedPrefs.dart';
 import 'MyColors.dart';
 
 class MenuWidget extends StatelessWidget {
@@ -16,9 +17,11 @@ class MenuWidget extends StatelessWidget {
         ),
         padding: const EdgeInsets.only(left: 20),
         onPressed: () {
-          if (ZoomDrawer.of(context) != null) {
-            ZoomDrawer.of(context)!.toggle();
-            // Statusbarz.instance.refresh();
+          if (!prefs.getBool("loading")!) {
+            if (ZoomDrawer.of(context) != null) {
+              ZoomDrawer.of(context)!.toggle();
+              // Statusbarz.instance.refresh();
+            }
           }
           // Scaffold.of(context).openDrawer();
         },
