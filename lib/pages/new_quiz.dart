@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
+import 'package:gucentral/main.dart';
 import 'package:gucentral/pages/schedule_page.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import 'package:gucentral/widgets/Requests.dart';
@@ -24,14 +25,21 @@ class AddQuizPage extends StatefulWidget {
   final List<dynamic> courses;
   final Event? event;
   final DateTime? initialDate;
-  const AddQuizPage(
-      {super.key, required this.courses, this.event, this.initialDate});
+  AddQuizPage({super.key, required this.courses, this.event, this.initialDate});
 
   @override
   _AddQuizPageState createState() => _AddQuizPageState();
 }
 
 class _AddQuizPageState extends State<AddQuizPage> {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   // Create controllers for the form fields
   final _formKey = GlobalKey<FormState>();
   final _quizTitleController = TextEditingController();
@@ -85,7 +93,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
         elevation: 0,
         title: Text(
           '${widget.event == null ? 'Add' : 'Edit'} Quiz',
-          style: const TextStyle(fontSize: 25, color: MyColors.primary),
+          style: TextStyle(fontSize: 25),
         ),
         actions: [
           TextButton.icon(
@@ -141,7 +149,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
+                                      Text(
                                         "Course",
                                         style: TextStyle(
                                           fontFamily: "Outfit",
@@ -165,7 +173,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(7.5),
-                                              borderSide: const BorderSide(
+                                              borderSide: BorderSide(
                                                   width: 2,
                                                   color:
                                                       MyColors.primaryVariant)),
@@ -225,7 +233,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
+                                      Text(
                                         "Title",
                                         style: TextStyle(
                                           fontFamily: "Outfit",
@@ -238,9 +246,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                       TextFormField(
                                         textInputAction: TextInputAction.next,
                                         keyboardType: TextInputType.text,
-                                        autofillHints: const [
-                                          AutofillHints.username
-                                        ],
+                                        autofillHints: [AutofillHints.username],
                                         controller: _quizTitleController,
                                         validator: (value) =>
                                             value != null && value.isEmpty
@@ -263,7 +269,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                           focusedBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(7.5),
-                                              borderSide: const BorderSide(
+                                              borderSide: BorderSide(
                                                   width: 2,
                                                   color:
                                                       MyColors.primaryVariant)),
@@ -315,7 +321,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                     MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
+                                  Text(
                                     "Location",
                                     style: TextStyle(
                                       fontFamily: "Outfit",
@@ -328,9 +334,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                   TextFormField(
                                     textInputAction: TextInputAction.next,
                                     keyboardType: TextInputType.text,
-                                    autofillHints: const [
-                                      AutofillHints.username
-                                    ],
+                                    autofillHints: [AutofillHints.username],
                                     controller: _locationController,
                                     validator: (value) =>
                                         value != null && value.isEmpty
@@ -352,7 +356,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(7.5),
-                                          borderSide: const BorderSide(
+                                          borderSide: BorderSide(
                                               width: 2,
                                               color: MyColors.primaryVariant)),
                                       contentPadding:
@@ -373,7 +377,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
             ),
           ),
           //// DELETE BUTTON ////
-          // const SizedBox(height: 40),
+          //  SizedBox(height: 40),
           widget.event == null
               ? Container()
               : Expanded(
@@ -391,16 +395,16 @@ class _AddQuizPageState extends State<AddQuizPage> {
                           padding: const EdgeInsets.all(10),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7)),
-                          side: const BorderSide(color: MyColors.error)),
+                          side: BorderSide(color: MyColors.error)),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(
                               Icons.delete_rounded,
                               color: MyColors.error,
                               size: 25,
                             ),
-                            SizedBox(width: 5),
+                            const SizedBox(width: 5),
                             Text(
                               "Delete",
                               style: TextStyle(
@@ -459,7 +463,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "Date",
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -487,22 +491,20 @@ class _AddQuizPageState extends State<AddQuizPage> {
                   firstDay: DateTime.utc(2010, 10, 16),
                   lastDay: DateTime.utc(2080, 3, 14),
                   startingDayOfWeek: StartingDayOfWeek.saturday,
-                  weekendDays: const [],
+                  weekendDays: [],
                   calendarFormat: CalendarFormat.month,
-                  availableCalendarFormats: const {
-                    CalendarFormat.month: 'Month'
-                  },
+                  availableCalendarFormats: {CalendarFormat.month: 'Month'},
                   focusedDay: _selectedDate,
                   rowHeight: 35,
                   headerStyle: HeaderStyle(
                     leftChevronMargin: EdgeInsets.zero,
                     rightChevronMargin: EdgeInsets.zero,
-                    leftChevronIcon: const Icon(
+                    leftChevronIcon: Icon(
                       Icons.arrow_back_ios_new_rounded,
                       color: MyColors.primary,
                       size: 20,
                     ),
-                    rightChevronIcon: const Icon(
+                    rightChevronIcon: Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: MyColors.primary,
                       size: 20,
@@ -512,7 +514,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                     titleTextFormatter: (date, locale) =>
                         DateFormat("MMMM yyyy").format(date).toUpperCase(),
                     titleTextStyle:
-                        const TextStyle(color: MyColors.primary, fontSize: 17),
+                        TextStyle(color: MyColors.primary, fontSize: 17),
                   ),
                   calendarStyle: CalendarStyle(
                     cellMargin: const EdgeInsets.symmetric(horizontal: 2),
@@ -520,7 +522,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                     selectedTextStyle:
                         const TextStyle(fontSize: 18, color: Colors.white),
                     todayTextStyle:
-                        const TextStyle(fontSize: 18, color: MyColors.primary),
+                        TextStyle(fontSize: 18, color: MyColors.primary),
                     todayDecoration:
                         const BoxDecoration(shape: BoxShape.rectangle),
                     defaultDecoration:
@@ -575,7 +577,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "From",
                     style: TextStyle(
                         fontWeight: FontWeight.w500,
@@ -608,8 +610,11 @@ class _AddQuizPageState extends State<AddQuizPage> {
                             minutes: _selectedFromTime.minute)),
                         alignment: Alignment.center,
                         highlightedTextStyle: const TextStyle(fontSize: 25),
-                        normalTextStyle: const TextStyle(
-                            fontSize: 20, color: Colors.black54),
+                        normalTextStyle: TextStyle(
+                            fontSize: 20,
+                            color: MyApp.isDarkMode.value
+                                ? Colors.white30
+                                : Colors.black54),
                         is24HourMode: false,
                         isForce2Digits: true,
                         minutesInterval: 5,
@@ -670,7 +675,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     "To",
                     style: TextStyle(
                         fontWeight: FontWeight.w500,

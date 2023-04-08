@@ -29,6 +29,7 @@ class MyTheme {
           fontFamily: 'Outfit',
         )),
     primaryColor: light,
+    // hintColor: Colors.white12,
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
       // primary: Color.fromARGB(255, 223, 223, 223),
@@ -43,7 +44,7 @@ class MyTheme {
       background: light,
       onBackground: darkGrey,
       surface: darkGrey,
-      onSurface: light,
+      onSurface: Colors.black,
     ),
     fontFamily: 'Outfit',
     textTheme: const TextTheme(

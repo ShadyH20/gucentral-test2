@@ -72,8 +72,10 @@ class _SettingsPageState extends State<SettingsPage> {
               //   settingsSectionBackground: Colors.black12,
               // ),
               darkTheme: SettingsThemeData(
-                  titleTextColor: Colors.white,
-                  tileDescriptionTextColor: Colors.white70),
+                titleTextColor: Colors.white,
+                tileDescriptionTextColor: Colors.white70,
+                settingsListBackground: MyColors.background,
+              ),
               sections: [
                 //// GENERAL SECTION ////
                 SettingsSection(

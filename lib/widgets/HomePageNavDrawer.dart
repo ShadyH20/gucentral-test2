@@ -28,6 +28,14 @@ class HomePageNavDrawer extends StatefulWidget {
 }
 
 class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   final GlobalKey<SchedulePageState> _scheduleKey =
       GlobalKey<SchedulePageState>();
 
@@ -107,10 +115,10 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         borderRadius: 0,
         angle: 0,
         menuScreenWidth: MediaQuery.of(context).size.width * 0.7,
-        menuScreenOverlayColor: Colors.transparent,
+        menuScreenOverlayColor: MyColors.background,
         mainScreenTapClose: true,
-        menuBackgroundColor: Color(0),
-        slideWidth: MediaQuery.of(context).size.width * 0.7 + 10,
+        menuBackgroundColor: MyColors.background,
+        slideWidth: MediaQuery.of(context).size.width * 0.7 + 3,
         mainScreen: LazyLoadIndexedStack(
           index: selectedIndex,
           children: pages,

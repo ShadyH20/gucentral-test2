@@ -1248,16 +1248,15 @@ class SchedulePageState extends State<SchedulePage> {
                 MaterialStateColor.resolveWith((states) => Colors.transparent)),
         isExpanded: true,
         value: dropdownValue,
-        style: const TextStyle(
+        style: TextStyle(
             // decoration: TextDecoration.underline,
-            color: Colors.black54,
+            color: MyApp.isDarkMode.value ? Colors.white70 : Colors.black54,
             fontFamily: 'Outfit',
             fontSize: 18,
             fontWeight: FontWeight.bold),
         // dropdownColor: MyColors.secondary,
         dropdownStyleData: DropdownStyleData(
             openInterval: const Interval(0, 1, curve: Curves.easeIn),
-            elevation: 8,
             offset: const Offset(0, 5),
             width: 200,
             decoration: BoxDecoration(

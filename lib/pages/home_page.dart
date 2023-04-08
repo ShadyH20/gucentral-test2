@@ -243,9 +243,8 @@ class _HomePageState extends State<HomePage>
                                     color: MyColors.surface,
                                   ),
                                   child: DefaultTextStyle(
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: MyColors.onSurface),
+                                    style: const TextStyle(
+                                        fontSize: 15, color: Colors.white),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 11.0),
@@ -261,7 +260,7 @@ class _HomePageState extends State<HomePage>
                                                 fit: BoxFit.scaleDown,
                                                 child: Text(
                                                   getNumberOfQuizzesThisWeek(),
-                                                  textScaleFactor: 6,
+                                                  textScaleFactor: 5.5,
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.w700,
                                                   ),
