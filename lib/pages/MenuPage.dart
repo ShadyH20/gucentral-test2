@@ -65,7 +65,7 @@ class MenuPageState extends State<MenuPage> {
               ? LinearGradient(
                   // begin: Alignment(-1.7, 0.2),
                   // end: Alignment(1.43, -0.2),
-                  begin: Alignment.bottomRight,
+                  begin: Alignment(0.8, 0.8),
                   end: Alignment(-1, -1.4),
                   // end: Alignment(1.7, -0.4),
                   // colors: [Colors.black, Color(0xFF303030)])
@@ -122,7 +122,7 @@ class MenuPageState extends State<MenuPage> {
                   // height: 150,
                   decoration: BoxDecoration(
                       color: MyApp.isDarkMode.value
-                          ? Color(0xff0E0E0E)
+                          ? Color.fromARGB(255, 18, 18, 18)
                           : MyColors.surface,
                       borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(25),
