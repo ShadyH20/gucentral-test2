@@ -4,10 +4,14 @@ import 'package:flutter/services.dart';
 class MyTheme {
   static const Color orange = Color(0xFFF65F3E);
   static const Color orangeLight = Color(0xFFF66F51);
+
   static const Color darkGrey = Color(0xFF272932);
+  static const Color darkGrey2 = Color.fromARGB(255, 28, 29, 34);
+
   static const Color darkerGreyOld = Color.fromARGB(255, 16, 17, 17);
   static const Color darkerGrey = Color.fromARGB(255, 15, 15, 15);
   static const Color darkerGrey2 = Color(0xFF141518);
+
   static const Color yellow = Color(0xFFffc857);
   static const Color yellowDark = Color.fromARGB(255, 40, 40, 40);
   // static const Color secondaryVariant = Color(0xFF018786);
@@ -62,6 +66,7 @@ class MyTheme {
         secondary: light,
         onSecondary: darkGrey,
         tertiary: yellow,
+        surfaceVariant: darkGrey2,
         error: error,
         onError: light,
         background: darkerGrey2,

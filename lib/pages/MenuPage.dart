@@ -61,20 +61,31 @@ class MenuPageState extends State<MenuPage> {
       backgroundColor: MyColors.background,
       body: Container(
         decoration: BoxDecoration(
+          // border: Border.all(color: MyColors.primary, width: 0.5),
+          boxShadow: [
+            BoxShadow(
+              color: MyColors.primary,
+              spreadRadius: 0,
+              blurRadius: 0,
+              offset: const Offset(1.5, 0), // changes position of shadow
+            ),
+          ],
           gradient: MyApp.isDarkMode.value
-              ? LinearGradient(
-                  // begin: Alignment(-1.7, 0.2),
-                  // end: Alignment(1.43, -0.2),
-                  begin: Alignment(0.8, 0.8),
-                  end: Alignment(-1, -1.4),
-                  // end: Alignment(1.7, -0.4),
-                  // colors: [Colors.black, Color(0xFF303030)])
-                  // colors: [Colors.black, MyColors.primaryVariant])
-                  colors: [
-                      Colors.black,
-                      // MyColors.primary,
-                      MyColors.primaryVariant
-                    ])
+              ? null
+              // LinearGradient(
+              //     // begin: Alignment(-1.7, 0.2),
+              //     // end: Alignment(1.43, -0.2),
+              //     begin: Alignment(0.8, 0.8),
+              //     end: Alignment(-1, -1.4),
+              //     // end: Alignment(1.7, -0.4),
+              //     // colors: [Colors.black, Color(0xFF303030)])
+              //     colors: [Colors.black, MyColors.primaryVariant])
+              // // colors: [
+              // // MyColors.surface, MyColors.surface
+              // // Colors.black,
+              // // MyColors.primary,
+              // // MyColors.primaryVariant
+              // // ])
               : LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -86,8 +97,11 @@ class MenuPageState extends State<MenuPage> {
           borderRadius: const BorderRadius.horizontal(
             right: Radius.circular(25),
           ),
+          color:
+              // Color.fromARGB(255, 21, 24, 27)
+              // Color.fromARGB(255, 17, 18, 19)
+              MyApp.isDarkMode.value ? Colors.grey[900] : null,
         ),
-        // color: MyColors.accent,
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -123,6 +137,8 @@ class MenuPageState extends State<MenuPage> {
                   decoration: BoxDecoration(
                       color: MyApp.isDarkMode.value
                           ? Color.fromARGB(255, 18, 18, 18)
+                          // ? Colors.black
+                          // ? MyColors.surface
                           : MyColors.surface,
                       borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(25),

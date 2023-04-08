@@ -109,8 +109,8 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         menuScreenWidth: MediaQuery.of(context).size.width * 0.7,
         menuScreenOverlayColor: Colors.transparent,
         mainScreenTapClose: true,
-        menuBackgroundColor: MyColors.primaryVariant,
-        slideWidth: MediaQuery.of(context).size.width * 0.7,
+        menuBackgroundColor: Color(0),
+        slideWidth: MediaQuery.of(context).size.width * 0.7 + 10,
         mainScreen: LazyLoadIndexedStack(
           index: selectedIndex,
           children: pages,
