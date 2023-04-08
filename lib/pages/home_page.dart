@@ -15,6 +15,7 @@ import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import "package:timeago/timeago.dart" as timeago;
+import "../main.dart";
 import "../utils/SharedPrefs.dart";
 //import Notifications.dart from the web directory
 import '../utils/Notifications.dart';
@@ -469,7 +470,8 @@ class _HomePageState extends State<HomePage>
                           height: 40,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
-                            color: MyColors.secondary.withOpacity(0.4),
+                            color: MyColors.secondary.withOpacity(
+                                MyApp.isDarkMode.value ? 0.4 : 0.2),
                           ),
                           child: Icon(
                             Icons.notifications,
@@ -523,51 +525,6 @@ class _HomePageState extends State<HomePage>
               ),
             );
           }),
-    );
-  }
-
-  buildNotifications2() {
-    return ListView.builder(
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: MyColors.secondary.withOpacity(0.2),
-            ),
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-              dense: false,
-              visualDensity: VisualDensity.comfortable,
-              leading: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: MyColors.secondary.withOpacity(0.4),
-                ),
-                child: Icon(
-                  Icons.notifications,
-                  color: MyColors.secondary,
-                ),
-              ),
-              // i want to add
-              title: Text(
-                "Notification ${index + 1}",
-                style: TextStyle(
-                    color: MyColors.secondary, fontWeight: FontWeight.w700),
-              ),
-              subtitle: Text(
-                "This is a notification",
-                style: TextStyle(
-                    color: MyColors.secondary, fontWeight: FontWeight.w400),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 
