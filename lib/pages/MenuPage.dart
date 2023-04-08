@@ -65,7 +65,7 @@ class MenuPageState extends State<MenuPage> {
               ? const LinearGradient(
                   begin: Alignment(-1.7, 0.2),
                   end: Alignment(1.43, -0.2),
-                  colors: [Colors.black, Color(0xFF363636)])
+                  colors: [Colors.black, Color(0xFF303030)])
               : LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -235,7 +235,7 @@ class MenuPageState extends State<MenuPage> {
                 style: const TextStyle(
                   fontFamily: "Outfit",
                   fontSize: 28,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               isComingSoon
