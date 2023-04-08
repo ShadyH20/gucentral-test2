@@ -63,11 +63,18 @@ class MenuPageState extends State<MenuPage> {
         decoration: BoxDecoration(
           gradient: MyApp.isDarkMode.value
               ? LinearGradient(
-                  begin: Alignment(-1.7, 0.2),
-                  end: Alignment(1.43, -0.2),
+                  // begin: Alignment(-1.7, 0.2),
+                  // end: Alignment(1.43, -0.2),
+                  begin: Alignment.bottomRight,
+                  end: Alignment(-1, -1.4),
                   // end: Alignment(1.7, -0.4),
                   // colors: [Colors.black, Color(0xFF303030)])
-                  colors: [Colors.black, MyColors.primaryVariant])
+                  // colors: [Colors.black, MyColors.primaryVariant])
+                  colors: [
+                      Colors.black,
+                      // MyColors.primary,
+                      MyColors.primaryVariant
+                    ])
               : LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
