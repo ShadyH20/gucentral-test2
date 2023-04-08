@@ -137,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const Spacer(flex: 2),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -159,9 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  Container(
-                    height: 50,
-                  ),
+                  const Spacer(flex: 2),
                   Form(
                     key: _formKey,
                     child: AutofillGroup(
@@ -248,6 +247,8 @@ class _LoginPageState extends State<LoginPage> {
                                   Container(height: 5),
                                   TextFormField(
                                     focusNode: _passwordFocusNode,
+                                    scrollPadding:
+                                        const EdgeInsets.only(bottom: 50),
                                     autofillHints: const [
                                       AutofillHints.password
                                     ],
@@ -316,9 +317,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Container(
-                    height: 40,
-                  ),
+                  const Spacer(),
                   Column(
                     children: [
                       showLoading
@@ -357,7 +356,12 @@ class _LoginPageState extends State<LoginPage> {
                   Text(
                     "v1.0.8",
                     style: TextStyle(color: MyColors.secondary),
-                  )
+                  ),
+                  const Spacer(flex: 2),
+                  // Padding(
+                  //   padding: EdgeInsets.only(
+                  //       bottom: MediaQuery.of(context).viewInsets.bottom / 4),
+                  // )
                 ],
               ),
             ),
