@@ -113,7 +113,6 @@ class _AttendancePageState extends State<AttendancePage> {
                               setState(() {
                                 dropdownCourseValue = course;
                               });
-                              debugPrint("$dropdownCourseValue chosen");
                               courseChosen(context, course);
                             },
                             items:
@@ -412,7 +411,7 @@ class _AttendancePageState extends State<AttendancePage> {
           Align(
             alignment: AlignmentDirectional.centerStart,
             child: Text(
-              attendanceId,
+              attendanceId.toString(),
               style: TextStyle(
                   fontSize: 30,
                   color: Colors.black.withOpacity(0.3),

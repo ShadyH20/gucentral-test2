@@ -23,6 +23,8 @@ class SharedPrefs {
   static const quizzes = 'quizzes';
   static const examSched = 'exam_sched';
   static const attendance = 'att:';
+  static const grades = 'grades:';
+  static const notifications = 'notifications';
   static const firstAccess = 'first_access';
 
   static getString(String key) {

@@ -18,6 +18,8 @@ class Requests {
   static Uri evaluateCourseURL = Uri.parse('$backendURL/evaluateCourse');
   static Uri examSchedURL = Uri.parse('$backendURL/examSched');
   static Uri attendanceURL = Uri.parse('$backendURL/attendance');
+  static Uri gradesURL = Uri.parse('$backendURL/grades');
+  static Uri notificationsURL = Uri.parse('$backendURL/notifications');
 
   // static SharedPreferences prefs = getPrefs();
 
@@ -285,9 +287,8 @@ class Requests {
       });
 
       var attendance = jsonDecode(response.body);
-      print('attendance: $attendance');
       if (attendance['success']) {
-        prefs.setString('${SharedPrefs.examSched}$course',
+        prefs.setString('${SharedPrefs.attendance}$course',
             jsonEncode(attendance['attendance']));
       }
       return attendance;
@@ -301,11 +302,80 @@ class Requests {
   }
 
   static getAttendanceSaved(String course) {
-    if (prefs.containsKey('${SharedPrefs.examSched}$course')) {
-      return jsonDecode(prefs.getString('${SharedPrefs.examSched}$course')!);
+    if (prefs.containsKey('${SharedPrefs.attendance}$course')) {
+      return jsonDecode(prefs.getString('${SharedPrefs.attendance}$course')!);
     }
     return [];
   }
+
+  getNotifications() async {
+    var creds = getCreds();
+    var body = jsonEncode(creds);
+
+    try {
+      var response = await http.post(notificationsURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      var notifications = jsonDecode(response.body);
+      if (notifications['success']) {
+        prefs.setString(SharedPrefs.notifications,
+            jsonEncode(notifications['notifications']));
+      }
+      return notifications;
+    } on Exception catch (e) {
+      print("Notifications exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
+  static getNotificationsSaved() {
+    if (prefs.containsKey(SharedPrefs.notifications)) {
+      return jsonDecode(prefs.getString(SharedPrefs.notifications)!);
+    }
+    return [];
+  }
+
+  static getGrades(String course) async {
+    var out = getCreds();
+    out['course'] = course;
+    var body = jsonEncode(out);
+
+    try {
+      var response = await http.post(gradesURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      var grades = jsonDecode(response.body);
+      if (grades['success']) {
+        prefs.setString(
+            '${SharedPrefs.grades}$course', jsonEncode(grades['all_grades']));
+      }
+      return grades;
+    } on Exception catch (e) {
+      print("Grades exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
+  static getGradesSaved(String course) {
+    if (prefs.containsKey('${SharedPrefs.grades}$course')) {
+      return jsonDecode(prefs.getString('${SharedPrefs.grades}$course')!);
+    }
+    return [];
+  }
+
+  ////////////////////////////////
+  //// END OF REQUEST METHODS ////
+  ////////////////////////////////
 
   Future<void> _showMyDialog(context) async {
     return showDialog<void>(
