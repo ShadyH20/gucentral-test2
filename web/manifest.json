@@ -3,9 +3,9 @@
     "short_name": "GUCentral",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#d45100",
-    "theme_color": "#d45100",
-    "description": "A new Flutter project.",
+    "background_color": "#ffffff",
+    "theme_color": "#141518",
+    "description": "Welcome to GUCentral! A web app made for GUC students to make uni life easier!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
