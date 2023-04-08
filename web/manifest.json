@@ -6,7 +6,7 @@
     "background_color": "#ffffff",
     "theme_color": "#141518",
     "description": "Welcome to GUCentral! A web app made for GUC students to make uni life easier!",
-    "orientation": "portrait-primary",
+    "orientation": "portrait",
     "prefer_related_applications": false,
     "icons": [
         {
