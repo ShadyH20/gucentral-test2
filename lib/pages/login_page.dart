@@ -129,112 +129,53 @@ class _LoginPageState extends State<LoginPage> {
         onWillPop: () async => false,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          body: Container(
-            color: MyColors.background,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Welcome to",
-                      style: TextStyle(
-                        fontFamily: "Outfit",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 60.0,
+          body: SingleChildScrollView(
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              color: MyColors.background,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Welcome to",
+                        style: TextStyle(
+                          fontFamily: "Outfit",
+                          fontWeight: FontWeight.w500,
+                          fontSize: 60.0,
+                          color: MyColors.primary,
+                        ),
+                      ),
+                      Container(
+                        height: 5,
+                      ),
+                      SvgPicture.asset(
+                        "assets/images/logo-text.svg",
+                        height: 70,
                         color: MyColors.primary,
                       ),
-                    ),
-                    Container(
-                      height: 5,
-                    ),
-                    SvgPicture.asset(
-                      "assets/images/logo-text.svg",
-                      height: 70,
-                      color: MyColors.primary,
-                    ),
-                  ],
-                ),
-                Container(
-                  height: 50,
-                ),
-                Form(
-                  key: _formKey,
-                  child: AutofillGroup(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          width: 300,
-                          // height: double.infinity,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Username",
-                                style: TextStyle(
-                                  fontFamily: "Outfit",
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 21,
-                                  color: MyColors.primary,
-                                ),
-                              ),
-                              Container(height: 5),
-                              TextFormField(
-                                focusNode: _usernameFocusNode,
-                                textInputAction: TextInputAction.next,
-                                keyboardType: TextInputType.name,
-                                autofillHints: const [AutofillHints.username],
-                                controller: usernameController,
-                                validator: (value) =>
-                                    value != null && value.isEmpty
-                                        ? 'Please enter your username'
-                                        : null,
-                                style: const TextStyle(fontSize: 21),
-                                textAlignVertical: TextAlignVertical.center,
-                                decoration: InputDecoration(
-                                  hintText: "user.name",
-                                  hintStyle: TextStyle(
-                                      fontFamily: "Outfit",
-                                      fontWeight: FontWeight.w500,
-                                      color:
-                                          MyColors.secondary.withOpacity(.15)),
-                                  enabledBorder: !MyApp.isDarkMode.value
-                                      ? OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(7.5),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey[700]!,
-                                              width: 0.7))
-                                      : null,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(7.5),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(7.5),
-                                      borderSide: BorderSide(
-                                          width: 2,
-                                          color: MyColors.primaryVariant)),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 7, horizontal: 15),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 20,
-                        ),
-                        SizedBox(
-                          width: 300,
-                          child: AutofillGroup(
+                    ],
+                  ),
+                  Container(
+                    height: 50,
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: AutofillGroup(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: 300,
+                            // height: double.infinity,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Password",
+                                  "Username",
                                   style: TextStyle(
                                     fontFamily: "Outfit",
                                     fontWeight: FontWeight.w500,
@@ -244,37 +185,19 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Container(height: 5),
                                 TextFormField(
-                                  focusNode: _passwordFocusNode,
-                                  autofillHints: const [AutofillHints.password],
-                                  obscureText: showPassword,
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.visiblePassword,
-                                  onEditingComplete: () =>
-                                      TextInput.finishAutofillContext(),
-                                  enableSuggestions: false,
-                                  autocorrect: false,
-                                  controller: passwordController,
+                                  focusNode: _usernameFocusNode,
+                                  textInputAction: TextInputAction.next,
+                                  keyboardType: TextInputType.name,
+                                  autofillHints: const [AutofillHints.username],
+                                  controller: usernameController,
                                   validator: (value) =>
                                       value != null && value.isEmpty
-                                          ? 'Please enter your password'
+                                          ? 'Please enter your username'
                                           : null,
                                   style: const TextStyle(fontSize: 21),
                                   textAlignVertical: TextAlignVertical.center,
                                   decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                      splashRadius: 5,
-                                      icon: showPassword
-                                          ? Icon(Icons.visibility,
-                                              color: MyColors.secondary)
-                                          : Icon(Icons.visibility_off,
-                                              color: MyColors.secondary),
-                                      onPressed: () {
-                                        setState(() {
-                                          showPassword = !showPassword;
-                                        });
-                                      },
-                                    ),
-                                    hintText: "password",
+                                    hintText: "user.name",
                                     hintStyle: TextStyle(
                                         fontFamily: "Outfit",
                                         fontWeight: FontWeight.w500,
@@ -300,58 +223,143 @@ class _LoginPageState extends State<LoginPage> {
                                     contentPadding: const EdgeInsets.symmetric(
                                         vertical: 7, horizontal: 15),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                           ),
-                        ),
-                      ],
+                          Container(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 300,
+                            child: AutofillGroup(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Password",
+                                    style: TextStyle(
+                                      fontFamily: "Outfit",
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 21,
+                                      color: MyColors.primary,
+                                    ),
+                                  ),
+                                  Container(height: 5),
+                                  TextFormField(
+                                    focusNode: _passwordFocusNode,
+                                    autofillHints: const [
+                                      AutofillHints.password
+                                    ],
+                                    obscureText: showPassword,
+                                    textInputAction: TextInputAction.done,
+                                    keyboardType: TextInputType.visiblePassword,
+                                    onEditingComplete: () =>
+                                        TextInput.finishAutofillContext(),
+                                    enableSuggestions: false,
+                                    autocorrect: false,
+                                    controller: passwordController,
+                                    validator: (value) =>
+                                        value != null && value.isEmpty
+                                            ? 'Please enter your password'
+                                            : null,
+                                    style: const TextStyle(fontSize: 21),
+                                    textAlignVertical: TextAlignVertical.center,
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        splashRadius: 5,
+                                        icon: showPassword
+                                            ? Icon(Icons.visibility,
+                                                color: MyColors.secondary)
+                                            : Icon(Icons.visibility_off,
+                                                color: MyColors.secondary),
+                                        onPressed: () {
+                                          setState(() {
+                                            showPassword = !showPassword;
+                                          });
+                                        },
+                                      ),
+                                      hintText: "password",
+                                      hintStyle: TextStyle(
+                                          fontFamily: "Outfit",
+                                          fontWeight: FontWeight.w500,
+                                          color: MyColors.secondary
+                                              .withOpacity(.15)),
+                                      enabledBorder: !MyApp.isDarkMode.value
+                                          ? OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(7.5),
+                                              borderSide: BorderSide(
+                                                  color: Colors.grey[700]!,
+                                                  width: 0.7))
+                                          : null,
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(7.5),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(7.5),
+                                          borderSide: BorderSide(
+                                              width: 2,
+                                              color: MyColors.primaryVariant)),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 7, horizontal: 15),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 40,
-                ),
-                Column(
-                  children: [
-                    showLoading
-                        ? const CircularProgressIndicator()
-                        : SizedBox(
-                            width: 115,
-                            height: 42,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(7.5)),
-                                backgroundColor: MyColors.secondary,
-                              ),
-                              onPressed: () {
-                                loginPressed();
-                              },
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                    color: MyColors.background, fontSize: 18),
-                              ),
-                            )),
-                    Container(height: 10),
-                  ],
-                ),
-                Container(
-                  height: 80,
-                ),
-                SvgPicture.asset(
-                  "assets/images/main-logo.svg",
-                  height: 70,
-                ),
-                Container(
-                  height: 10,
-                ),
-                Text(
-                  "v1.0.8",
-                  style: TextStyle(color: MyColors.secondary),
-                )
-              ],
+                  Container(
+                    height: 40,
+                  ),
+                  Column(
+                    children: [
+                      showLoading
+                          ? const CircularProgressIndicator()
+                          : SizedBox(
+                              width: 115,
+                              height: 42,
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(7.5)),
+                                  backgroundColor: MyColors.secondary,
+                                ),
+                                onPressed: () {
+                                  loginPressed();
+                                },
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      color: MyColors.background, fontSize: 18),
+                                ),
+                              )),
+                      Container(height: 10),
+                    ],
+                  ),
+                  Container(
+                    height: 80,
+                  ),
+                  SvgPicture.asset(
+                    "assets/images/main-logo.svg",
+                    height: 70,
+                  ),
+                  Container(
+                    height: 10,
+                  ),
+                  Text(
+                    "v1.0.8",
+                    style: TextStyle(color: MyColors.secondary),
+                  )
+                ],
+              ),
             ),
           ),
         ));
