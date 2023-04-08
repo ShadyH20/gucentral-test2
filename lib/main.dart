@@ -97,6 +97,12 @@ class MyAppState extends State<MyApp> {
       valueListenable: MyApp.isDarkMode,
       builder: (context, isDarkMode, child) {
         return MaterialApp(
+          // builder:  (context, child) {
+          //   return MediaQuery(
+          //     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          //     child: child!,
+          //   );
+          // },
           key: mainKey,
           navigatorKey: MyApp.navigatorKey,
           title: 'GUCentral',
