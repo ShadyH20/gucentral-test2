@@ -122,9 +122,9 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
               onSelectedItem: (item) async {
                 if (item == MenuItems.login) {
                   // Clear SharedPrefs
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
+                  bool dark = prefs.getBool('dark_mode') ?? false;
                   prefs.clear();
+                  prefs.setBool('dark_mode', dark);
                   // Navigate to login page
                   Navigator.pushNamedAndRemoveUntil(
                       context, '/login', (route) => false);
