@@ -69,6 +69,7 @@ dependencies:
   pull_to_refresh: ^2.0.0
   flutter_staggered_animations: ^1.1.1
   flutter_native_splash: ^2.2.19
+  timeago: ^3.4.0
 
 flutter_native_splash:
   color: "#ffffff"

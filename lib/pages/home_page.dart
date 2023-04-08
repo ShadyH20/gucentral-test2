@@ -5,6 +5,7 @@ import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/pages/schedule_page.dart";
 import "package:gucentral/widgets/EventDataSource.dart";
@@ -12,6 +13,8 @@ import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
+import "package:pull_to_refresh/pull_to_refresh.dart";
+import "package:timeago/timeago.dart" as timeago;
 import "../utils/SharedPrefs.dart";
 //import Notifications.dart from the web directory
 import '../utils/Notifications.dart';
@@ -54,8 +57,11 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
+// Override "en" locale messages with custom messages that are more precise and short
+    timeago.setLocaleMessages('en', timeago.EnMessages());
     super.initState();
     initializeEverything();
+    initNotifications();
   }
 
   bool loadingEverything = true;
@@ -101,24 +107,12 @@ class _HomePageState extends State<HomePage>
         //   height: 70,
         // ),
         appBar: AppBar(
-          // systemOverlayStyle: const SystemUiOverlayStyle(
-          //     // statusBarColor: Colors.transparent,
-          //     statusBarIconBrightness: Brightness.dark,
-          //     statusBarBrightness: Brightness.dark),
           elevation: 0,
           backgroundColor: MyColors.background,
           centerTitle: true,
           leadingWidth: 50.0,
           leading: const MenuWidget(),
-          title:
-              // Container(
-              //     padding: const EdgeInsets.only(top: 15),
-              //     child: SvgPicture.asset(
-              //       "assets/images/logo-text.svg",
-              //       height: 35,
-              //       color: MyColors.primary,
-              //     )),
-              const Text(
+          title: const Text(
             "Home",
           ),
           actions: [
@@ -181,7 +175,7 @@ class _HomePageState extends State<HomePage>
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 15),
               //// HELLO STUDENT ////
               Row(
                 children: [
@@ -191,7 +185,7 @@ class _HomePageState extends State<HomePage>
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
-                        "Hello, ${prefs.getString('first_name')! ?? "Student"}!",
+                        "Hello, ${prefs.getString('first_name') ?? "Student"}!",
                         style: TextStyle(
                             color: MyColors.secondary,
                             fontSize: 36,
@@ -319,45 +313,74 @@ class _HomePageState extends State<HomePage>
                     )),
               ),
 
-              //// SCHEDULE ////
+              //// NOTIFICATIONS ////
               Expanded(
-                flex: 3,
+                flex: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // i want this to have a loading indicator on the right side to indicate whether the notifications are loading or not
+                    // and if there are no notifications, then show a message saying "No notifications"
                     Expanded(
                       // height: 50,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text.rich(
-                          TextSpan(
-                            text: "Today, ",
-                            style: TextStyle(
-                                color: MyColors.secondary,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700),
-                            children: [
-                              TextSpan(
-                                text: DateFormat("dd MMMM")
-                                    .format(DateTime.now()),
-                                style: const TextStyle(
-                                    // color: MyColors.background,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.normal),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text.rich(
+                                TextSpan(
+                                  text: "Today, ",
+                                  style: TextStyle(
+                                      color: MyColors.secondary,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700),
+                                  children: [
+                                    TextSpan(
+                                      text: DateFormat("d MMMM")
+                                          .format(DateTime.now()),
+                                      style: const TextStyle(
+                                          // color: MyColors.background,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                            // show a loading indicator if the notifications are loading
+                            loadingNotifications
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
+                          ],
                         ),
                       ),
                     ),
+                    const SizedBox(height: 5),
                     Expanded(
                       flex: 10,
                       child: Container(
                         // height: 50,
                         decoration: BoxDecoration(
+                          color: MyColors.background,
                           borderRadius: BorderRadius.circular(15),
-                          color: MyColors.secondary.withOpacity(0.07),
+                          boxShadow: [
+                            BoxShadow(
+                              color: MyColors.primary,
+                              offset: const Offset(0, -2),
+                            ),
+                          ],
                         ),
+                        padding: const EdgeInsets.only(top: 5),
+                        child: buildNotifications(),
                       ),
                     ),
                   ],
@@ -393,4 +416,222 @@ class _HomePageState extends State<HomePage>
         .add(Duration(days: daysToadd))
         .subtract(const Duration(minutes: 1));
   }
+
+  /// NOTIFICATIONS ///
+  // this is 1 notification: {'title': 'SE Project Repository', 'course_code': 'CSEN603', 'date': '28/03/2023 09:24:28', 'message': "Dear All,\n\nPlease note that you should NOT set your team's GitHub repository as public otherwise it will be considered a cheating case because this means everyone can
+// see your submission.\n\nKind regards,\n\n------------------------------\nMs. Marina Nader Nabil Amin Eskander \nDepartment: Computer Science", 'sender': 'Ms. Marina Nader Nabil Amin Eskander'}
+  // i wanto to make me a listview with all notifications from the notifications list. I want to show a notification's title, sender, and how much time ago was the notification sent (e.g. 20m ago) if the sent time is today, or the date if it was sent yesterday or before
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  Widget buildNotifications() {
+    return SmartRefresher(
+      controller: _refreshController,
+      enablePullDown: true,
+      onRefresh: () async {
+        await refreshNotifications();
+        _refreshController.refreshCompleted();
+      },
+      header: WaterDropHeader(
+        waterDropColor: MyColors.primary,
+        complete: Icon(
+          Icons.check,
+          color: MyColors.primary,
+        ),
+      ),
+      child: ListView.builder(
+          itemCount: notifications.length,
+          itemBuilder: (context, index) {
+            var date = DateFormat('dd/MM/yyyy HH:mm:ss')
+                .parse(notifications[index]['date'], true);
+            var timeAgo = timeago.format(date, locale: 'en_short');
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 200),
+              child: SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: MyColors.secondary.withOpacity(0.2),
+                      ),
+                      child: ListTile(
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 10),
+                        dense: false,
+                        visualDensity: VisualDensity.compact,
+                        leading: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: MyColors.secondary.withOpacity(0.4),
+                          ),
+                          child: Icon(
+                            Icons.notifications,
+                            color: MyColors.secondary,
+                          ),
+                        ),
+                        // i want to add
+                        title: Text(
+                          notifications[index]['title'],
+                          style: TextStyle(
+                            color: MyColors.secondary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              notifications[index]['course_code'],
+                              style: TextStyle(
+                                color: MyColors.secondary,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              notifications[index]['sender'],
+                              style: TextStyle(
+                                color: MyColors.secondary,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        trailing: Text(
+                          timeAgo,
+                          style: TextStyle(
+                            color: MyColors.secondary,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
+    );
+  }
+
+  buildNotifications2() {
+    return ListView.builder(
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: MyColors.secondary.withOpacity(0.2),
+            ),
+            child: ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+              dense: false,
+              visualDensity: VisualDensity.comfortable,
+              leading: Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  color: MyColors.secondary.withOpacity(0.4),
+                ),
+                child: Icon(
+                  Icons.notifications,
+                  color: MyColors.secondary,
+                ),
+              ),
+              // i want to add
+              title: Text(
+                "Notification ${index + 1}",
+                style: TextStyle(
+                    color: MyColors.secondary, fontWeight: FontWeight.w700),
+              ),
+              subtitle: Text(
+                "This is a notification",
+                style: TextStyle(
+                    color: MyColors.secondary, fontWeight: FontWeight.w400),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  List<dynamic> notifications = Requests.getNotificationsSaved();
+  bool loadingNotifications = false;
+  initNotifications() async {
+    setState(() {
+      loadingNotifications = true;
+    });
+    var result = await Requests.getNotifications();
+    var success = result['success'];
+    if (success) {
+      setState(() {
+        notifications = result['notifications'];
+      });
+    }
+    setState(() {
+      loadingNotifications = false;
+    });
+  }
+
+  refreshNotifications() async {
+    var result = await Requests.getNotifications();
+    var success = result['success'];
+    if (success) {
+      setState(() {
+        notifications = result['notifications'];
+      });
+    }
+  }
+}
+
+// my_custom_messages.dart
+class MyCustomMessages implements timeago.LookupMessages {
+  @override
+  String prefixAgo() => '';
+  @override
+  String prefixFromNow() => '';
+  @override
+  String suffixAgo() => '';
+  @override
+  String suffixFromNow() => '';
+  @override
+  String lessThanOneMinute(int seconds) => 'now';
+  @override
+  String aboutAMinute(int minutes) => '${minutes}m ago';
+  @override
+  String minutes(int minutes) => '${minutes}m ago';
+  @override
+  String aboutAnHour(int minutes) => '${minutes}m ago';
+  @override
+  String hours(int hours) => '${hours}h ago';
+  @override
+  String aDay(int hours) => '${hours}h';
+  @override
+  String days(int days) => '${days}d';
+  @override
+  String aboutAMonth(int days) => '${days}d';
+  @override
+  String months(int months) => '${months}mo';
+  @override
+  String aboutAYear(int year) => '${year}y';
+  @override
+  String years(int years) => '${years}y';
+  @override
+  String wordSeparator() => ' ';
 }

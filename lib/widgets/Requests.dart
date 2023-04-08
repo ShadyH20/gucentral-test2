@@ -308,7 +308,7 @@ class Requests {
     return [];
   }
 
-  getNotifications() async {
+  static getNotifications() async {
     var creds = getCreds();
     var body = jsonEncode(creds);
 

@@ -266,23 +266,21 @@ class _AttendancePageState extends State<AttendancePage> {
           color: MyColors.primary,
         ),
       ),
-      child: AnimationLimiter(
-        child: ListView.builder(
-          itemCount: attendanceList.length,
-          itemBuilder: (context, index) {
-            var attendance = attendanceList[attendanceList.length - 1 - index];
-            return AnimationConfiguration.staggeredList(
-              position: index,
-              duration: const Duration(milliseconds: 200),
-              child: SlideAnimation(
-                verticalOffset: 50.0,
-                child: FadeInAnimation(
-                  child: buildAttendanceItem(attendance, index),
-                ),
+      child: ListView.builder(
+        itemCount: attendanceList.length,
+        itemBuilder: (context, index) {
+          var attendance = attendanceList[attendanceList.length - 1 - index];
+          return AnimationConfiguration.staggeredList(
+            position: index,
+            duration: const Duration(milliseconds: 200),
+            child: SlideAnimation(
+              verticalOffset: 50.0,
+              child: FadeInAnimation(
+                child: buildAttendanceItem(attendance, index),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

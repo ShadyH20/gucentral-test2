@@ -249,7 +249,9 @@ class _TranscriptPageState extends State<TranscriptPage>
         color: MyColors.background,
         boxShadow: [
           BoxShadow(
-              color: MyColors.primary, offset: Offset(0, 2), spreadRadius: 0.3)
+              color: MyColors.primary,
+              offset: const Offset(0, 2),
+              spreadRadius: 0.3)
         ],
       ),
       child: Column(
@@ -386,7 +388,8 @@ class _TranscriptPageState extends State<TranscriptPage>
                       color: MyColors.background,
                       boxShadow: [
                         BoxShadow(
-                            color: MyColors.primary, offset: Offset(0, -2))
+                            color: MyColors.primary,
+                            offset: const Offset(0, -2))
                       ],
                     ),
                     child: LayoutBuilder(
