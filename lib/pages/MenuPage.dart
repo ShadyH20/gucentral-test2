@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import 'package:gucentral/widgets/Requests.dart';
 
+import '../main.dart';
 import '../utils/SharedPrefs.dart';
 import '../widgets/MeduItemList.dart';
 
@@ -60,14 +61,19 @@ class MenuPageState extends State<MenuPage> {
       backgroundColor: MyColors.background,
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                const Color.fromARGB(255, 255, 165, 87),
-                MyColors.primaryVariant,
-                MyColors.primary
-              ]),
+          gradient: MyApp.isDarkMode.value
+              ? const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Colors.black, Color(0xFF363636)])
+              : LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                      const Color.fromARGB(255, 255, 165, 87),
+                      MyColors.primaryVariant,
+                      MyColors.primary
+                    ]),
           borderRadius: const BorderRadius.horizontal(
             right: Radius.circular(25),
           ),
@@ -106,10 +112,22 @@ class MenuPageState extends State<MenuPage> {
                 child: Container(
                   // height: 150,
                   decoration: BoxDecoration(
-                      color: MyColors.surface,
+                      color: MyApp.isDarkMode.value
+                          ? Color(0xff0E0E0E)
+                          : MyColors.surface,
                       borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(25),
-                      )),
+                      ),
+                      boxShadow: MyApp.isDarkMode.value
+                          ? [
+                              const BoxShadow(
+                                  color: Colors.white,
+                                  blurRadius: 0,
+                                  spreadRadius: 0,
+                                  offset: Offset(0, -0.9))
+                            ]
+                          : null),
+
                   padding: const EdgeInsets.all(42),
                   width: double.infinity,
                   child: SvgPicture.asset(
