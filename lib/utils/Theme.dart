@@ -61,7 +61,7 @@ class MyTheme {
     // primaryColor: darkerGreyOld,
     colorScheme: const ColorScheme(
         brightness: Brightness.dark,
-        primary: orange,
+        primary: orangeLight,
         primaryVariant: orangeLight,
         onPrimary: light,
         secondary: light,
