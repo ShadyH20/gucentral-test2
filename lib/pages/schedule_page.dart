@@ -959,7 +959,7 @@ class SchedulePageState extends State<SchedulePage> {
           radius: const Radius.circular(12),
           thickness: 8,
           mainAxisMargin: 7,
-          thumbColor: MyColors.secondary.withOpacity(0.3),
+          thumbColor: const Color(0xFF272932).withOpacity(0.3),
           trackBorderColor: Colors.transparent,
           child: FadingEdgeScrollView.fromSingleChildScrollView(
             gradientFractionOnEnd: 0.4,
