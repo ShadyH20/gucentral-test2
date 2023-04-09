@@ -13,6 +13,7 @@ import "package:gucentral/pages/new_quiz.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
+import "package:hijri/hijri_calendar.dart";
 import 'package:intl/intl.dart';
 import "package:table_calendar/table_calendar.dart";
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -107,6 +108,20 @@ class SchedulePageState extends State<SchedulePage> {
   }
 
   void setTimeSlots() {
+    var today = HijriCalendar.now();
+    print(today.hMonth);
+    // Check if we are in Ramadan
+    if (today.hMonth == 9) {
+      timeSlots = [
+        '9:00-10:10',
+        '10:15-11:25',
+        '11:30-12:40',
+        '12:50-14:00',
+        '14:05-15:15'
+      ];
+      return;
+    }
+
     bool delayed = prefs.getBool('delayed_3rd') ?? false;
 
     timeSlots = [
@@ -201,72 +216,36 @@ class SchedulePageState extends State<SchedulePage> {
                   },
                 ),
                 //// TAB BUTTONS ////
-                Container(
-                  color: Colors.transparent,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: FittedBox(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 20),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 2),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                                offset: Offset(0, 1.1),
-                                color: MyApp.isDarkMode.value
-                                    ? Colors.white24
-                                    : Colors.black26,
-                                spreadRadius: 0.6)
-                          ],
-                          color: MyColors.background,
-                        ),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  clickTabBtn("Deadline");
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: getTabBackColor(0),
-                                    ),
-                                    child: SvgPicture.asset(
-                                      "assets/images/deadline-new.svg",
-                                      height: 20,
-                                      color: getTabFrontColor(0),
-                                    ))),
-                            Container(
-                              width: 5,
+                checkExistsDlorQ()
+                    ? Container(
+                        color: Colors.transparent,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FittedBox(
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 20),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 2),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 1.1),
+                                      color: MyApp.isDarkMode.value
+                                          ? Colors.white24
+                                          : Colors.black26,
+                                      spreadRadius: 0.6)
+                                ],
+                                color: MyColors.background,
+                              ),
+                              child: Row(
+                                children: buildTabs(),
+                              ),
                             ),
-                            GestureDetector(
-                                onTap: () {
-                                  clickTabBtn("Q");
-                                },
-                                child: Container(
-                                    alignment: Alignment.center,
-                                    width: 28,
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: getTabBackColor(1),
-                                    ),
-                                    child: Text(
-                                      "Q",
-                                      style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w800,
-                                          color: getTabFrontColor(1)),
-                                    ))),
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
+                      )
+                    : Container(),
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 500),
                   height: tabIndex == 0
@@ -662,6 +641,66 @@ class SchedulePageState extends State<SchedulePage> {
     );
   }
 
+  checkExistsDlorQ() {
+    List<dynamic>? dayQuizzes =
+        _quizDataSource.getVisibleAppointments(_controller.displayDate!, '');
+    List<dynamic>? dayDeadlines = _deadlineDataSource.getVisibleAppointments(
+        _controller.displayDate!, '');
+    return dayDeadlines.isNotEmpty || dayQuizzes.isNotEmpty;
+  }
+
+  buildTabs() {
+    List<dynamic>? dayQuizzes =
+        _quizDataSource.getVisibleAppointments(_controller.displayDate!, '');
+    List<dynamic>? dayDeadlines = _deadlineDataSource.getVisibleAppointments(
+        _controller.displayDate!, '');
+    List<Widget> list = [];
+    if (dayDeadlines.isNotEmpty) {
+      list.add(
+        GestureDetector(
+            onTap: () {
+              clickTabBtn("Deadline");
+            },
+            child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: getTabBackColor(0),
+                ),
+                child: SvgPicture.asset(
+                  "assets/images/deadline-new.svg",
+                  height: 20,
+                  color: getTabFrontColor(0),
+                ))),
+      );
+    }
+    if (dayQuizzes.isNotEmpty) {
+      if (dayDeadlines.isNotEmpty) list.add(Container(width: 5));
+      list.add(
+        GestureDetector(
+            onTap: () {
+              clickTabBtn("Q");
+            },
+            child: Container(
+                alignment: Alignment.center,
+                width: 28,
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: getTabBackColor(1),
+                ),
+                child: Text(
+                  "Q",
+                  style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                      color: getTabFrontColor(1)),
+                ))),
+      );
+    }
+    return list;
+  }
+
 // ###########################
 // ######### METHODS #########
 // ###########################
@@ -721,9 +760,7 @@ class SchedulePageState extends State<SchedulePage> {
     print(schedule);
     for (int i = 0; i < schedule.length; i++) {
       String day = schedule[i][0];
-      print(day);
       int dayIndex = dayIndexMap[day]!;
-      print(dayIndex);
 
       for (int j = 1; j < schedule[i].length; j++) {
         if (schedule[i][j] is List) {
@@ -754,6 +791,49 @@ class SchedulePageState extends State<SchedulePage> {
     // print("Events $events");
     // _eventDataSource = EventDataSource(events);
   }
+
+//   EventDataSource _getCalendarDataSource() {
+//   List<Event> ramadanEvents = <Event>[];
+//   for (int i = 0; i < events.length; i++) {
+//     if (events[i].recurrence != null) {
+//       RecurrenceProperties recurrenceProperties =
+//           RecurrenceHelper.getRecurrenceProperties(events[i].recurrence!);
+//       if (recurrenceProperties.recurrenceType == RecurrenceType.weekly &&
+//           recurrenceProperties.weekDays.contains(DateTime.friday)) {
+//         // change the time of the weekly meeting to 11 AM in March
+//         if (events[i].startTime.month == 3) {
+//           ramadanEvents.add(Appointment(
+//             startTime: events[i].startTime.replace(hour: 11),
+//             endTime: events[i].endTime.replace(hour: 12),
+//             subject: events[i].subject,
+//             recurrenceRule: events[i].recurrenceRule,
+//           ));
+//         } else {
+//           ramadanEvents.add(events[i]);
+//         }
+//       } else if (recurrenceProperties.recurrenceType == RecurrenceType.weekly &&
+//                  recurrenceProperties.weekDays.contains(DateTime.thursday)) {
+//         // change the time of the project presentation to 3 PM in March
+//         if (events[i].startTime.month == 3) {
+//           ramadanEvents.add(Appointment(
+//             startTime: events[i].startTime.replace(hour: 15),
+//             endTime: events[i].endTime.replace(hour: 16),
+//             subject: events[i].subject,
+//             recurrenceRule: events[i].recurrenceRule,
+//           ));
+//         } else {
+//           ramadanEvents.add(events[i]);
+//         }
+//       } else {
+//         ramadanEvents.add(events[i]);
+//       }
+//     } else {
+//       ramadanEvents.add(events[i]);
+//     }
+//   }
+
+//   return AppointmentDataSource(ramadanEvents);
+// }
 
   Map<int, List<Event>> groupEvents(List<Event> events) {
     Map<int, List<Event>> groupedEvents = {};
@@ -804,7 +884,7 @@ class SchedulePageState extends State<SchedulePage> {
     bool isExam = examEvents.contains(event);
     bool isQuiz = quizzes.contains(event) || examEvents.contains(event);
     EventDataSource dataSource = EventDataSource(events);
-    // dataSource.appointments!.remove(details.appointments.first);
+    // dataSource.events!.remove(details.events.first);
     return Stack(
       children: [
         // AnimatedAlign(
@@ -981,7 +1061,6 @@ class SchedulePageState extends State<SchedulePage> {
   Widget quizBuilder() {
     List<dynamic>? dayQuizzes =
         _quizDataSource.getVisibleAppointments(_controller.displayDate!, '');
-    ;
     return dayQuizzes.isEmpty
         ? Center(
             child: Text(

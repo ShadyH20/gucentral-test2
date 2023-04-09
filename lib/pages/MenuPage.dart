@@ -311,7 +311,7 @@ class MenuItems {
   static final all = <MenuItemlist>[
     // profile,
     home,
-    grades,
+    // grades,
     courses,
     schedule,
     attendance,

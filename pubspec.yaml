@@ -70,6 +70,8 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   flutter_native_splash: ^2.2.19
   timeago: ^3.4.0
+  hijri: ^3.0.0
+
 
 flutter_native_splash:
   color: "#ffffff"
