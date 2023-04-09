@@ -6,6 +6,7 @@ import "dart:math";
 import "dart:ui";
 import "package:auto_size_text/auto_size_text.dart";
 import "package:dropdown_button2/dropdown_button2.dart";
+import "package:fading_edge_scrollview/fading_edge_scrollview.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -873,6 +874,7 @@ class SchedulePageState extends State<SchedulePage> {
 
   Widget appointmentBuilder(
       BuildContext context, CalendarAppointmentDetails details) {
+    final ScrollController scrollController = ScrollController();
     Event event = details.appointments.first;
     bool hasPassed = DateTime.now().isAfter(details.date
         .getDateOnly()
@@ -885,175 +887,227 @@ class SchedulePageState extends State<SchedulePage> {
     bool isQuiz = quizzes.contains(event) || examEvents.contains(event);
     EventDataSource dataSource = EventDataSource(events);
     // dataSource.events!.remove(details.events.first);
-    return Stack(
-      children: [
-        // AnimatedAlign(
-        //   curve: editButtonsToggle ? Curves.linear : Curves.decelerate,
-        //   alignment: tappedEvent == event ? alignment1 : const Alignment(0, 0),
-        //   duration: const Duration(milliseconds: 300),
-        //   child: Container(
-        //     width: 40,
-        //     height: 40,
-        //     decoration: const BoxDecoration(
-        //         color: MyColors.primary,
-        //         // borderRadius: BorderRadius.circular(50),
-        //         shape: BoxShape.circle),
-        //     child: IconButton(
-        //       color: MyColors.background,
-        //       icon: const Icon(Icons.edit)
-        //       //  SvgPicture.asset(
-        //       //   "assets/images/edit.svg",
-        //       //   // height: 30,
-        //       //   color: MyColors.background,
-        //       // )
-        //       ,
-        //       onPressed: () async {
-        //         var quiz = await goToAddQuiz();
-        //         if (quiz != null) {
-        //           print("Quiz: ${quiz.toString()}");
-        //           quizzes.add(quiz);
-        //           Requests.updateQuizzes(quizzes);
 
-        //           setState(() {});
-        //         }
-        //       },
-        //     ),
-        //   ),
-        // ),
-        // AnimatedAlign(
-        //   curve: editButtonsToggle ? Curves.linear : Curves.decelerate,
-        //   alignment: tappedEvent == event ? alignment2 : const Alignment(0, 0),
-        //   duration: const Duration(milliseconds: 300),
-        //   child: Container(
-        //     width: 40,
-        //     height: 40,
-        //     decoration: const BoxDecoration(
-        //         color: MyColors.primary,
-        //         // borderRadius: BorderRadius.circular(50),
-        //         shape: BoxShape.circle),
-        //     child: IconButton(
-        //       color: MyColors.background,
-        //       icon: const Icon(Icons.delete_outline_rounded),
-        //       onPressed: () {},
-        //     ),
-        //   ),
-        // ),
+    // AnimatedAlign(
+    //   curve: editButtonsToggle ? Curves.linear : Curves.decelerate,
+    //   alignment: tappedEvent == event ? alignment1 : const Alignment(0, 0),
+    //   duration: const Duration(milliseconds: 300),
+    //   child: Container(
+    //     width: 40,
+    //     height: 40,
+    //     decoration: const BoxDecoration(
+    //         color: MyColors.primary,
+    //         // borderRadius: BorderRadius.circular(50),
+    //         shape: BoxShape.circle),
+    //     child: IconButton(
+    //       color: MyColors.background,
+    //       icon: const Icon(Icons.edit)
+    //       //  SvgPicture.asset(
+    //       //   "assets/images/edit.svg",
+    //       //   // height: 30,
+    //       //   color: MyColors.background,
+    //       // )
+    //       ,
+    //       onPressed: () async {
+    //         var quiz = await goToAddQuiz();
+    //         if (quiz != null) {
+    //           print("Quiz: ${quiz.toString()}");
+    //           quizzes.add(quiz);
+    //           Requests.updateQuizzes(quizzes);
 
-        AnimatedOpacity(
-          duration: const Duration(seconds: 2),
-          opacity: hasPassed ? 0.6 : 1,
-          child: Container(
-            width: details.bounds.width,
-            height: details.bounds.height,
-            // constraints: BoxConstraints(),
-            // alignment: Alignment.center,
-            margin: const EdgeInsets.only(left: 7),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-            decoration: BoxDecoration(
-                color: getColor(),
-                borderRadius: BorderRadius.circular(13),
-                border: false
-                    ? Border.all(color: MyColors.primary, width: 1.5)
-                    : null),
-            child: SingleChildScrollView(
-              // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              // padding: EdgeInsets.zero,
-              physics: const ClampingScrollPhysics(),
-              child: Container(
-                constraints:
-                    BoxConstraints(minHeight: details.bounds.height - 18),
-                child: DefaultTextStyle(
-                    style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontFamily: 'Outfit'),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // only wrap if it will overflow
-                        SizedBox(
-                          width: details.bounds.width - 20,
-                          child: Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            runSpacing: 5,
-                            children: [
-                              Text(event.description.toString()),
-                              FittedBox(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    isExam
-                                        ? Text(
-                                            'Seat ${event.location.split(' in ')[0]}',
-                                            textAlign: TextAlign.justify,
-                                          )
-                                        : Container(),
-                                    Row(
+    //           setState(() {});
+    //         }
+    //       },
+    //     ),
+    //   ),
+    // ),
+    // AnimatedAlign(
+    //   curve: editButtonsToggle ? Curves.linear : Curves.decelerate,
+    //   alignment: tappedEvent == event ? alignment2 : const Alignment(0, 0),
+    //   duration: const Duration(milliseconds: 300),
+    //   child: Container(
+    //     width: 40,
+    //     height: 40,
+    //     decoration: const BoxDecoration(
+    //         color: MyColors.primary,
+    //         // borderRadius: BorderRadius.circular(50),
+    //         shape: BoxShape.circle),
+    //     child: IconButton(
+    //       color: MyColors.background,
+    //       icon: const Icon(Icons.delete_outline_rounded),
+    //       onPressed: () {},
+    //     ),
+    //   ),
+    // ),
+    return AnimatedOpacity(
+      duration: const Duration(seconds: 2),
+      opacity: hasPassed ? 0.6 : 1,
+      child: Container(
+        width: details.bounds.width,
+        height: details.bounds.height,
+        margin: const EdgeInsets.only(left: 7),
+        // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+        decoration: BoxDecoration(
+          color: getColor(),
+          borderRadius: BorderRadius.circular(13),
+        ),
+        child: ScrollbarTheme(
+          data: ScrollbarThemeData(
+            crossAxisMargin: 2,
+            interactive: true,
+            radius: const Radius.circular(12),
+            thickness: MaterialStateProperty.all(8),
+            mainAxisMargin: 7,
+            thumbColor:
+                MaterialStateProperty.all(MyColors.secondary.withOpacity(0.3)),
+            trackBorderColor: MaterialStateProperty.all(Colors.transparent),
+          ),
+          child: Padding(
+            // padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+            child: Scrollbar(
+              controller: scrollController,
+              thumbVisibility: true,
+              child: FadingEdgeScrollView.fromSingleChildScrollView(
+                gradientFractionOnEnd: 0.4,
+                gradientFractionOnStart: 0.4,
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  clipBehavior: Clip.antiAlias,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+                  // padding: EdgeInsets.zero,
+                  physics: const ScrollPhysics(),
+                  child: Container(
+                    constraints:
+                        BoxConstraints(minHeight: details.bounds.height - 18),
+                    child: DefaultTextStyle(
+                        style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                            fontFamily: 'Outfit'),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // only wrap if it will overflow
+                            SizedBox(
+                              width: details.bounds.width - 20,
+                              child: Wrap(
+                                alignment: WrapAlignment.spaceBetween,
+                                runSpacing: 5,
+                                children: [
+                                  Text(event.description.toString()),
+                                  FittedBox(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        SvgPicture.asset(
-                                          "assets/images/location.svg",
-                                          height: 11,
-                                          color: Colors.black,
+                                        isExam
+                                            ? Text(
+                                                'Seat ${event.location.split(' in ')[0]}',
+                                                textAlign: TextAlign.justify,
+                                              )
+                                            : Container(),
+                                        Row(
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/images/location.svg",
+                                              height: 11,
+                                              color: Colors.black,
+                                            ),
+                                            const SizedBox(width: 3),
+                                            Text(isExam
+                                                ? event.location
+                                                    .split(' in ')[1]
+                                                : event.location ?? "No Loc")
+                                          ],
                                         ),
-                                        const SizedBox(width: 3),
-                                        Text(isExam
-                                            ? event.location.split(' in ')[1]
-                                            : event.location ?? "No Loc")
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height: 37,
-                                alignment: Alignment.centerLeft,
-                                child: AutoSizeText(
-                                  overflow: TextOverflow.fade,
-                                  courseMap[event.title.split(' ').join('')] ??
-                                      "No Course",
-                                  maxLines: 2,
-                                  // wrapWords: true,
-                                  softWrap: true,
-                                  wrapWords: true,
-                                  style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600),
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Container(
+                                    height: 37,
+                                    alignment: Alignment.centerLeft,
+                                    child: AutoSizeText(
+                                      overflow: TextOverflow.fade,
+                                      courseMap[event.title
+                                              .split(' ')
+                                              .join('')] ??
+                                          "No Course",
+                                      maxLines: 2,
+                                      // wrapWords: true,
+                                      softWrap: true,
+                                      wrapWords: true,
+                                      style: const TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ),
 
-                            // FLAG ICON
-                            isQuiz
-                                ? Icon(
-                                    Icons.flag_rounded,
-                                    color: MyColors.error,
-                                    size: 17,
-                                  )
-                                : const Text("")
+                                // FLAG ICON
+                                isQuiz
+                                    ? Icon(
+                                        Icons.flag_rounded,
+                                        color: MyColors.error,
+                                        size: 17,
+                                      )
+                                    : const Text("")
+                              ],
+                            ),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                  "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}"),
+                            ),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // Text("Room ${event.location.split(' in ')[0]}"),
                           ],
-                        ),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                              "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}"),
-                        )
-                      ],
-                    )),
+                        )),
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
+
+    // print(scrollController.position.maxScrollExtent);
+    // // Add a text widget to the end of the list view if the scroll extent is greater than 0
+    // if (scrollController.position.maxScrollExtent > 0) {
+    //   children.add(
+    //     Container(
+    //       height: 20,
+    //       width: 20,
+    //       color: Colors.red,
+    //     ),
+    //   );
+    // }
+    // return Row(
+    //   children: children,
+    // );
   }
 
   List<Event> quizzes = Requests.getQuizzes();
