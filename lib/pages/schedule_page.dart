@@ -241,7 +241,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                      offset: Offset(0, 1.1),
+                                      offset: const Offset(0, 1.1),
                                       color: MyApp.isDarkMode.value
                                           ? Colors.white24
                                           : Colors.black26,
@@ -885,10 +885,16 @@ class SchedulePageState extends State<SchedulePage> {
   Widget appointmentBuilder(
       BuildContext context, CalendarAppointmentDetails details) {
     final ScrollController scrollController = ScrollController();
+
     Event event = details.appointments.first;
     bool hasPassed = DateTime.now().isAfter(details.date
         .getDateOnly()
         .add(Duration(hours: event.end.hour, minutes: event.end.minute)));
+    bool isShort = details.bounds.height < 70;
+    var height = details.bounds.height;
+    Widget timeWidget = Text(
+        "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}",
+        style: const TextStyle(fontWeight: FontWeight.w400));
 
     var dayExams =
         EventDataSource(examEvents).getVisibleAppointments(details.date, "");
@@ -956,136 +962,133 @@ class SchedulePageState extends State<SchedulePage> {
         width: details.bounds.width,
         height: details.bounds.height,
         margin: const EdgeInsets.only(left: 7),
-        // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+        // padding: const EdgeInsets.only(bottom: 5),
         decoration: BoxDecoration(
           color: getColor(),
           borderRadius: BorderRadius.circular(13),
         ),
-        child: RawScrollbar(
-          controller: scrollController,
-          thumbVisibility: true,
-          crossAxisMargin: 2,
-          interactive: true,
-          radius: const Radius.circular(12),
-          thickness: 8,
-          mainAxisMargin: 7,
-          thumbColor: const Color(0xFF272932).withOpacity(0.3),
-          trackBorderColor: Colors.transparent,
-          child: FadingEdgeScrollView.fromSingleChildScrollView(
-            gradientFractionOnEnd: 0.4,
-            gradientFractionOnStart: 0.4,
-            child: SingleChildScrollView(
-              controller: scrollController,
-              clipBehavior: Clip.antiAlias,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-              // padding: EdgeInsets.zero,
-              physics: const ScrollPhysics(),
-              child: Container(
-                constraints:
-                    BoxConstraints(minHeight: details.bounds.height - 18),
-                child: DefaultTextStyle(
-                    style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                        fontFamily: 'Outfit'),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // only wrap if it will overflow
-                        SizedBox(
-                          width: details.bounds.width - 20,
-                          child: Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            runSpacing: 5,
-                            children: [
-                              Text(event.description.toString()),
-                              FittedBox(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    isExam
-                                        ? Text(
-                                            'Seat ${event.location.split(' in ')[0]}',
-                                            textAlign: TextAlign.justify,
-                                          )
-                                        : Container(),
-                                    Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          "assets/images/location.svg",
-                                          height: 11,
-                                          color: Colors.black,
-                                        ),
-                                        const SizedBox(width: 3),
-                                        Text(isExam
-                                            ? event.location.split(' in ')[1]
-                                            : event.location ?? "No Loc")
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+        child: Container(
+          // constraints: BoxConstraints(minHeight: details.bounds.height - 18),
+          padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: isShort ? height / 15 : 9,
+              bottom: isShort ? height / 30 : 5),
+          child: DefaultTextStyle(
+              style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black,
+                  fontFamily: 'Outfit'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Type and Location
+                  Expanded(
+                    flex: isShort ? 3 : 2,
+                    child: SizedBox(
+                      width: details.bounds.width - 20,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              event.description.toString(),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Container(
-                                height: 37,
-                                alignment: Alignment.centerLeft,
-                                child: AutoSizeText(
-                                  overflow: TextOverflow.fade,
-                                  courseMap[event.title.split(' ').join('')] ??
-                                      "No Course",
-                                  maxLines: 2,
-                                  // wrapWords: true,
-                                  softWrap: true,
-                                  wrapWords: true,
-                                  style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600),
-                                ),
+
+                          isShort ? const Text(" | ") : Container(),
+                          // Time here if the event is short
+                          isShort
+                              ? Flexible(
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: timeWidget,
+                                  ),
+                                )
+                              : Container(),
+                          isShort ? const Text(" | ") : Container(),
+
+                          Flexible(
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  isExam
+                                      ? Text(
+                                          'Seat ${event.location.split(' in ')[0]}',
+                                          textAlign: TextAlign.justify,
+                                        )
+                                      : Container(),
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/images/location.svg",
+                                        height: 11,
+                                        color: Colors.black,
+                                      ),
+                                      const SizedBox(width: 3),
+                                      Text(isExam
+                                          ? event.location.split(' in ')[1]
+                                          : event.location ?? "No Loc")
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: isShort ? 4 : 3,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: details.bounds.width - 20 - 34,
+                          child: AutoSizeText(
+                            // minFontSize: 16,
+                            maxFontSize: 22,
+                            overflow: TextOverflow.visible,
+                            courseMap[event.title.split(' ').join('')] ??
+                                "No Course",
+                            maxLines: 2,
+                            // wrapWords: true,
+                            softWrap: true,
+                            wrapWords: true,
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w600),
+                          ),
+                        ),
 
-                            // FLAG ICON
-                            isQuiz
-                                ? Icon(
-                                    Icons.flag_rounded,
-                                    color: MyColors.error,
-                                    size: 17,
-                                  )
-                                : const Text("")
-                          ],
-                        ),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                              "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}"),
-                        ),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
-                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // FLAG ICON
+                        isQuiz
+                            ? Icon(
+                                Icons.flag_rounded,
+                                color: MyColors.error,
+                                size: 17,
+                              )
+                            : const Text("")
                       ],
-                    )),
-              ),
-            ),
-          ),
+                    ),
+                  ),
+                  isShort
+                      ? Container()
+                      : Expanded(
+                          flex: 2,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: timeWidget,
+                          ),
+                        ),
+                ],
+              )),
         ),
       ),
     );
@@ -1134,144 +1137,100 @@ class SchedulePageState extends State<SchedulePage> {
                 Appointment app = dayQuizzes[index];
                 Event? event =
                     _quizDataSource.convertAppointmentToObject(null, app);
-                return Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    // AnimatedAlign(
-                    //   curve:
-                    //       editButtonsToggle ? Curves.linear : Curves.decelerate,
-                    //   alignment: tappedEvent == event
-                    //       ? alignment2
-                    //       : const Alignment(0, 0),
-                    //   duration: const Duration(milliseconds: 300),
-                    //   child: Container(
-                    //     width: 40,
-                    //     height: 40,
-                    //     decoration: BoxDecoration(
-                    //         color: MyColors.primary,
-                    //         // borderRadius: BorderRadius.circular(50),
-                    //         shape: BoxShape.circle),
-                    //     child: IconButton(
-                    //       color: MyColors.background,
-                    //       icon: const Icon(Icons.delete_outline_rounded),
-                    //       onPressed: () {},
-                    //     ),
-                    //   ),
-                    // ),
-                    // AnimatedAlign(
-                    //   curve:
-                    //       editButtonsToggle ? Curves.linear : Curves.decelerate,
-                    //   alignment: tappedEvent == event
-                    //       ? alignment1
-                    //       : const Alignment(0, 0),
-                    //   duration: const Duration(milliseconds: 300),
-                    //   child: Container(
-                    //     width: 40,
-                    //     height: 40,
-                    //     decoration: BoxDecoration(
-                    //         color: MyColors.primary,
-                    //         // borderRadius: BorderRadius.circular(50),
-                    //         shape: BoxShape.circle),
-                    //     child: IconButton(
-                    //       color: MyColors.background,
-                    //       icon: const Icon(Icons.edit),
-                    //       onPressed: () {
-                    //         //
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-                    GestureDetector(
-                      onTap: () async {
-                        var editedEvent = await goToAddQuiz(eventToEdit: event);
-                        if (editedEvent is Event) {
-                          if (editedEvent == null) return;
+                return GestureDetector(
+                  onTap: () async {
+                    var editedEvent = await goToAddQuiz(eventToEdit: event);
+                    if (editedEvent is Event) {
+                      if (editedEvent == null) return;
 
-                          quizzes.remove(event);
-                          quizzes.add(editedEvent);
-                        } else if (editedEvent is String &&
-                            editedEvent == 'Delete') {
-                          quizzes.remove(event);
-                        }
-                        _eventDataSource = EventDataSource(events + quizzes);
-                        Requests.updateQuizzes(quizzes);
+                      quizzes.remove(event);
+                      quizzes.add(editedEvent);
+                    } else if (editedEvent is String &&
+                        editedEvent == 'Delete') {
+                      quizzes.remove(event);
+                    }
+                    _eventDataSource = EventDataSource(events + quizzes);
+                    Requests.updateQuizzes(quizzes);
 
-                        setState(() {});
+                    setState(() {});
 
-                        setState(() {
-                          tappedEvent = event;
-                          alignment1 = editButtonsToggle
-                              ? const Alignment(-0.16, -2.7)
-                              : const Alignment(0, 0.8);
-                          alignment2 = editButtonsToggle
-                              ? const Alignment(0.16, -2.7)
-                              : const Alignment(0, 0.8);
-                          editButtonsToggle = !editButtonsToggle;
-                        });
-                      },
-                      child: Container(
-                        width: 190,
-                        margin: const EdgeInsets.only(right: 10),
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 6, horizontal: 9),
-                        decoration: BoxDecoration(
-                          color: MyColors.primary,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: DefaultTextStyle(
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: MyColors.background,
-                                fontFamily: 'Outfit'),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    // courseMap[event.subject] ?? "",
-                                    courseMap[
-                                            event!.title.split(' ').join('')] ??
-                                        "No Course Found",
-                                    style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w700),
-                                  ),
+                    setState(() {
+                      tappedEvent = event;
+                      alignment1 = editButtonsToggle
+                          ? const Alignment(-0.16, -2.7)
+                          : const Alignment(0, 0.8);
+                      alignment2 = editButtonsToggle
+                          ? const Alignment(0.16, -2.7)
+                          : const Alignment(0, 0.8);
+                      editButtonsToggle = !editButtonsToggle;
+                    });
+                  },
+                  child: Container(
+                    constraints: const BoxConstraints(
+                      minWidth: 190,
+                    ),
+                    margin: const EdgeInsets.only(right: 10),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
+                    decoration: BoxDecoration(
+                      color: MyColors.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DefaultTextStyle(
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: MyColors.background,
+                            fontFamily: 'Outfit'),
+                        child: IntrinsicWidth(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  // courseMap[event.subject] ?? "",
+                                  courseMap[event!.title.split(' ').join('')] ??
+                                      "No Course Found",
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700),
                                 ),
-                                Text("~ ${event.description.toString()} ~",
+                              ),
+                              Expanded(
+                                child: Text(
+                                    "~ ${event.description.toString()} ~",
                                     style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w700)),
-                                FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                              ),
+                              Row(
+                                // mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                      "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
+                                  // const SizedBox(width: 5),
+                                  // Spacer(),
+                                  Row(
                                     children: [
-                                      Text(
-                                          "${DateFormat('h:mm a').format(event.start)} - ${DateFormat('h:mm a').format(event.end)}"),
-                                      const SizedBox(width: 5),
-                                      Row(
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/images/location.svg",
-                                            height: 11,
-                                            color: MyColors.background,
-                                          ),
-                                          const SizedBox(width: 3),
-                                          Text(event.location ?? "No Loc")
-                                        ],
+                                      SvgPicture.asset(
+                                        "assets/images/location.svg",
+                                        height: 11,
+                                        color: MyColors.background,
                                       ),
+                                      const SizedBox(width: 3),
+                                      Text(event.location ?? "No Loc")
                                     ],
                                   ),
-                                ),
-                              ],
-                            )),
-                      ),
-                    ),
-                  ],
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
                 );
               },
             ),
@@ -1568,7 +1527,8 @@ class SchedulePageState extends State<SchedulePage> {
     }
     examEvents = exams;
     Requests.updateExams(exams);
-    Future.delayed(Duration(milliseconds: 10), () => widget.notifyHomePage);
+    Future.delayed(
+        const Duration(milliseconds: 10), () => widget.notifyHomePage);
     setState(() {});
 
     List<DateTime> datesBetween = earliestDate.getDatesInBetween(latestDate);

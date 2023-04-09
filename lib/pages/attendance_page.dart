@@ -74,7 +74,7 @@ class _AttendancePageState extends State<AttendancePage> {
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         // width: ,
                         height: 55,
-                        padding: const EdgeInsets.only(left: 10),
+                        // padding: const EdgeInsets.only(left: 10),
                         decoration: BoxDecoration(
                             color: MyApp.isDarkMode.value
                                 ? MyColors.surface
@@ -92,7 +92,10 @@ class _AttendancePageState extends State<AttendancePage> {
                             ),
                             isExpanded: true,
                             value: dropdownCourseValue,
-                            hint: const Text('Choose A Course'),
+                            hint: const Padding(
+                              padding: EdgeInsets.only(left: 0.0),
+                              child: Text('Choose A Course'),
+                            ),
                             style: TextStyle(
                                 // decoration: TextDecoration.underline,
                                 color: MyApp.isDarkMode.value
@@ -102,10 +105,13 @@ class _AttendancePageState extends State<AttendancePage> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                             // dropdownColor: MyColors.secondary,
-                            dropdownStyleData: DropdownStyleData(
+                            dropdownStyleData: const DropdownStyleData(
+                                offset: Offset(0, 4),
                                 decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                )),
                             underline: Container(
                               color: Colors.transparent,
                             ),

@@ -476,7 +476,7 @@ class _TranscriptPageState extends State<TranscriptPage>
     return Container(
       width: 180,
       height: 40,
-      padding: const EdgeInsets.only(left: 10),
+      padding: const EdgeInsets.only(left: 0),
       decoration: BoxDecoration(
           color: MyApp.isDarkMode.value
               ? MyColors.surface
@@ -493,14 +493,15 @@ class _TranscriptPageState extends State<TranscriptPage>
               fontFamily: 'Outfit',
               fontSize: 18,
               fontWeight: FontWeight.bold),
-          dropdownStyleData: DropdownStyleData(
+          dropdownStyleData: const DropdownStyleData(
+              offset: Offset(0, 3),
               decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          )),
-          underline: Container(
-            color: Colors.transparent,
-          ),
-          hint: const Text("Select A Year"),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
+              )),
+          hint: const Align(
+              alignment: Alignment.centerRight, child: Text("Select A Year")),
           onChanged: (String? value) {
             // This is called when the user selects an item.
             setState(() {

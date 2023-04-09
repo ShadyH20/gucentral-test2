@@ -31,8 +31,8 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
 
   @override
   void initState() {
-    initCoursesToEval();
     super.initState();
+    initCoursesToEval();
   }
 
   void initCoursesToEval() async {
@@ -42,10 +42,8 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
     var resp = await Requests.getCoursesToEval();
     if (resp['success']) {
       setState(() {
-        coursesToEval = [
-          {'name': 'Choose a course', 'value': '-1'}
-        ];
-        dropdownCourseValue = coursesToEval[0];
+        coursesToEval = [];
+        // dropdownCourseValue = coursesToEval[0];
         coursesToEval += (resp['courses']);
       });
       debugPrint(coursesToEval.toString());
@@ -81,9 +79,8 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                       const SizedBox(height: 15),
                       Container(
                         margin: const EdgeInsets.symmetric(horizontal: 20),
-                        // width: ,
                         height: 55,
-                        padding: const EdgeInsets.only(left: 10),
+                        // padding: const EdgeInsets.only(left: 0),
                         decoration: BoxDecoration(
                             color: MyApp.isDarkMode.value
                                 ? MyColors.surface
@@ -100,6 +97,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                               iconSize: 30,
                             ),
                             isExpanded: true,
+
                             value: dropdownCourseValue,
                             style: TextStyle(
                                 // decoration: TextDecoration.underline,
@@ -110,10 +108,14 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                             // dropdownColor: MyColors.secondary,
-                            dropdownStyleData: DropdownStyleData(
+                            dropdownStyleData: const DropdownStyleData(
+                                offset: Offset(0, 4),
                                 decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            )),
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                )),
+                            hint: const Text("Choose a course"),
                             underline: Container(
                               color: const Color(0),
                             ),
@@ -122,11 +124,9 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
                               setState(() {
                                 dropdownCourseValue = course;
                               });
-                              if (dropdownCourseValue != coursesToEval.first) {
-                                debugPrint("$dropdownCourseValue chosen");
-                                courseChosen(course);
-                                // widget.transcript.updateTranscript(value!);
-                              }
+                              debugPrint("$dropdownCourseValue chosen");
+                              courseChosen(course);
+                              // widget.transcript.updateTranscript(value!);
                             },
                             items: coursesToEval
                                 .map<DropdownMenuItem>((dynamic course) {
@@ -181,9 +181,6 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
   }
 
   buildCourseName(String course) {
-    if (course == coursesToEval[0]['name']) {
-      return Text(course);
-    }
     var courseSplit = course.split(' ');
     var name = courseSplit.sublist(0, courseSplit.length - 2).join(" ");
     var code = courseSplit.sublist(courseSplit.length - 2).join(" ");
