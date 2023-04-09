@@ -198,7 +198,7 @@ class _HomePageState extends State<HomePage>
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 15),
 
               //// THE 3 BOXES ////
               Expanded(
@@ -309,7 +309,7 @@ class _HomePageState extends State<HomePage>
                             ],
                           ),
                         ),
-                        const SizedBox(height: 25),
+                        const SizedBox(height: 15),
                       ],
                     )),
               ),

@@ -242,17 +242,6 @@ class _AttendancePageState extends State<AttendancePage> {
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   buildAttendance() {
-    // return AnimatedList(
-    //   key: _listKey,
-    //   initialItemCount: attendanceList.length,
-    //   itemBuilder: (context, index, animation) {
-    //     var attendance = attendanceList[attendanceList.length - 1 - index];
-    //     var item = buildAttendanceItem(attendance, animation);
-    //     _listKey.currentState!
-    //         .insertItem(index, duration: const Duration(milliseconds: 500));
-    //     return item;
-    //   },
-    // );
     return AnimationLimiter(
       key: ValueKey("$attendanceList"),
       child: SmartRefresher(
