@@ -498,6 +498,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                                 //   ],
                                 // ),
                                 ShapeDecoration(
+											color: MyApp.isDarkMode.value ? Colors.transparent: Colors.white,
                                     shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                               side: MyApp.isDarkMode.value
