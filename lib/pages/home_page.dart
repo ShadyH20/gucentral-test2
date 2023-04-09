@@ -43,11 +43,10 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin {
+class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   // ignore: non_constant_identifier_names
   late ColorScheme MyColors;
   @override
@@ -71,7 +70,7 @@ class _HomePageState extends State<HomePage>
     setState(() {
       loadingEverything = false;
       prefs.setBool("loading", false);
-      menuPageKey.currentState?.setState(() {});
+      // menuPageKey.currentState?.setState(() {});
     });
   }
 
@@ -398,7 +397,8 @@ class _HomePageState extends State<HomePage>
 
   getNumberOfQuizzesThisWeek() {
     var allQuizzes = Requests.getQuizzes();
-    var dataSource = EventDataSource(allQuizzes);
+    var allExams = Requests.getExamsSaved();
+    var dataSource = EventDataSource(allQuizzes + allExams);
     var quizzesThisWeek = dataSource.getVisibleAppointments(
         DateTime.now(), "", findLastDateOfTheWeek(DateTime.now()));
     setState(() {
@@ -422,7 +422,7 @@ class _HomePageState extends State<HomePage>
   // this is 1 notification: {'title': 'SE Project Repository', 'course_code': 'CSEN603', 'date': '28/03/2023 09:24:28', 'message': "Dear All,\n\nPlease note that you should NOT set your team's GitHub repository as public otherwise it will be considered a cheating case because this means everyone can
 // see your submission.\n\nKind regards,\n\n------------------------------\nMs. Marina Nader Nabil Amin Eskander \nDepartment: Computer Science", 'sender': 'Ms. Marina Nader Nabil Amin Eskander'}
   // i wanto to make me a listview with all notifications from the notifications list. I want to show a notification's title, sender, and how much time ago was the notification sent (e.g. 20m ago) if the sent time is today, or the date if it was sent yesterday or before
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   Widget buildNotifications() {
@@ -461,24 +461,58 @@ class _HomePageState extends State<HomePage>
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: MyColors.secondary.withOpacity(0.2),
+                          color:
+                              // Color.fromARGB(255, 227, 246, 254).withOpacity(1)
+                              MyColors.secondary.withOpacity(
+                                  MyApp.isDarkMode.value ? 0.2 : 0.1),
                         ),
                         child: ListTile(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 10),
                           dense: false,
                           visualDensity: VisualDensity.compact,
+                          horizontalTitleGap: 15,
                           leading: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
+                            width: 42,
+                            height: 42,
+                            decoration:
+                                // BoxDecoration(
+                                //   borderRadius: BorderRadius.circular(15),
+                                //   color: MyApp.isDarkMode.value
+                                //       ? MyColors.secondary.withOpacity(0.4)
+                                //       // : Color(0xFFDBF2FD).withOpacity(0.6),
+                                //       : ui.Color.fromARGB(255, 220, 220, 220),
+                                //   // color: Color(0xFFDBF2FD)
+                                //   // border: MyApp.isDarkMode.value
+                                //   //     ? Border.all(
+                                //   //         color: MyColors.secondary.withOpacity(0.4),
+                                //   //         width: 1)
+                                //   //     : Border.all(
+                                //   //         color: Color.fromARGB(255, 227, 246, 254),
+                                //   //         width: 1),
+                                //   boxShadow: [
+                                //     BoxShadow(
+                                //         color: MyColors.surface.withOpacity(0.5),
+                                //         offset: const Offset(0, 0),
+                                //         spreadRadius: 1),
+                                //   ],
+                                // ),
+                                ShapeDecoration(
+                                    shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
-                              color: MyColors.secondary.withOpacity(
-                                  MyApp.isDarkMode.value ? 0.4 : 0.2),
-                            ),
+                              side: MyApp.isDarkMode.value
+                                  ? BorderSide(
+                                      color:
+                                          MyColors.secondary.withOpacity(0.4),
+                                      width: 1.5)
+                                  : BorderSide(
+                                      color: MyColors.surface.withOpacity(0.5),
+                                      width: 1),
+                            )),
                             child: Icon(
                               Icons.notifications,
-                              color: MyColors.secondary,
+                              color: MyColors.secondary.withOpacity(
+                                  MyApp.isDarkMode.value ? 1 : 0.9),
                             ),
                           ),
                           // i want to add
@@ -497,7 +531,7 @@ class _HomePageState extends State<HomePage>
                                 style: TextStyle(
                                   color: MyColors.secondary,
                                   fontWeight: FontWeight.w400,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -507,7 +541,7 @@ class _HomePageState extends State<HomePage>
                                 style: TextStyle(
                                   color: MyColors.secondary,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

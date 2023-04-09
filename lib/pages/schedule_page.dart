@@ -39,7 +39,8 @@ List<Color> colors = const [
 ];
 
 class SchedulePage extends StatefulWidget {
-  const SchedulePage({super.key});
+  final VoidCallback notifyHomePage;
+  const SchedulePage({super.key, required this.notifyHomePage});
 
   @override
   State<SchedulePage> createState() => SchedulePageState();
@@ -529,9 +530,16 @@ class SchedulePageState extends State<SchedulePage> {
     if (dayDeadlines.isNotEmpty) {
       icons.add(deadline);
     }
-    if (dayQuizzes.isNotEmpty || dayExams.isNotEmpty) {
+    if (dayQuizzes.isNotEmpty) {
       icons.add(Text(
         "Q",
+        style: TextStyle(
+            fontWeight: FontWeight.bold, color: color, fontSize: size),
+      ));
+    }
+    if (dayExams.isNotEmpty) {
+      icons.add(Text(
+        "E",
         style: TextStyle(
             fontWeight: FontWeight.bold, color: color, fontSize: size),
       ));
@@ -687,10 +695,10 @@ class SchedulePageState extends State<SchedulePage> {
   }
 
   Map<String, int> dayIndexMap = {
+    'Thursday:': 4,
     'Monday': 1,
     'Tuesday': 2,
     'Wednesday': 3,
-    'Thursday:': 4,
     'Friday': 5,
     'Saturday': 6,
     'Sunday': 7,
@@ -710,9 +718,12 @@ class SchedulePageState extends State<SchedulePage> {
 
   createEvents() {
     events = [];
+    print(schedule);
     for (int i = 0; i < schedule.length; i++) {
       String day = schedule[i][0];
+      print(day);
       int dayIndex = dayIndexMap[day]!;
+      print(dayIndex);
 
       for (int j = 1; j < schedule[i].length; j++) {
         if (schedule[i][j] is List) {
@@ -969,9 +980,7 @@ class SchedulePageState extends State<SchedulePage> {
 
   Widget quizBuilder() {
     List<dynamic>? dayQuizzes =
-        _quizDataSource.getVisibleAppointments(_controller.displayDate!, '') +
-            EventDataSource(examEvents)
-                .getVisibleAppointments(_controller.displayDate!, '');
+        _quizDataSource.getVisibleAppointments(_controller.displayDate!, '');
     ;
     return dayQuizzes.isEmpty
         ? Center(
@@ -999,56 +1008,54 @@ class SchedulePageState extends State<SchedulePage> {
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    AnimatedAlign(
-                      curve:
-                          editButtonsToggle ? Curves.linear : Curves.decelerate,
-                      alignment: tappedEvent == event
-                          ? alignment2
-                          : const Alignment(0, 0),
-                      duration: const Duration(milliseconds: 300),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: MyColors.primary,
-                            // borderRadius: BorderRadius.circular(50),
-                            shape: BoxShape.circle),
-                        child: IconButton(
-                          color: MyColors.background,
-                          icon: const Icon(Icons.delete_outline_rounded),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ),
-                    AnimatedAlign(
-                      curve:
-                          editButtonsToggle ? Curves.linear : Curves.decelerate,
-                      alignment: tappedEvent == event
-                          ? alignment1
-                          : const Alignment(0, 0),
-                      duration: const Duration(milliseconds: 300),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            color: MyColors.primary,
-                            // borderRadius: BorderRadius.circular(50),
-                            shape: BoxShape.circle),
-                        child: IconButton(
-                          color: MyColors.background,
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            //
-                          },
-                        ),
-                      ),
-                    ),
+                    // AnimatedAlign(
+                    //   curve:
+                    //       editButtonsToggle ? Curves.linear : Curves.decelerate,
+                    //   alignment: tappedEvent == event
+                    //       ? alignment2
+                    //       : const Alignment(0, 0),
+                    //   duration: const Duration(milliseconds: 300),
+                    //   child: Container(
+                    //     width: 40,
+                    //     height: 40,
+                    //     decoration: BoxDecoration(
+                    //         color: MyColors.primary,
+                    //         // borderRadius: BorderRadius.circular(50),
+                    //         shape: BoxShape.circle),
+                    //     child: IconButton(
+                    //       color: MyColors.background,
+                    //       icon: const Icon(Icons.delete_outline_rounded),
+                    //       onPressed: () {},
+                    //     ),
+                    //   ),
+                    // ),
+                    // AnimatedAlign(
+                    //   curve:
+                    //       editButtonsToggle ? Curves.linear : Curves.decelerate,
+                    //   alignment: tappedEvent == event
+                    //       ? alignment1
+                    //       : const Alignment(0, 0),
+                    //   duration: const Duration(milliseconds: 300),
+                    //   child: Container(
+                    //     width: 40,
+                    //     height: 40,
+                    //     decoration: BoxDecoration(
+                    //         color: MyColors.primary,
+                    //         // borderRadius: BorderRadius.circular(50),
+                    //         shape: BoxShape.circle),
+                    //     child: IconButton(
+                    //       color: MyColors.background,
+                    //       icon: const Icon(Icons.edit),
+                    //       onPressed: () {
+                    //         //
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
                     GestureDetector(
                       onTap: () async {
-                        print("Will edit quiz: $event");
                         var editedEvent = await goToAddQuiz(eventToEdit: event);
                         if (editedEvent is Event) {
-                          print("Edited quiz: $editedEvent");
                           if (editedEvent == null) return;
 
                           quizzes.remove(event);
@@ -1379,7 +1386,7 @@ class SchedulePageState extends State<SchedulePage> {
         loadingExamSched = false;
       });
       if (result != null) {
-        print(result);
+        // print(result);
       }
 
       if (!result['success']) {
@@ -1423,6 +1430,8 @@ class SchedulePageState extends State<SchedulePage> {
       dates.add(examDateTime);
     }
     examEvents = exams;
+    Requests.updateExams(exams);
+    Future.delayed(Duration(milliseconds: 10), () => widget.notifyHomePage);
     setState(() {});
 
     for (Event event in events) {

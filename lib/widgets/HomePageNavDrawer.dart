@@ -38,14 +38,15 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
 
   final GlobalKey<SchedulePageState> _scheduleKey =
       GlobalKey<SchedulePageState>();
+  final GlobalKey<HomePageState> _homeKey = GlobalKey<HomePageState>();
 
   void callScheduleInit(bool val) {
-    // pages[getIndex(MenuItems.schedule)]
-    print("HomeDrawer: In callScheduleInit");
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     // Call your method here
     _scheduleKey.currentState?.initializeSchedulePage();
-    //   });
+  }
+
+  void notifyHomePage() {
+    print("Notifying home page");
+    _homeKey.currentState!.getNumberOfQuizzesThisWeek();
   }
 
   late List<Widget> pages;
@@ -92,9 +93,9 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   void initState() {
     super.initState();
     pages = [
-      const HomePage(),
+      HomePage(key: _homeKey),
       const CoursesPage(),
-      SchedulePage(key: _scheduleKey),
+      SchedulePage(key: _scheduleKey, notifyHomePage: notifyHomePage),
       SettingsPage(callScheduleInit: callScheduleInit),
       const GradesPage(),
       TranscriptPage(),

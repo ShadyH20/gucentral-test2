@@ -275,6 +275,23 @@ class Requests {
     }
   }
 
+  static void updateExams(List<Event> exams) {
+    prefs.setString('exams', jsonEncode(exams));
+  }
+
+  static List<Event> getExamsSaved() {
+    if (prefs.containsKey('exams')) {
+      var list = jsonDecode(prefs.getString('exams')!);
+      List<Event> exams = [];
+      for (var exam in list) {
+        exams.add(Event.fromJson(exam));
+      }
+      return exams;
+    }
+
+    return [];
+  }
+
   static getAttendance(String course) async {
     var out = getCreds();
     out['course'] = course;
