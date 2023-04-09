@@ -31,6 +31,16 @@ extension DateTimeExtension on DateTime {
   DateTime at8am() {
     return DateTime.utc(year, month, day, 7, 45);
   }
+
+  List<DateTime> getDatesInBetween(DateTime end) {
+    List<DateTime> dates = [];
+    DateTime current = getDateOnly();
+    while (current.isBefore(end)) {
+      dates.add(current);
+      current = current.add(const Duration(days: 1));
+    }
+    return dates;
+  }
 }
 
 List<Color> colors = const [
@@ -1522,7 +1532,9 @@ class SchedulePageState extends State<SchedulePage> {
   List<Event> examEvents = [];
   void createExamEvents() {
     List<Event> exams = [];
-    List<DateTime> dates = [];
+    // List<DateTime> dates = [];
+    DateTime earliestDate = DateTime(3000);
+    DateTime latestDate = DateTime(1000);
     for (var exam in examSchedule) {
       // var examDay = exam['exam_day'][0];
       var examDate = exam['exam_date'][0];
@@ -1546,15 +1558,23 @@ class SchedulePageState extends State<SchedulePage> {
           color: MyColors.primary,
           isAllDay: false);
       exams.add(examEvent);
-      dates.add(examDateTime);
+      // dates.add(examDateTime);
+      if (examDateTime.isBefore(earliestDate)) {
+        earliestDate = examDateTime;
+      }
+      if (examEndDateTime.isAfter(latestDate)) {
+        latestDate = examEndDateTime;
+      }
     }
     examEvents = exams;
     Requests.updateExams(exams);
     Future.delayed(Duration(milliseconds: 10), () => widget.notifyHomePage);
     setState(() {});
 
+    List<DateTime> datesBetween = earliestDate.getDatesInBetween(latestDate);
+    print('Dates between: $datesBetween');
     for (Event event in events) {
-      event.setRecurrenceExceptionDates(dates);
+      event.setRecurrenceExceptionDates(datesBetween);
     }
   }
 }
