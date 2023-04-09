@@ -890,10 +890,12 @@ class SchedulePageState extends State<SchedulePage> {
     bool hasPassed = DateTime.now().isAfter(details.date
         .getDateOnly()
         .add(Duration(hours: event.end.hour, minutes: event.end.minute)));
-    bool isShort = details.bounds.height < 70;
+    bool isShort = details.bounds.height < 60;
     var height = details.bounds.height;
-    Widget timeWidget = Text(
+    Widget timeWidget = AutoSizeText(
         "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}",
+        maxLines: 1,
+        minFontSize: 10,
         style: const TextStyle(fontWeight: FontWeight.w400));
 
     var dayExams =
@@ -993,7 +995,7 @@ class SchedulePageState extends State<SchedulePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Flexible(
-                            child: Text(
+                            child: AutoSizeText(
                               event.description.toString(),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -1004,10 +1006,7 @@ class SchedulePageState extends State<SchedulePage> {
                           // Time here if the event is short
                           isShort
                               ? Flexible(
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: timeWidget,
-                                  ),
+                                  child: timeWidget,
                                 )
                               : Container(),
                           isShort ? const Text(" | ") : Container(),

@@ -708,8 +708,11 @@ class _AddQuizPageState extends State<AddQuizPage> {
                             minutes: _selectedToTime.minute)),
                         alignment: Alignment.center,
                         highlightedTextStyle: const TextStyle(fontSize: 25),
-                        normalTextStyle: const TextStyle(
-                            fontSize: 20, color: Colors.black54),
+                        normalTextStyle: TextStyle(
+                            fontSize: 20,
+                            color: MyApp.isDarkMode.value
+                                ? Colors.white30
+                                : Colors.black54),
                         is24HourMode: false,
                         isForce2Digits: true,
                         minutesInterval: 5,
