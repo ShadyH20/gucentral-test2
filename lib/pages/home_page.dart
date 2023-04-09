@@ -426,105 +426,109 @@ class _HomePageState extends State<HomePage>
       RefreshController(initialRefresh: false);
 
   Widget buildNotifications() {
-    return SmartRefresher(
-      controller: _refreshController,
-      enablePullDown: true,
-      onRefresh: () async {
-        await refreshNotifications();
-        _refreshController.refreshCompleted();
-      },
-      header: WaterDropHeader(
-        waterDropColor: MyColors.primary,
-        complete: Icon(
-          Icons.check,
-          color: MyColors.primary,
+    return AnimationLimiter(
+      key: ValueKey("$notifications"),
+      child: SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: true,
+        onRefresh: () async {
+          await refreshNotifications();
+          _refreshController.refreshCompleted();
+        },
+        header: WaterDropHeader(
+          waterDropColor: MyColors.primary,
+          complete: Icon(
+            Icons.check,
+            color: MyColors.primary,
+          ),
         ),
-      ),
-      child: ListView.builder(
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            var date = DateFormat('dd/MM/yyyy HH:mm:ss')
-                .parse(notifications[index]['date'], true);
-            var timeAgo = timeago.format(date, locale: 'en_short');
-            return AnimationConfiguration.staggeredList(
-              position: index,
-              duration: const Duration(milliseconds: 200),
-              child: SlideAnimation(
-                verticalOffset: 50.0,
-                child: FadeInAnimation(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: MyColors.secondary.withOpacity(0.2),
-                      ),
-                      child: ListTile(
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 10),
-                        dense: false,
-                        visualDensity: VisualDensity.compact,
-                        leading: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: MyColors.secondary.withOpacity(
-                                MyApp.isDarkMode.value ? 0.4 : 0.2),
-                          ),
-                          child: Icon(
-                            Icons.notifications,
-                            color: MyColors.secondary,
-                          ),
+        child: ListView.builder(
+            itemCount: notifications.length,
+            itemBuilder: (context, index) {
+              var date = DateFormat('dd/MM/yyyy HH:mm:ss')
+                  .parse(notifications[index]['date'], true);
+              var timeAgo = timeago.format(date, locale: 'en_short');
+              return AnimationConfiguration.staggeredList(
+                delay: const Duration(milliseconds: 50),
+                position: index,
+                duration: const Duration(milliseconds: 200),
+                child: SlideAnimation(
+                  verticalOffset: 50.0,
+                  child: FadeInAnimation(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 7, vertical: 5),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: MyColors.secondary.withOpacity(0.2),
                         ),
-                        // i want to add
-                        title: Text(
-                          notifications[index]['title'],
-                          style: TextStyle(
-                            color: MyColors.secondary,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              notifications[index]['course_code'],
-                              style: TextStyle(
-                                color: MyColors.secondary,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                        child: ListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 10),
+                          dense: false,
+                          visualDensity: VisualDensity.compact,
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: MyColors.secondary.withOpacity(
+                                  MyApp.isDarkMode.value ? 0.4 : 0.2),
                             ),
-                            Text(
-                              notifications[index]['sender'],
-                              style: TextStyle(
-                                color: MyColors.secondary,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            child: Icon(
+                              Icons.notifications,
+                              color: MyColors.secondary,
                             ),
-                          ],
-                        ),
-                        trailing: Text(
-                          timeAgo,
-                          style: TextStyle(
-                            color: MyColors.secondary,
-                            fontWeight: FontWeight.w400,
+                          ),
+                          // i want to add
+                          title: Text(
+                            notifications[index]['title'],
+                            style: TextStyle(
+                              color: MyColors.secondary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                notifications[index]['course_code'],
+                                style: TextStyle(
+                                  color: MyColors.secondary,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                notifications[index]['sender'],
+                                style: TextStyle(
+                                  color: MyColors.secondary,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                          trailing: Text(
+                            timeAgo,
+                            style: TextStyle(
+                              color: MyColors.secondary,
+                              fontWeight: FontWeight.w400,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+      ),
     );
   }
 

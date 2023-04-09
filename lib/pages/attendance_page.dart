@@ -4,6 +4,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:gucentral/utils/SharedPrefs.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -252,35 +253,38 @@ class _AttendancePageState extends State<AttendancePage> {
     //     return item;
     //   },
     // );
-    return SmartRefresher(
-      controller: _refreshController,
-      enablePullDown: true,
-      onRefresh: () async {
-        await courseChosen(context, dropdownCourseValue);
-        _refreshController.refreshCompleted();
-      },
-      header: WaterDropHeader(
-        waterDropColor: MyColors.primary,
-        complete: Icon(
-          Icons.check,
-          color: MyColors.primary,
-        ),
-      ),
-      child: ListView.builder(
-        itemCount: attendanceList.length,
-        itemBuilder: (context, index) {
-          var attendance = attendanceList[attendanceList.length - 1 - index];
-          return AnimationConfiguration.staggeredList(
-            position: index,
-            duration: const Duration(milliseconds: 200),
-            child: SlideAnimation(
-              verticalOffset: 50.0,
-              child: FadeInAnimation(
-                child: buildAttendanceItem(attendance, index),
-              ),
-            ),
-          );
+    return AnimationLimiter(
+      key: ValueKey("$attendanceList"),
+      child: SmartRefresher(
+        controller: _refreshController,
+        enablePullDown: true,
+        onRefresh: () async {
+          await courseChosen(context, dropdownCourseValue);
+          _refreshController.refreshCompleted();
         },
+        header: WaterDropHeader(
+          waterDropColor: MyColors.primary,
+          complete: Icon(
+            Icons.check,
+            color: MyColors.primary,
+          ),
+        ),
+        child: ListView.builder(
+          itemCount: attendanceList.length,
+          itemBuilder: (context, index) {
+            var attendance = attendanceList[attendanceList.length - 1 - index];
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 200),
+              child: SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(
+                  child: buildAttendanceItem(attendance, index),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
