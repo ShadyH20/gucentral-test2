@@ -951,142 +951,128 @@ class SchedulePageState extends State<SchedulePage> {
           color: getColor(),
           borderRadius: BorderRadius.circular(13),
         ),
-        child: ScrollbarTheme(
-          data: ScrollbarThemeData(
-            crossAxisMargin: 2,
-            interactive: true,
-            radius: const Radius.circular(12),
-            thickness: MaterialStateProperty.all(8),
-            mainAxisMargin: 7,
-            thumbColor:
-                MaterialStateProperty.all(MyColors.secondary.withOpacity(0.3)),
-            trackBorderColor: MaterialStateProperty.all(Colors.transparent),
-          ),
-          child: Padding(
-            // padding: const EdgeInsets.all(8.0),
-            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-            child: Scrollbar(
+        child: RawScrollbar(
+          controller: scrollController,
+          thumbVisibility: true,
+          crossAxisMargin: 2,
+          interactive: true,
+          radius: const Radius.circular(12),
+          thickness: 8,
+          mainAxisMargin: 7,
+          thumbColor: MyColors.secondary.withOpacity(0.3),
+          trackBorderColor: Colors.transparent,
+          child: FadingEdgeScrollView.fromSingleChildScrollView(
+            gradientFractionOnEnd: 0.4,
+            gradientFractionOnStart: 0.4,
+            child: SingleChildScrollView(
               controller: scrollController,
-              thumbVisibility: true,
-              child: FadingEdgeScrollView.fromSingleChildScrollView(
-                gradientFractionOnEnd: 0.4,
-                gradientFractionOnStart: 0.4,
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  clipBehavior: Clip.antiAlias,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-                  // padding: EdgeInsets.zero,
-                  physics: const ScrollPhysics(),
-                  child: Container(
-                    constraints:
-                        BoxConstraints(minHeight: details.bounds.height - 18),
-                    child: DefaultTextStyle(
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                            fontFamily: 'Outfit'),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // only wrap if it will overflow
-                            SizedBox(
-                              width: details.bounds.width - 20,
-                              child: Wrap(
-                                alignment: WrapAlignment.spaceBetween,
-                                runSpacing: 5,
-                                children: [
-                                  Text(event.description.toString()),
-                                  FittedBox(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+              clipBehavior: Clip.antiAlias,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+              // padding: EdgeInsets.zero,
+              physics: const ScrollPhysics(),
+              child: Container(
+                constraints:
+                    BoxConstraints(minHeight: details.bounds.height - 18),
+                child: DefaultTextStyle(
+                    style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black,
+                        fontFamily: 'Outfit'),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // only wrap if it will overflow
+                        SizedBox(
+                          width: details.bounds.width - 20,
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            runSpacing: 5,
+                            children: [
+                              Text(event.description.toString()),
+                              FittedBox(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    isExam
+                                        ? Text(
+                                            'Seat ${event.location.split(' in ')[0]}',
+                                            textAlign: TextAlign.justify,
+                                          )
+                                        : Container(),
+                                    Row(
                                       children: [
-                                        isExam
-                                            ? Text(
-                                                'Seat ${event.location.split(' in ')[0]}',
-                                                textAlign: TextAlign.justify,
-                                              )
-                                            : Container(),
-                                        Row(
-                                          children: [
-                                            SvgPicture.asset(
-                                              "assets/images/location.svg",
-                                              height: 11,
-                                              color: Colors.black,
-                                            ),
-                                            const SizedBox(width: 3),
-                                            Text(isExam
-                                                ? event.location
-                                                    .split(' in ')[1]
-                                                : event.location ?? "No Loc")
-                                          ],
+                                        SvgPicture.asset(
+                                          "assets/images/location.svg",
+                                          height: 11,
+                                          color: Colors.black,
                                         ),
+                                        const SizedBox(width: 3),
+                                        Text(isExam
+                                            ? event.location.split(' in ')[1]
+                                            : event.location ?? "No Loc")
                                       ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 37,
+                                alignment: Alignment.centerLeft,
+                                child: AutoSizeText(
+                                  overflow: TextOverflow.fade,
+                                  courseMap[event.title.split(' ').join('')] ??
+                                      "No Course",
+                                  maxLines: 2,
+                                  // wrapWords: true,
+                                  softWrap: true,
+                                  wrapWords: true,
+                                  style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    height: 37,
-                                    alignment: Alignment.centerLeft,
-                                    child: AutoSizeText(
-                                      overflow: TextOverflow.fade,
-                                      courseMap[event.title
-                                              .split(' ')
-                                              .join('')] ??
-                                          "No Course",
-                                      maxLines: 2,
-                                      // wrapWords: true,
-                                      softWrap: true,
-                                      wrapWords: true,
-                                      style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ),
 
-                                // FLAG ICON
-                                isQuiz
-                                    ? Icon(
-                                        Icons.flag_rounded,
-                                        color: MyColors.error,
-                                        size: 17,
-                                      )
-                                    : const Text("")
-                              ],
-                            ),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                  "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}"),
-                            ),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
-                            // Text("Room ${event.location.split(' in ')[0]}"),
+                            // FLAG ICON
+                            isQuiz
+                                ? Icon(
+                                    Icons.flag_rounded,
+                                    color: MyColors.error,
+                                    size: 17,
+                                  )
+                                : const Text("")
                           ],
-                        )),
-                  ),
-                ),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                              "${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start)} - ${DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.end)}"),
+                        ),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                        // Text("Room ${event.location.split(' in ')[0]}"),
+                      ],
+                    )),
               ),
             ),
           ),
