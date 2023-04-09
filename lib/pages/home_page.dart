@@ -526,6 +526,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              SizedBox(height: 1),
                               Text(
                                 notifications[index]['course_code'],
                                 style: TextStyle(
