@@ -17,7 +17,8 @@ class EvaluateCourses extends StatefulWidget {
   State<EvaluateCourses> createState() => _EvaluateCoursesState();
 }
 
-class _EvaluateCoursesState extends State<EvaluateCourses> {
+class _EvaluateCoursesState extends State<EvaluateCourses>
+    with AutomaticKeepAliveClientMixin<EvaluateCourses> {
   // ignore: non_constant_identifier_names
   late ColorScheme MyColors;
   @override
@@ -197,6 +198,10 @@ class _EvaluateCoursesState extends State<EvaluateCourses> {
     //   TextSpan(text: code, style: TextStyle(color: MyColors.primaryVariant))
     // ]));
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   // void testLogin() async {
   //   print("test login");

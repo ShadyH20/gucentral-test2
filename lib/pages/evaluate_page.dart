@@ -29,12 +29,15 @@ class _EvaluatePageState extends State<EvaluatePage> {
 
   int pageIndex = 0;
 
-  var pages = [];
+  List<Widget> pages = [];
 
   @override
   void initState() {
-    // pages = [EvaluateCourses()];
     super.initState();
+    pages = const [
+      EvaluateCourses(),
+      Center(child: Text("Evaluate Academics")),
+    ];
   }
 
   PageController pageController = PageController(initialPage: 0);
@@ -54,10 +57,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
-        children: const [
-          EvaluateCourses(),
-          Center(child: Text("Evaluate Academics"))
-        ],
+        children: pages,
       ),
       // SlideIndexedStack(
       //   // endSlideOffset: const Offset(0.0, 0),
@@ -116,11 +116,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
       centerTitle: true,
       leadingWidth: 60.0,
       leading: const MenuWidget(),
-      title: Text(
-        "Evaluate",
-        // textScaleFactor: 0.95,
-        // style: TextStyle(color: MyColors.primary),
-      ),
+      title: const Text("Evaluate"),
       actions: [
         IconButton(
           splashRadius: 15,

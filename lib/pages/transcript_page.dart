@@ -25,7 +25,7 @@ class TranscriptPage extends StatefulWidget {
   TranscriptPage({super.key});
 
   void hideGPA() {
-    showGPA = false;
+    // showGPA = false;
   }
 
   @override
@@ -78,16 +78,19 @@ class _TranscriptPageState extends State<TranscriptPage>
     if (prefs.containsKey('gpa')) {
       gpa = prefs.getString('gpa')!;
       int currYear = DateTime.now().year;
-      String lastOption = "$currYear-${currYear + 1}";
-      if (lastOption != "") {
-        int batch = int.parse((usernameId[1] as String).split("-")[0]);
-        int firstYear = ((batch - 1) / 3 + 2003).toInt();
-        int lastYear = int.parse(lastOption.split("-")[0]);
-        list = [];
-        while (firstYear <= lastYear) {
-          list.add("$firstYear-${firstYear + 1}");
-          firstYear++;
-        }
+      // String lastOption = "$currYear-${currYear + 1}";
+      int batch = int.parse((usernameId[1] as String).split("-")[0]);
+      int firstYear = ((batch - 1) / 3 + 2003).toInt();
+      // int lastYear = int.parse(lastOption.split("-")[0]);
+      list = [];
+      int i = 1;
+      while (firstYear < currYear) {
+        list.add({
+          'value': "$firstYear-${firstYear + 1}",
+          'text': '${getYearText(i)} Year'
+        }); // ignore: prefer_collection_literals});
+        firstYear++;
+        i++;
       }
     }
     if (widget.firstAccess) {
@@ -98,11 +101,30 @@ class _TranscriptPageState extends State<TranscriptPage>
     }
   }
 
-  void updateTranscript(String year) async {
+  getYearText(int num) {
+    // returns the number with the ranking suffix i.e 1st, 2nd, 3rd, 4th, etc.
+    // should handle multiple digit numbers as well
+    if (num % 100 >= 11 && num % 100 <= 13) {
+      return "${num}th";
+    }
+    switch (num % 10) {
+      case 1:
+        return "${num}st";
+      case 2:
+        return "${num}nd";
+      case 3:
+        return "${num}rd";
+      default:
+        return "${num}th";
+    }
+  }
+
+  void updateTranscript(dynamic year) async {
     // loading
     setState(() {
       showLoading = true;
     });
+    print("Updating transcript for $year");
 
     // get the transcript
     var output = await Requests.getTranscript(context, year);
@@ -224,9 +246,7 @@ class _TranscriptPageState extends State<TranscriptPage>
             color: MyColors.secondary,
           ),
           onPressed: () {
-            if (dropdownValue != "") {
-              updateTranscript(dropdownValue ?? "");
-            }
+            updateTranscript(dropdownValue ?? "");
           },
         ),
         Container(
@@ -335,143 +355,140 @@ class _TranscriptPageState extends State<TranscriptPage>
 // ######### METHODS #########
 // ###########################
   Widget createTables() {
-    return Scrollbar(
-      thumbVisibility: true,
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: ListView.separated(
+        // controller: _scrollController,
+        shrinkWrap: true,
         physics: const BouncingScrollPhysics(),
-        child: ListView.separated(
-          controller: _scrollController,
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(),
-          separatorBuilder: (context, index) => Container(height: 15),
-          itemCount: semesterGrades != null ? semesterGrades!.length : 0,
-          itemBuilder: (BuildContext context, int index) {
-            var semester = semesterGrades?[index];
-            var semesterName = semester[0];
-            var courseGrades = semester[1];
+        separatorBuilder: (context, index) => Container(height: 15),
+        itemCount: semesterGrades != null ? semesterGrades!.length : 0,
+        itemBuilder: (BuildContext context, int index) {
+          var semester = semesterGrades?[index];
+          var semesterName = semester[0];
+          var courseGrades = semester[1];
 
-            // Create a list of DataRows for each course grade
-            var rows = <DataRow>[
-              for (var grade in courseGrades.take(courseGrades.length - 1))
-                DataRow(cells: [
-                  DataCell(Text(grade[0])), // Course name
-                  DataCell(ImageFiltered(
-                      enabled: !showGPA,
-                      imageFilter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      //sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
-                      child: Text(grade[1]))), // Grade
-                  DataCell(Text(grade[2].toString())), // Credits
-                ])
-            ];
+          // Create a list of DataRows for each course grade
+          var rows = <DataRow>[
+            for (var grade in courseGrades.take(courseGrades.length - 1))
+              DataRow(cells: [
+                DataCell(Text(grade[0])), // Course name
+                DataCell(ImageFiltered(
+                    enabled: !showGPA,
+                    imageFilter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    //sigmaX: 7, sigmaY: 7, tileMode: TileMode.decal),
+                    child: Text(grade[1]))), // Grade
+                DataCell(Text(grade[2].toString())), // Credits
+              ])
+          ];
 
-            // Create a DataTable for the current semester
-            return Column(
-              children: [
-                FittedBox(
-                  fit: BoxFit.fitWidth,
-                  child: Text(
-                    semesterName ?? "",
-                    style: TextStyle(
-                        color: MyColors.primary,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold),
-                  ),
+          // Create a DataTable for the current semester
+          return Column(
+            children: [
+              FittedBox(
+                fit: BoxFit.fitWidth,
+                child: Text(
+                  semesterName ?? "",
+                  style: TextStyle(
+                      color: MyColors.primary,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
                 ),
-                Container(height: 5),
-                Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          25.0,
-                        ),
-                        color: MyColors.background,
-                        boxShadow: [
-                          BoxShadow(
-                              color: MyColors.primary,
-                              offset: const Offset(0, -2))
+              ),
+              Container(height: 5),
+              Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        25.0,
+                      ),
+                      color: MyColors.background,
+                      boxShadow: [
+                        BoxShadow(
+                            color: MyColors.primary,
+                            offset: const Offset(0, -2))
+                      ],
+                    ),
+                    child: LayoutBuilder(
+                      builder: (context, constrains) => DataTable(
+                        headingRowHeight: 0,
+                        showBottomBorder: true,
+                        dividerThickness: 2,
+                        // border: TableBorder(
+                        //     horizontalInside: BorderSide(
+                        //         color: MyColors.secondary
+                        //             .withOpacity(.5))),
+                        columnSpacing: 0,
+                        dataRowHeight: 30,
+                        horizontalMargin: 3,
+                        dataTextStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13.5,
+                            letterSpacing: .1,
+                            color: MyColors.secondary),
+                        columns: [
+                          DataColumn2(
+                              label: SizedBox(
+                                  width: (constrains.maxWidth - 10) * 0.85,
+                                  child: const Text('Course Name')),
+                              size: ColumnSize.L),
+                          DataColumn(
+                              label: SizedBox(
+                                  width: (constrains.maxWidth - 10) * 0.05,
+                                  child: const Text(''))),
+                          DataColumn2(
+                              label: SizedBox(
+                                  width: (constrains.maxWidth - 10) * 0.05,
+                                  child: const Text('')),
+                              numeric: true),
                         ],
+                        rows: rows,
                       ),
-                      child: LayoutBuilder(
-                        builder: (context, constrains) => DataTable(
-                          headingRowHeight: 0,
-                          showBottomBorder: true,
-                          dividerThickness: 2,
-                          // border: TableBorder(
-                          //     horizontalInside: BorderSide(
-                          //         color: MyColors.secondary
-                          //             .withOpacity(.5))),
-                          columnSpacing: 0,
-                          dataRowHeight: 30,
-                          horizontalMargin: 3,
-                          dataTextStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.5,
-                              letterSpacing: .1,
-                              color: MyColors.secondary),
-                          columns: [
-                            DataColumn2(
-                                label: SizedBox(
-                                    width: (constrains.maxWidth - 10) * 0.85,
-                                    child: const Text('Course Name')),
-                                size: ColumnSize.L),
-                            DataColumn(
-                                label: SizedBox(
-                                    width: (constrains.maxWidth - 10) * 0.05,
-                                    child: const Text(''))),
-                            DataColumn2(
-                                label: SizedBox(
-                                    width: (constrains.maxWidth - 10) * 0.05,
-                                    child: const Text('')),
-                                numeric: true),
+                    ),
+                  ),
+                  Align(
+                    alignment: const FractionalOffset(0.96, 0.0),
+                    child: ImageFiltered(
+                      imageFilter: showGPA
+                          ? ImageFilter.blur()
+                          : ImageFilter.blur(sigmaX: 7, sigmaY: 7),
+                      child: Text.rich(
+                        // textAlign: TextAlign.end,
+                        TextSpan(
+                          text: courseGrades[courseGrades.length - 1][0]
+                              .toString(),
+                          style: TextStyle(
+                              color: MyColors.secondary,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900),
+                          children: const [
+                            TextSpan(
+                              text: "GPA",
+                              style: TextStyle(
+                                  // color: MyColors.background,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.normal),
+                            ),
                           ],
-                          rows: rows,
                         ),
                       ),
                     ),
-                    Align(
-                      alignment: const FractionalOffset(0.96, 0.0),
-                      child: ImageFiltered(
-                        imageFilter: showGPA
-                            ? ImageFilter.blur()
-                            : ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-                        child: Text.rich(
-                          // textAlign: TextAlign.end,
-                          TextSpan(
-                            text: courseGrades[courseGrades.length - 1][0]
-                                .toString(),
-                            style: TextStyle(
-                                color: MyColors.secondary,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w900),
-                            children: const [
-                              TextSpan(
-                                text: "GPA",
-                                style: TextStyle(
-                                    // color: MyColors.background,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 
-  late List<String> list;
+  late List<Map<String, String>> list;
 
-  String? dropdownValue;
+  dynamic dropdownValue;
   buildDropdown() {
     return Container(
       width: 180,
@@ -500,19 +517,20 @@ class _TranscriptPageState extends State<TranscriptPage>
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10)),
               )),
-          hint: const Align(
-              alignment: Alignment.centerRight, child: Text("Select A Year")),
-          onChanged: (String? value) {
+          hint: const Positioned(right: 0, child: Text("Select A Year")),
+          buttonStyleData: ButtonStyleData(),
+          alignment: Alignment.centerRight,
+          onChanged: (dynamic value) {
             // This is called when the user selects an item.
             setState(() {
               dropdownValue = value!;
             });
             updateTranscript(value!);
           },
-          items: list.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Center(child: Text(value)),
+          items: list.map<DropdownMenuItem<dynamic>>((dynamic year) {
+            return DropdownMenuItem<dynamic>(
+              value: year['value'],
+              child: Center(child: Text(year['text'])),
             );
           }).toList(),
         ),

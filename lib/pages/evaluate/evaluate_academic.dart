@@ -57,7 +57,8 @@ class EvaluateAcademic extends StatefulWidget {
   State<EvaluateAcademic> createState() => _EvaluateAcademicState();
 }
 
-class _EvaluateAcademicState extends State<EvaluateAcademic> {
+class _EvaluateAcademicState extends State<EvaluateAcademic>
+    with AutomaticKeepAliveClientMixin<EvaluateAcademic> {
   final _formKey = GlobalKey<FormState>();
 
   List<int> radio1Vals = List.filled(labels.length, 0);
@@ -477,4 +478,7 @@ class _EvaluateAcademicState extends State<EvaluateAcademic> {
   }
 
   bool submitting = false;
+
+  @override
+  bool get wantKeepAlive => true;
 }
