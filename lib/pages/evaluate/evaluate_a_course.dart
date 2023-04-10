@@ -8,6 +8,8 @@ import 'package:gucentral/widgets/MyColors.dart';
 import 'package:gucentral/widgets/Requests.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 
+import '../../main.dart';
+
 const labels = [
   'The timetable works efficiently as far as my activities are concerned',
   'Any changes in the course or teaching have been communicated effectively ',
@@ -495,7 +497,12 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                   contentPadding: const EdgeInsets.all(15),
                   hintText: "Type Here...",
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: MyApp.isDarkMode.value
+                          ? BorderSide(
+                              color: MyColors.secondary.withOpacity(0.7),
+                            )
+                          : BorderSide()),
                   focusedBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: MyColors.primaryVariant, width: 2),
