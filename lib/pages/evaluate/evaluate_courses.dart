@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
@@ -189,8 +190,14 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
     // add a seperator after the course name
     return Row(
       children: [
-        Expanded(child: Text(code)),
-        Expanded(flex: 2, child: Text(name)),
+        Expanded(flex: 4, child: Text(code)),
+        Expanded(
+            flex: 9,
+            child: AutoSizeText(
+              name,
+              maxLines: 2,
+              // maxFontSize: 18,
+            )),
       ],
       // const Divider()
     );
