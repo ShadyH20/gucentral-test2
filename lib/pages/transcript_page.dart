@@ -517,8 +517,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                     bottomLeft: Radius.circular(10),
                     bottomRight: Radius.circular(10)),
               )),
-          hint: const Positioned(right: 0, child: Text("Select A Year")),
-          buttonStyleData: ButtonStyleData(),
+          hint: Text("Select A Year"),
           alignment: Alignment.centerRight,
           onChanged: (dynamic value) {
             // This is called when the user selects an item.
