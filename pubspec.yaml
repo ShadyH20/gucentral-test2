@@ -112,6 +112,7 @@ flutter:
     - assets/images/main-logo.png
     - assets/images/nav-bar.svg
     - assets/images/profile.svg
+    - assets/images/profile-dark.svg
     - assets/images/edit.svg
     - assets/images/refresh.svg
     - assets/images/nav-bar.png

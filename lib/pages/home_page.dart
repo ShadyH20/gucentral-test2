@@ -616,6 +616,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     );
   }
 
+  String at = 'at';
   Material buildNoticiationContent(BuildContext context, notification, date) {
     return Material(
       child: Container(
@@ -660,9 +661,20 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
             Row(
               children: [
-                SvgPicture.asset(
-                  "assets/images/profile.svg",
+                Container(
+                  width: 50,
                   height: 50,
+                  // decoration: ShapeDecoration(
+                  //   shape: CircleBorder(
+                  //     side: MyApp.isDarkMode.value
+                  //         ? BorderSide(color: MyColors.secondary, width: 1)
+                  //         : const BorderSide(),
+                  //   ),
+                  // ),
+                  child: SvgPicture.asset(
+                    "assets/images/profile.svg",
+                    height: 50,
+                  ),
                 ),
                 Expanded(
                   child: ListTile(
@@ -689,7 +701,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                       children: [
                         const SizedBox(height: 1),
                         Text(
-                          DateFormat('EEEE, MMMM dd, yyyy, h:mm a')
+                          DateFormat('EEEE, MMMM dd, yyyy - h:mm a')
                               .format(date),
                           style: TextStyle(
                             color: MyColors.secondary.withOpacity(0.8),
