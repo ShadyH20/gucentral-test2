@@ -170,9 +170,11 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
           alignment: Alignment.center,
           child: Icon(Icons.logout, color: logoutRed, size: 30),
         ),
-        title: const Text("Logout?"),
-        titleTextStyle:
-            const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        title: const Text("Are you sure?"),
+        titleTextStyle: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: MyColors.secondary),
         content: Text(
             "All your saved data will be lost!\ne.g. quizzes, deadlines, weights, etc...",
             textAlign: TextAlign.center,
@@ -216,9 +218,9 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
                 shape: const StadiumBorder(),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              child: Text("Yes, Logout",
+              child: const Text("Yes, Logout",
                   style: TextStyle(
-                    color: MyColors.secondary,
+                    color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   )),
