@@ -75,6 +75,7 @@ dependencies:
   wtf_sliding_sheet: ^0.6.1
 
 
+
 flutter_native_splash:
   color: "#ffffff"
   color_dark: "#141518"
