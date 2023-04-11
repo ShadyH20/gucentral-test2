@@ -41,7 +41,7 @@ void main() {
       debug: true);
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.green,
+    // statusBarColor: Colors.green,
     statusBarBrightness: Brightness.dark,
     statusBarIconBrightness: Brightness.light,
     systemStatusBarContrastEnforced: false,
@@ -64,9 +64,9 @@ class MyApp extends StatefulWidget {
   static final ValueNotifier<bool> isDarkMode =
       ValueNotifier(prefs.getBool('dark_mode') ?? false);
 
-  static ColorScheme MyColors = isDarkMode.value
-      ? MyTheme.darkTheme.colorScheme
-      : MyTheme.lightTheme.colorScheme;
+  // static ColorScheme MyColors = isDarkMode.value
+  //     ? MyTheme.darkTheme.colorScheme
+  //     : MyTheme.lightTheme.colorScheme;
 
   const MyApp({super.key});
 
@@ -92,7 +92,7 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    MyApp.MyColors = Theme.of(context).colorScheme;
+    // MyApp.MyColors = Theme.of(context).colorScheme;
     return ValueListenableBuilder<bool>(
       valueListenable: MyApp.isDarkMode,
       builder: (context, isDarkMode, child) {

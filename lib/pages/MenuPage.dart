@@ -62,14 +62,16 @@ class MenuPageState extends State<MenuPage> {
       body: Container(
         decoration: BoxDecoration(
           // border: Border.all(color: MyColors.primary, width: 0.5),
-          boxShadow: [
-            BoxShadow(
-              color: MyColors.primary,
-              spreadRadius: 0,
-              blurRadius: 0,
-              offset: const Offset(1.5, 0), // changes position of shadow
-            ),
-          ],
+          boxShadow: MyApp.isDarkMode.value
+              ? [
+                  BoxShadow(
+                    color: MyColors.primary.withOpacity(0.6),
+                    spreadRadius: 0,
+                    blurRadius: 4,
+                    offset: const Offset(0.5, 0), // changes position of shadow
+                  ),
+                ]
+              : null,
           gradient: MyApp.isDarkMode.value
               ? null
               // LinearGradient(
@@ -122,7 +124,7 @@ class MenuPageState extends State<MenuPage> {
                       thickness: 3,
                     ),
                     buildMenuItem(MenuItems.settings),
-                    buildMenuItem(MenuItems.login),
+                    buildMenuItem(MenuItems.logout),
                     const Spacer(flex: 2)
                   ],
                 ),
@@ -178,9 +180,10 @@ class MenuPageState extends State<MenuPage> {
           children: [
             ListTile(
               dense: false,
-              contentPadding: const EdgeInsets.only(top: 20, bottom: 10),
+              contentPadding: const EdgeInsets.only(top: 20),
               horizontalTitleGap: 10.0,
               minVerticalPadding: 10,
+
               leading: SvgPicture.asset(
                 "assets/images/profile.svg",
                 height: 50,
@@ -195,17 +198,17 @@ class MenuPageState extends State<MenuPage> {
               //   ),
               // ),
               title: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 3.0),
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: FractionalOffset.centerLeft,
-                  child: Text(
-                    "${idName[1].split(" ")[0]} ${idName[1].split(" ")[1]}",
-                    style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFF0F0F0)),
-                  ),
+                padding: const EdgeInsets.only(top: 2.0),
+                child: AutoSizeText(
+                  "${idName[1].split(" ")[0]} ${idName[1].split(" ")[1]}",
+                  maxLines: 1,
+                  minFontSize: 10,
+                  maxFontSize: 20,
+                  overflow: TextOverflow.visible,
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFF0F0F0)),
                 ),
               ),
               subtitle: Text(
@@ -297,7 +300,7 @@ class MenuPageState extends State<MenuPage> {
 
 class MenuItems {
   static const profile = MenuItemlist('Profile');
-  static const login = MenuItemlist('Logout', Icons.logout_outlined);
+  static const logout = MenuItemlist('Logout', Icons.logout_outlined);
   static const transcript = MenuItemlist('Transcript');
   static const home = MenuItemlist('Home');
   static const grades = MenuItemlist('Grades');

@@ -127,7 +127,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                                 dropdownCourseValue = course;
                               });
                               debugPrint("$dropdownCourseValue chosen");
-                              courseChosen(course);
+                              courseChosen(context, course);
                               // widget.transcript.updateTranscript(value!);
                             },
                             items: coursesToEval
@@ -162,7 +162,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
 
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
-  void courseChosen(course) async {
+  void courseChosen(context, course) async {
     if (course['value'] == "-1") return;
     setState(() => isCourseLoading = true);
     // setState(() => loading = true);

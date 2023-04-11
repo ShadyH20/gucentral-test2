@@ -129,7 +129,11 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
               key: menuPageKey,
               currentItem: currentItem,
               onSelectedItem: (item) async {
-                if (item == MenuItems.login) {
+                if (item == MenuItems.logout) {
+                  // show confirmation dialog before logging out
+                  bool logout = await buildLoagoutDialog();
+                  if (!logout) return;
+
                   // Clear SharedPrefs
                   bool dark = prefs.getBool('dark_mode') ?? false;
                   prefs.clear();
@@ -147,4 +151,81 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
               }),
         ),
       ));
+  Color logoutRed = const Color.fromARGB(255, 223, 70, 67);
+
+  buildLoagoutDialog() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        elevation: 500,
+        actionsAlignment: MainAxisAlignment.center,
+
+        // Title
+        icon: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: logoutRed.withOpacity(0.25),
+          ),
+          alignment: Alignment.center,
+          child: Icon(Icons.logout, color: logoutRed, size: 30),
+        ),
+        title: const Text("Logout?"),
+        titleTextStyle:
+            const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        content: Text(
+            "All your saved data will be lost!\ne.g. quizzes, deadlines, weights, etc...",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                fontSize: 15, color: MyColors.secondary.withOpacity(0.6))),
+        backgroundColor: MyColors.background,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+
+        // Actions
+        actionsOverflowDirection: VerticalDirection.up,
+        actionsOverflowButtonSpacing: 7,
+        actions: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              style: TextButton.styleFrom(
+                shape: const StadiumBorder(),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Text("No, I am staying",
+                  style: TextStyle(
+                    color: MyColors.secondary.withOpacity(0.7),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  )),
+            ),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: TextButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: logoutRed,
+                shape: const StadiumBorder(),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Text("Yes, Logout",
+                  style: TextStyle(
+                    color: MyColors.secondary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  )),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
