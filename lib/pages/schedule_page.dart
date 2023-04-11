@@ -180,6 +180,13 @@ class SchedulePageState extends State<SchedulePage> {
                   },
                   onDaySelected: (selectedDay, focusedDay) {
                     if (!isSameDay(_selectedDay, selectedDay)) {
+                      List<dynamic>? dayQuizzes = _quizDataSource
+                          .getVisibleAppointments(selectedDay, '');
+                      List<dynamic>? dayDeadlines = _deadlineDataSource
+                          .getVisibleAppointments(selectedDay, '');
+                      if (dayQuizzes.isEmpty && dayDeadlines.isEmpty) {
+                        clickTabBtn("");
+                      }
                       // Call `setState()` when updating the selected day
                       setState(() {
                         _selectedDay = selectedDay;
@@ -1157,6 +1164,7 @@ class SchedulePageState extends State<SchedulePage> {
   Widget quizBuilder() {
     List<dynamic>? dayQuizzes =
         _quizDataSource.getVisibleAppointments(_controller.displayDate!, '');
+
     return dayQuizzes.isEmpty
         ? Center(
             child: Text(
