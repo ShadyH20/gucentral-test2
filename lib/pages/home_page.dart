@@ -2,6 +2,7 @@
 // import "dart:html";
 import "dart:async";
 import "dart:ui" as ui;
+import "package:auto_size_text/auto_size_text.dart";
 import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
@@ -15,6 +16,7 @@ import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
 import "package:pull_to_refresh/pull_to_refresh.dart";
+import "package:sliding_sheet/sliding_sheet.dart";
 import "package:timeago/timeago.dart" as timeago;
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
@@ -474,76 +476,80 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                               MyColors.secondary.withOpacity(
                                   MyApp.isDarkMode.value ? 0.2 : 0.1),
                         ),
-                        child: ListTile(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 10),
-                          dense: false,
-                          visualDensity: VisualDensity.compact,
-                          horizontalTitleGap: 15,
-                          leading: Container(
-                            width: 42,
-                            height: 42,
-                            decoration: ShapeDecoration(
-                                color: MyApp.isDarkMode.value
-                                    ? Colors.transparent
-                                    : Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  side: MyApp.isDarkMode.value
-                                      ? BorderSide(
-                                          color: MyColors.secondary
-                                              .withOpacity(0.4),
-                                          width: 1.5)
-                                      : BorderSide(
-                                          color:
-                                              MyColors.surface.withOpacity(0.5),
-                                          width: 1),
-                                )),
-                            child: Icon(
-                              Icons.notifications,
-                              color: MyColors.secondary.withOpacity(
-                                  MyApp.isDarkMode.value ? 1 : 0.9),
-                            ),
-                          ),
-                          title: Text(
-                            notifications[index]['title'],
-                            style: TextStyle(
-                              color: MyColors.secondary,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 1),
-                              Text(
-                                notifications[index]['course_code'],
-                                style: TextStyle(
-                                  color: MyColors.secondary,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 11,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
+                        child: GestureDetector(
+                          onTap: () => buildNotificationSheet(
+                              notifications[index], date),
+                          child: ListTile(
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 10),
+                            dense: false,
+                            visualDensity: VisualDensity.compact,
+                            horizontalTitleGap: 15,
+                            leading: Container(
+                              width: 42,
+                              height: 42,
+                              decoration: ShapeDecoration(
+                                  color: MyApp.isDarkMode.value
+                                      ? Colors.transparent
+                                      : Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    side: MyApp.isDarkMode.value
+                                        ? BorderSide(
+                                            color: MyColors.secondary
+                                                .withOpacity(0.4),
+                                            width: 1.5)
+                                        : BorderSide(
+                                            color: MyColors.surface
+                                                .withOpacity(0.5),
+                                            width: 1),
+                                  )),
+                              child: Icon(
+                                Icons.notifications,
+                                color: MyColors.secondary.withOpacity(
+                                    MyApp.isDarkMode.value ? 1 : 0.9),
                               ),
-                              Text(
-                                notifications[index]['sender'],
-                                style: TextStyle(
-                                  color: MyColors.secondary,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 11,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                            ),
+                            title: Text(
+                              notifications[index]['title'],
+                              style: TextStyle(
+                                color: MyColors.secondary,
+                                fontWeight: FontWeight.w700,
                               ),
-                            ],
-                          ),
-                          trailing: Text(
-                            timeAgo,
-                            style: TextStyle(
-                              color: MyColors.secondary,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 1),
+                                Text(
+                                  notifications[index]['course_code'],
+                                  style: TextStyle(
+                                    color: MyColors.secondary,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 11,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  notifications[index]['sender'],
+                                  style: TextStyle(
+                                    color: MyColors.secondary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 11,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            trailing: Text(
+                              timeAgo,
+                              style: TextStyle(
+                                color: MyColors.secondary,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ),
@@ -584,6 +590,147 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
         print(notifications);
       });
     }
+  }
+
+  buildNotificationSheet(dynamic notification, date) {
+    print(notification);
+    showSlidingBottomSheet(
+      context,
+      builder: (context) {
+        return SlidingSheetDialog(
+          duration: const Duration(milliseconds: 400),
+          avoidStatusBar: true,
+          minHeight: MediaQuery.of(context).size.height,
+          cornerRadius: 20,
+          extendBody: true,
+          headerBuilder: (context, state) =>
+              buildNotificationHeader(context, state, notification),
+          snapSpec: const SnapSpec(snappings: [0.5, 0.8, 1], initialSnap: 0.8),
+          builder: (context, state) =>
+              buildNoticiationContent(context, notification, date),
+        );
+      },
+    );
+  }
+
+  Material buildNoticiationContent(BuildContext context, notification, date) {
+    return Material(
+      child: Container(
+        color: MyColors.background,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            //Text containing the notification title
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                notification['course_code'],
+                style: TextStyle(
+                  color: MyColors.secondary,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                notification['title'],
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: MyColors.secondary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            const Divider(
+              height: 35,
+              thickness: 2,
+            ),
+
+            //ListTile containing the profile.svg icon, the sender name and the send time
+
+            Row(
+              children: [
+                SvgPicture.asset(
+                  "assets/images/profile.svg",
+                  height: 50,
+                ),
+                Expanded(
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+                    dense: true,
+                    // visualDensity: VisualDensity.compact,
+                    horizontalTitleGap: 10,
+                    minVerticalPadding: 0,
+                    minLeadingWidth: 0,
+                    leading: Container(
+                      width: 0,
+                    ),
+                    title: Text(
+                      notification['sender'],
+                      maxLines: 2,
+                      style: TextStyle(
+                        color: MyColors.secondary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15.5,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 1),
+                        Text(
+                          DateFormat('EEEE, MMMM dd, yyyy, h:mm a')
+                              .format(date),
+                          style: TextStyle(
+                            color: MyColors.secondary.withOpacity(0.8),
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            Text(
+              notification['message'],
+              style: TextStyle(
+                color: MyColors.secondary.withOpacity(0.9),
+                fontWeight: FontWeight.w400,
+                fontSize: 16.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNotificationHeader(
+      BuildContext context, SheetState state, notification) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 35,
+          height: 8,
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: MyColors.secondary.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ],
+    );
   }
 }
 

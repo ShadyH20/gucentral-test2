@@ -72,6 +72,7 @@ dependencies:
   timeago: ^3.4.0
   hijri: ^3.0.0
   fading_edge_scrollview: ^3.0.0
+  sliding_sheet: ^0.5.2
 
 
 flutter_native_splash:
