@@ -1,5 +1,6 @@
 // ignore: avoid_web_libraries_in_flutter
 // import "dart:html";
+import "dart:async";
 import "dart:ui" as ui;
 import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/foundation.dart";
@@ -55,10 +56,16 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     MyColors = Theme.of(context).colorScheme;
   }
 
+// late Timer _everySecond;
   @override
   void initState() {
-// Override "en" locale messages with custom messages that are more precise and short
-    timeago.setLocaleMessages('en', timeago.EnMessages());
+    // Set State every 5 seconds to update the timeago widget
+    Timer.periodic(const Duration(seconds: 5), (Timer t) {
+      setState(() {});
+    });
+
+    // Override "en" locale messages with custom messages that are more precise and short
+    timeago.setLocaleMessages('en', MyCustomMessages());
     super.initState();
     initializeEverything();
     initNotifications();
@@ -446,8 +453,9 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             itemCount: notifications.length,
             itemBuilder: (context, index) {
               var date = DateFormat('dd/MM/yyyy HH:mm:ss')
-                  .parse(notifications[index]['date'], true);
-              var timeAgo = timeago.format(date, locale: 'en_short');
+                  .parse(notifications[index]['date']);
+              // print(date);
+              var timeAgo = timeago.format(date, locale: 'en');
               return AnimationConfiguration.staggeredList(
                 delay: const Duration(milliseconds: 50),
                 position: index,
@@ -475,51 +483,28 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           leading: Container(
                             width: 42,
                             height: 42,
-                            decoration:
-                                // BoxDecoration(
-                                //   borderRadius: BorderRadius.circular(15),
-                                //   color: MyApp.isDarkMode.value
-                                //       ? MyColors.secondary.withOpacity(0.4)
-                                //       // : Color(0xFFDBF2FD).withOpacity(0.6),
-                                //       : ui.Color.fromARGB(255, 220, 220, 220),
-                                //   // color: Color(0xFFDBF2FD)
-                                //   // border: MyApp.isDarkMode.value
-                                //   //     ? Border.all(
-                                //   //         color: MyColors.secondary.withOpacity(0.4),
-                                //   //         width: 1)
-                                //   //     : Border.all(
-                                //   //         color: Color.fromARGB(255, 227, 246, 254),
-                                //   //         width: 1),
-                                //   boxShadow: [
-                                //     BoxShadow(
-                                //         color: MyColors.surface.withOpacity(0.5),
-                                //         offset: const Offset(0, 0),
-                                //         spreadRadius: 1),
-                                //   ],
-                                // ),
-                                ShapeDecoration(
-                                    color: MyApp.isDarkMode.value
-                                        ? Colors.transparent
-                                        : Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                      side: MyApp.isDarkMode.value
-                                          ? BorderSide(
-                                              color: MyColors.secondary
-                                                  .withOpacity(0.4),
-                                              width: 1.5)
-                                          : BorderSide(
-                                              color: MyColors.surface
-                                                  .withOpacity(0.5),
-                                              width: 1),
-                                    )),
+                            decoration: ShapeDecoration(
+                                color: MyApp.isDarkMode.value
+                                    ? Colors.transparent
+                                    : Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  side: MyApp.isDarkMode.value
+                                      ? BorderSide(
+                                          color: MyColors.secondary
+                                              .withOpacity(0.4),
+                                          width: 1.5)
+                                      : BorderSide(
+                                          color:
+                                              MyColors.surface.withOpacity(0.5),
+                                          width: 1),
+                                )),
                             child: Icon(
                               Icons.notifications,
                               color: MyColors.secondary.withOpacity(
                                   MyApp.isDarkMode.value ? 1 : 0.9),
                             ),
                           ),
-                          // i want to add
                           title: Text(
                             notifications[index]['title'],
                             style: TextStyle(
@@ -530,7 +515,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 1),
+                              const SizedBox(height: 1),
                               Text(
                                 notifications[index]['course_code'],
                                 style: TextStyle(
@@ -558,6 +543,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                             style: TextStyle(
                               color: MyColors.secondary,
                               fontWeight: FontWeight.w400,
+                              fontSize: 12,
                             ),
                           ),
                         ),
@@ -595,6 +581,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     if (success) {
       setState(() {
         notifications = result['notifications'];
+        print(notifications);
       });
     }
   }
@@ -607,29 +594,29 @@ class MyCustomMessages implements timeago.LookupMessages {
   @override
   String prefixFromNow() => '';
   @override
-  String suffixAgo() => '';
+  String suffixAgo() => 'ago';
   @override
   String suffixFromNow() => '';
   @override
   String lessThanOneMinute(int seconds) => 'now';
   @override
-  String aboutAMinute(int minutes) => '${minutes}m ago';
+  String aboutAMinute(int minutes) => '1m';
   @override
-  String minutes(int minutes) => '${minutes}m ago';
+  String minutes(int minutes) => '${minutes}m';
   @override
-  String aboutAnHour(int minutes) => '${minutes}m ago';
+  String aboutAnHour(int minutes) => minutes > 59 ? '1h' : '${minutes}m';
   @override
-  String hours(int hours) => '${hours}h ago';
+  String hours(int hours) => '${hours}h';
   @override
-  String aDay(int hours) => '${hours}h';
+  String aDay(int hours) => '1d';
   @override
   String days(int days) => '${days}d';
   @override
-  String aboutAMonth(int days) => '${days}d';
+  String aboutAMonth(int days) => '1mo';
   @override
   String months(int months) => '${months}mo';
   @override
-  String aboutAYear(int year) => '${year}y';
+  String aboutAYear(int year) => '1y';
   @override
   String years(int years) => '${years}y';
   @override
