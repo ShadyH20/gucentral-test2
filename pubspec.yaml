@@ -73,6 +73,8 @@ dependencies:
   hijri: ^3.0.0
   fading_edge_scrollview: ^3.0.0
   wtf_sliding_sheet: ^0.6.1
+  vibration_web: ^1.6.5
+  vibration: ^1.7.6
 
 
 

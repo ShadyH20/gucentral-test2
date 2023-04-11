@@ -9,10 +9,12 @@ import "package:gucentral/utils/local_auth_api.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:settings_ui/settings_ui.dart";
+import "package:vibration/vibration.dart";
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
 import "../utils/Theme.dart";
 import "../widgets/Requests.dart";
+import 'package:vibration_web/vibration_web.dart';
 
 class SettingsPage extends StatefulWidget {
   final ValueChanged<bool> callScheduleInit;
@@ -173,8 +175,9 @@ class _SettingsPageState extends State<SettingsPage> {
         onChanged: (value) {
           setState(() {
             prefs.setBool('dark_mode', value);
-            print(mainKey.toString());
             MyApp.isDarkMode.value = value;
+            vibrate();
+
             // mainKey.currentState!.setDarkMode(value);
           });
         },
@@ -347,6 +350,13 @@ class _SettingsPageState extends State<SettingsPage> {
   buildChangePassword() {}
 
   buildLogout() {}
+
+  void vibrate() {
+    // if (await Vibration.hasVibrator() ?? false) {
+    print("CAN VIBRATE");
+    Vibration.vibrate();
+    // }
+  }
 }
 
 class IconBuilder extends StatelessWidget {
