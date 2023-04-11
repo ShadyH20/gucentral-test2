@@ -48,7 +48,7 @@ class _SettingsPageState extends State<SettingsPage> {
             statusBarColor: MyColors.background,
             statusBarIconBrightness: Brightness.dark,
             statusBarBrightness: Brightness.dark),
-        elevation: 2,
+        elevation: 0,
         backgroundColor: MyColors.background,
         centerTitle: true,
         leadingWidth: 50.0,
@@ -66,11 +66,10 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsList(
               shrinkWrap: true,
               platform: DevicePlatform.iOS,
-
               // lightTheme: SettingsThemeData(
-              //   settingsListBackground: Colors.transparent,
-              //   settingsSectionBackground: Colors.black12,
-              // ),
+              //     settingsListBackground: MyColors.background,
+              //     settingsSectionBackground: Colors.black.withOpacity(0.0),
+              //     ),
               darkTheme: SettingsThemeData(
                 titleTextColor: Colors.white,
                 tileDescriptionTextColor: Colors.white70,

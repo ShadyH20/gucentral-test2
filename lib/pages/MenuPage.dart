@@ -66,7 +66,7 @@ class MenuPageState extends State<MenuPage> {
               ? [
                   BoxShadow(
                     color: MyColors.primary.withOpacity(0.6),
-                    spreadRadius: 0,
+                    spreadRadius: 1,
                     blurRadius: 4,
                     offset: const Offset(0.5, 0), // changes position of shadow
                   ),

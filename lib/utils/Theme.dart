@@ -29,6 +29,7 @@ class MyTheme {
           fontFamily: 'Outfit',
         )),
     primaryColor: light,
+    accentColor: darkGrey,
     // hintColor: Colors.white12,
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
@@ -59,6 +60,7 @@ class MyTheme {
 
   static ThemeData darkTheme = ThemeData(
     // primaryColor: darkerGreyOld,
+    accentColor: light,
     colorScheme: const ColorScheme(
         brightness: Brightness.dark,
         primary: orangeLight,
