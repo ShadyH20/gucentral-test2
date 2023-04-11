@@ -16,8 +16,8 @@ import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
 import "package:pull_to_refresh/pull_to_refresh.dart";
-import "package:sliding_sheet/sliding_sheet.dart";
 import "package:timeago/timeago.dart" as timeago;
+import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
 //import Notifications.dart from the web directory
@@ -616,7 +616,9 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   Material buildNoticiationContent(BuildContext context, notification, date) {
     return Material(
       child: Container(
-        color: MyColors.background,
+        color: MyApp.isDarkMode.value
+            ? MyColors.background
+            : const Color.fromARGB(255, 250, 250, 254),
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
@@ -705,7 +707,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               notification['message'],
               style: TextStyle(
                 color: MyColors.secondary.withOpacity(0.9),
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.w500,
                 fontSize: 16.5,
               ),
             ),
