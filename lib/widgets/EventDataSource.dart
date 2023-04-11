@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -36,7 +37,10 @@ class EventDataSource extends CalendarDataSource {
 
   @override
   String? getNotes(int index) {
-    return _getEventData(index).description;
+    return jsonEncode({
+      'description': _getEventData(index).description,
+      'slot': _getEventData(index).slot
+    });
   }
 
   @override
@@ -77,13 +81,16 @@ class EventDataSource extends CalendarDataSource {
   @override
   Event? convertAppointmentToObject(
       Object? customData, Appointment appointment) {
+    dynamic notes = jsonDecode(appointment.notes ?? "");
     return Event(
-        title: appointment.subject,
-        description: appointment.notes ?? "",
-        start: appointment.startTime,
-        end: appointment.endTime,
-        color: appointment.color,
-        isAllDay: appointment.isAllDay,
-        location: appointment.location ?? "");
+      title: appointment.subject,
+      description: notes['description'] ?? "",
+      start: appointment.startTime,
+      end: appointment.endTime,
+      color: appointment.color,
+      isAllDay: appointment.isAllDay,
+      location: appointment.location ?? "",
+      slot: notes['slot'] ?? "0",
+    );
   }
 }

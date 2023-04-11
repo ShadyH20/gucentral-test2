@@ -434,6 +434,7 @@ class Event implements Comparable<Event> {
   String recurrence;
   List<DateTime> recurrenceExceptionDates;
   String location;
+  String slot;
 
   Event({
     required this.title,
@@ -445,6 +446,7 @@ class Event implements Comparable<Event> {
     this.recurrence = "",
     this.recurrenceExceptionDates = const [],
     this.location = "",
+    this.slot = "0",
   });
 
   setRecurrenceExceptionDates(List<DateTime> dates) {
@@ -452,7 +454,7 @@ class Event implements Comparable<Event> {
   }
 
   @override
-  String toString() => "$description: $title";
+  String toString() => "$description: $title | Slot: $slot";
 
   @override
   bool operator ==(Object other) {
@@ -494,7 +496,8 @@ class Event implements Comparable<Event> {
         recurrence = json['r'],
         recurrenceExceptionDates =
             (json['re'] as List).map((e) => DateTime.parse(e)).toList(),
-        location = json['l'];
+        location = json['l'],
+        slot = json['slot'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -506,7 +509,8 @@ class Event implements Comparable<Event> {
       'i': isAllDay,
       'r': recurrence,
       're': recurrenceExceptionDates.map((e) => e.toIso8601String()).toList(),
-      'l': location
+      'l': location,
+      'slot': slot
     };
   }
 }

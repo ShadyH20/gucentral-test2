@@ -39,9 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     checkCredsExist().then((userRemembered) {
       userRemembered = this.userRemembered;
-      print("User Remembered? $userRemembered");
       if (userRemembered) {
-        print("WE IN!");
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -370,9 +368,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   checkCredsExist() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      userRemembered = prefs.containsKey('username');
-    });
+    // prefs.clear();
+    userRemembered = prefs.containsKey('username');
   }
 }

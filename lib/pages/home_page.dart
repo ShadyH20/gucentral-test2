@@ -701,7 +701,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                       children: [
                         const SizedBox(height: 1),
                         Text(
-                          DateFormat('EEEE, MMMM dd, yyyy - h:mm a')
+                          DateFormat('EEEE, MMMM dd, yyyy  @ h:mm a')
                               .format(date),
                           style: TextStyle(
                             color: MyColors.secondary.withOpacity(0.8),
@@ -722,7 +722,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               notification['message'],
               style: TextStyle(
                 color: MyColors.secondary.withOpacity(0.9),
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 fontSize: 16.5,
               ),
             ),
