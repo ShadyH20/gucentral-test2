@@ -15,6 +15,7 @@ import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
+import "package:linkwell/linkwell.dart";
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import "package:timeago/timeago.dart" as timeago;
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
@@ -587,13 +588,11 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     if (success) {
       setState(() {
         notifications = result['notifications'];
-        print(notifications);
       });
     }
   }
 
   buildNotificationSheet(dynamic notification, date) {
-    print(notification);
     showSlidingBottomSheet(
       context,
       builder: (context) {
@@ -718,14 +717,29 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               ],
             ),
             const SizedBox(height: 30),
-            Text(
+            LinkWell(
               notification['message'],
               style: TextStyle(
                 color: MyColors.secondary.withOpacity(0.9),
                 fontWeight: FontWeight.w400,
                 fontSize: 16.5,
               ),
+              linkStyle: TextStyle(
+                color: MyColors.primary.withOpacity(0.9),
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.w400,
+                fontSize: 16.5,
+              ),
             ),
+
+            // Text(
+            //   notification['message'],
+            //   style: TextStyle(
+            //     color: MyColors.secondary.withOpacity(0.9),
+            //     fontWeight: FontWeight.w400,
+            //     fontSize: 16.5,
+            //   ),
+            // ),
           ],
         ),
       ),

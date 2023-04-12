@@ -14,7 +14,7 @@ import "../main.dart";
 import "../utils/SharedPrefs.dart";
 import "../utils/Theme.dart";
 import "../widgets/Requests.dart";
-import 'package:vibration_web/vibration_web.dart';
+// import 'package:vibration_web/vibration_web.dart';
 
 class SettingsPage extends StatefulWidget {
   final ValueChanged<bool> callScheduleInit;
