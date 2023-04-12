@@ -7,6 +7,7 @@ import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_linkify/flutter_linkify.dart";
 import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/pages/schedule_page.dart";
@@ -16,6 +17,7 @@ import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
 import "package:linkwell/linkwell.dart";
+import 'package:url_launcher/url_launcher.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import "package:timeago/timeago.dart" as timeago;
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
@@ -717,8 +719,12 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               ],
             ),
             const SizedBox(height: 30),
-            LinkWell(
-              notification['message'],
+            SelectableLinkify(
+              options: LinkifyOptions(
+                humanize: false,
+              ),
+              onOpen: _onOpen,
+              text: notification['message'],
               style: TextStyle(
                 color: MyColors.secondary.withOpacity(0.9),
                 fontWeight: FontWeight.w400,
@@ -731,6 +737,20 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                 fontSize: 16.5,
               ),
             ),
+            // LinkWell(
+            //   notification['message'],
+            //   style: TextStyle(
+            //     color: MyColors.secondary.withOpacity(0.9),
+            //     fontWeight: FontWeight.w400,
+            //     fontSize: 16.5,
+            //   ),
+            //   linkStyle: TextStyle(
+            //     color: MyColors.primary.withOpacity(0.9),
+            //     decoration: TextDecoration.underline,
+            //     fontWeight: FontWeight.w400,
+            //     fontSize: 16.5,
+            //   ),
+            // ),
 
             // Text(
             //   notification['message'],
@@ -744,6 +764,15 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
         ),
       ),
     );
+  }
+
+  Future<void> _onOpen(LinkableElement link) async {
+    Uri uri = Uri.parse(link.url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $link';
+    }
   }
 
   Widget buildNotificationHeader(
