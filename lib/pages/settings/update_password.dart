@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../utils/SharedPrefs.dart';
 import '../../widgets/MyColors.dart';
+import '../../widgets/Requests.dart';
 
 class UpdatePassword extends StatefulWidget {
   const UpdatePassword({super.key});
@@ -14,6 +15,14 @@ class UpdatePassword extends StatefulWidget {
 }
 
 class _UpdatePasswordState extends State<UpdatePassword> {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   final _formKey = GlobalKey<FormState>();
   final _currentController = TextEditingController();
   final _newPassController = TextEditingController();
@@ -100,7 +109,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               const SizedBox(height: 40),
 
               //// CURRENT PASSWORD ////
-              const Text(
+              Text(
                 "Current Password",
                 style: TextStyle(
                   fontFamily: "Outfit",
@@ -112,25 +121,22 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               Container(height: 5),
               TextFormField(
                 obscureText: !showCurrPassword,
+                autofillHints: const [AutofillHints.password],
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 controller: _currentController,
                 // autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) => value != null && value.isEmpty
                     ? 'Please enter your current password'
-                    : (value != prefs.getString(SharedPrefs.password)
-                        ? 'Incorrect password'
-                        : null),
+                    : null,
                 style: const TextStyle(fontSize: 18),
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   suffixIcon: IconButton(
                     splashRadius: 5,
                     icon: showCurrPassword
-                        ? const Icon(Icons.visibility,
-                            color: MyColors.secondary)
-                        : const Icon(Icons.visibility_off,
-                            color: MyColors.secondary),
+                        ? Icon(Icons.visibility, color: MyColors.secondary)
+                        : Icon(Icons.visibility_off, color: MyColors.secondary),
                     onPressed: () {
                       setState(() {
                         showCurrPassword = !showCurrPassword;
@@ -147,8 +153,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   ),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7.5),
-                      borderSide: const BorderSide(
-                          width: 2, color: MyColors.primaryVariant)),
+                      borderSide:
+                          BorderSide(width: 2, color: MyColors.primaryVariant)),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                 ),
@@ -157,7 +163,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               const SizedBox(height: 20),
 
               //// NEW PASSWORD ////
-              const Text(
+              Text(
                 "New Password",
                 style: TextStyle(
                   fontFamily: "Outfit",
@@ -169,6 +175,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               Container(height: 5),
               TextFormField(
                 obscureText: !showNewPassword,
+                autofillHints: const [AutofillHints.password],
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 controller: _newPassController,
@@ -183,10 +190,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   suffixIcon: IconButton(
                     splashRadius: 5,
                     icon: showNewPassword
-                        ? const Icon(Icons.visibility,
-                            color: MyColors.secondary)
-                        : const Icon(Icons.visibility_off,
-                            color: MyColors.secondary),
+                        ? Icon(Icons.visibility, color: MyColors.secondary)
+                        : Icon(Icons.visibility_off, color: MyColors.secondary),
                     onPressed: () {
                       setState(() {
                         showNewPassword = !showNewPassword;
@@ -203,8 +208,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   ),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7.5),
-                      borderSide: const BorderSide(
-                          width: 2, color: MyColors.primaryVariant)),
+                      borderSide:
+                          BorderSide(width: 2, color: MyColors.primaryVariant)),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                 ),
@@ -215,7 +220,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               //// CONFIRM NEW PASSWORD ////
               ///
               /// show a green tick if the passwords match
-              const Text(
+              Text(
                 "Confirm New Password",
                 style: TextStyle(
                   fontFamily: "Outfit",
@@ -227,6 +232,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               Container(height: 5),
               TextFormField(
                 obscureText: !showConfirmPassword,
+                autofillHints: const [AutofillHints.password],
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
                 controller: _confirmController,
@@ -249,7 +255,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                         child: _newPassController.text.isNotEmpty &&
                                 _confirmController.text ==
                                     _newPassController.text
-                            ? const Icon(
+                            ? Icon(
                                 Icons.check_circle,
                                 color: MyColors.primary,
                               )
@@ -258,9 +264,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                       IconButton(
                         splashRadius: 5,
                         icon: showConfirmPassword
-                            ? const Icon(Icons.visibility,
-                                color: MyColors.secondary)
-                            : const Icon(Icons.visibility_off,
+                            ? Icon(Icons.visibility, color: MyColors.secondary)
+                            : Icon(Icons.visibility_off,
                                 color: MyColors.secondary),
                         onPressed: () {
                           setState(() {
@@ -280,8 +285,8 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   ),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7.5),
-                      borderSide: const BorderSide(
-                          width: 2, color: MyColors.primaryVariant)),
+                      borderSide:
+                          BorderSide(width: 2, color: MyColors.primaryVariant)),
                   contentPadding:
                       const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
                 ),
@@ -301,7 +306,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       "Update Password",
                       style: TextStyle(
                         fontFamily: "Outfit",
@@ -320,12 +325,30 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     );
   }
 
-  changePassPressed() {
+  changePassPressed() async {
     bool isValid = _formKey.currentState!.validate();
+    // print('Current: ${_currentController.text}');
+    // print('New: ${_newPassController.text}');
+    // print('Confirm: ${_confirmController.text}');
+    // print('isValid: $isValid');
 
-    print('Current: ${_currentController.text}');
-    print('New: ${_newPassController.text}');
-    print('Confirm: ${_confirmController.text}');
-    print('isValid: $isValid');
+    if (!isValid) return;
+
+    bool isCurrentValid =
+        _currentController.text == prefs.getString('password');
+    if (!isCurrentValid) {
+      showSnackBar(context, 'Current password is incorrect!\nPlease try again');
+      return;
+    }
+
+    bool result = await Requests.checkCredentials(
+        prefs.getString(SharedPrefs.username)!, _newPassController.text);
+
+    print('result: $result');
+    if (result) {
+      showSnackBar(context, 'Password will be updated soon!');
+    } else {
+      showSnackBar(context, 'New password in incorrect!\nPlease try again');
+    }
   }
 }

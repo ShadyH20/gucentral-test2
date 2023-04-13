@@ -18,6 +18,7 @@ class MyTheme {
   static const Color light = Color(0xFFFFFFFF);
   // static const Color surface = Color(0xFFFAFAFA);
   static const Color error = Color(0xFFB00020);
+  static const Color errorDark = Color.fromARGB(255, 223, 70, 67);
 
   static ThemeData lightTheme = ThemeData(
     appBarTheme: const AppBarTheme(
@@ -70,7 +71,7 @@ class MyTheme {
         onSecondary: darkGrey,
         tertiary: yellow,
         surfaceVariant: darkGrey2,
-        error: error,
+        error: errorDark,
         onError: light,
         background: darkerGrey2,
         onBackground: light,

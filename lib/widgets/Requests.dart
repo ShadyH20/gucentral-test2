@@ -11,6 +11,7 @@ class Requests {
   static const backendURL =
       'https://gucentralbackend-production.up.railway.app';
   static Uri transcriptURL = Uri.parse('$backendURL/transcript');
+  static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
   static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
   static Uri loginURL = Uri.parse('$backendURL/login');
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
@@ -22,6 +23,28 @@ class Requests {
   static Uri notificationsURL = Uri.parse('$backendURL/notifications');
 
   // static SharedPreferences prefs = getPrefs();
+
+  static Future<bool> checkCredentials(String username, String password) async {
+    var body = jsonEncode({
+      'username': username,
+      'password': password,
+    });
+
+    try {
+      var response = await http.post(checkCredsURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+      // print(response.toString());
+
+      var login = jsonDecode(response.body);
+      print(login);
+      return login['success'];
+    } on Exception catch (e) {
+      print("Login exception $e");
+      return false;
+    }
+  }
 
   static Map getCreds() {
     // SharedPreferences prefs = await SharedPreferences.getInstance();
