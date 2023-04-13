@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:gucentral/pages/schedule_page%20copy.dart";
 import "package:gucentral/pages/schedule_page.dart";
+import "package:gucentral/pages/settings/change_password.dart";
 import "package:gucentral/pages/settings/semester_range.dart";
 import "package:gucentral/utils/local_auth_api.dart";
 // import "package:flutter_svg/flutter_svg.dart";
@@ -26,15 +27,17 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  static bool timeFormatIs24 = false;
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   ColorScheme MyColors = MyTheme.lightTheme.colorScheme;
+
   //// TILE TITLE TEXT STYLE ////
   late TextStyle titleTS;
+  late TextStyle sectionTitleTs;
   @override
   void initState() {
     super.initState();
-    titleTS = TextStyle(fontWeight: FontWeight.w400, fontSize: 20);
+    titleTS = TextStyle(fontWeight: FontWeight.w400, fontSize: 18);
+    sectionTitleTs = TextStyle(fontSize: 20, color: MyColors.secondary);
   }
 
   @override
@@ -82,7 +85,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsSection(
                   title: Text(
                     'General',
-                    style: TextStyle(fontSize: 22, color: MyColors.secondary),
+                    style: sectionTitleTs,
                     softWrap: true,
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
@@ -97,7 +100,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsSection(
                   title: Text(
                     'Schedule',
-                    style: TextStyle(fontSize: 22, color: MyColors.secondary),
+                    style: sectionTitleTs,
                     softWrap: true,
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
@@ -111,13 +114,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsSection(
                   title: Text(
                     'Security',
-                    style: TextStyle(fontSize: 22, color: MyColors.secondary),
+                    style: sectionTitleTs,
                     softWrap: true,
                   ),
                   margin: const EdgeInsetsDirectional.all(20),
                   tiles: <SettingsTile>[
                     buildLockApp(),
-                    // buildChangePassword(),
+                    buildUpdatePassword(),
                   ],
                 ),
               ],
@@ -347,7 +350,27 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  buildChangePassword() {}
+  buildUpdatePassword() {
+    return SettingsTile.navigation(
+      leading: IconBuilder(
+        color: MyColors.primaryVariant,
+        icon: Icons.lock_rounded,
+      ),
+      title: Text(
+        'Update Password',
+        style: titleTS,
+      ),
+      description: const Text(
+          'Update your password when you change it on the GUC system'),
+      onPressed: (context) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const UpdatePassword(),
+            ));
+      },
+    );
+  }
 
   buildLogout() {}
 

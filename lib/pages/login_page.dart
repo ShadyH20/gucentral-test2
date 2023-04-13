@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     print("WILL SEND REQUEST NAAWW");
-    var output = await Requests.checkCreds(
+    var output = await Requests.firstLogin(
         usernameController.text.trim(), passwordController.text);
 
     if (output) {

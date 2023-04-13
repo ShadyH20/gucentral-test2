@@ -246,7 +246,6 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                       TextFormField(
                                         textInputAction: TextInputAction.next,
                                         keyboardType: TextInputType.text,
-                                        autofillHints: [AutofillHints.username],
                                         controller: _quizTitleController,
                                         validator: (value) =>
                                             value != null && value.isEmpty
@@ -334,7 +333,6 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                   TextFormField(
                                     textInputAction: TextInputAction.next,
                                     keyboardType: TextInputType.text,
-                                    autofillHints: [AutofillHints.username],
                                     controller: _locationController,
                                     validator: (value) =>
                                         value != null && value.isEmpty

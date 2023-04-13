@@ -11,7 +11,7 @@ class Requests {
   static const backendURL =
       'https://gucentralbackend-production.up.railway.app';
   static Uri transcriptURL = Uri.parse('$backendURL/transcript');
-  static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
+  static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
   static Uri loginURL = Uri.parse('$backendURL/login');
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
   static Uri checkEvalURL = Uri.parse('$backendURL/checkEvaluated');
@@ -33,14 +33,14 @@ class Requests {
     return credentials;
   }
 
-  static Future<bool> checkCreds(username, password) async {
+  static Future<bool> firstLogin(username, password) async {
     var body = jsonEncode({
       'username': username,
       'password': password,
     });
 
     try {
-      var response = await http.post(checkCredsURL, body: body, headers: {
+      var response = await http.post(firstLoginURL, body: body, headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       });

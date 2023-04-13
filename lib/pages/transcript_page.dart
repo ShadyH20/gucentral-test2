@@ -466,7 +466,7 @@ class _TranscriptPageState extends State<TranscriptPage>
                               fontWeight: FontWeight.w900),
                           children: const [
                             TextSpan(
-                              text: "GPA",
+                              text: " GPA",
                               style: TextStyle(
                                   // color: MyColors.background,
                                   fontSize: 10,

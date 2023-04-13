@@ -607,9 +607,15 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               : const Color.fromARGB(255, 250, 250, 254),
           cornerRadius: 20,
           extendBody: true,
+          snapSpec: const SnapSpec(
+              snappings: [0.5, 0.8],
+              initialSnap: 0.8,
+              positioning: SnapPositioning.relativeToAvailableSpace),
+          scrollSpec: const ScrollSpec(
+            overscroll: false,
+          ),
           headerBuilder: (context, state) =>
               buildNotificationHeader(context, state, notification),
-          snapSpec: const SnapSpec(snappings: [0.5, 0.8, 1], initialSnap: 0.8),
           builder: (context, state) =>
               buildNoticiationContent(context, notification, date),
         );
@@ -720,9 +726,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             ),
             const SizedBox(height: 30),
             SelectableLinkify(
-              options: LinkifyOptions(
-                humanize: false,
-              ),
+              options: const LinkifyOptions(humanize: false),
               onOpen: _onOpen,
               text: notification['message'],
               style: TextStyle(
