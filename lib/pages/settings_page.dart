@@ -67,72 +67,68 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SizedBox(
         width: double.infinity,
         // color: Colors.red,
-        child: ListView(
-          // padding: EdgeInsets.all(20),
-          children: [
-            SettingsList(
-              shrinkWrap: true,
-              platform: DevicePlatform.iOS,
-              // lightTheme: SettingsThemeData(
-              //     settingsListBackground: MyColors.background,
-              //     settingsSectionBackground: Colors.black.withOpacity(0.0),
-              //     ),
-              darkTheme: SettingsThemeData(
-                titleTextColor: Colors.white70,
-                // settingsTileTextColor: Colors.green,
-                // tileHighlightColor: Colors.yellow,
-                // tileDescriptionTextColor: Colors.lightBlue,
-                settingsListBackground: MyColors.background,
+        child: SettingsList(
+          // shrinkWrap: true,
+          platform: DevicePlatform.iOS,
+          // lightTheme: SettingsThemeData(
+          //     settingsListBackground: MyColors.background,
+          //     settingsSectionBackground: Colors.black.withOpacity(0.0),
+          //     ),
+          darkTheme: SettingsThemeData(
+            titleTextColor: Colors.white70,
+            // settingsTileTextColor: Colors.green,
+            // tileHighlightColor: Colors.yellow,
+            // tileDescriptionTextColor: Colors.lightBlue,
+            settingsListBackground: MyColors.background,
+          ),
+          sections: [
+            //// GENERAL SECTION ////
+            SettingsSection(
+              title: Text(
+                'General',
+                style: sectionTitleTs,
+                softWrap: true,
               ),
-              sections: [
-                //// GENERAL SECTION ////
-                SettingsSection(
-                  title: Text(
-                    'General',
-                    style: sectionTitleTs,
-                    softWrap: true,
-                  ),
-                  margin: const EdgeInsetsDirectional.all(20),
-                  tiles: <SettingsTile>[
-                    buildDarkMode(),
-                    buildTimeFormat(),
-                    buildDefaultPage(),
-                    buildChangeName(),
-                  ],
-                ),
-
-                //// SCHEDULE SECTION ////
-                SettingsSection(
-                  title: Text(
-                    'Schedule',
-                    style: sectionTitleTs,
-                    softWrap: true,
-                  ),
-                  margin: const EdgeInsetsDirectional.all(20),
-                  tiles: <SettingsTile>[
-                    buildSemStartEnd(),
-                    build3rdSlot(),
-                  ],
-                ),
-
-                //// SECURITY SECTION ////
-                SettingsSection(
-                  title: Text(
-                    'Security',
-                    style: sectionTitleTs,
-                    softWrap: true,
-                  ),
-                  margin: const EdgeInsetsDirectional.all(20),
-                  tiles: <SettingsTile>[
-                    buildLockApp(),
-                    buildUpdatePassword(),
-                  ],
-                ),
+              margin: const EdgeInsetsDirectional.all(20),
+              tiles: <SettingsTile>[
+                buildDarkMode(),
+                buildTimeFormat(),
+                buildDefaultPage(),
+                buildChangeName(),
               ],
             ),
 
-            // SPACE
-            const SizedBox(height: 40),
+            //// SCHEDULE SECTION ////
+            SettingsSection(
+              title: Text(
+                'Schedule',
+                style: sectionTitleTs,
+                softWrap: true,
+              ),
+              margin: const EdgeInsetsDirectional.all(20),
+              tiles: <SettingsTile>[
+                buildSemStartEnd(),
+                build3rdSlot(),
+              ],
+            ),
+
+            //// SECURITY SECTION ////
+            SettingsSection(
+              title: Text(
+                'Security',
+                style: sectionTitleTs,
+                softWrap: true,
+              ),
+              margin: const EdgeInsetsDirectional.all(20),
+              tiles: <SettingsTile>[
+                buildLockApp(),
+                buildUpdatePassword(),
+              ],
+            ),
+            // SettingsSection(
+            //   tiles: [],
+            //   margin: const EdgeInsetsDirectional.all(20),
+            // )
           ],
         ),
       ),
