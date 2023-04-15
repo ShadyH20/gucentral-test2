@@ -130,6 +130,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
+
+            // SPACE
+            const SizedBox(height: 40),
           ],
         ),
       ),
