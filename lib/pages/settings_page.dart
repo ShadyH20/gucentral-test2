@@ -261,11 +261,18 @@ class _SettingsPageState extends State<SettingsPage> {
           hintStyle: TextStyle(
               fontSize: 18, color: MyColors.secondary.withOpacity(0.2)),
         ),
-        onChanged: (value) {
-          setState(() {
-            prefs.setString('first_name', value);
-          });
+        onEditingComplete: () {
+          if (_nameController.text.isNotEmpty) {
+            setState(() {
+              prefs.setString('first_name', _nameController.text);
+            });
+          }
         },
+        // onChanged: (value) {
+        //   setState(() {
+        //     prefs.setString('first_name', value);
+        //   });
+        // },
       ),
       description: const Text('Change how you are greeted in the home screen!'),
       // initialValue: prefs.getBool('dark_mode') ?? false,
