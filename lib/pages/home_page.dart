@@ -606,8 +606,10 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               ? MyColors.background
               : const Color.fromARGB(255, 250, 250, 254),
           cornerRadius: 20,
-          extendBody: true,
+          // extendBody: true,
           snapSpec: const SnapSpec(
+              snap: true,
+              // onSnap: (p0, snap) {},
               snappings: [0.5, 0.8],
               initialSnap: 0.8,
               positioning: SnapPositioning.relativeToAvailableSpace),
@@ -630,12 +632,12 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
         color: MyApp.isDarkMode.value
             ? MyColors.background
             : const Color.fromARGB(255, 250, 250, 254),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
         child: Column(
           children: [
             //Text containing the notification title
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.topLeft,
               child: Text(
                 notification['course_code'],
                 style: TextStyle(
@@ -741,29 +743,6 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                 fontSize: 16.5,
               ),
             ),
-            // LinkWell(
-            //   notification['message'],
-            //   style: TextStyle(
-            //     color: MyColors.secondary.withOpacity(0.9),
-            //     fontWeight: FontWeight.w400,
-            //     fontSize: 16.5,
-            //   ),
-            //   linkStyle: TextStyle(
-            //     color: MyColors.primary.withOpacity(0.9),
-            //     decoration: TextDecoration.underline,
-            //     fontWeight: FontWeight.w400,
-            //     fontSize: 16.5,
-            //   ),
-            // ),
-
-            // Text(
-            //   notification['message'],
-            //   style: TextStyle(
-            //     color: MyColors.secondary.withOpacity(0.9),
-            //     fontWeight: FontWeight.w400,
-            //     fontSize: 16.5,
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -785,12 +764,22 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 35,
-          height: 8,
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: MyColors.secondary.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(10),
+          width: MediaQuery.of(context).size.width,
+          // padding: const EdgeInsets.symmetric(vertical: 10),
+          color: MyColors.background,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 35,
+                height: 8,
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: MyColors.secondary.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ],
           ),
         ),
       ],
