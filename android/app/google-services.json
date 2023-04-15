@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "556091875139",
+    "project_id": "gucentrall",
+    "storage_bucket": "gucentrall.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556091875139:android:355dd6a900b6a7c9e4d9f6",
+        "android_client_info": {
+          "package_name": "com.example.gucentral"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "556091875139-b3jlb4vnbg188onapnpdusmc9gbvt8u5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnVyiBr8hD8wkdvMqPh5TVHj5ENTgLz9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "556091875139-b3jlb4vnbg188onapnpdusmc9gbvt8u5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
