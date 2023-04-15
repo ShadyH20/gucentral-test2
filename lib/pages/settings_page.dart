@@ -261,7 +261,14 @@ class _SettingsPageState extends State<SettingsPage> {
           hintStyle: TextStyle(
               fontSize: 18, color: MyColors.secondary.withOpacity(0.2)),
         ),
-        onEditingComplete: () {
+        // onEditingComplete: () {
+        //   if (_nameController.text.isNotEmpty) {
+        //     setState(() {
+        //       prefs.setString('first_name', _nameController.text);
+        //     });
+        //   }
+        // },
+        onSubmitted: (value) {
           if (_nameController.text.isNotEmpty) {
             setState(() {
               prefs.setString('first_name', _nameController.text);
