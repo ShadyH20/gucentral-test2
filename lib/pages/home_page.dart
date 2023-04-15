@@ -602,17 +602,21 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
           duration: const Duration(milliseconds: 400),
           avoidStatusBar: true,
           minHeight: MediaQuery.of(context).size.height,
+          // minHeight: MediaQuery.of(context).size.height,
           color: MyApp.isDarkMode.value
               ? MyColors.background
               : const Color.fromARGB(255, 250, 250, 254),
           cornerRadius: 20,
           // extendBody: true,
           snapSpec: const SnapSpec(
-              snap: true,
-              // onSnap: (p0, snap) {},
-              snappings: [0.5, 0.8],
-              initialSnap: 0.8,
-              positioning: SnapPositioning.relativeToAvailableSpace),
+            snappings: [0.5, 0.75, .96],
+            initialSnap: .96,
+            // onSnap: (p0, snap) {
+            //   print(snap);
+            // },
+
+            // positioning: SnapPositioning.relativeToSheetHeight,
+          ),
           scrollSpec: const ScrollSpec(
             overscroll: false,
           ),
