@@ -51,9 +51,6 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
 
   late List<Widget> pages;
 
-  int selectedIndex = 0;
-  MenuItemlist currentItem = MenuItems.home;
-
   late ZoomDrawerController _drawerController;
   GlobalKey transcriptKey = GlobalKey();
 
@@ -88,10 +85,15 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
     }
   }
 
+  late int selectedIndex;
+  MenuItemlist currentItem =
+      MenuItems.getItem(prefs.getString('default_page') ?? 'Home');
+
   bool loadingEverything = false;
   @override
   void initState() {
     super.initState();
+    selectedIndex = getIndex(currentItem);
     pages = [
       HomePage(key: _homeKey),
       const CoursesPage(),

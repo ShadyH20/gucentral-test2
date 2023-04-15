@@ -463,15 +463,6 @@ class SchedulePageState extends State<SchedulePage> {
                     height: 25, width: 25, child: CircularProgressIndicator()),
               )
             : Container(),
-        // IconButton(
-        //     icon: const Icon(Icons.schedule_rounded,
-        //         color: MyColors.secondary, size: 30),
-        //     splashRadius: 15,
-        //     tooltip: "Exam Schedule",
-        //     onPressed: () {
-        //       getExamSchedule();
-        //     },
-        //   ),
         const SizedBox(width: 10),
         IconButton(
           icon: SvgPicture.asset(
@@ -1383,7 +1374,7 @@ class SchedulePageState extends State<SchedulePage> {
       child: DropdownButton2(
         customButton: AnimatedRotation(
           turns: addIconTurns,
-          duration: const Duration(milliseconds: 400),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.decelerate,
           child: Icon(
             Icons.add_rounded,

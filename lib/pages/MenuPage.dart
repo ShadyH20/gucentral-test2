@@ -325,4 +325,29 @@ class MenuItems {
     // settings,
     // login
   ];
+
+  static MenuItemlist getItem(String s) {
+    switch (s) {
+      case 'Home':
+        return home;
+      case 'Transcript':
+        return transcript;
+      case 'Grades':
+        return grades;
+      case 'Courses':
+        return courses;
+      case 'Schedule':
+        return schedule;
+      case 'Map':
+        return map;
+      case 'Settings':
+        return settings;
+      case 'Evaluate':
+        return evaluate;
+      case 'Attendance':
+        return attendance;
+      default:
+        return home;
+    }
+  }
 }

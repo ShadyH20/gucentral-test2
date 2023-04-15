@@ -4,4 +4,9 @@ class MenuItemlist {
   final String title;
   final IconData? icon;
   const MenuItemlist(this.title, [this.icon]);
+
+  @override
+  String toString() {
+    return title;
+  }
 }

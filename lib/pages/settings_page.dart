@@ -6,6 +6,7 @@ import "package:gucentral/pages/schedule_page.dart";
 import 'package:gucentral/pages/settings/update_password.dart';
 import "package:gucentral/pages/settings/semester_range.dart";
 import "package:gucentral/utils/local_auth_api.dart";
+import "package:gucentral/widgets/MeduItemList.dart";
 // import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
@@ -15,6 +16,7 @@ import "../main.dart";
 import "../utils/SharedPrefs.dart";
 import "../utils/Theme.dart";
 import "../widgets/Requests.dart";
+import "MenuPage.dart";
 // import 'package:vibration_web/vibration_web.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -36,8 +38,8 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-    titleTS = TextStyle(fontWeight: FontWeight.w400, fontSize: 18);
-    sectionTitleTs = TextStyle(fontSize: 20, color: MyColors.secondary);
+    titleTS = const TextStyle(fontWeight: FontWeight.w400, fontSize: 18);
+    sectionTitleTs = const TextStyle(fontSize: 20);
   }
 
   @override
@@ -76,8 +78,10 @@ class _SettingsPageState extends State<SettingsPage> {
               //     settingsSectionBackground: Colors.black.withOpacity(0.0),
               //     ),
               darkTheme: SettingsThemeData(
-                titleTextColor: Colors.white,
-                tileDescriptionTextColor: Colors.white70,
+                titleTextColor: Colors.white70,
+                // settingsTileTextColor: Colors.green,
+                // tileHighlightColor: Colors.yellow,
+                // tileDescriptionTextColor: Colors.lightBlue,
                 settingsListBackground: MyColors.background,
               ),
               sections: [
@@ -92,6 +96,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   tiles: <SettingsTile>[
                     buildDarkMode(),
                     buildTimeFormat(),
+                    buildDefaultPage(),
                     buildChangeName(),
                   ],
                 ),
@@ -125,27 +130,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ],
             ),
-            // DefaultTextStyle(
-            //   style: TextStyle(color: MyColors.primary),
-            //   child: SettingsGroup(
-            //     title: "General",
-            //     children: <Widget>[
-            //       buildDarkMode(),
-            //       buildChangeName(),
-            //     ],
-            //   ),
-            // ),
-            // SettingsGroup(title: "Schedule", children: <Widget>[
-            // buildSemesterStartEnd(),
-            // buildTimeSlots(),
-            // buildTimeFormat(),
-            // buildRamadanTS(),
-            // ]),
-            // SettingsGroup(title: "Security", children: <Widget>[
-            //   buildLockApp(),
-            //   // buildChangePassword(),
-            // ]),
-            // buildLogout()
           ],
         ),
       ),
@@ -217,7 +201,38 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  static const keyName = 'key-name';
+  buildDefaultPage() {
+    return SettingsTile.navigation(
+      // onToggle: (value) {
+      //   setState(() {
+      //     prefs.setBool('is_24h', value);
+      //   });
+      // },
+      value: Text(prefs.getString('default_page') ?? 'Home'),
+      onPressed: (context) async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return const DefaultPage();
+            },
+          ),
+        );
+        setState(() {});
+      },
+      // trailing: Icon(Icons.arrow_forward_ios_rounded),
+      // onPressed: (context) => ,
+      // initialValue: prefs.getBool('is_24h') ?? false,
+      leading: IconBuilder(
+        icon: Icons.phonelink_setup_rounded,
+        color: MyColors.primary,
+        // MyColors.accent,
+      ),
+      title: Text(
+        'Default Page',
+        style: titleTS,
+      ),
+    );
+  }
 
   final TextEditingController _nameController = TextEditingController();
   buildChangeName() {
@@ -230,14 +245,22 @@ class _SettingsPageState extends State<SettingsPage> {
       title: TextField(
         controller: _nameController,
         keyboardType: TextInputType.name,
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        // strutStyle: const StrutStyle(height: 0.5),
+        textCapitalization: TextCapitalization.words,
+        textAlignVertical: TextAlignVertical.center,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
-          labelStyle: const TextStyle(fontSize: 20),
-          contentPadding: EdgeInsets.zero,
-          // label
-          // label: Text("First Name"),
+          isDense: true,
+          // isCollapsed: true,
+          floatingLabelStyle: TextStyle(
+              fontSize: 18, color: MyColors.secondary.withOpacity(0.7)),
           labelText: "First Name",
+          labelStyle: TextStyle(
+              fontSize: 18, color: MyColors.secondary.withOpacity(0.3)),
+          contentPadding: EdgeInsets.zero,
           hintText: prefs.getString('first_name') ?? "",
+          hintStyle: TextStyle(
+              fontSize: 18, color: MyColors.secondary.withOpacity(0.2)),
         ),
         onChanged: (value) {
           setState(() {
@@ -254,7 +277,6 @@ class _SettingsPageState extends State<SettingsPage> {
       // },
       // trailing:
     );
-    ;
   }
 
   build3rdSlot() {
@@ -379,6 +401,152 @@ class _SettingsPageState extends State<SettingsPage> {
     print("CAN VIBRATE");
     Vibration.vibrate();
     // }
+  }
+}
+
+class DefaultPage extends StatefulWidget {
+  const DefaultPage({super.key});
+
+  @override
+  State<DefaultPage> createState() => _DefaultPageState();
+}
+
+class _DefaultPageState extends State<DefaultPage> {
+  MenuItemlist _defaultPage =
+      MenuItems.getItem(prefs.getString('default_page') ?? 'Home');
+  Icon check = const Icon(Icons.check, color: MyColors.primary);
+  @override
+  Widget build(BuildContext context) {
+    // page that lets you choose one page to be the default from a list of pages: Home, Courses, Schedule, Attendance, transcript, evaluate, map
+
+    return Scaffold(
+        backgroundColor: MyApp.isDarkMode.value
+            ? Theme.of(context).colorScheme.background
+            : const Color(0xfff3f3fa),
+        appBar: AppBar(
+          title: const Text('Default Page'),
+          backgroundColor: Theme.of(context).colorScheme.background,
+          foregroundColor: Theme.of(context).colorScheme.secondary,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              prefs.setString('default_page', _defaultPage.toString());
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        // list of buttons each with a page title. when pressed, it sets the default page to that page and displays a check mark to the right of the button
+        body: SizedBox(
+          width: double.infinity,
+          // color: Colors.red,
+          child: ListView(
+            // padding: EdgeInsets.all(20),
+            children: [
+              SettingsList(
+                shrinkWrap: true,
+                platform: DevicePlatform.iOS,
+                // lightTheme: SettingsThemeData(
+                //     settingsListBackground: MyColors.background,
+                //     settingsSectionBackground: Colors.black.withOpacity(0.0),
+                //     ),
+                darkTheme: SettingsThemeData(
+                  titleTextColor: Colors.white70,
+                  settingsListBackground:
+                      Theme.of(context).colorScheme.background,
+                ),
+                sections: [
+                  SettingsSection(
+                    // title: Text(
+                    //   'General',
+                    //   style: TextStyle(fontSize: 20),
+                    //   softWrap: true,
+                    // ),
+                    margin: const EdgeInsetsDirectional.all(20),
+                    tiles: [
+                      SettingsTile(
+                        title: const Text('Home'),
+                        // leading: const Icon(Icons.home),
+                        trailing: _defaultPage == MenuItems.home ? check : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _defaultPage = MenuItems.home;
+                          });
+                        },
+                      ),
+                      // SettingsTile(
+                      //   title: const Text('Courses'),
+                      //   // leading: const Icon(Icons.menu_book_rounded),
+                      //   trailing:
+                      //       _defaultPage == MenuItems.courses ? check : null,
+                      //   onPressed: (context) {
+                      //     setState(() {
+                      //       _defaultPage = MenuItems.courses;
+                      //     });
+                      //   },
+                      // ),
+                      SettingsTile(
+                        title: const Text('Schedule'),
+                        // leading: const Icon(Icons.calendar_today_rounded),
+                        trailing:
+                            _defaultPage == MenuItems.schedule ? check : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _defaultPage = MenuItems.schedule;
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('Attendance'),
+                        // leading: const Icon(Icons.check_circle_rounded),
+                        trailing:
+                            _defaultPage == MenuItems.attendance ? check : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _defaultPage = MenuItems.attendance;
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('Transcript'),
+                        // leading: const Icon(Icons.description_rounded),
+                        trailing:
+                            _defaultPage == MenuItems.transcript ? check : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _defaultPage = MenuItems.transcript;
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('Evaluate'),
+                        description: Text(
+                            'Choose the default page that is opened when you first open the app.'),
+                        trailing:
+                            _defaultPage == MenuItems.evaluate ? check : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _defaultPage = MenuItems.evaluate;
+                          });
+                        },
+                      ),
+                      // SettingsTile(
+                      //   title: const Text('Map'),
+                      //   // leading: const Icon(Icons.map_rounded),
+                      //   trailing: _defaultPage == MenuItems.map ? check : null,
+                      //   onPressed: (context) {
+                      //     setState(() {
+                      //       _defaultPage = MenuItems.map;
+                      //     });
+                      //   },
+                      // ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
   }
 }
 

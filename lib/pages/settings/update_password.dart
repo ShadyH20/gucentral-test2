@@ -220,77 +220,77 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               //// CONFIRM NEW PASSWORD ////
               ///
               /// show a green tick if the passwords match
-              Text(
-                "Confirm New Password",
-                style: TextStyle(
-                  fontFamily: "Outfit",
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
-                  color: MyColors.secondary,
-                ),
-              ),
-              Container(height: 5),
-              TextFormField(
-                obscureText: !showConfirmPassword,
-                autofillHints: const [AutofillHints.password],
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                controller: _confirmController,
-                onChanged: (value) => setState(() {}),
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) => value != null && value.isEmpty
-                    ? 'Please confirm your new password'
-                    : (value != _newPassController.text
-                        ? 'Passwords do not match'
-                        : null),
-                style: const TextStyle(fontSize: 18),
-                textAlignVertical: TextAlignVertical.center,
-                decoration: InputDecoration(
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 200),
-                        child: _newPassController.text.isNotEmpty &&
-                                _confirmController.text ==
-                                    _newPassController.text
-                            ? Icon(
-                                Icons.check_circle,
-                                color: MyColors.primary,
-                              )
-                            : Container(),
-                      ),
-                      IconButton(
-                        splashRadius: 5,
-                        icon: showConfirmPassword
-                            ? Icon(Icons.visibility, color: MyColors.secondary)
-                            : Icon(Icons.visibility_off,
-                                color: MyColors.secondary),
-                        onPressed: () {
-                          setState(() {
-                            showConfirmPassword = !showConfirmPassword;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  // hintText: "password",
-                  hintStyle: TextStyle(
-                      fontFamily: "Outfit",
-                      fontWeight: FontWeight.w500,
-                      color: MyColors.secondary.withOpacity(.15)),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(7.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(7.5),
-                      borderSide:
-                          BorderSide(width: 2, color: MyColors.primaryVariant)),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
-                ),
-              ),
+              // Text(
+              //   "Confirm New Password",
+              //   style: TextStyle(
+              //     fontFamily: "Outfit",
+              //     fontWeight: FontWeight.w500,
+              //     fontSize: 20,
+              //     color: MyColors.secondary,
+              //   ),
+              // ),
+              // Container(height: 5),
+              // TextFormField(
+              //   obscureText: !showConfirmPassword,
+              //   autofillHints: const [AutofillHints.password],
+              //   textInputAction: TextInputAction.next,
+              //   keyboardType: TextInputType.text,
+              //   controller: _confirmController,
+              //   onChanged: (value) => setState(() {}),
+              //   autovalidateMode: AutovalidateMode.onUserInteraction,
+              //   validator: (value) => value != null && value.isEmpty
+              //       ? 'Please confirm your new password'
+              //       : (value != _newPassController.text
+              //           ? 'Passwords do not match'
+              //           : null),
+              //   style: const TextStyle(fontSize: 18),
+              //   textAlignVertical: TextAlignVertical.center,
+              //   decoration: InputDecoration(
+              //     suffixIcon: Row(
+              //       mainAxisSize: MainAxisSize.min,
+              //       mainAxisAlignment: MainAxisAlignment.end,
+              //       children: [
+              //         AnimatedContainer(
+              //           duration: const Duration(milliseconds: 200),
+              //           child: _newPassController.text.isNotEmpty &&
+              //                   _confirmController.text ==
+              //                       _newPassController.text
+              //               ? Icon(
+              //                   Icons.check_circle,
+              //                   color: MyColors.primary,
+              //                 )
+              //               : Container(),
+              //         ),
+              //         IconButton(
+              //           splashRadius: 5,
+              //           icon: showConfirmPassword
+              //               ? Icon(Icons.visibility, color: MyColors.secondary)
+              //               : Icon(Icons.visibility_off,
+              //                   color: MyColors.secondary),
+              //           onPressed: () {
+              //             setState(() {
+              //               showConfirmPassword = !showConfirmPassword;
+              //             });
+              //           },
+              //         ),
+              //       ],
+              //     ),
+              //     // hintText: "password",
+              //     hintStyle: TextStyle(
+              //         fontFamily: "Outfit",
+              //         fontWeight: FontWeight.w500,
+              //         color: MyColors.secondary.withOpacity(.15)),
+              //     border: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(7.5),
+              //     ),
+              //     focusedBorder: OutlineInputBorder(
+              //         borderRadius: BorderRadius.circular(7.5),
+              //         borderSide:
+              //             BorderSide(width: 2, color: MyColors.primaryVariant)),
+              //     contentPadding:
+              //         const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+              //   ),
+              // ),
 
               const SizedBox(height: 40),
               //// Change Password Button ////
@@ -306,15 +306,22 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    child: Text(
-                      "Update Password",
-                      style: TextStyle(
-                        fontFamily: "Outfit",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                        color: MyColors.background,
-                      ),
-                    ),
+                    child: loading
+                        ? SizedBox(
+                            height: 23,
+                            width: 23,
+                            child: CircularProgressIndicator(
+                                color: MyColors.background),
+                          )
+                        : Text(
+                            "Update Password",
+                            style: TextStyle(
+                              fontFamily: "Outfit",
+                              fontWeight: FontWeight.w500,
+                              fontSize: 18,
+                              color: MyColors.background,
+                            ),
+                          ),
                   ),
                 ),
               ),
@@ -325,6 +332,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     );
   }
 
+  bool loading = false;
   changePassPressed() async {
     bool isValid = _formKey.currentState!.validate();
     // print('Current: ${_currentController.text}');
@@ -341,12 +349,22 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       return;
     }
 
+    setState(() {
+      loading = true;
+    });
+
     bool result = await Requests.checkCredentials(
         prefs.getString(SharedPrefs.username)!, _newPassController.text);
 
+    setState(() {
+      loading = false;
+    });
+
     print('result: $result');
     if (result) {
-      showSnackBar(context, 'Password will be updated soon!');
+      prefs.setString('password', _newPassController.text);
+      // Navigator.pop(context);
+      showSnackBar(context, 'Your password was updated successfuly!');
     } else {
       showSnackBar(context, 'New password in incorrect!\nPlease try again');
     }
