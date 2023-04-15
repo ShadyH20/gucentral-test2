@@ -122,20 +122,21 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         drawerStyleBuilder:
             (context, animationValue, slideWidth, menuScreen, mainScreen) {
           double slide = slideWidth * animationValue;
+          // print('Slide: $slide');
           return Stack(children: [
             Transform(
               transform: Matrix4.identity()..translate(slide),
               alignment: Alignment.center,
               child: mainScreen,
             ),
-            menuScreen,
+            slide == 0.0 ? Container() : menuScreen,
           ]);
         },
-        moveMenuScreen: true,
+        // moveMenuScreen: true,
         menuScreenWidth: MediaQuery.of(context).size.width * 0.7,
-        menuScreenOverlayColor: MyColors.background,
+        // menuScreenOverlayColor: MyColors.background,
         mainScreenTapClose: true,
-        menuBackgroundColor: Colors.transparent,
+        // menuBackgroundColor: Colors.transparent,
         // mainScreenOverlayColor: MyColors.background,
         slideWidth: MediaQuery.of(context).size.width * 0.7,
         mainScreen: LazyLoadIndexedStack(

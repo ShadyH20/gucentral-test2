@@ -60,6 +60,7 @@ class MenuPageState extends State<MenuPage> {
     return Scaffold(
       backgroundColor: MyColors.background,
       body: Container(
+        width: MediaQuery.of(context).size.width * 0.7,
         decoration: BoxDecoration(
           // border: Border.all(color: MyColors.primary, width: 0.5),
           boxShadow: MyApp.isDarkMode.value
@@ -104,7 +105,6 @@ class MenuPageState extends State<MenuPage> {
               // Color.fromARGB(255, 17, 18, 19)
               MyApp.isDarkMode.value ? Colors.grey[900] : null,
         ),
-        width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
