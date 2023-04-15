@@ -117,11 +117,27 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         mainScreenScale: 0,
         borderRadius: 0,
         angle: 0,
+
+        // make a drawer style so that the drawer appears on top of the main screen
+        drawerStyleBuilder:
+            (context, animationValue, slideWidth, menuScreen, mainScreen) {
+          double slide = slideWidth * animationValue;
+          return Stack(children: [
+            Transform(
+              transform: Matrix4.identity()..translate(slide),
+              alignment: Alignment.center,
+              child: mainScreen,
+            ),
+            menuScreen,
+          ]);
+        },
+        moveMenuScreen: true,
         menuScreenWidth: MediaQuery.of(context).size.width * 0.7,
         menuScreenOverlayColor: MyColors.background,
         mainScreenTapClose: true,
-        menuBackgroundColor: MyColors.background,
-        slideWidth: MediaQuery.of(context).size.width * 0.7 + 3,
+        menuBackgroundColor: Colors.transparent,
+        // mainScreenOverlayColor: MyColors.background,
+        slideWidth: MediaQuery.of(context).size.width * 0.7,
         mainScreen: LazyLoadIndexedStack(
           index: selectedIndex,
           children: pages,
@@ -133,7 +149,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
               onSelectedItem: (item) async {
                 if (item == MenuItems.logout) {
                   // show confirmation dialog before logging out
-                  bool logout = await buildLoagoutDialog();
+                  bool logout = await buildLogoutDialog();
                   if (!logout) return;
 
                   // Clear SharedPrefs
@@ -155,7 +171,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       ));
   Color logoutRed = const Color.fromARGB(255, 223, 70, 67);
 
-  buildLoagoutDialog() {
+  buildLogoutDialog() {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog(
