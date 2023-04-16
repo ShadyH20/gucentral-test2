@@ -39,7 +39,8 @@ class EventDataSource extends CalendarDataSource {
   String? getNotes(int index) {
     return jsonEncode({
       'description': _getEventData(index).description,
-      'slot': _getEventData(index).slot
+      'slot': _getEventData(index).slot,
+      'group': _getEventData(index).group,
     });
   }
 
@@ -91,6 +92,7 @@ class EventDataSource extends CalendarDataSource {
       isAllDay: appointment.isAllDay,
       location: appointment.location ?? "",
       slot: notes['slot'] ?? "0",
+      group: notes['group'] ?? "",
     );
   }
 }

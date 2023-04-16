@@ -777,6 +777,12 @@ class SchedulePageState extends State<SchedulePage> {
           String eventTitle = schedule[i][j][2];
           String eventDescription = schedule[i][j][3];
           String eventLocation = schedule[i][j][1];
+          List semesterAndGroup = schedule[i][j][0].split(' ');
+          String eventSemester = semesterAndGroup[0];
+          String eventGroup = semesterAndGroup[1]
+              .split(' ')[1]
+              // .replaceAll(RegExp(r'(?<=\D)0+(?=\d)'), '');
+              .replaceFirst('0', '');
 
           // Convert the time slot to start and end times
           DateTime startTime = getTime(dayIndex, timeSlot.split("-")[0].trim());
@@ -794,6 +800,7 @@ class SchedulePageState extends State<SchedulePage> {
             recurrenceExceptionDates: [],
             location: eventLocation,
             slot: '$j',
+            group: eventGroup,
           );
           print(event.description);
           events.add(event);
@@ -899,19 +906,8 @@ class SchedulePageState extends State<SchedulePage> {
         minFontSize: 10,
         style: const TextStyle(fontWeight: FontWeight.w400));
 
-    // var dayExams =
-    //     EventDataSource(examEvents).getVisibleAppointments(details.date, "");
-
-    // bool isClass = events.contains(event);
-
-    // String slot = '0';
-    // var myListFiltered = events.where((e) => e == event);
-    // print("myListFiltered $myListFiltered");
-    // if (myListFiltered.isNotEmpty) {
-    //   slot = myListFiltered.first.slot.toString();
-    // }
     bool isExam = examEvents.contains(event);
-    bool isQuiz = quizzes.contains(event) || examEvents.contains(event);
+    bool isQuiz = quizzes.contains(event) || isExam;
     EventDataSource dataSource = EventDataSource(events);
     // dataSource.events!.remove(details.events.first);
     String slot = event.slot;
@@ -983,20 +979,11 @@ class SchedulePageState extends State<SchedulePage> {
           alignment: Alignment.center,
           children: [
             /// SLOT NUMBER ///
-            // slot number is only shown if the event is a class
-            // it should be on the right and as if it is a watermark
             Positioned(
               right: 5,
               bottom: 5,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                // decoration: const BoxDecoration(
-                //   color: Colors.white,
-                //   borderRadius: BorderRadius.only(
-                //     bottomLeft: Radius.circular(13),
-                //     topRight: Radius.circular(13),
-                //   ),
-                // ),
                 child: Text(
                   slot == '0'
                       ? ''
@@ -1004,7 +991,7 @@ class SchedulePageState extends State<SchedulePage> {
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.15),
                     fontWeight: FontWeight.w500,
-                    fontSize: 21,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -1036,7 +1023,7 @@ class SchedulePageState extends State<SchedulePage> {
                             children: [
                               Flexible(
                                 child: AutoSizeText(
-                                  event.description,
+                                  '${event.description} ${!isQuiz ? ' |  ${event.group}' : ''}',
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
@@ -1470,19 +1457,6 @@ class SchedulePageState extends State<SchedulePage> {
       ),
     );
   }
-
-  // Future<void> showAddEventOverlay() async {
-  //   String result = await displayCupertino();
-  //   print(result);
-  //   if (result == "Quiz") {
-  //     var quiz = await goToAddQuiz();
-  //     print(quiz.toString());
-  //     if (quiz != null) {
-  //       quizzes.add(quiz);
-  //     }
-  //     setState(() {});
-  //   }
-  // }
 
   Future<dynamic> goToAddQuiz(
       {dynamic eventToEdit, DateTime? initialDate}) async {

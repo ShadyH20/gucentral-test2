@@ -458,6 +458,7 @@ class Event implements Comparable<Event> {
   List<DateTime> recurrenceExceptionDates;
   String location;
   String slot;
+  String group;
 
   Event({
     required this.title,
@@ -470,6 +471,7 @@ class Event implements Comparable<Event> {
     this.recurrenceExceptionDates = const [],
     this.location = "",
     this.slot = "0",
+    this.group = "",
   });
 
   setRecurrenceExceptionDates(List<DateTime> dates) {
@@ -520,7 +522,8 @@ class Event implements Comparable<Event> {
         recurrenceExceptionDates =
             (json['re'] as List).map((e) => DateTime.parse(e)).toList(),
         location = json['l'],
-        slot = json['slot'];
+        slot = json['slot'],
+        group = json['group'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -533,7 +536,8 @@ class Event implements Comparable<Event> {
       'r': recurrence,
       're': recurrenceExceptionDates.map((e) => e.toIso8601String()).toList(),
       'l': location,
-      'slot': slot
+      'slot': slot,
+      'group': group,
     };
   }
 }
