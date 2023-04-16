@@ -1020,6 +1020,7 @@ class SchedulePageState extends State<SchedulePage> {
                           width: details.bounds.width - 20,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Flexible(
                                 child: AutoSizeText(
@@ -1080,7 +1081,7 @@ class SchedulePageState extends State<SchedulePage> {
                               width: details.bounds.width - 20 - 34,
                               child: AutoSizeText(
                                 // minFontSize: 16,
-                                maxFontSize: 22,
+                                maxFontSize: 23,
                                 overflow: TextOverflow.visible,
                                 courseMap[event.title.split(' ').join('')] ??
                                     "No Course",
@@ -1089,7 +1090,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 softWrap: true,
                                 wrapWords: true,
                                 style: const TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.w600),
+                                    fontSize: 23, fontWeight: FontWeight.w600),
                               ),
                             ),
 
@@ -1110,6 +1111,7 @@ class SchedulePageState extends State<SchedulePage> {
                               flex: 2,
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
+                                alignment: Alignment.bottomCenter,
                                 child: timeWidget,
                               ),
                             ),
