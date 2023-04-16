@@ -4,8 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/widgets/Requests.dart';
-
-import '../pages/new_quiz.dart';
+import '../pages/add_quiz.dart';
 import 'MyColors.dart';
 // import 'package:flutter_overlay_library/flutter_overlay_library.dart';
 

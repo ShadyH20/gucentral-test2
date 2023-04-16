@@ -190,6 +190,24 @@ class Requests {
     prefs.setString('quizzes', jsonEncode(quizzes));
   }
 
+  static List<Event> getDeadlines() {
+    if (prefs.containsKey('deadlines')) {
+      var list = jsonDecode(prefs.getString('deadlines')!);
+      List<Event> deadlines = [];
+      for (var deadline in list) {
+        deadlines.add(Event.fromJson(deadline));
+      }
+      return deadlines;
+    }
+
+    return [];
+  }
+
+  static void updateDeadlines(List<Event> deadlines) {
+    prefs.setString('deadlines', jsonEncode(deadlines));
+    print('updated deadlines to ${prefs.getString('deadlines')}');
+  }
+
   static dynamic getTranscript(context, year) async {
     var out = getCreds();
     out['year'] = year;
@@ -465,8 +483,8 @@ class Event implements Comparable<Event> {
     required this.description,
     required this.start,
     required this.end,
-    required this.color,
-    required this.isAllDay,
+    this.color = Colors.blue,
+    this.isAllDay = false,
     this.recurrence = "",
     this.recurrenceExceptionDates = const [],
     this.location = "",

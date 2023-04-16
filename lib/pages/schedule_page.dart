@@ -10,7 +10,8 @@ import "package:fading_edge_scrollview/fading_edge_scrollview.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
-import "package:gucentral/pages/new_quiz.dart";
+import "package:gucentral/pages/add_deadline.dart";
+import 'package:gucentral/pages/add_quiz.dart';
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
@@ -180,9 +181,9 @@ class SchedulePageState extends State<SchedulePage> {
                   },
                   onDaySelected: (selectedDay, focusedDay) {
                     if (!isSameDay(_selectedDay, selectedDay)) {
-                      List<dynamic>? dayQuizzes = _quizDataSource
+                      List<dynamic>? dayQuizzes = EventDataSource(quizzes)
                           .getVisibleAppointments(selectedDay, '');
-                      List<dynamic>? dayDeadlines = _deadlineDataSource
+                      List<dynamic>? dayDeadlines = EventDataSource(deadlines)
                           .getVisibleAppointments(selectedDay, '');
                       if (dayQuizzes.isEmpty && dayDeadlines.isEmpty) {
                         clickTabBtn("");
@@ -906,8 +907,7 @@ class SchedulePageState extends State<SchedulePage> {
 
     bool isExam = examEvents.contains(event);
     bool isQuiz = quizzes.contains(event) || isExam;
-    EventDataSource dataSource = EventDataSource(events);
-    // dataSource.events!.remove(details.events.first);
+
     String slot = event.slot;
 
     // AnimatedAlign(
@@ -966,7 +966,7 @@ class SchedulePageState extends State<SchedulePage> {
       opacity: hasPassed ? 0.6 : 1,
       child: Container(
         width: details.bounds.width,
-        height: details.bounds.height,
+        height: height,
         margin: const EdgeInsets.only(left: 7),
         // padding: const EdgeInsets.only(bottom: 5),
         decoration: BoxDecoration(
@@ -1000,7 +1000,7 @@ class SchedulePageState extends State<SchedulePage> {
                   left: 10,
                   right: 10,
                   top: isShort ? height / 15 : 9,
-                  bottom: isShort ? height / 30 : 5),
+                  bottom: isShort ? height / 30 : 7),
               child: DefaultTextStyle(
                   style: const TextStyle(
                       fontSize: 13,
@@ -1056,7 +1056,7 @@ class SchedulePageState extends State<SchedulePage> {
                                             height: 11,
                                             color: Colors.black,
                                           ),
-                                          const SizedBox(width: 3),
+                                          const SizedBox(width: 2),
                                           Text(isExam
                                               ? event.location.split(' in ')[1]
                                               : event.location ?? "No Loc")
@@ -1183,16 +1183,16 @@ class SchedulePageState extends State<SchedulePage> {
 
                     setState(() {});
 
-                    setState(() {
-                      tappedEvent = event;
-                      alignment1 = editButtonsToggle
-                          ? const Alignment(-0.16, -2.7)
-                          : const Alignment(0, 0.8);
-                      alignment2 = editButtonsToggle
-                          ? const Alignment(0.16, -2.7)
-                          : const Alignment(0, 0.8);
-                      editButtonsToggle = !editButtonsToggle;
-                    });
+                    // setState(() {
+                    //   tappedEvent = event;
+                    //   alignment1 = editButtonsToggle
+                    //       ? const Alignment(-0.16, -2.7)
+                    //       : const Alignment(0, 0.8);
+                    //   alignment2 = editButtonsToggle
+                    //       ? const Alignment(0.16, -2.7)
+                    //       : const Alignment(0, 0.8);
+                    //   editButtonsToggle = !editButtonsToggle;
+                    // });
                   },
                   child: Container(
                     constraints: const BoxConstraints(
@@ -1220,8 +1220,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   // courseMap[event.subject] ?? "",
-                                  courseMap[event!.title.split(' ').join('')] ??
-                                      "No Course Found",
+                                  courseMap[event!.title] ?? "No Course Found",
                                   style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700),
@@ -1266,10 +1265,10 @@ class SchedulePageState extends State<SchedulePage> {
           );
   }
 
-  List<Event> deadlines = [];
+  List<Event> deadlines = Requests.getDeadlines();
 
   Widget deadlineBuilder() {
-    List<Appointment>? dayDeadlines = _deadlineDataSource
+    List<Appointment>? dayDeadlines = EventDataSource(deadlines)
         .getVisibleAppointments(_controller.displayDate ?? DateTime.now(), '');
     return dayDeadlines.isEmpty
         ? Center(
@@ -1290,64 +1289,80 @@ class SchedulePageState extends State<SchedulePage> {
               physics: const BouncingScrollPhysics(),
               itemCount: dayDeadlines.length,
               itemBuilder: (BuildContext context, int index) {
-                Appointment event = dayDeadlines[index];
-                return Container(
-                  // width: 160,
-                  // height: 65,
-                  margin: const EdgeInsets.only(right: 10),
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
-                  decoration: BoxDecoration(
-                    color: MyColors.primary,
-                    borderRadius: BorderRadius.circular(10),
+                Appointment app = dayDeadlines[index];
+                Event? event =
+                    _quizDataSource.convertAppointmentToObject(null, app);
+                return GestureDetector(
+                  onTap: () async {
+                    var editedEvent = await goToAddDeadline(eventToEdit: event);
+                    if (editedEvent is Event) {
+                      if (editedEvent == null) return;
+
+                      deadlines.remove(event);
+                      deadlines.add(editedEvent);
+                    } else if (editedEvent is String &&
+                        editedEvent == 'Delete') {
+                      deadlines.remove(event);
+                    }
+                    // _eventDataSource = EventDataSource(events + quizzes);
+                    Requests.updateDeadlines(deadlines);
+
+                    setState(() {});
+                  },
+                  child: Container(
+                    // width: 160,
+                    // height: 65,
+                    margin: const EdgeInsets.only(right: 10),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 9),
+                    decoration: BoxDecoration(
+                      color: MyColors.primary,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DefaultTextStyle(
+                        style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: MyColors.background,
+                            fontFamily: 'Outfit'),
+                        child: IntrinsicWidth(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  // courseMap[event.subject] ?? "",
+                                  courseMap[event!.title] ?? "No Course Found",
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(event.description,
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500)),
+                                    Container(width: 10),
+                                    Text(DateFormat('h:mm a').format(event.end),
+                                        textAlign: TextAlign.end,
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
                   ),
-                  child: DefaultTextStyle(
-                      style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: MyColors.background,
-                          fontFamily: 'Outfit'),
-                      child: IntrinsicWidth(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                // courseMap[event.subject] ?? "",
-                                courseMap[event.subject.split(' ').join('')] ??
-                                    "No Course Found",
-                                style: const TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w700),
-                              ),
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                      jsonDecode(event.notes!)['description']
-                                          .toString(),
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500)),
-                                  Container(width: 10),
-                                  Text(
-                                      DateFormat('h:mm a')
-                                          .format(event.endTime),
-                                      textAlign: TextAlign.end,
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                      )),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
                 );
               },
             ),
@@ -1403,6 +1418,16 @@ class SchedulePageState extends State<SchedulePage> {
               quizzes.add(quiz);
               _eventDataSource = EventDataSource(events + quizzes);
               Requests.updateQuizzes(quizzes);
+
+              setState(() {});
+            }
+          } else if (dropdownValue == "Deadline") {
+            var deadline = await goToAddDeadline(initialDate: _selectedDay);
+            if (deadline != null) {
+              print("Deadline: ${deadline.toString()}");
+              deadlines.add(deadline);
+              // _eventDataSource = EventDataSource(events + quizzes);
+              Requests.updateDeadlines(deadlines);
 
               setState(() {});
             }
@@ -1473,6 +1498,27 @@ class SchedulePageState extends State<SchedulePage> {
           context,
           MaterialPageRoute(
               builder: (context) => AddQuizPage(
+                    courses: courses,
+                    initialDate: initialDate,
+                  )));
+    }
+  }
+
+  Future<dynamic> goToAddDeadline(
+      {dynamic eventToEdit, DateTime? initialDate}) async {
+    if (eventToEdit != null) {
+      return await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AddDeadlinePage(
+                    courses: courses,
+                    event: eventToEdit,
+                  )));
+    } else {
+      return await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AddDeadlinePage(
                     courses: courses,
                     initialDate: initialDate,
                   )));
