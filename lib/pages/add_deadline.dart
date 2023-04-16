@@ -614,7 +614,7 @@ class _AddDeadlinePageState extends State<AddDeadlinePage> {
                                 : Colors.black54),
                         is24HourMode: false,
                         isForce2Digits: true,
-                        minutesInterval: 5,
+                        // minutesInterval: 5,
                         itemHeight: 40,
                         spacing: 20,
                         onTimeChange: (time) {
