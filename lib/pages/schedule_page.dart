@@ -1396,8 +1396,10 @@ class SchedulePageState extends State<SchedulePage> {
             fontSize: 18,
             fontWeight: FontWeight.bold),
         // dropdownColor: MyColors.secondary,
+
         dropdownStyleData: DropdownStyleData(
-            openInterval: const Interval(0, 1, curve: Curves.easeIn),
+
+            // openInterval: const Interval(0, 1, curve: Curves.easeIn),
             offset: const Offset(0, 5),
             width: 200,
             decoration: BoxDecoration(
