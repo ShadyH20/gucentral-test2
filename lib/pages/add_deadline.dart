@@ -67,6 +67,9 @@ class _AddDeadlinePageState extends State<AddDeadlinePage> {
       _deadlineTitleController.text = widget.event!.description;
       _locationController.text = widget.event!.location;
       _selectedValue = widget.event!.title.split(" ").join("");
+      if (_selectedValue == "") {
+        _selectedValue = null;
+      }
     } else {
       _selectedDate = widget.initialDate ?? DateTime.now();
       _selectedTime = TimeOfDay.now();

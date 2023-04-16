@@ -1334,7 +1334,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   // courseMap[event.subject] ?? "",
-                                  courseMap[event!.title] ?? "No Course Found",
+                                  courseMap[event!.title] ?? event.description,
                                   style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700),
@@ -1346,7 +1346,10 @@ class SchedulePageState extends State<SchedulePage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(event.description,
+                                    Text(
+                                        event.title == ""
+                                            ? ""
+                                            : event.description,
                                         style: const TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w500)),
