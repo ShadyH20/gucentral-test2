@@ -780,7 +780,6 @@ class SchedulePageState extends State<SchedulePage> {
           List semesterAndGroup = schedule[i][j][0].split(' ');
           String eventSemester = semesterAndGroup[0];
           String eventGroup = semesterAndGroup[1]
-              .split(' ')[1]
               // .replaceAll(RegExp(r'(?<=\D)0+(?=\d)'), '');
               .replaceFirst('0', '');
 
@@ -802,7 +801,6 @@ class SchedulePageState extends State<SchedulePage> {
             slot: '$j',
             group: eventGroup,
           );
-          print(event.description);
           events.add(event);
         }
       }
