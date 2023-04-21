@@ -795,8 +795,10 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
+          color: MyApp.isDarkMode.value
+              ? MyColors.background
+              : const Color.fromARGB(255, 250, 250, 254),
           // padding: const EdgeInsets.symmetric(vertical: 10),
-          color: MyColors.background,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
