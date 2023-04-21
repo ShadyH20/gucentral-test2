@@ -63,38 +63,42 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               // rich text
               //same text as below but embed the gucentral svg logo instead of the word "GUCentral"
               RichText(
-                  text: TextSpan(children: [
-                TextSpan(
-                  text: "P.S. Update your saved password in ",
-                  style: TextStyle(
-                    fontFamily: "Outfit",
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: MyColors.secondary.withOpacity(0.6),
-                  ),
-                ),
-                WidgetSpan(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: SvgPicture.asset(
-                      "assets/images/logo-text.svg",
-                      height: 20,
-                      color: MyColors.primary.withOpacity(0.8),
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "P.S. Update your saved password in ",
+                      style: TextStyle(
+                        fontFamily: "Outfit",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: MyColors.secondary.withOpacity(0.6),
+                      ),
                     ),
-                  ),
-                  baseline: TextBaseline.alphabetic,
-                  alignment: PlaceholderAlignment.middle,
+                    WidgetSpan(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: SvgPicture.asset(
+                          "assets/images/logo-text.svg",
+                          height: 20,
+                          color: MyColors.primary.withOpacity(0.8),
+                        ),
+                      ),
+                      baseline: TextBaseline.alphabetic,
+                      alignment: PlaceholderAlignment.middle,
+                    ),
+                    TextSpan(
+                      text:
+                          " only after you have changed it on the GUC system.",
+                      style: TextStyle(
+                        fontFamily: "Outfit",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                        color: MyColors.secondary.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
                 ),
-                TextSpan(
-                  text: " only after you have changed it on the GUC system.",
-                  style: TextStyle(
-                    fontFamily: "Outfit",
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: MyColors.secondary.withOpacity(0.6),
-                  ),
-                ),
-              ])),
+              ),
 
               // Text(
               //   "P.S. Updates your saved password in GUCentral only after you have changed it on the GUC system.",

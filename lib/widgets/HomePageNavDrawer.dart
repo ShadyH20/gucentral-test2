@@ -143,7 +143,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
           index: selectedIndex,
           children: pages,
         ),
-        menuScreen: Builder(
+        menuScreen: Builder (
           builder: (context) => MenuPage(
               key: menuPageKey,
               currentItem: currentItem,

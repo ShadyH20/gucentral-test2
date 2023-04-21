@@ -487,17 +487,17 @@ class _DefaultPageState extends State<DefaultPage> {
                           });
                         },
                       ),
-                      // SettingsTile(
-                      //   title: const Text('Courses'),
-                      //   // leading: const Icon(Icons.menu_book_rounded),
-                      //   trailing:
-                      //       _defaultPage == MenuItems.courses ? check : null,
-                      //   onPressed: (context) {
-                      //     setState(() {
-                      //       _defaultPage = MenuItems.courses;
-                      //     });
-                      //   },
-                      // ),
+                      SettingsTile(
+                        title: const Text('Courses'),
+                        // leading: const Icon(Icons.menu_book_rounded),
+                        trailing:
+                            _defaultPage == MenuItems.courses ? check : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _defaultPage = MenuItems.courses;
+                          });
+                        },
+                      ),
                       SettingsTile(
                         title: const Text('Schedule'),
                         // leading: const Icon(Icons.calendar_today_rounded),
@@ -533,7 +533,7 @@ class _DefaultPageState extends State<DefaultPage> {
                       ),
                       SettingsTile(
                         title: const Text('Evaluate'),
-                        description: Text(
+                        description: const Text(
                             'Choose the default page that is opened when you first open the app.'),
                         trailing:
                             _defaultPage == MenuItems.evaluate ? check : null,

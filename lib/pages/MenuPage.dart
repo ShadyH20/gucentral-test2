@@ -21,7 +21,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class MenuPageState extends State<MenuPage> {
-  late List<String> idName;
+  late List<String?> idName;
 
   @override
   void initState() {
@@ -200,7 +200,7 @@ class MenuPageState extends State<MenuPage> {
               title: Padding(
                 padding: const EdgeInsets.only(top: 2.0),
                 child: AutoSizeText(
-                  "${idName[1].split(" ")[0]} ${idName[1].split(" ")[1]}",
+                  "${idName[1]?.split(" ")[0]} ${idName[1]?.split(" ")[1]}",
                   maxLines: 1,
                   minFontSize: 10,
                   maxFontSize: 20,
@@ -212,7 +212,7 @@ class MenuPageState extends State<MenuPage> {
                 ),
               ),
               subtitle: Text(
-                idName[0],
+                idName[0] ?? '#ERROR',
                 style: const TextStyle(
                   color: Color(0xFFF0F0F0),
                   fontSize: 16,
@@ -294,7 +294,7 @@ class MenuPageState extends State<MenuPage> {
   }
 
   bool comingSoon(String title) {
-    return title == 'Courses' || title == 'Grades' || title == 'Map';
+    return title == 'Grades' || title == 'Map';
   }
 }
 

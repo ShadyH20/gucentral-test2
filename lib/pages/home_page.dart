@@ -673,7 +673,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
             Row(
               children: [
-                Container(
+                SizedBox(
                   width: 50,
                   height: 50,
                   // decoration: ShapeDecoration(
@@ -775,8 +775,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             children: [
               Container(
                 width: 35,
-                height: 8,
-                margin: const EdgeInsets.symmetric(vertical: 10),
+                height: 5,
+                margin: const EdgeInsets.symmetric(vertical: 20),
                 decoration: BoxDecoration(
                   color: MyColors.secondary.withOpacity(0.4),
                   borderRadius: BorderRadius.circular(10),
