@@ -746,6 +746,33 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                 fontSize: 16.5,
               ),
             ),
+            const SizedBox(height: 40),
+            const Divider(
+              thickness: 2,
+            ),
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Text(
+            //     notification['sender'],
+            //     textAlign: TextAlign.left,
+            //     style: TextStyle(
+            //       color: MyColors.secondary.withOpacity(0.9),
+            //       fontWeight: FontWeight.w400,
+            //       fontSize: 16.5,
+            //     ),
+            //   ),
+            // ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                notification['department'],
+                style: TextStyle(
+                  color: MyColors.secondary.withOpacity(0.9),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.5,
+                ),
+              ),
+            ),
           ],
         ),
       ),

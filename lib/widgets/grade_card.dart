@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'MyColors.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'MyColors.dart';
 
 class GradeCard extends StatelessWidget {
   const GradeCard({

@@ -117,7 +117,7 @@ class _CoursesPageState extends State<CoursesPage> {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(height: 30),
-                const WeightCard(text: 'Quizzes', weight: '50')
+                const WeightCard(text: 'Quizzes', weight: '50'),
               ],
             ),
           );
