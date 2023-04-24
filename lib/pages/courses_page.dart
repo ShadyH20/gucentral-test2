@@ -26,11 +26,10 @@ class _CoursesPageState extends State<CoursesPage> {
     print("Courses page created");
     getCourses();
   }
-  getCourses() async {
+  getCourses() {
     print("Getting courses");
-    var out = await Requests.getCourses();
     setState(() {
-      courses = out;
+      courses = Requests.getCourses();
     });
     print("Courses: $courses");
   }

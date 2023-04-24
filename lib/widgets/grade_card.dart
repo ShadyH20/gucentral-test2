@@ -52,7 +52,7 @@ class GradeCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontFamily: "Outfit",
+              // fontFamily: "Outfit",
               fontWeight: !isElement ? FontWeight.w700 : FontWeight.w200,
               fontSize: !isElement ? 15 : 13,
               color: MyColors.secondary,
