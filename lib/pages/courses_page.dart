@@ -135,7 +135,7 @@ class _CoursesPageState extends State<CoursesPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("Building courses page");
+    // print("Building courses page");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
