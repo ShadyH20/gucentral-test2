@@ -28,9 +28,7 @@ class _CoursesPageState extends State<CoursesPage> {
   }
   getCourses() {
     print("Getting courses");
-    setState(() {
-      courses = Requests.getCourses();
-    });
+    courses = Requests.getCourses();
     print("Courses: $courses");
   }
 
