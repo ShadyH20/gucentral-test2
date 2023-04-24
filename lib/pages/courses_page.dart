@@ -23,13 +23,16 @@ class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
 
   _CoursesPageState() {
+    print("Courses page created");
     getCourses();
   }
   getCourses() async {
+    print("Getting courses");
     var out = await Requests.getCourses();
     setState(() {
       courses = out;
     });
+    print("Courses: $courses");
   }
 
   buildCourseName(dynamic course) {
@@ -132,6 +135,7 @@ class _CoursesPageState extends State<CoursesPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("Building courses page");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
