@@ -22,10 +22,15 @@ class CoursesPage extends StatefulWidget {
 class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
 
-  _CoursesPageState() {
-    print("Courses page created");
+  // _CoursesPageState() {
+  // }
+  @override
+  void initState() {
+    super.initState();
+    print("Courses page init state");
     getCourses();
   }
+
   getCourses() {
     print("Getting courses");
     courses = Requests.getCourses();
