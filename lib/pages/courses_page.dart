@@ -27,14 +27,11 @@ class _CoursesPageState extends State<CoursesPage> {
   @override
   void initState() {
     super.initState();
-    print("Courses page init state");
     getCourses();
   }
 
   getCourses() {
-    print("Getting courses");
     courses = Requests.getCourses();
-    print("Courses: $courses");
   }
 
   buildCourseName(dynamic course) {
@@ -97,6 +94,7 @@ class _CoursesPageState extends State<CoursesPage> {
   Widget buildGradeCard(List<Map> item) {
     if (item.length == 1) {
       return GradeCard(
+        key: UniqueKey(),
         title: item[0]['title'],
         score: item[0]['score'].toDouble(),
         scoreTotal: item[0]['scoreTotal'].toDouble(),
@@ -233,30 +231,28 @@ class _CoursesPageState extends State<CoursesPage> {
             Expanded(
               child: ListView(
                 children: [
-                  Flexible(
-                    child: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Introduction to Communication Networks',
-                            style: kMainTitleStyle.copyWith(fontSize: 26),
-                          ),
-                          const WidgetSpan(child: SizedBox(width: 10)),
-                          WidgetSpan(
-                            child: IconButton(
-                              padding: const EdgeInsets.all(0),
-                              alignment: Alignment.centerLeft,
-                              icon: SvgPicture.asset(
-                                "assets/images/edit.svg",
-                                height: 18,
-                              ),
-                              onPressed: () {},
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Introduction to Communication Networks',
+                          style: kMainTitleStyle.copyWith(fontSize: 26),
+                        ),
+                        const WidgetSpan(child: SizedBox(width: 10)),
+                        WidgetSpan(
+                          child: IconButton(
+                            padding: const EdgeInsets.all(0),
+                            alignment: Alignment.centerLeft,
+                            icon: SvgPicture.asset(
+                              "assets/images/edit.svg",
+                              height: 18,
                             ),
-                            baseline: TextBaseline.alphabetic,
-                            alignment: PlaceholderAlignment.middle,
+                            onPressed: () {},
                           ),
-                        ],
-                      ),
+                          baseline: TextBaseline.alphabetic,
+                          alignment: PlaceholderAlignment.middle,
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(
@@ -335,7 +331,7 @@ class _CoursesPageState extends State<CoursesPage> {
                   Container(
                     padding: const EdgeInsets.only(top: 45),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -365,6 +361,10 @@ class _CoursesPageState extends State<CoursesPage> {
                             return buildGradeCard(item);
                           }).toList(),
                         ),
+                        // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
+                        //   print("Building grade card $index");
+                        //   return buildGradeCard(allGrades[index]);
+                        // }),
                         const SizedBox(height: 150),
                       ],
                     ),

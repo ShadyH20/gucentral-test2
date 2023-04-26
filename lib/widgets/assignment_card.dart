@@ -68,6 +68,7 @@ class AssignmentCard extends StatelessWidget {
           // mainAxisAlignment: MainAxisAlignment.end,
           children: elements.map((item) {
             return GradeCard(
+              key: UniqueKey(),
               title: item['elementName'],
               score: item['score'].toDouble(),
               scoreTotal: item['scoreTotal'].toDouble(),
