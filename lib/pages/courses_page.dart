@@ -191,7 +191,7 @@ class _CoursesPageState extends State<CoursesPage> {
                     }
                   ],
                   [
-                    {'title': 'Quiz 4', 'score': 9.4, 'scoreTotal': 10.0}
+                    {'title': 'Quiz 3', 'score': 5, 'scoreTotal': 10.0}
                   ],
                 ];
               });
@@ -235,22 +235,29 @@ class _CoursesPageState extends State<CoursesPage> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Introduction to Communication Networks',
+                          text: 'Computer System Architecture',
                           style: kMainTitleStyle.copyWith(fontSize: 26),
                         ),
                         const WidgetSpan(child: SizedBox(width: 10)),
                         WidgetSpan(
-                          child: IconButton(
-                            padding: const EdgeInsets.all(0),
-                            alignment: Alignment.centerLeft,
-                            icon: SvgPicture.asset(
-                              "assets/images/edit.svg",
-                              height: 18,
+                          child: SizedBox(
+                            // margin: const EdgeInsets.only(bottom: 1),
+                            height: 18,
+                            width: 18,
+                            child: IconButton(
+                              padding: const EdgeInsets.all(0),
+                              // iconSize: 5,
+                              splashRadius: 17,
+                              iconSize: 15,
+                              alignment: Alignment.center,
+                              icon: SvgPicture.asset(
+                                "assets/images/edit.svg",
+                              ),
+                              onPressed: () {},
                             ),
-                            onPressed: () {},
                           ),
                           baseline: TextBaseline.alphabetic,
-                          alignment: PlaceholderAlignment.middle,
+                          // alignment: PlaceholderAlignment.middle,
                         ),
                       ],
                     ),
@@ -270,39 +277,45 @@ class _CoursesPageState extends State<CoursesPage> {
                             ),
                             const WidgetSpan(child: SizedBox(width: 10)),
                             WidgetSpan(
-                              child: IconButton(
-                                padding: const EdgeInsets.all(0),
-                                // iconSize: 5,
-                                alignment: Alignment.centerLeft,
-                                icon: SvgPicture.asset(
-                                  "assets/images/edit.svg",
-                                  height: 18,
-                                  // fit: BoxFit.scaleDown,
+                              child: SizedBox(
+                                // margin: const EdgeInsets.only(bottom: 5),
+                                height: 18,
+                                width: 18,
+                                child: IconButton(
+                                  padding: const EdgeInsets.all(0),
+                                  // iconSize: 5,
+                                  splashRadius: 17,
+                                  iconSize: 15,
+                                  alignment: Alignment.center,
+                                  icon: SvgPicture.asset(
+                                    "assets/images/edit.svg",
+                                    // fit: BoxFit.scaleDown,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      buildWeightSheet(context);
+                                      // allWeights = [
+                                      //   {
+                                      //     'text': 'Quizzes',
+                                      //     'weight': '30',
+                                      //     'best': ['4', '5']
+                                      //   },
+                                      //   {
+                                      //     'text': 'In-Class Assignments',
+                                      //     'weight': '20',
+                                      //     'best': ['8', '10']
+                                      //   },
+                                      //   {
+                                      //     'text': 'Midterms',
+                                      //     'weight': '30',
+                                      //   },
+                                      // ];
+                                    });
+                                  },
                                 ),
-                                onPressed: () {
-                                  setState(() {
-                                    buildWeightSheet(context);
-                                    // allWeights = [
-                                    //   {
-                                    //     'text': 'Quizzes',
-                                    //     'weight': '30',
-                                    //     'best': ['4', '5']
-                                    //   },
-                                    //   {
-                                    //     'text': 'In-Class Assignments',
-                                    //     'weight': '20',
-                                    //     'best': ['8', '10']
-                                    //   },
-                                    //   {
-                                    //     'text': 'Midterms',
-                                    //     'weight': '30',
-                                    //   },
-                                    // ];
-                                  });
-                                },
                               ),
                               baseline: TextBaseline.alphabetic,
-                              alignment: PlaceholderAlignment.middle,
+                              // alignment: PlaceholderAlignment.middle,
                             ),
                           ],
                         ),
