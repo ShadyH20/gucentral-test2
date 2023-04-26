@@ -48,3 +48,6 @@ class SharedPrefs {
 final GlobalKey<MenuPageState> menuPageKey = GlobalKey();
 final GlobalKey<MyAppState> mainKey = GlobalKey();
 final GlobalKey<HomePageState> homeKey = GlobalKey();
+
+// Maps course code to course name
+Map<String, String> courseMap = {};

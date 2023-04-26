@@ -81,8 +81,10 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     setState(() {
       loadingEverything = false;
       prefs.setBool("loading", false);
-      // menuPageKey.currentState?.setState(() {});
     });
+    // Set the course map
+    var courses = Requests.getCourses();
+    courseMap = {for (var course in courses) course['code']: course['name']};
   }
 
   Widget adsenseAdsView() {

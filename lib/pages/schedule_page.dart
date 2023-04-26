@@ -69,7 +69,7 @@ class SchedulePageState extends State<SchedulePage> {
   bool is24h = false;
 
   late List<String> timeSlots;
-  Map<String, String> courseMap = {};
+  // Map<String, String> courseMap = {};
   List<dynamic> courses = [];
   List<dynamic> schedule = [];
   Map<int, List<Event>> groupedEvents = {};
