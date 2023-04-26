@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gucentral/pages/evaluate/evaluate_academics.dart';
 import 'package:gucentral/pages/evaluate/evaluate_courses.dart';
 import 'package:gucentral/widgets/Requests.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
@@ -36,7 +37,8 @@ class _EvaluatePageState extends State<EvaluatePage> {
     super.initState();
     pages = const [
       EvaluateCourses(),
-      Center(child: Text("Evaluate Academics")),
+      EvaluateAcademics()
+      // Center(child: Text("Evaluate Academics")),
     ];
   }
 
@@ -127,7 +129,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
             color: MyColors.secondary,
           ),
           onPressed: () {
-            // initCoursesToEval();
+            refreshCurrentPage();
           },
         ),
         Container(
@@ -135,5 +137,17 @@ class _EvaluatePageState extends State<EvaluatePage> {
         )
       ],
     );
+  }
+
+  refreshCurrentPage() {
+    setState(() {
+      if (pageIndex == 0) {
+        pages[0] = EvaluateCourses();
+        print('Refreshed Courses');
+      } else {
+        pages[1] = EvaluateAcademics();
+        print('Refreshed Academics');
+      }
+    });
   }
 }

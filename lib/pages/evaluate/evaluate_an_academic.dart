@@ -48,17 +48,17 @@ const labels2 = [
   'How great is the amount of work for this course to you'
 ];
 
-class EvaluateAcademic extends StatefulWidget {
+class EvaluateAnAcademic extends StatefulWidget {
   final dynamic academic;
 
-  const EvaluateAcademic({super.key, required this.academic});
+  const EvaluateAnAcademic({super.key, required this.academic});
 
   @override
-  State<EvaluateAcademic> createState() => _EvaluateAcademicState();
+  State<EvaluateAnAcademic> createState() => _EvaluateAnAcademicState();
 }
 
-class _EvaluateAcademicState extends State<EvaluateAcademic>
-    with AutomaticKeepAliveClientMixin<EvaluateAcademic> {
+class _EvaluateAnAcademicState extends State<EvaluateAnAcademic>
+    with AutomaticKeepAliveClientMixin<EvaluateAnAcademic> {
   final _formKey = GlobalKey<FormState>();
 
   List<int> radio1Vals = List.filled(labels.length, 0);
@@ -76,7 +76,7 @@ class _EvaluateAcademicState extends State<EvaluateAcademic>
             backgroundColor: MyColors.background,
             foregroundColor: MyColors.secondary,
             title: const Text(
-              "Evaluate a Course",
+              "Evaluate an Academic",
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ),

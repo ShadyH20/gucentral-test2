@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
+import 'package:gucentral/pages/evaluate/evaluate_an_academic.dart';
 import 'package:http/http.dart';
 import 'package:ntlm/ntlm.dart';
 
@@ -11,15 +12,15 @@ import '../../main.dart';
 import '../../widgets/MyColors.dart';
 import '../../widgets/Requests.dart';
 
-class EvaluateCourses extends StatefulWidget {
-  const EvaluateCourses({super.key});
+class EvaluateAcademics extends StatefulWidget {
+  const EvaluateAcademics({super.key});
 
   @override
-  State<EvaluateCourses> createState() => _EvaluateCoursesState();
+  State<EvaluateAcademics> createState() => _EvaluateAcademicsState();
 }
 
-class _EvaluateCoursesState extends State<EvaluateCourses>
-    with AutomaticKeepAliveClientMixin<EvaluateCourses> {
+class _EvaluateAcademicsState extends State<EvaluateAcademics>
+    with AutomaticKeepAliveClientMixin<EvaluateAcademics> {
   // ignore: non_constant_identifier_names
   late ColorScheme MyColors;
   @override
@@ -57,7 +58,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
     });
   }
 
-  var dropdownCourseValue;
+  dynamic dropdownAcademicValue;
   @override
   Widget build(BuildContext context) {
     return ScaffoldMessenger(
@@ -74,7 +75,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                     children: [
                       const SizedBox(height: 10),
                       const Text(
-                        "Courses To Evaluate",
+                        "Academics To Evaluate",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w500),
                       ),
@@ -100,7 +101,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                             ),
                             isExpanded: true,
 
-                            value: dropdownCourseValue,
+                            value: dropdownAcademicValue,
                             style: TextStyle(
                                 // decoration: TextDecoration.underline,
                                 color: MyApp.isDarkMode.value
@@ -117,16 +118,16 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                                       bottomLeft: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                 )),
-                            hint: const Text("Choose a course"),
+                            hint: const Text("Choose an academic"),
                             underline: Container(
                               color: const Color(0),
                             ),
                             onChanged: (course) {
                               // This is called when the user selects an item.
                               setState(() {
-                                dropdownCourseValue = course;
+                                dropdownAcademicValue = course;
                               });
-                              debugPrint("$dropdownCourseValue chosen");
+                              debugPrint("$dropdownAcademicValue chosen");
                               courseChosen(context, course);
                               // widget.transcript.updateTranscript(value!);
                             },
@@ -147,7 +148,8 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                         child: isCourseLoading
                             ? const Center(child: CircularProgressIndicator())
                             : isCourseLoaded
-                                ? EvaluateACourse(course: dropdownCourseValue)
+                                ? EvaluateAnAcademic(
+                                    academic: dropdownAcademicValue)
                                 : const SizedBox(),
                       ),
                       //

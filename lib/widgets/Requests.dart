@@ -574,10 +574,12 @@ void showSnackBar(BuildContext context, String text,
     content: Text(
       text,
       textAlign: TextAlign.center,
-      style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-          color: Theme.of(context).colorScheme.secondary),
+      style: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+        // color: Theme.of(context).colorScheme.secondary,
+        color: Colors.white,
+      ),
     ),
     showCloseIcon: true,
     closeIconColor: MyColors.background,

@@ -129,7 +129,12 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
               alignment: Alignment.center,
               child: mainScreen,
             ),
-            slide == 0.0 ? Container() : menuScreen,
+            slide == 0.0
+                ? Container()
+                : SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: menuScreen,
+                  ),
           ]);
         },
         // moveMenuScreen: true,
@@ -143,7 +148,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
           index: selectedIndex,
           children: pages,
         ),
-        menuScreen: Builder (
+        menuScreen: Builder(
           builder: (context) => MenuPage(
               key: menuPageKey,
               currentItem: currentItem,
