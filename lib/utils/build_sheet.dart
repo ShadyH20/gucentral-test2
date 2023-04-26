@@ -43,7 +43,9 @@ class BuildSheet {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          color: MyColors.background,
+          color: MyApp.isDarkMode.value
+              ? MyColors.background
+              : const Color.fromARGB(255, 250, 250, 254),
           child: Container(
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 175),
             height: 5,
