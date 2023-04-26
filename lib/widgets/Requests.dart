@@ -14,9 +14,16 @@ class Requests {
   static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
   static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
   static Uri loginURL = Uri.parse('$backendURL/login');
+
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
-  static Uri checkEvalURL = Uri.parse('$backendURL/checkEvaluated');
+  static Uri checkCourseEvalURL = Uri.parse('$backendURL/checkCourseEvaluated');
   static Uri evaluateCourseURL = Uri.parse('$backendURL/evaluateCourse');
+
+  static Uri academicsEvalURL = Uri.parse('$backendURL/academicsToEval');
+  static Uri checkAcademicEvalURL =
+      Uri.parse('$backendURL/checkAcademicEvaluated');
+  static Uri evaluateAcademicURL = Uri.parse('$backendURL/evaluateAcademic');
+
   static Uri examSchedURL = Uri.parse('$backendURL/examSched');
   static Uri attendanceURL = Uri.parse('$backendURL/attendance');
   static Uri gradesURL = Uri.parse('$backendURL/grades');
@@ -228,6 +235,9 @@ class Requests {
     }
   }
 
+  ////////////////////////////
+  ///// EVALUATE COURSES /////
+  ////////////////////////////
   static getCoursesToEval() async {
     var creds = getCreds();
     var body = jsonEncode(creds);
@@ -245,13 +255,13 @@ class Requests {
     }
   }
 
-  static checkEvaluated(String course) async {
+  static checkCourseEvaluated(String course) async {
     var out = getCreds();
     out['course'] = course;
     var body = jsonEncode(out);
 
     try {
-      var response = await http.post(checkEvalURL, body: body, headers: {
+      var response = await http.post(checkCourseEvalURL, body: body, headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       });
@@ -290,6 +300,76 @@ class Requests {
       };
     }
   }
+  ////////////////////////////
+
+  ////////////////////////////
+  //// EVALUATE ACADEMICS ////
+  ////////////////////////////
+  static getAcademicsToEval() async {
+    var creds = getCreds();
+    var body = jsonEncode(creds);
+
+    try {
+      var response = await http.post(academicsEvalURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      return jsonDecode(response.body);
+    } on Exception catch (e) {
+      print("Courses to eval exception $e");
+      return null;
+    }
+  }
+
+  static checkAcademicEvaluated(String academic) async {
+    var out = getCreds();
+    out['academic'] = academic;
+    var body = jsonEncode(out);
+
+    try {
+      var response = await http.post(checkAcademicEvalURL,
+          body: body,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          });
+
+      return jsonDecode(response.body);
+    } on Exception catch (e) {
+      print("Academics to eval exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
+  static evaluateAcademic(
+      academic, List<int> radio1vals, List radio2vals, String remark) async {
+    var out = getCreds();
+    out['academic'] = academic;
+    out['radio1'] = radio1vals;
+    out['radio2'] = radio2vals;
+    out['remark'] = remark;
+    var body = jsonEncode(out);
+
+    try {
+      var response = await http.post(evaluateAcademicURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      return jsonDecode(response.body);
+    } on Exception catch (e) {
+      print("Courses to eval exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+  ////////////////////
 
   static getExamSchedule() async {
     var creds = getCreds();

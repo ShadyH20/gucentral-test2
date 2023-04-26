@@ -117,7 +117,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                                       bottomLeft: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                 )),
-                            hint: const Text("Choose a course"),
+                            hint: const Text("Choose a Course"),
                             underline: Container(
                               color: const Color(0),
                             ),
@@ -166,7 +166,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
     if (course['value'] == "-1") return;
     setState(() => isCourseLoading = true);
     // setState(() => loading = true);
-    var resp = await Requests.checkEvaluated(course['value']);
+    var resp = await Requests.checkCourseEvaluated(course['value']);
     var alreadyEvaluated = !resp['success'];
     setState(() {
       isCourseLoading = false;

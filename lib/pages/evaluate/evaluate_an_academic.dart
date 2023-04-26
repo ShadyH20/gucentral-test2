@@ -468,12 +468,13 @@ class _EvaluateAnAcademicState extends State<EvaluateAnAcademic>
       setState(() {
         submitting = true;
       });
-      var res = await Requests.evaluateCourse(widget.academic['value'],
-          radio1Vals, radio2Vals, _remarkController.text);
-      setState(() {
-        submitting = false;
-      });
-      showSnackBar(context, res['message']);
+      // var res = await Requests.evaluateAcademic(widget.academic['value'],
+      //     radio1Vals, radio2Vals, _remarkController.text);
+      // setState(() {
+      //   submitting = false;
+      // });
+      // showSnackBar(context, res['message']);
+      showSnackBar(context, 'Evaluate Academics is coming soon!');
     }
   }
 

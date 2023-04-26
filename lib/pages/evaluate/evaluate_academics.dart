@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:gucentral/pages/evaluate/evaluate_a_course.dart';
 import 'package:gucentral/pages/evaluate/evaluate_an_academic.dart';
 import 'package:http/http.dart';
 import 'package:ntlm/ntlm.dart';
@@ -30,26 +29,25 @@ class _EvaluateAcademicsState extends State<EvaluateAcademics>
   }
 
   bool loading = false;
-  List coursesToEval = [];
+  List academicsToEval = [];
 
   @override
   void initState() {
     super.initState();
-    initCoursesToEval();
+    initAcademicsToEval();
   }
 
-  void initCoursesToEval() async {
+  void initAcademicsToEval() async {
     setState(() {
       loading = true;
     });
-    var resp = await Requests.getCoursesToEval();
+    var resp = await Requests.getAcademicsToEval();
     if (resp['success']) {
       setState(() {
-        coursesToEval = [];
-        // dropdownCourseValue = coursesToEval[0];
-        coursesToEval += (resp['courses']);
+        academicsToEval = [];
+        academicsToEval += (resp['academics']);
       });
-      debugPrint(coursesToEval.toString());
+      debugPrint(academicsToEval.toString());
     } else {
       showSnackBar(context, resp['message']);
     }
@@ -112,48 +110,44 @@ class _EvaluateAcademicsState extends State<EvaluateAcademics>
                                 fontWeight: FontWeight.bold),
                             // dropdownColor: MyColors.secondary,
                             dropdownStyleData: const DropdownStyleData(
+                                // maxHeight: 200,
                                 offset: Offset(0, 4),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                 )),
-                            hint: const Text("Choose an academic"),
-                            underline: Container(
-                              color: const Color(0),
-                            ),
-                            onChanged: (course) {
+                            hint: const Text("Choose a Staff Member"),
+                            onChanged: (academic) {
                               // This is called when the user selects an item.
                               setState(() {
-                                dropdownAcademicValue = course;
+                                dropdownAcademicValue = academic;
                               });
                               debugPrint("$dropdownAcademicValue chosen");
-                              courseChosen(context, course);
+                              academicChosen(context, academic);
                               // widget.transcript.updateTranscript(value!);
                             },
-                            items: coursesToEval
-                                .map<DropdownMenuItem>((dynamic course) {
+                            items: academicsToEval
+                                .map<DropdownMenuItem>((dynamic academic) {
                               return DropdownMenuItem(
-                                value: course,
-                                child: buildCourseName(course['name']),
+                                value: academic,
+                                child: Text(academic['name']),
                               );
                             }).toList(),
                           ),
                         ),
                       ),
-                      SizedBox(height: isCourseLoaded ? 10 : 0),
+                      SizedBox(height: isAcademicLoaded ? 10 : 0),
 
-                      /// if the user has chosen a course to evaluate
+                      /// if the user has chosen a staff member to evaluate
                       Expanded(
-                        child: isCourseLoading
+                        child: isAcademicLoading
                             ? const Center(child: CircularProgressIndicator())
-                            : isCourseLoaded
+                            : isAcademicLoaded
                                 ? EvaluateAnAcademic(
                                     academic: dropdownAcademicValue)
                                 : const SizedBox(),
                       ),
-                      //
-                      // EvaluateACourse(course: dropdownCourseValue)
                     ],
                   ),
           ),
@@ -162,76 +156,25 @@ class _EvaluateAcademicsState extends State<EvaluateAcademics>
     );
   }
 
-  bool isCourseLoading = false;
-  bool isCourseLoaded = false;
-  void courseChosen(context, course) async {
-    if (course['value'] == "-1") return;
-    setState(() => isCourseLoading = true);
+  bool isAcademicLoading = false;
+  bool isAcademicLoaded = false;
+  void academicChosen(context, academic) async {
+    if (academic['value'] == "-1") return;
+    setState(() => isAcademicLoading = true);
     // setState(() => loading = true);
-    var resp = await Requests.checkEvaluated(course['value']);
+    var resp = await Requests.checkAcademicEvaluated(academic['value']);
     var alreadyEvaluated = !resp['success'];
     setState(() {
-      isCourseLoading = false;
-      isCourseLoaded = !alreadyEvaluated;
+      isAcademicLoading = false;
+      isAcademicLoaded = !alreadyEvaluated;
     });
     if (alreadyEvaluated) {
       showSnackBar(context, resp['message'],
           duration: const Duration(seconds: 7));
     }
-    // else {
-    //   // ignore: use_build_context_synchronously
-    //   // Navigator.pushNamed(context, '/evaluate', arguments: course);
-    // }
-  }
-
-  buildCourseName(String course) {
-    var courseSplit = course.split(' ');
-    var name = courseSplit.sublist(0, courseSplit.length - 2).join(" ");
-    var code = courseSplit.sublist(courseSplit.length - 2).join(" ");
-
-    // add a seperator after the course name
-    return Row(
-      children: [
-        Expanded(flex: 4, child: Text(code)),
-        Expanded(
-            flex: 9,
-            child: AutoSizeText(
-              name,
-              maxLines: 2,
-              // maxFontSize: 18,
-            )),
-      ],
-      // const Divider()
-    );
-    // Text.rich(TextSpan(text: "$name ", children: [
-    //   TextSpan(text: code, style: TextStyle(color: MyColors.primaryVariant))
-    // ]));
   }
 
   @override
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-
-  // void testLogin() async {
-  //   print("test login");
-  //   NTLMClient client = NTLMClient(
-  //     domain: "",
-  //     workstation: "LAPTOP",
-  //     username: '${prefs.getString('username')}@student.guc.edu.eg',
-  //     password: prefs.getString('password'),
-  //   );
-  //   print(client.username);
-  //   print(client.password);
-  //   String basicAuth =
-  //       'Basic ' + base64.encode(utf8.encode('$username:$password'));
-  //   print(basicAuth);
-
-  //   Response r = await get(
-  //       Uri.parse('https://cms.guc.edu.eg/apps/student/HomePageStn.aspx'),
-  //       headers: <String, String>{'authorization': basicAuth});
-  //   print(r.statusCode);
-  //   print(r.body);
-
-  //   var res = await client.get(Uri.parse('https://student.guc.edu.eg/'));
-  // }
 }
