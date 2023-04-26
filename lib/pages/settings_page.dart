@@ -51,10 +51,10 @@ class _SettingsPageState extends State<SettingsPage> {
           ? MyColors.background
           : const Color(0xfff3f3fa),
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: MyColors.background,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.dark),
+        // systemOverlayStyle: SystemUiOverlayStyle(
+        //     statusBarColor: MyColors.background,
+        //     statusBarIconBrightness: Brightness.dark,
+        //     statusBarBrightness: Brightness.dark),
         elevation: 0,
         backgroundColor: MyColors.background,
         centerTitle: true,

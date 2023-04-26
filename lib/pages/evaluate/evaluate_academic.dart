@@ -69,10 +69,10 @@ class _EvaluateAcademicState extends State<EvaluateAcademic>
         return Scaffold(
           backgroundColor: MyColors.background,
           appBar: AppBar(
-            systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: MyColors.background,
-                statusBarIconBrightness: Brightness.dark,
-                statusBarBrightness: Brightness.dark),
+            // systemOverlayStyle: const SystemUiOverlayStyle(
+            //     statusBarColor: MyColors.background,
+            //     statusBarIconBrightness: Brightness.dark,
+            //     statusBarBrightness: Brightness.dark),
             backgroundColor: MyColors.background,
             foregroundColor: MyColors.secondary,
             title: const Text(

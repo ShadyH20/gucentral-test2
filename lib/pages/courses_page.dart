@@ -139,10 +139,10 @@ class _CoursesPageState extends State<CoursesPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: MyColors.primary,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.dark),
+        // systemOverlayStyle: const SystemUiOverlayStyle(
+        //     statusBarColor: MyColors.primary,
+        //     statusBarIconBrightness: Brightness.dark,
+        //     statusBarBrightness: Brightness.dark),
         elevation: 0,
         backgroundColor: MyColors.background,
         centerTitle: true,

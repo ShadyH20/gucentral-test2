@@ -391,10 +391,10 @@ class SchedulePageState extends State<SchedulePage> {
   double changeViewBtnScale = 1;
   AppBar scheduleAppBar() {
     return AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: MyColors.primary,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark),
+      // systemOverlayStyle: SystemUiOverlayStyle(
+      //     statusBarColor: MyColors.primary,
+      //     statusBarIconBrightness: Brightness.dark,
+      //     statusBarBrightness: Brightness.dark),
       elevation: 0,
       backgroundColor: MyColors.background,
       centerTitle: true,

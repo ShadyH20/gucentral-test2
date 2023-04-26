@@ -21,14 +21,6 @@ class MyTheme {
   static const Color errorDark = Color.fromARGB(255, 223, 70, 67);
 
   static ThemeData lightTheme = ThemeData(
-    appBarTheme: const AppBarTheme(
-        centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w600,
-          color: orange,
-          fontFamily: 'Outfit',
-        )),
     primaryColor: light,
     // accentColor: darkGrey,
     // hintColor: Colors.white12,
@@ -48,6 +40,20 @@ class MyTheme {
       surface: darkGrey,
       onSurface: Colors.black,
     ),
+
+    appBarTheme: const AppBarTheme(
+        systemOverlayStyle: SystemUiOverlayStyle(
+            // statusBarBrightness: Brightness.dark,
+            // statusBarIconBrightness: Brightness.light,
+            statusBarColor: light,
+            systemNavigationBarContrastEnforced: false),
+        centerTitle: true,
+        titleTextStyle: TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.w600,
+          color: orange,
+          fontFamily: 'Outfit',
+        )),
     fontFamily: 'Outfit',
     textTheme: const TextTheme(
       displayLarge: TextStyle(
@@ -77,12 +83,11 @@ class MyTheme {
         onBackground: light,
         surface: darkGrey,
         onSurface: light),
-    fontFamily: 'Outfit',
     appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarBrightness: Brightness.dark,
-            statusBarColor: darkerGrey,
-            statusBarIconBrightness: Brightness.light,
+            // statusBarBrightness: Brightness.dark,
+            // statusBarIconBrightness: Brightness.light,
+            statusBarColor: darkerGrey2,
             systemNavigationBarContrastEnforced: false),
         centerTitle: true,
         titleTextStyle: TextStyle(
@@ -91,6 +96,7 @@ class MyTheme {
           color: light,
           fontFamily: 'Outfit',
         )),
+    fontFamily: 'Outfit',
     textTheme: const TextTheme(
       displayLarge: TextStyle(
           fontSize: 60.0,

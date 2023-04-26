@@ -107,10 +107,10 @@ class _EvaluatePageState extends State<EvaluatePage> {
 
   evaluateAppBar() {
     return AppBar(
-      systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: MyColors.primary,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.dark),
+      // systemOverlayStyle: SystemUiOverlayStyle(
+      //     statusBarColor: MyColors.primary,
+      //     statusBarIconBrightness: Brightness.dark,
+      //     statusBarBrightness: Brightness.dark),
       elevation: 0,
       backgroundColor: MyColors.background,
       centerTitle: true,
