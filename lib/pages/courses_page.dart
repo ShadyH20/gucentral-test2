@@ -104,7 +104,7 @@ class _CoursesPageState extends State<CoursesPage> {
   }
 
   buildWeightSheet(BuildContext context) {
-    weightSheet ??= BuildSheet(
+    weightSheet = BuildSheet(
         context: context,
         builder: (context, state) {
           return Container(
@@ -121,6 +121,36 @@ class _CoursesPageState extends State<CoursesPage> {
                 ),
                 const SizedBox(height: 30),
                 const WeightCard(text: 'Quizzes', weight: '50'),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    Expanded(
+                      // flex: 6,
+                      child: Container(
+                        color: const Color.fromARGB(30, 0, 0, 0),
+                        height: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        color: MyColors.primary,
+                        borderRadius: BorderRadius.circular(7),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          print('sup');
+                        },
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           );
