@@ -9,6 +9,7 @@ import '../widgets/weight_card.dart';
 import '../widgets/grade_card.dart';
 import '../widgets/assignment_card.dart';
 import '../utils/constants.dart';
+import '../widgets/add_weight_card.dart';
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
 import '../main.dart';
 
@@ -122,6 +123,13 @@ class _CoursesPageState extends State<CoursesPage> {
                 const SizedBox(height: 30),
                 const WeightCard(text: 'Quizzes', weight: '50'),
                 const SizedBox(height: 30),
+                Column(
+                  children: [
+                    for (var i = 0; i < addWeightCardNum; i++)
+                      AddWeightCard(onCancel: setWeightCardNum)
+                  ],
+                ),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     Expanded(
@@ -142,6 +150,7 @@ class _CoursesPageState extends State<CoursesPage> {
                       child: GestureDetector(
                         onTap: () {
                           print('sup');
+                          setWeightCardNum(true);
                         },
                         child: const Icon(
                           Icons.add,
@@ -162,6 +171,20 @@ class _CoursesPageState extends State<CoursesPage> {
   List<List<Map>> allGrades = [];
   double midterm = -1;
   BuildSheet? weightSheet;
+
+  int addWeightCardNum = 0;
+
+  void setWeightCardNum(bool increment) {
+    if (increment) {
+      setState(() {
+        addWeightCardNum++;
+      });
+    } else {
+      setState(() {
+        if (addWeightCardNum > 0) addWeightCardNum--;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
