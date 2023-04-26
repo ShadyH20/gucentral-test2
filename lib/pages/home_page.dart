@@ -610,8 +610,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
           cornerRadius: 20,
           // extendBody: true,
           snapSpec: const SnapSpec(
-            snappings: [0.5, 0.75, .96],
-            initialSnap: .96,
+            snappings: [0.5, 0.75, 0.85],
+            initialSnap: .85,
             // onSnap: (p0, snap) {
             //   print(snap);
             // },
@@ -643,15 +643,30 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             //Text containing the notification title
             Align(
               alignment: Alignment.topLeft,
-              child: Text(
-                notification['course_code'],
-                style: TextStyle(
-                  color: MyColors.secondary,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 15,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: [
+                  Text(
+                    '${courseMap[notification['course_code']]}  |',
+                    style: TextStyle(
+                      color: MyColors.secondary,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    '  ${notification['course_code']}',
+                    style: TextStyle(
+                      color: MyColors.secondary,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                    ),
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
             Align(
@@ -767,11 +782,22 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
+                notification['sender'],
+                style: TextStyle(
+                  color: MyColors.secondary.withOpacity(0.9),
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
                 notification['department'],
                 style: TextStyle(
                   color: MyColors.secondary.withOpacity(0.9),
                   fontWeight: FontWeight.w400,
-                  fontSize: 16.5,
+                  fontSize: 15,
                 ),
               ),
             ),

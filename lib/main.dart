@@ -46,7 +46,7 @@ void main() async {
     if (message.notification != null) {
       print(
           'Message also contained a notification: ${message.notification!.title}');
-    } 
+    }
   });
 
   // Initialize Shared Prefs
@@ -169,7 +169,7 @@ class MyAppState extends State<MyApp> {
             }
           },
           routes: {
-            "/login": (context) => LoginPage(),
+            "/login": (context) => const LoginPage(),
             // "/evaluate": (context) => EvaluateACourse(key: key),
             "/home": (context) => HomePageNavDrawer(
                   gpa: "",
