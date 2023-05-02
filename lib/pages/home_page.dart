@@ -188,7 +188,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              const SizedBox(height: 15),
+              const SizedBox(height: 5),
               //// HELLO STUDENT ////
               Row(
                 children: [
@@ -484,203 +484,211 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           onTap: () => buildNotificationSheet(
                               notifications[index], date),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 5),
-                            child: IntrinsicHeight(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                            // padding: const EdgeInsets.symmetric(
+                            //     horizontal: 10, vertical: 5),
+                            child:
+                                // IntrinsicHeight(
+                                //   child:
+                                // Row(
+                                //       mainAxisAlignment:
+                                //           MainAxisAlignment.spaceBetween,
+                                //       children: [
+                                //         // Noticiation Icon
+                                //         Stack(
+                                //           alignment: Alignment.topLeft,
+                                //           children: [
+                                //             Container(
+                                //               width: 42,
+                                //               height: 42,
+                                //               decoration: ShapeDecoration(
+                                //                   color: MyApp.isDarkMode.value
+                                //                       ? Colors.transparent
+                                //                       : Colors.white,
+                                //                   shape: RoundedRectangleBorder(
+                                //                     borderRadius:
+                                //                         BorderRadius.circular(15),
+                                //                     side: MyApp.isDarkMode.value
+                                //                         ? BorderSide(
+                                //                             color: MyColors.secondary
+                                //                                 .withOpacity(0.4),
+                                //                             width: 1.5)
+                                //                         : BorderSide(
+                                //                             color: MyColors.surface
+                                //                                 .withOpacity(0.5),
+                                //                             width: 1),
+                                //                   )),
+                                //               child: Icon(
+                                //                 Icons.notifications,
+                                //                 color: MyColors.secondary.withOpacity(
+                                //                     MyApp.isDarkMode.value ? 1 : 0.9),
+                                //               ),
+                                //             ),
+                                //             // Small orange cicle if notification is new
+                                //             (DateTime.now()
+                                //                         .difference(date)
+                                //                         .inHours <=
+                                //                     3 * 24)
+                                //                 ? Container(
+                                //                     width: 9,
+                                //                     height: 9,
+                                //                     margin: const EdgeInsets.all(0.2),
+                                //                     decoration: BoxDecoration(
+                                //                       color: MyColors.primary,
+                                //                       shape: BoxShape.circle,
+                                //                     ),
+                                //                   )
+                                //                 : const SizedBox.shrink(),
+                                //           ],
+                                //         ),
+
+                                //         const SizedBox(width: 12),
+
+                                //         // Notification Info
+                                //         Expanded(
+                                //           child: Column(
+                                //             crossAxisAlignment:
+                                //                 CrossAxisAlignment.start,
+                                //             children: [
+                                //               // Title
+                                //               Text(
+                                //                 notifications[index]['title'],
+                                //                 style: const TextStyle(
+                                //                     fontSize: 16,
+                                //                     fontWeight: FontWeight.w600),
+                                //               ),
+                                //               const SizedBox(height: 1),
+                                //               // Course Code
+                                //               Text(
+                                //                 notifications[index]['course_code'],
+                                //                 style: TextStyle(
+                                //                   color: MyColors.secondary,
+                                //                   fontWeight: FontWeight.w400,
+                                //                   fontSize: 11,
+                                //                 ),
+                                //                 maxLines: 2,
+                                //                 overflow: TextOverflow.ellipsis,
+                                //               ),
+                                //               // Sender
+                                //               Text(
+                                //                 notifications[index]['sender'],
+                                //                 style: TextStyle(
+                                //                   color: MyColors.secondary,
+                                //                   fontWeight: FontWeight.w500,
+                                //                   fontSize: 11,
+                                //                 ),
+                                //                 maxLines: 1,
+                                //                 overflow: TextOverflow.ellipsis,
+                                //               ),
+                                //             ],
+                                //           ),
+                                //         ),
+
+                                //         // Trailing
+
+                                //         Text(
+                                //           timeAgo,
+                                //           style: const TextStyle(
+                                //               fontSize: 12,
+                                //               fontWeight: FontWeight.w400),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
+                                ListTile(
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              dense: false,
+                              visualDensity: VisualDensity.compact,
+                              minVerticalPadding: 5,
+                              horizontalTitleGap: 15,
+                              leading: Stack(
+                                alignment: Alignment.topLeft,
                                 children: [
-                                  // Noticiation Icon
-                                  Stack(
-                                    alignment: Alignment.topLeft,
-                                    children: [
-                                      Container(
-                                        width: 42,
-                                        height: 42,
-                                        decoration: ShapeDecoration(
-                                            color: MyApp.isDarkMode.value
-                                                ? Colors.transparent
-                                                : Colors.white,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              side: MyApp.isDarkMode.value
-                                                  ? BorderSide(
-                                                      color: MyColors.secondary
-                                                          .withOpacity(0.4),
-                                                      width: 1.5)
-                                                  : BorderSide(
-                                                      color: MyColors.surface
-                                                          .withOpacity(0.5),
-                                                      width: 1),
-                                            )),
-                                        child: Icon(
-                                          Icons.notifications,
-                                          color: MyColors.secondary.withOpacity(
-                                              MyApp.isDarkMode.value ? 1 : 0.9),
-                                        ),
-                                      ),
-                                      // Small orange cicle if notification is new
-                                      (DateTime.now()
-                                                  .difference(date)
-                                                  .inHours <=
-                                              3 * 24)
-                                          ? Container(
-                                              width: 9,
-                                              height: 9,
-                                              margin: const EdgeInsets.all(0.2),
-                                              decoration: BoxDecoration(
-                                                color: MyColors.primary,
-                                                shape: BoxShape.circle,
-                                              ),
-                                            )
-                                          : const SizedBox.shrink(),
-                                    ],
-                                  ),
-
-                                  const SizedBox(width: 12),
-
-                                  // Notification Info
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // Title
-                                        Text(
-                                          notifications[index]['title'],
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        const SizedBox(height: 1),
-                                        // Course Code
-                                        Text(
-                                          notifications[index]['course_code'],
-                                          style: TextStyle(
-                                            color: MyColors.secondary,
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 11,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        // Sender
-                                        Text(
-                                          notifications[index]['sender'],
-                                          style: TextStyle(
-                                            color: MyColors.secondary,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 11,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
+                                  Container(
+                                    width: 42,
+                                    height: 42,
+                                    decoration: ShapeDecoration(
+                                        color: MyApp.isDarkMode.value
+                                            ? Colors.transparent
+                                            : Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          side: MyApp.isDarkMode.value
+                                              ? BorderSide(
+                                                  color: MyColors.secondary
+                                                      .withOpacity(0.4),
+                                                  width: 1.5)
+                                              : BorderSide(
+                                                  color: MyColors.surface
+                                                      .withOpacity(0.5),
+                                                  width: 1),
+                                        )),
+                                    child: Icon(
+                                      Icons.notifications,
+                                      color: MyColors.secondary.withOpacity(
+                                          MyApp.isDarkMode.value ? 1 : 0.9),
                                     ),
                                   ),
-
-                                  // Trailing
-
+                                  // Small orange cicle if notification is new
+                                  (DateTime.now().difference(date).inHours <=
+                                          3 * 24)
+                                      ? Container(
+                                          width: 9,
+                                          height: 9,
+                                          margin: const EdgeInsets.all(0.2),
+                                          decoration: BoxDecoration(
+                                            color: MyColors.primary,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
+                                ],
+                              ),
+                              title: Text(
+                                notifications[index]['title'],
+                                style: TextStyle(
+                                  color: MyColors.secondary,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 1),
                                   Text(
-                                    timeAgo,
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
+                                    notifications[index]['course_code'],
+                                    style: TextStyle(
+                                      color: MyColors.secondary,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 11,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    notifications[index]['sender'],
+                                    style: TextStyle(
+                                      color: MyColors.secondary,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 11,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
+                              trailing: Text(
+                                timeAgo,
+                                style: TextStyle(
+                                  color: MyColors.secondary,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
                           ),
-                          // ListTile(
-                          //   contentPadding:
-                          //       const EdgeInsets.symmetric(horizontal: 10),
-                          //   dense: false,
-                          //   visualDensity: VisualDensity.compact,
-                          //   // minVerticalPadding: 0,
-                          //   horizontalTitleGap: 15,
-                          //   leading: Container(
-                          //     width: 42,
-                          //     height: 42,
-                          //     decoration: ShapeDecoration(
-                          //         color: MyApp.isDarkMode.value
-                          //             ? Colors.transparent
-                          //             : Colors.white,
-                          //         shape: RoundedRectangleBorder(
-                          //           borderRadius: BorderRadius.circular(15),
-                          //           side: MyApp.isDarkMode.value
-                          //               ? BorderSide(
-                          //                   color: MyColors.secondary
-                          //                       .withOpacity(0.4),
-                          //                   width: 1.5)
-                          //               : BorderSide(
-                          //                   color: MyColors.surface
-                          //                       .withOpacity(0.5),
-                          //                   width: 1),
-                          //         )),
-                          //     child: Icon(
-                          //       Icons.notifications,
-                          //       color: MyColors.secondary.withOpacity(
-                          //           MyApp.isDarkMode.value ? 1 : 0.9),
-                          //     ),
-                          //   ),
-                          //   title: Text(
-                          //     notifications[index]['title'],
-                          //     style: TextStyle(
-                          //       color: MyColors.secondary,
-                          //       fontWeight: FontWeight.w700,
-                          //     ),
-                          //   ),
-                          //   subtitle: Column(
-                          //     crossAxisAlignment: CrossAxisAlignment.start,
-                          //     children: [
-                          //       const SizedBox(height: 1),
-                          //       Text(
-                          //         notifications[index]['course_code'],
-                          //         style: TextStyle(
-                          //           color: MyColors.secondary,
-                          //           fontWeight: FontWeight.w400,
-                          //           fontSize: 11,
-                          //         ),
-                          //         maxLines: 2,
-                          //         overflow: TextOverflow.ellipsis,
-                          //       ),
-                          //       Text(
-                          //         notifications[index]['sender'],
-                          //         style: TextStyle(
-                          //           color: MyColors.secondary,
-                          //           fontWeight: FontWeight.w500,
-                          //           fontSize: 11,
-                          //         ),
-                          //         maxLines: 1,
-                          //         overflow: TextOverflow.ellipsis,
-                          //       ),
-                          //     ],
-                          //   ),
-                          //   trailing: IntrinsicWidth(
-                          //     child: Container(
-                          //       // color: Colors.grey,
-                          //       padding: const EdgeInsets.symmetric(
-                          //           vertical: 4.0),
-                          //       child: Column(
-                          //         mainAxisAlignment: MainAxisAlignment.end,
-                          //         crossAxisAlignment:
-                          //             CrossAxisAlignment.end,
-                          //         children: [
-                          //           Text(
-                          //             timeAgo,
-                          //             style: TextStyle(
-                          //               color: MyColors.secondary,
-                          //               fontWeight: FontWeight.w400,
-                          //               fontSize: 12,
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ),
                       ),
                     ),

@@ -83,8 +83,10 @@ void main() async {
     systemStatusBarContrastEnforced: false,
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [])
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+          overlays: [SystemUiOverlay.bottom])
+      // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values)
       .then(
     (_) {
       runApp(const MyApp());

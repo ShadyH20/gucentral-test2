@@ -47,18 +47,9 @@ class MenuPageState extends State<MenuPage> {
   bool loaded = false;
   @override
   Widget build(BuildContext context) {
-    // if (!loaded) {
-    //   var loading = prefs.getBool('loading') ?? true;
-    //   if (!loading) {
-    //     setState(() {
-    //       loaded = true;
-    //     });
-    //     getIdName();
-    //   }
-    //   setState(() {});
-    // }
     return Scaffold(
       backgroundColor: MyColors.background,
+      // extendBodyBehindAppBar: true,
       body: Container(
         width: MediaQuery.of(context).size.width * 0.7,
         decoration: BoxDecoration(
@@ -108,6 +99,7 @@ class MenuPageState extends State<MenuPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            const SizedBox(height: kToolbarHeight - 50 / 3),
             Expanded(
               flex: 9,
               child: Padding(
@@ -180,7 +172,7 @@ class MenuPageState extends State<MenuPage> {
           children: [
             ListTile(
               dense: false,
-              contentPadding: const EdgeInsets.only(top: 20),
+              contentPadding: const EdgeInsets.only(top: 0),
               horizontalTitleGap: 10.0,
               minVerticalPadding: 10,
 
