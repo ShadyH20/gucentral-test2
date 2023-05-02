@@ -483,79 +483,204 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                         child: GestureDetector(
                           onTap: () => buildNotificationSheet(
                               notifications[index], date),
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 10),
-                            dense: false,
-                            visualDensity: VisualDensity.compact,
-                            horizontalTitleGap: 15,
-                            leading: Container(
-                              width: 42,
-                              height: 42,
-                              decoration: ShapeDecoration(
-                                  color: MyApp.isDarkMode.value
-                                      ? Colors.transparent
-                                      : Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    side: MyApp.isDarkMode.value
-                                        ? BorderSide(
-                                            color: MyColors.secondary
-                                                .withOpacity(0.4),
-                                            width: 1.5)
-                                        : BorderSide(
-                                            color: MyColors.surface
-                                                .withOpacity(0.5),
-                                            width: 1),
-                                  )),
-                              child: Icon(
-                                Icons.notifications,
-                                color: MyColors.secondary.withOpacity(
-                                    MyApp.isDarkMode.value ? 1 : 0.9),
-                              ),
-                            ),
-                            title: Text(
-                              notifications[index]['title'],
-                              style: TextStyle(
-                                color: MyColors.secondary,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 1),
-                                Text(
-                                  notifications[index]['course_code'],
-                                  style: TextStyle(
-                                    color: MyColors.secondary,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 11,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            child: IntrinsicHeight(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  // Noticiation Icon
+                                  Stack(
+                                    alignment: Alignment.topLeft,
+                                    children: [
+                                      Container(
+                                        width: 42,
+                                        height: 42,
+                                        decoration: ShapeDecoration(
+                                            color: MyApp.isDarkMode.value
+                                                ? Colors.transparent
+                                                : Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              side: MyApp.isDarkMode.value
+                                                  ? BorderSide(
+                                                      color: MyColors.secondary
+                                                          .withOpacity(0.4),
+                                                      width: 1.5)
+                                                  : BorderSide(
+                                                      color: MyColors.surface
+                                                          .withOpacity(0.5),
+                                                      width: 1),
+                                            )),
+                                        child: Icon(
+                                          Icons.notifications,
+                                          color: MyColors.secondary.withOpacity(
+                                              MyApp.isDarkMode.value ? 1 : 0.9),
+                                        ),
+                                      ),
+                                      // Small orange cicle if notification is new
+                                      (DateTime.now()
+                                                  .difference(date)
+                                                  .inHours <=
+                                              3 * 24)
+                                          ? Container(
+                                              width: 9,
+                                              height: 9,
+                                              margin: const EdgeInsets.all(0.2),
+                                              decoration: BoxDecoration(
+                                                color: MyColors.primary,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            )
+                                          : const SizedBox.shrink(),
+                                    ],
                                   ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  notifications[index]['sender'],
-                                  style: TextStyle(
-                                    color: MyColors.secondary,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 11,
+
+                                  const SizedBox(width: 12),
+
+                                  // Notification Info
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Title
+                                        Text(
+                                          notifications[index]['title'],
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        const SizedBox(height: 1),
+                                        // Course Code
+                                        Text(
+                                          notifications[index]['course_code'],
+                                          style: TextStyle(
+                                            color: MyColors.secondary,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 11,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        // Sender
+                                        Text(
+                                          notifications[index]['sender'],
+                                          style: TextStyle(
+                                            color: MyColors.secondary,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 11,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                            trailing: Text(
-                              timeAgo,
-                              style: TextStyle(
-                                color: MyColors.secondary,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 12,
+
+                                  // Trailing
+
+                                  Text(
+                                    timeAgo,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
+                          // ListTile(
+                          //   contentPadding:
+                          //       const EdgeInsets.symmetric(horizontal: 10),
+                          //   dense: false,
+                          //   visualDensity: VisualDensity.compact,
+                          //   // minVerticalPadding: 0,
+                          //   horizontalTitleGap: 15,
+                          //   leading: Container(
+                          //     width: 42,
+                          //     height: 42,
+                          //     decoration: ShapeDecoration(
+                          //         color: MyApp.isDarkMode.value
+                          //             ? Colors.transparent
+                          //             : Colors.white,
+                          //         shape: RoundedRectangleBorder(
+                          //           borderRadius: BorderRadius.circular(15),
+                          //           side: MyApp.isDarkMode.value
+                          //               ? BorderSide(
+                          //                   color: MyColors.secondary
+                          //                       .withOpacity(0.4),
+                          //                   width: 1.5)
+                          //               : BorderSide(
+                          //                   color: MyColors.surface
+                          //                       .withOpacity(0.5),
+                          //                   width: 1),
+                          //         )),
+                          //     child: Icon(
+                          //       Icons.notifications,
+                          //       color: MyColors.secondary.withOpacity(
+                          //           MyApp.isDarkMode.value ? 1 : 0.9),
+                          //     ),
+                          //   ),
+                          //   title: Text(
+                          //     notifications[index]['title'],
+                          //     style: TextStyle(
+                          //       color: MyColors.secondary,
+                          //       fontWeight: FontWeight.w700,
+                          //     ),
+                          //   ),
+                          //   subtitle: Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [
+                          //       const SizedBox(height: 1),
+                          //       Text(
+                          //         notifications[index]['course_code'],
+                          //         style: TextStyle(
+                          //           color: MyColors.secondary,
+                          //           fontWeight: FontWeight.w400,
+                          //           fontSize: 11,
+                          //         ),
+                          //         maxLines: 2,
+                          //         overflow: TextOverflow.ellipsis,
+                          //       ),
+                          //       Text(
+                          //         notifications[index]['sender'],
+                          //         style: TextStyle(
+                          //           color: MyColors.secondary,
+                          //           fontWeight: FontWeight.w500,
+                          //           fontSize: 11,
+                          //         ),
+                          //         maxLines: 1,
+                          //         overflow: TextOverflow.ellipsis,
+                          //       ),
+                          //     ],
+                          //   ),
+                          //   trailing: IntrinsicWidth(
+                          //     child: Container(
+                          //       // color: Colors.grey,
+                          //       padding: const EdgeInsets.symmetric(
+                          //           vertical: 4.0),
+                          //       child: Column(
+                          //         mainAxisAlignment: MainAxisAlignment.end,
+                          //         crossAxisAlignment:
+                          //             CrossAxisAlignment.end,
+                          //         children: [
+                          //           Text(
+                          //             timeAgo,
+                          //             style: TextStyle(
+                          //               color: MyColors.secondary,
+                          //               fontWeight: FontWeight.w400,
+                          //               fontSize: 12,
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                       ),
                     ),
@@ -866,7 +991,7 @@ class MyCustomMessages implements timeago.LookupMessages {
   @override
   String aboutAnHour(int minutes) => minutes > 59 ? '1h' : '${minutes}m';
   @override
-  String hours(int hours) => '${hours}h';
+  String hours(int hours) => hours == 24 ? '1d' : '${hours}h';
   @override
   String aDay(int hours) => '1d';
   @override
