@@ -242,14 +242,13 @@ class _ChromeDinoState extends State<ChromeDino>
         builder: (context, cardS, child) {
           screenSize = Size(HomePage.cardSize.value.width,
               HomePage.cardSize.value.height * 1.25);
-          print('Changed dino size to $screenSize');
           return AnimatedContainer(
             duration: const Duration(milliseconds: 3000),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
                 15.0,
               ),
-              border: Border.all(color: MyColors.secondary),
+              // border: Border.all(color: MyColors.secondary),
               color: (runDistance ~/ dayNightOffest) % 2 == 0
                   ? Colors.white
                   : Colors.black,
@@ -272,10 +271,10 @@ class _ChromeDinoState extends State<ChromeDino>
                     animation: worldController,
                     builder: (context, _) {
                       return Positioned(
-                        right: 10,
+                        right: 35,
                         top: 10,
                         child: Text(
-                          'SCORE: ' + runDistance.toInt().toString(),
+                          runDistance.toInt().toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: (runDistance ~/ dayNightOffest) % 2 == 0
@@ -305,8 +304,8 @@ class _ChromeDinoState extends State<ChromeDino>
                     },
                   ),
                   Positioned(
-                    right: 0,
-                    top: 20,
+                    right: -5,
+                    top: -5,
                     child: AnimatedContainer(
                       duration: const Duration(seconds: 3),
                       child: IconButton(

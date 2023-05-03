@@ -6,7 +6,7 @@ import 'constants.dart';
 import 'game_object.dart';
 import 'sprite.dart';
 
-double scale = 0.55;
+double scale = 0.45;
 
 List<Sprite> cacti = [
   Sprite()
