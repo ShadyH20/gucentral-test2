@@ -226,25 +226,25 @@ class _CoursesPageState extends State<CoursesPage> {
                           height: 1,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Container(
-                        height: 25,
-                        width: 25,
-                        decoration: BoxDecoration(
-                          color: MyColors.primary,
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            print('sup');
-                            setWeightCardNum(increment: true);
-                          },
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                      // const SizedBox(width: 10),
+                      // Container(
+                      //   height: 25,
+                      //   width: 25,
+                      //   decoration: BoxDecoration(
+                      //     color: MyColors.primary,
+                      //     borderRadius: BorderRadius.circular(7),
+                      //   ),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       print('sup');
+                      //       setWeightCardNum(increment: true);
+                      //     },
+                      //     child: const Icon(
+                      //       Icons.add,
+                      //       color: Colors.white,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 90),

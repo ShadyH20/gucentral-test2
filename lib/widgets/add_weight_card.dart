@@ -268,65 +268,37 @@ class _AddWeightCardState extends State<AddWeightCard> {
               ),
             ),
             const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 28,
-                  width: 45,
-                  child: TextButton(
-                    onPressed: () {
-                      widget.addFunction({
-                        'text': text,
-                        'weight': weight,
-                        'best': [best, from]
-                      });
-                      textController.clear();
-                      weightController.clear();
-                      bestController.clear();
-                      fromController.clear();
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    style: TextButton.styleFrom(
-                      backgroundColor: MyColors.primary,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      padding: const EdgeInsets.all(0),
-                    ),
-                    child: const Text(
-                      "Add",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+            SizedBox(
+              height: 28,
+              width: 45,
+              child: TextButton(
+                onPressed: () {
+                  widget.addFunction({
+                    'text': text,
+                    'weight': weight,
+                    'best': [best, from]
+                  });
+                  textController.clear();
+                  weightController.clear();
+                  bestController.clear();
+                  fromController.clear();
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: MyColors.primary,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                  padding: const EdgeInsets.all(0),
+                ),
+                child: const Text(
+                  "Add",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(width: 25),
-                GestureDetector(
-                  child: Container(
-                    width: 28,
-                    height: 28,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      border: Border.all(
-                        color: MyColors.primary,
-                      ),
-                      color: Colors.transparent,
-                    ),
-                    child: const Icon(
-                      Icons.delete_forever,
-                      color: MyColors.primary,
-                      size: 17,
-                    ),
-                  ),
-                  onTap: () {
-                    widget.onCancel(increment: false);
-                    print('deleted');
-                  },
-                ),
-              ],
+              ),
             ),
           ],
         ),
