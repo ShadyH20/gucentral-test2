@@ -124,35 +124,40 @@ class MenuPageState extends State<MenuPage> {
             ),
             Expanded(
               flex: 2,
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Container(
-                  // height: 150,
-                  decoration: BoxDecoration(
-                      color: MyApp.isDarkMode.value
-                          ? Color.fromARGB(255, 18, 18, 18)
-                          // ? Colors.black
-                          // ? MyColors.surface
-                          : MyColors.surface,
-                      borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(25),
-                      ),
-                      boxShadow: MyApp.isDarkMode.value
-                          ? [
-                              const BoxShadow(
-                                  color: Colors.white,
-                                  blurRadius: 0,
-                                  spreadRadius: 0,
-                                  offset: Offset(0, -0.9))
-                            ]
-                          : null),
+              child: Container(
+                // height: 150,
+                decoration: BoxDecoration(
+                    color: MyApp.isDarkMode.value
+                        ? const Color.fromARGB(255, 18, 18, 18)
+                        // ? Colors.black
+                        // ? MyColors.surface
+                        : MyColors.surface,
+                    borderRadius: const BorderRadius.only(
+                      bottomRight: Radius.circular(25),
+                    ),
+                    boxShadow: MyApp.isDarkMode.value
+                        ? [
+                            const BoxShadow(
+                                color: Colors.white,
+                                blurRadius: 0,
+                                spreadRadius: 0,
+                                offset: Offset(0, -0.9))
+                          ]
+                        : null),
 
-                  padding: const EdgeInsets.all(42),
-                  width: double.infinity,
-                  child: SvgPicture.asset(
-                    "assets/images/main-logo.svg",
-                    // height: 70,
-                  ),
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    const Spacer(),
+                    Expanded(
+                      flex: 2,
+                      child: SvgPicture.asset(
+                        "assets/images/main-logo.svg",
+                        // height: 70,
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
                 ),
               ),
             )

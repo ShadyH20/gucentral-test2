@@ -75,12 +75,19 @@ dependencies:
   timeago: ^3.4.0
   wtf_sliding_sheet: ^0.6.1
   transitioned_indexed_stack: ^1.0.2
+  flutter_launcher_icons: ^0.13.1
 
 flutter_native_splash:
   color: "#141518"
   # color: "#ffffff"
   # color_dark: "#141518"
   image: assets/images/main-logo.png
+
+flutter_launcher_icons:
+  # android: "launcher_icon"
+  ios: true
+  image_path: "assets/app.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 dev_dependencies:
   flutter_lints: ^2.0.0
@@ -118,6 +125,7 @@ flutter:
     - assets/images/dino/
     - assets/images/cacti/
     - assets/images/ptera/
+    - assets/images/app.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

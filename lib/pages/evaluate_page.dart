@@ -50,7 +50,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
       backgroundColor: MyColors.background,
       appBar: evaluateAppBar(),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(bottom: 10.0),
+        padding: const EdgeInsets.symmetric(vertical: 6.0),
         color: MyApp.isDarkMode.value
             ? MyColors.surface
             // const Color.fromARGB(255, 45, 45, 45)

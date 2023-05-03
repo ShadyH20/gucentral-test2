@@ -17,6 +17,7 @@ import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
+import "package:jumping_dot/jumping_dot.dart";
 import 'package:url_launcher/url_launcher.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import "package:timeago/timeago.dart" as timeago;
@@ -348,8 +349,6 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // i want this to have a loading indicator on the right side to indicate whether the notifications are loading or not
-                    // and if there are no notifications, then show a message saying "No notifications"
                     Expanded(
                       // height: 50,
                       child: Padding(
@@ -397,20 +396,37 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                     Expanded(
                       flex: 10,
                       child: Container(
-                        // height: 50,
-                        decoration: BoxDecoration(
-                          color: MyColors.background,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: MyColors.primary,
-                              offset: const Offset(0, -2),
-                            ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.only(top: 5),
-                        child: buildNotifications(),
-                      ),
+                          // height: 50,
+                          decoration: BoxDecoration(
+                            color: MyColors.background,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: MyColors.primary,
+                                offset: const Offset(0, -2),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.only(top: 5),
+                          child:
+                              // loadingNotifications?
+                              Center(
+                                  child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Loading Notifications ',
+                                style: TextStyle(
+                                    color: MyColors.primary, fontSize: 20),
+                              ),
+                              JumpingDots(
+                                color: MyColors.primary,
+                                radius: 7,
+                              ),
+                            ],
+                          ))
+                          // : buildNotifications(),
+                          ),
                     ),
                   ],
                 ),
