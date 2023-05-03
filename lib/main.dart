@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gucentral/firebase_options.dart';
@@ -61,12 +62,26 @@ void main() async {
       null,
       [
         NotificationChannel(
-            channelGroupKey: 'basic_channel_group',
-            channelKey: 'basic_channel',
-            channelName: 'Basic notifications',
-            channelDescription: 'Notification channel for basic tests',
-            defaultColor: const Color(0xFF9D50DD),
-            ledColor: Colors.white)
+          channelGroupKey: 'basic_channel_group',
+          channelKey: 'basic_channel',
+          channelName: 'Basic notifications',
+          channelDescription: 'Notification channel for basic tests',
+          // defaultColor: const Color(0xFF9D50DD),
+          ledColor: Colors.white,
+        ),
+        NotificationChannel(
+          channelGroupKey: 'scheduled_group',
+          channelKey: 'scheduled',
+          channelName: 'Scheduled notifications',
+          channelDescription: 'Scheduled reminder notifications',
+          enableVibration: true,
+          playSound: true,
+          // my asset is 'assets/sounds/notification.mp3'
+          // soundSource: 'notification.mp3',
+          // icon:  'resource://drawable/res_ic_gu_logo',
+          // defaultColor: const Color(0xFF9D50DD),
+          ledColor: Colors.white,
+        )
       ],
       // Channel groups are only visual and are not required
       channelGroups: [
@@ -75,6 +90,10 @@ void main() async {
             channelGroupName: 'Basic group')
       ],
       debug: true);
+
+  tz.initializeTimeZones();
+
+  setTestNotifications();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     // statusBarColor: Colors.green,
@@ -93,6 +112,123 @@ void main() async {
     },
   );
   // runApp(MyApp());
+}
+
+Future<void> setTestNotifications() async {
+  //get local time zone
+  String timeZoneName =
+      await AwesomeNotifications().getLocalTimeZoneIdentifier();
+  print(timeZoneName);
+  AwesomeNotifications().cancelAll();
+
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'scheduled',
+      title: 'Lab',
+      body: '3 May, 8:15 AM - Network & Media Lab, Lab in C6.209',
+      wakeUpScreen: true,
+      category: NotificationCategory.Reminder,
+    ),
+    schedule: NotificationCalendar(
+        preciseAlarm: true,
+        hour: 1,
+        minute: 55,
+        // second: 0,
+        // millisecond: 0,
+        allowWhileIdle: true,
+        day: 3,
+        month: 5,
+        year: 2023,
+        timeZone: timeZoneName),
+  );
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'scheduled',
+      title: 'Lab',
+      body: '3 May, 8:15 AM - Network & Media Lab, Lab in C6.209',
+      wakeUpScreen: true,
+      category: NotificationCategory.Reminder,
+    ),
+    schedule: NotificationCalendar(
+        preciseAlarm: true,
+        hour: 8,
+        minute: 0,
+        // second: 0,
+        // millisecond: 0,
+        allowWhileIdle: true,
+        day: 3,
+        month: 5,
+        year: 2023,
+        timeZone: timeZoneName),
+  );
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'scheduled',
+      title: 'Tutorial',
+      body: '3 May, 10:00 AM - Data Bases II, Tutorial in C3.104',
+      wakeUpScreen: true,
+      category: NotificationCategory.Reminder,
+    ),
+    schedule: NotificationCalendar(
+        preciseAlarm: true,
+        hour: 9,
+        minute: 45,
+        // second: 0,
+        // millisecond: 0,
+        allowWhileIdle: true,
+        day: 3,
+        month: 5,
+        year: 2023,
+        timeZone: timeZoneName),
+  );
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'scheduled',
+      title: 'Lab',
+      body: '3 May, 11:45 AM - Computer System Architecture, Lab in C7.203',
+      wakeUpScreen: true,
+      category: NotificationCategory.Reminder,
+    ),
+    schedule: NotificationCalendar(
+        preciseAlarm: true,
+        hour: 11,
+        minute: 30,
+        // second: 0,
+        // millisecond: 0,
+        allowWhileIdle: true,
+        day: 3,
+        month: 5,
+        year: 2023,
+        timeZone: timeZoneName),
+  );
+  await AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: -1,
+      channelKey: 'scheduled',
+      title: 'Lecture',
+      body: '3 May, 1:45 PM - Operating Systems, Lecture in H18',
+      wakeUpScreen: true,
+      category: NotificationCategory.Reminder,
+    ),
+    schedule: NotificationCalendar(
+        preciseAlarm: true,
+        hour: 13,
+        minute: 30,
+        // second: 0,
+        // millisecond: 0,
+        allowWhileIdle: true,
+        day: 3,
+        month: 5,
+        year: 2023,
+        timeZone: timeZoneName),
+  );
+  List nots = await AwesomeNotifications().listScheduledNotifications();
+  print(nots.length);
+  print(nots);
 }
 
 class MyApp extends StatefulWidget {
@@ -146,7 +282,7 @@ class MyAppState extends State<MyApp> {
           title: 'GUCentral',
           // home: const LoginPage(),
           debugShowCheckedModeBanner: false,
-          initialRoute: "/login",
+          initialRoute: prefs.containsKey('username') ? "/home" : "/login",
           theme: isDarkMode
               ? MyTheme.lightTheme.copyWith(
                   primaryColor: MyTheme.darkTheme.colorScheme.background)

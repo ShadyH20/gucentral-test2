@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -139,15 +140,36 @@ class _EvaluatePageState extends State<EvaluatePage> {
     );
   }
 
-  refreshCurrentPage() {
-    setState(() {
-      if (pageIndex == 0) {
-        pages[0] = EvaluateCourses();
-        print('Refreshed Courses');
-      } else {
-        pages[1] = EvaluateAcademics();
-        print('Refreshed Academics');
-      }
-    });
+  refreshCurrentPage() async {
+    print('Will sen notifiication in 5');
+    await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 10,
+          // channelKey: 'scheduled',
+          channelKey: 'scheduled',
+          roundedLargeIcon: true,
+          // this is my asset for the sound: 'assets/sounds/notification.mp3'
+
+          title: 'wait 5 seconds to show',
+          body: 'now is 5 seconds later',
+          wakeUpScreen: true,
+          category: NotificationCategory.Reminder,
+        ),
+        schedule: NotificationInterval(
+          interval: 5,
+          timeZone: 'Africa/Cairo',
+          preciseAlarm: true,
+          // timezone: await AwesomeNotifications().getLocalTimeZoneIdentifier()
+        )
+        // setState(() {
+        //   if (pageIndex == 0) {
+        //     pages[0] = EvaluateCourses();
+        //     print('Refreshed Courses');
+        //   } else {
+        //     pages[1] = EvaluateAcademics();
+        //     print('Refreshed Academics');
+        //   }
+        // }
+        );
   }
 }

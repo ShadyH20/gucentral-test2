@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/MenuPage.dart';
 import '../pages/attendance_page.dart';
+import '../utils/local_auth_api.dart';
 import 'MeduItemList.dart';
 import 'Requests.dart';
 
@@ -105,6 +106,18 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       const AttendancePage(),
     ];
     _drawerController = ZoomDrawerController();
+
+    // LOCK APP
+    handleLockApp();
+  }
+
+  handleLockApp() async {
+    if (prefs.getBool('lock') ?? false) {
+      var isAuthenticated = false;
+      do {
+        isAuthenticated = await LocalAuthApi.authenticate();
+      } while (!isAuthenticated);
+    }
   }
 
   @override

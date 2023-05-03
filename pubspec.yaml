@@ -114,6 +114,10 @@ flutter:
     - assets/images/arrow.svg
     - assets/images/today.svg
     - assets/sounds/notification.mp3
+    - assets/images/
+    - assets/images/dino/
+    - assets/images/cacti/
+    - assets/images/ptera/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -59,11 +59,11 @@ class _TranscriptPageState extends State<TranscriptPage>
     }
 
     gyroscopeEvents?.listen((GyroscopeEvent event) {
-      if (event.x > 2.0) {
+      if (event.x > 3.0) {
         setState(() {
           tiltingBack = true;
         });
-      } else if (tiltingBack && event.x < -2.0) {
+      } else if (tiltingBack && event.x < -3.0) {
         setState(() {
           tiltingBack = false;
           showGPA = !showGPA;

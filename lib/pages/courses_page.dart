@@ -4,6 +4,7 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "../chrome-dino/chromeDino.dart";
 import "../widgets/Requests.dart";
 import '../widgets/weight_card.dart';
 import '../widgets/grade_card.dart';
@@ -255,192 +256,193 @@ class _CoursesPageState extends State<CoursesPage> {
           )
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 35,
-          vertical: 15,
-        ),
-        child: Column(
-          children: [
-            Column(
-              children: [
-                Text(
-                  'Show All Midterm Grades',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Container(
-                  height: 20,
-                  width: 100,
-                  color: Colors.black,
-                  // child: const Text('huh??'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: ListView(
-                children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Computer System Architecture',
-                          style: kMainTitleStyle.copyWith(fontSize: 26),
-                        ),
-                        const WidgetSpan(child: SizedBox(width: 10)),
-                        WidgetSpan(
-                          child: SizedBox(
-                            // margin: const EdgeInsets.only(bottom: 1),
-                            height: 18,
-                            width: 18,
-                            child: IconButton(
-                              padding: const EdgeInsets.all(0),
-                              // iconSize: 5,
-                              splashRadius: 17,
-                              iconSize: 15,
-                              alignment: Alignment.center,
-                              icon: SvgPicture.asset(
-                                "assets/images/edit.svg",
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                          baseline: TextBaseline.alphabetic,
-                          // alignment: PlaceholderAlignment.middle,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Weights',
-                              style: kMainTitleStyle,
-                            ),
-                            const WidgetSpan(child: SizedBox(width: 10)),
-                            WidgetSpan(
-                              child: SizedBox(
-                                // margin: const EdgeInsets.only(bottom: 5),
-                                height: 18,
-                                width: 18,
-                                child: IconButton(
-                                  padding: const EdgeInsets.all(0),
-                                  // iconSize: 5,
-                                  splashRadius: 17,
-                                  iconSize: 15,
-                                  alignment: Alignment.center,
-                                  icon: SvgPicture.asset(
-                                    "assets/images/edit.svg",
-                                    // fit: BoxFit.scaleDown,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      buildWeightSheet(context);
-                                      // allWeights = [
-                                      //   {
-                                      //     'text': 'Quizzes',
-                                      //     'weight': '30',
-                                      //     'best': ['4', '5']
-                                      //   },
-                                      //   {
-                                      //     'text': 'In-Class Assignments',
-                                      //     'weight': '20',
-                                      //     'best': ['8', '10']
-                                      //   },
-                                      //   {
-                                      //     'text': 'Midterms',
-                                      //     'weight': '30',
-                                      //   },
-                                      // ];
-                                    });
-                                  },
-                                ),
-                              ),
-                              baseline: TextBaseline.alphabetic,
-                              // alignment: PlaceholderAlignment.middle,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Divider(
-                        thickness: 0.7,
-                      ),
-                      Column(
-                        children: allWeights.isNotEmpty
-                            ? allWeights.map((item) {
-                                return WeightCard(
-                                  text: item['text'],
-                                  weight: item['weight'],
-                                  best: item['best'] ?? [],
-                                );
-                              }).toList()
-                            : const [
-                                Text(
-                                  'You haven\'t added this course\'s weights yet!',
-                                  style: TextStyle(fontWeight: FontWeight.w200),
-                                ),
-                              ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 45),
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Grades', style: kMainTitleStyle),
-                            midterm >= 0
-                                ? Row(
-                                    children: [
-                                      const Text('Midterm  |  ',
-                                          style: kMainTitleStyle),
-                                      Text(
-                                        '${midterm.toStringAsFixed(1)}%',
-                                        style: kMainTitleStyle.copyWith(
-                                          color: getScoreColor(midterm),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : const Text(''),
-                          ],
-                        ),
-                        const Divider(
-                          thickness: 0.7,
-                        ),
-                        Column(
-                          children: allGrades.map((item) {
-                            return buildGradeCard(item);
-                          }).toList(),
-                        ),
-                        // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
-                        //   print("Building grade card $index");
-                        //   return buildGradeCard(allGrades[index]);
-                        // }),
-                        const SizedBox(height: 150),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: ChromeDino(),
+      // Container(
+      //   padding: const EdgeInsets.symmetric(
+      //     horizontal: 35,
+      //     vertical: 15,
+      //   ),
+      //   child: Column(
+      //     children: [
+      //       Column(
+      //         children: [
+      //           Text(
+      //             'Show All Midterm Grades',
+      //             style: TextStyle(
+      //               decoration: TextDecoration.underline,
+      //               color: Colors.grey[600],
+      //             ),
+      //           ),
+      //           const SizedBox(height: 20),
+      //           Container(
+      //             height: 20,
+      //             width: 100,
+      //             color: Colors.black,
+      //             // child: const Text('huh??'),
+      //           ),
+      //         ],
+      //       ),
+      //       const SizedBox(height: 30),
+      //       Expanded(
+      //         child: ListView(
+      //           children: [
+      //             RichText(
+      //               text: TextSpan(
+      //                 children: [
+      //                   TextSpan(
+      //                     text: 'Computer System Architecture',
+      //                     style: kMainTitleStyle.copyWith(fontSize: 26),
+      //                   ),
+      //                   const WidgetSpan(child: SizedBox(width: 10)),
+      //                   WidgetSpan(
+      //                     child: SizedBox(
+      //                       // margin: const EdgeInsets.only(bottom: 1),
+      //                       height: 18,
+      //                       width: 18,
+      //                       child: IconButton(
+      //                         padding: const EdgeInsets.all(0),
+      //                         // iconSize: 5,
+      //                         splashRadius: 17,
+      //                         iconSize: 15,
+      //                         alignment: Alignment.center,
+      //                         icon: SvgPicture.asset(
+      //                           "assets/images/edit.svg",
+      //                         ),
+      //                         onPressed: () {},
+      //                       ),
+      //                     ),
+      //                     baseline: TextBaseline.alphabetic,
+      //                     // alignment: PlaceholderAlignment.middle,
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             const SizedBox(
+      //               height: 30,
+      //             ),
+      //             Column(
+      //               crossAxisAlignment: CrossAxisAlignment.stretch,
+      //               children: [
+      //                 RichText(
+      //                   text: TextSpan(
+      //                     children: [
+      //                       const TextSpan(
+      //                         text: 'Weights',
+      //                         style: kMainTitleStyle,
+      //                       ),
+      //                       const WidgetSpan(child: SizedBox(width: 10)),
+      //                       WidgetSpan(
+      //                         child: SizedBox(
+      //                           // margin: const EdgeInsets.only(bottom: 5),
+      //                           height: 18,
+      //                           width: 18,
+      //                           child: IconButton(
+      //                             padding: const EdgeInsets.all(0),
+      //                             // iconSize: 5,
+      //                             splashRadius: 17,
+      //                             iconSize: 15,
+      //                             alignment: Alignment.center,
+      //                             icon: SvgPicture.asset(
+      //                               "assets/images/edit.svg",
+      //                               // fit: BoxFit.scaleDown,
+      //                             ),
+      //                             onPressed: () {
+      //                               setState(() {
+      //                                 buildWeightSheet(context);
+      //                                 // allWeights = [
+      //                                 //   {
+      //                                 //     'text': 'Quizzes',
+      //                                 //     'weight': '30',
+      //                                 //     'best': ['4', '5']
+      //                                 //   },
+      //                                 //   {
+      //                                 //     'text': 'In-Class Assignments',
+      //                                 //     'weight': '20',
+      //                                 //     'best': ['8', '10']
+      //                                 //   },
+      //                                 //   {
+      //                                 //     'text': 'Midterms',
+      //                                 //     'weight': '30',
+      //                                 //   },
+      //                                 // ];
+      //                               });
+      //                             },
+      //                           ),
+      //                         ),
+      //                         baseline: TextBaseline.alphabetic,
+      //                         // alignment: PlaceholderAlignment.middle,
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ),
+      //                 const Divider(
+      //                   thickness: 0.7,
+      //                 ),
+      //                 Column(
+      //                   children: allWeights.isNotEmpty
+      //                       ? allWeights.map((item) {
+      //                           return WeightCard(
+      //                             text: item['text'],
+      //                             weight: item['weight'],
+      //                             best: item['best'] ?? [],
+      //                           );
+      //                         }).toList()
+      //                       : const [
+      //                           Text(
+      //                             'You haven\'t added this course\'s weights yet!',
+      //                             style: TextStyle(fontWeight: FontWeight.w200),
+      //                           ),
+      //                         ],
+      //                 ),
+      //               ],
+      //             ),
+      //             Container(
+      //               padding: const EdgeInsets.only(top: 45),
+      //               child: Column(
+      //                 // crossAxisAlignment: CrossAxisAlignment.start,
+      //                 children: [
+      //                   Row(
+      //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                     children: [
+      //                       const Text('Grades', style: kMainTitleStyle),
+      //                       midterm >= 0
+      //                           ? Row(
+      //                               children: [
+      //                                 const Text('Midterm  |  ',
+      //                                     style: kMainTitleStyle),
+      //                                 Text(
+      //                                   '${midterm.toStringAsFixed(1)}%',
+      //                                   style: kMainTitleStyle.copyWith(
+      //                                     color: getScoreColor(midterm),
+      //                                   ),
+      //                                 ),
+      //                               ],
+      //                             )
+      //                           : const Text(''),
+      //                     ],
+      //                   ),
+      //                   const Divider(
+      //                     thickness: 0.7,
+      //                   ),
+      //                   Column(
+      //                     children: allGrades.map((item) {
+      //                       return buildGradeCard(item);
+      //                     }).toList(),
+      //                   ),
+      //                   // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
+      //                   //   print("Building grade card $index");
+      //                   //   return buildGradeCard(allGrades[index]);
+      //                   // }),
+      //                   const SizedBox(height: 150),
+      //                 ],
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
     );
   }
 }

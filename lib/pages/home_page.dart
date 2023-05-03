@@ -20,6 +20,7 @@ import 'package:url_launcher/url_launcher.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import "package:timeago/timeago.dart" as timeago;
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
+import "../chrome-dino/chromeDino.dart";
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
 //import Notifications.dart from the web directory
@@ -230,7 +231,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                               ),
                               color: MyColors.primary,
                             ),
-                            // child: adsenseAdsView(),
+                            child: const ChromeDino(),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -486,116 +487,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           child: Container(
                             // padding: const EdgeInsets.symmetric(
                             //     horizontal: 10, vertical: 5),
-                            child:
-                                // IntrinsicHeight(
-                                //   child:
-                                // Row(
-                                //       mainAxisAlignment:
-                                //           MainAxisAlignment.spaceBetween,
-                                //       children: [
-                                //         // Noticiation Icon
-                                //         Stack(
-                                //           alignment: Alignment.topLeft,
-                                //           children: [
-                                //             Container(
-                                //               width: 42,
-                                //               height: 42,
-                                //               decoration: ShapeDecoration(
-                                //                   color: MyApp.isDarkMode.value
-                                //                       ? Colors.transparent
-                                //                       : Colors.white,
-                                //                   shape: RoundedRectangleBorder(
-                                //                     borderRadius:
-                                //                         BorderRadius.circular(15),
-                                //                     side: MyApp.isDarkMode.value
-                                //                         ? BorderSide(
-                                //                             color: MyColors.secondary
-                                //                                 .withOpacity(0.4),
-                                //                             width: 1.5)
-                                //                         : BorderSide(
-                                //                             color: MyColors.surface
-                                //                                 .withOpacity(0.5),
-                                //                             width: 1),
-                                //                   )),
-                                //               child: Icon(
-                                //                 Icons.notifications,
-                                //                 color: MyColors.secondary.withOpacity(
-                                //                     MyApp.isDarkMode.value ? 1 : 0.9),
-                                //               ),
-                                //             ),
-                                //             // Small orange cicle if notification is new
-                                //             (DateTime.now()
-                                //                         .difference(date)
-                                //                         .inHours <=
-                                //                     3 * 24)
-                                //                 ? Container(
-                                //                     width: 9,
-                                //                     height: 9,
-                                //                     margin: const EdgeInsets.all(0.2),
-                                //                     decoration: BoxDecoration(
-                                //                       color: MyColors.primary,
-                                //                       shape: BoxShape.circle,
-                                //                     ),
-                                //                   )
-                                //                 : const SizedBox.shrink(),
-                                //           ],
-                                //         ),
-
-                                //         const SizedBox(width: 12),
-
-                                //         // Notification Info
-                                //         Expanded(
-                                //           child: Column(
-                                //             crossAxisAlignment:
-                                //                 CrossAxisAlignment.start,
-                                //             children: [
-                                //               // Title
-                                //               Text(
-                                //                 notifications[index]['title'],
-                                //                 style: const TextStyle(
-                                //                     fontSize: 16,
-                                //                     fontWeight: FontWeight.w600),
-                                //               ),
-                                //               const SizedBox(height: 1),
-                                //               // Course Code
-                                //               Text(
-                                //                 notifications[index]['course_code'],
-                                //                 style: TextStyle(
-                                //                   color: MyColors.secondary,
-                                //                   fontWeight: FontWeight.w400,
-                                //                   fontSize: 11,
-                                //                 ),
-                                //                 maxLines: 2,
-                                //                 overflow: TextOverflow.ellipsis,
-                                //               ),
-                                //               // Sender
-                                //               Text(
-                                //                 notifications[index]['sender'],
-                                //                 style: TextStyle(
-                                //                   color: MyColors.secondary,
-                                //                   fontWeight: FontWeight.w500,
-                                //                   fontSize: 11,
-                                //                 ),
-                                //                 maxLines: 1,
-                                //                 overflow: TextOverflow.ellipsis,
-                                //               ),
-                                //             ],
-                                //           ),
-                                //         ),
-
-                                //         // Trailing
-
-                                //         Text(
-                                //           timeAgo,
-                                //           style: const TextStyle(
-                                //               fontSize: 12,
-                                //               fontWeight: FontWeight.w400),
-                                //         ),
-                                //       ],
-                                //     ),
-                                //   ),
-                                // ),
-                                ListTile(
+                            child: ListTile(
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               dense: false,

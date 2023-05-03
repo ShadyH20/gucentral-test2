@@ -360,8 +360,6 @@ class _SettingsPageState extends State<SettingsPage> {
         'Lock app using biometrics',
         style: titleTS,
       ),
-      // description:
-      //     const Text('If your 3rd slot starts at 12:00 pm instead of 11:45 pm'),
       initialValue: prefs.getBool('lock') ?? false,
       onToggle: (value) {
         setState(() {
@@ -372,9 +370,7 @@ class _SettingsPageState extends State<SettingsPage> {
         activeColor: MyColors.primary,
         value: prefs.getBool('lock') ?? false,
         onChanged: (value) async {
-          print("Trying to auth");
           var isAuthenicated = await LocalAuthApi.authenticate();
-          print("isAuthed? $isAuthenicated");
           if (isAuthenicated) {
             setState(() {
               prefs.setBool('lock', value);
