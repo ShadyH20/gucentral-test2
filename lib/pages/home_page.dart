@@ -635,7 +635,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
           cornerRadius: 20,
           // extendBody: true,
           snapSpec: const SnapSpec(
-            snappings: [0.5, 0.75, 0.85],
+            snappings: [0.85],
             initialSnap: .85,
             // onSnap: (p0, snap) {
             //   print(snap);

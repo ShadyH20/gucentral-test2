@@ -171,59 +171,65 @@ class _CoursesPageState extends State<CoursesPage> {
     weightSheet = BuildSheet(
         context: context,
         builder: (context, state) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Edit Weights',
-                  style: kMainTitleStyle.copyWith(
-                    fontSize: 28,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                const SizedBox(height: 30),
-                const WeightCard(text: 'Quizzes', weight: '50'),
-                const SizedBox(height: 30),
-                Column(
-                  children: [
-                    for (var i = 0; i < addWeightCardNum; i++)
-                      AddWeightCard(onCancel: setWeightCardNum)
-                  ],
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  children: [
-                    Expanded(
-                      // flex: 6,
-                      child: Container(
-                        color: const Color.fromARGB(30, 0, 0, 0),
-                        height: 1,
-                      ),
+          return GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Edit Weights',
+                    style: kMainTitleStyle.copyWith(
+                      fontSize: 28,
                     ),
-                    const SizedBox(width: 10),
-                    Container(
-                      height: 25,
-                      width: 25,
-                      decoration: BoxDecoration(
-                        color: MyColors.primary,
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          print('sup');
-                          setWeightCardNum(true);
-                        },
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
+                    textAlign: TextAlign.left,
+                  ),
+                  const SizedBox(height: 30),
+                  const WeightCard(text: 'Quizzes', weight: '50'),
+                  const SizedBox(height: 30),
+                  Column(
+                    children: [
+                      for (var i = 0; i < addWeightCardNum; i++)
+                        AddWeightCard(onCancel: setWeightCardNum)
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    children: [
+                      Expanded(
+                        // flex: 6,
+                        child: Container(
+                          color: const Color.fromARGB(30, 0, 0, 0),
+                          height: 1,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 10),
+                      Container(
+                        height: 25,
+                        width: 25,
+                        decoration: BoxDecoration(
+                          color: MyColors.primary,
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            print('sup');
+                            setWeightCardNum(increment: true);
+                          },
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 90),
+                ],
+              ),
             ),
           );
         });
@@ -235,9 +241,9 @@ class _CoursesPageState extends State<CoursesPage> {
   double midterm = -1;
   BuildSheet? weightSheet;
 
-  int addWeightCardNum = 0;
+  int addWeightCardNum = 1;
 
-  void setWeightCardNum(bool increment) {
+  void setWeightCardNum({required bool increment}) {
     if (increment) {
       setState(() {
         addWeightCardNum++;
@@ -318,185 +324,189 @@ class _CoursesPageState extends State<CoursesPage> {
           )
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 35,
-          vertical: 15,
-        ),
-        child: Column(
-          children: [
-            Column(
-              children: [
-                Text(
-                  'Show All Midterm Grades',
-                  style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                buildDropdown(),
-              ],
-            ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: ListView(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 35,
+            vertical: 15,
+          ),
+          child: Column(
+            children: [
+              Column(
                 children: [
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Computer System Architecture',
-                          style: kMainTitleStyle.copyWith(fontSize: 26),
-                        ),
-                        const WidgetSpan(child: SizedBox(width: 10)),
-                        WidgetSpan(
-                          child: SizedBox(
-                            // margin: const EdgeInsets.only(bottom: 1),
-                            height: 18,
-                            width: 18,
-                            child: IconButton(
-                              padding: const EdgeInsets.all(0),
-                              // iconSize: 5,
-                              splashRadius: 17,
-                              iconSize: 15,
-                              alignment: Alignment.center,
-                              icon: SvgPicture.asset(
-                                "assets/images/edit.svg",
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                          baseline: TextBaseline.alphabetic,
-                          // alignment: PlaceholderAlignment.middle,
-                        ),
-                      ],
+                  Text(
+                    'Show All Midterm Grades',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.grey[600],
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Weights',
-                              style: kMainTitleStyle,
-                            ),
-                            const WidgetSpan(child: SizedBox(width: 10)),
-                            WidgetSpan(
-                              child: SizedBox(
-                                // margin: const EdgeInsets.only(bottom: 5),
-                                height: 18,
-                                width: 18,
-                                child: IconButton(
-                                  padding: const EdgeInsets.all(0),
-                                  // iconSize: 5,
-                                  splashRadius: 17,
-                                  iconSize: 15,
-                                  alignment: Alignment.center,
-                                  icon: SvgPicture.asset(
-                                    "assets/images/edit.svg",
-                                    // fit: BoxFit.scaleDown,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      buildWeightSheet(context);
-                                      // allWeights = [
-                                      //   {
-                                      //     'text': 'Quizzes',
-                                      //     'weight': '30',
-                                      //     'best': ['4', '5']
-                                      //   },
-                                      //   {
-                                      //     'text': 'In-Class Assignments',
-                                      //     'weight': '20',
-                                      //     'best': ['8', '10']
-                                      //   },
-                                      //   {
-                                      //     'text': 'Midterms',
-                                      //     'weight': '30',
-                                      //   },
-                                      // ];
-                                    });
-                                  },
+                  const SizedBox(height: 20),
+                  buildDropdown(),
+                ],
+              ),
+              const SizedBox(height: 30),
+              Expanded(
+                child: ListView(
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Computer System Architecture',
+                            style: kMainTitleStyle.copyWith(fontSize: 26),
+                          ),
+                          const WidgetSpan(child: SizedBox(width: 10)),
+                          WidgetSpan(
+                            child: SizedBox(
+                              // margin: const EdgeInsets.only(bottom: 1),
+                              height: 18,
+                              width: 18,
+                              child: IconButton(
+                                padding: const EdgeInsets.all(0),
+                                // iconSize: 5,
+                                splashRadius: 17,
+                                iconSize: 15,
+                                alignment: Alignment.center,
+                                icon: SvgPicture.asset(
+                                  "assets/images/edit.svg",
                                 ),
+                                onPressed: () {},
                               ),
-                              baseline: TextBaseline.alphabetic,
-                              // alignment: PlaceholderAlignment.middle,
                             ),
-                          ],
-                        ),
+                            baseline: TextBaseline.alphabetic,
+                            // alignment: PlaceholderAlignment.middle,
+                          ),
+                        ],
                       ),
-                      const Divider(
-                        thickness: 0.7,
-                      ),
-                      Column(
-                        children: allWeights.isNotEmpty
-                            ? allWeights.map((item) {
-                                return WeightCard(
-                                  text: item['text'],
-                                  weight: item['weight'],
-                                  best: item['best'] ?? [],
-                                );
-                              }).toList()
-                            : const [
-                                Text(
-                                  'You haven\'t added this course\'s weights yet!',
-                                  style: TextStyle(fontWeight: FontWeight.w200),
-                                ),
-                              ],
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 45),
-                    child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.start,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Grades', style: kMainTitleStyle),
-                            midterm >= 0
-                                ? Row(
-                                    children: [
-                                      const Text('Midterm  |  ',
-                                          style: kMainTitleStyle),
-                                      Text(
-                                        '${midterm.toStringAsFixed(1)}%',
-                                        style: kMainTitleStyle.copyWith(
-                                          color: getScoreColor(midterm),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : const Text(''),
-                          ],
+                        RichText(
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: 'Weights',
+                                style: kMainTitleStyle,
+                              ),
+                              const WidgetSpan(child: SizedBox(width: 10)),
+                              WidgetSpan(
+                                child: SizedBox(
+                                  // margin: const EdgeInsets.only(bottom: 5),
+                                  height: 18,
+                                  width: 18,
+                                  child: IconButton(
+                                    padding: const EdgeInsets.all(0),
+                                    // iconSize: 5,
+                                    splashRadius: 17,
+                                    iconSize: 15,
+                                    alignment: Alignment.center,
+                                    icon: SvgPicture.asset(
+                                      "assets/images/edit.svg",
+                                      // fit: BoxFit.scaleDown,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        buildWeightSheet(context);
+                                        // allWeights = [
+                                        //   {
+                                        //     'text': 'Quizzes',
+                                        //     'weight': '30',
+                                        //     'best': ['4', '5']
+                                        //   },
+                                        //   {
+                                        //     'text': 'In-Class Assignments',
+                                        //     'weight': '20',
+                                        //     'best': ['8', '10']
+                                        //   },
+                                        //   {
+                                        //     'text': 'Midterms',
+                                        //     'weight': '30',
+                                        //   },
+                                        // ];
+                                      });
+                                    },
+                                  ),
+                                ),
+                                baseline: TextBaseline.alphabetic,
+                                // alignment: PlaceholderAlignment.middle,
+                              ),
+                            ],
+                          ),
                         ),
                         const Divider(
                           thickness: 0.7,
                         ),
                         Column(
-                          children: allGrades.map((item) {
-                            return buildGradeCard(item);
-                          }).toList(),
+                          children: allWeights.isNotEmpty
+                              ? allWeights.map((item) {
+                                  return WeightCard(
+                                    text: item['text'],
+                                    weight: item['weight'],
+                                    best: item['best'] ?? [],
+                                  );
+                                }).toList()
+                              : const [
+                                  Text(
+                                    'You haven\'t added this course\'s weights yet!',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w200),
+                                  ),
+                                ],
                         ),
-                        // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
-                        //   print("Building grade card $index");
-                        //   return buildGradeCard(allGrades[index]);
-                        // }),
-                        const SizedBox(height: 150),
                       ],
                     ),
-                  ),
-                ],
+                    Container(
+                      padding: const EdgeInsets.only(top: 45),
+                      child: Column(
+                        // crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Grades', style: kMainTitleStyle),
+                              midterm >= 0
+                                  ? Row(
+                                      children: [
+                                        const Text('Midterm  |  ',
+                                            style: kMainTitleStyle),
+                                        Text(
+                                          '${midterm.toStringAsFixed(1)}%',
+                                          style: kMainTitleStyle.copyWith(
+                                            color: getScoreColor(midterm),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : const Text(''),
+                            ],
+                          ),
+                          const Divider(
+                            thickness: 0.7,
+                          ),
+                          Column(
+                            children: allGrades.map((item) {
+                              return buildGradeCard(item);
+                            }).toList(),
+                          ),
+                          // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
+                          //   print("Building grade card $index");
+                          //   return buildGradeCard(allGrades[index]);
+                          // }),
+                          const SizedBox(height: 150),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

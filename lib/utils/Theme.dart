@@ -42,18 +42,19 @@ class MyTheme {
     ),
 
     appBarTheme: const AppBarTheme(
-        systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarBrightness: Brightness.light,
-            statusBarIconBrightness: Brightness.dark,
-            statusBarColor: light,
-            systemNavigationBarContrastEnforced: false),
-        centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w600,
-          color: orange,
-          fontFamily: 'Outfit',
-        )),
+      systemOverlayStyle: SystemUiOverlayStyle(
+          // statusBarBrightness: Brightness.dark,
+          // statusBarIconBrightness: Brightness.light,
+          statusBarColor: light,
+          systemNavigationBarContrastEnforced: false),
+      centerTitle: true,
+      titleTextStyle: TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.w600,
+        color: orange,
+        fontFamily: 'Outfit',
+      ),
+    ),
     fontFamily: 'Outfit',
     textTheme: const TextTheme(
       displayLarge: TextStyle(

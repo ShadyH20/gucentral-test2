@@ -281,12 +281,16 @@ class MyAppState extends State<MyApp> {
           // home: const LoginPage(),
           debugShowCheckedModeBanner: false,
           initialRoute: prefs.containsKey('username') ? "/home" : "/login",
+          
           theme: isDarkMode
               ? MyTheme.lightTheme.copyWith(
                   primaryColor: MyTheme.darkTheme.colorScheme.background)
               : MyTheme.lightTheme,
           darkTheme: MyTheme.darkTheme,
           themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+          
+          
+          
           onGenerateRoute: (settings) {
             // If you push the PassArguments route
             if (settings.name == '/evaluate') {
