@@ -6,6 +6,7 @@ import "package:auto_size_text/auto_size_text.dart";
 import "package:awesome_notifications/awesome_notifications.dart";
 import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
 import "package:flutter/services.dart";
 import "package:flutter_linkify/flutter_linkify.dart";
 import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
@@ -22,6 +23,7 @@ import "package:timeago/timeago.dart" as timeago;
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
 import "../chrome-dino/chromeDino.dart";
 import "../main.dart";
+import "../utils/MeasureSize.dart";
 import "../utils/SharedPrefs.dart";
 //import Notifications.dart from the web directory
 import '../utils/Notifications.dart';
@@ -48,6 +50,8 @@ String adUnitCode = '''
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  static ValueNotifier<Size> cardSize = ValueNotifier(const Size(300, 200));
+
   @override
   State<HomePage> createState() => HomePageState();
 }
@@ -61,7 +65,8 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     MyColors = Theme.of(context).colorScheme;
   }
 
-// late Timer _everySecond;
+  // Size cardSize = const Size(300, 200);
+
   @override
   void initState() {
     // Set State every 5 seconds to update the timeago widget
@@ -223,15 +228,25 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                         //// SUMMARY ////
                         Expanded(
                           flex: 3,
-                          child: Container(
-                            // height: 250,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                15.0,
+                          child: MeasureSize(
+                            child: Container(
+                              // height: 250,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(
+                                  15.0,
+                                ),
+                                color: MyColors.primary,
                               ),
-                              color: MyColors.primary,
+                              child: ChromeDino(),
                             ),
-                            child: const ChromeDino(),
+                            onChange: (size) {
+                              print('Size changed to $size');
+                              setState(() {
+                                HomePage.cardSize.value = size;
+                                // chromeDino = ChromeDino(size: HomePage.cardSize.value);
+                              });
+                            },
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -240,7 +255,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              //// NEXT WEEK QUIZZES ////
+                              //// THIS WEEK QUIZZES ////
                               Expanded(
                                 flex: 1,
                                 child: Container(

@@ -45,7 +45,7 @@ class MyTheme {
         systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: Brightness.light,
             statusBarIconBrightness: Brightness.dark,
-            statusBarColor: light,
+            statusBarColor: Colors.transparent,
             systemNavigationBarContrastEnforced: false),
         centerTitle: true,
         titleTextStyle: TextStyle(

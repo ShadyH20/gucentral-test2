@@ -5,7 +5,6 @@ import "package:gucentral/utils/SharedPrefs.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
-import "../chrome-dino/chromeDino.dart";
 import "../widgets/Requests.dart";
 import '../widgets/weight_card.dart';
 import '../widgets/grade_card.dart';
