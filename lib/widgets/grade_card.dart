@@ -54,7 +54,7 @@ class GradeCard extends StatelessWidget {
             style: TextStyle(
               // fontFamily: "Outfit",
               fontWeight: !isElement ? FontWeight.w700 : FontWeight.w200,
-              fontSize: !isElement ? 15 : 13,
+              fontSize: !isElement ? 16 : 15,
               color: MyColors.secondary,
             ),
           ),
@@ -106,51 +106,6 @@ class GradeCard extends StatelessWidget {
               ),
             ),
           ),
-          // Stack(
-          //   children: [
-          //     CircularPercentIndicator(
-          //       radius: 25,
-          //       animation: true,
-          //       animationDuration: 800,
-          //       animateFromLastPercent: true,
-          //       percent: percentage,
-          //       progressColor: gradeColor,
-          //       backgroundColor: const Color(0xFFdedede),
-          //       circularStrokeCap: CircularStrokeCap.round,
-          //       center: Container(
-          //         padding: const EdgeInsets.symmetric(horizontal: 10),
-          //         child: Flexible(
-          //           child: RichText(
-          //             textAlign: TextAlign.center,
-          //             text: TextSpan(
-          //               children: [
-          //                 TextSpan(
-          //                   text: getScore(score),
-          //                   style: TextStyle(
-          //                     fontFamily: "Outfit",
-          //                     fontWeight: FontWeight.w700,
-          //                     fontSize: 15,
-          //                     // height: 19,
-          //                     color: gradeColor,
-          //                   ),
-          //                 ),
-          //                 TextSpan(
-          //                   text: ' / ${scoreTotal.toStringAsFixed(0)}',
-          //                   style: TextStyle(
-          //                     fontFamily: "Outfit",
-          //                     fontWeight: FontWeight.w700,
-          //                     fontSize: 9,
-          //                     color: gradeColor,
-          //                   ),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );

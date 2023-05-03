@@ -47,7 +47,7 @@ class AssignmentCard extends StatelessWidget {
                 style: const TextStyle(
                   fontFamily: "Outfit",
                   fontWeight: FontWeight.w700,
-                  fontSize: 15,
+                  fontSize: 16,
                   color: MyColors.secondary,
                 ),
               ),
