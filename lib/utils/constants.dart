@@ -8,3 +8,11 @@ const kMainTitleStyle = TextStyle(
   color: MyColors.primary,
   decoration: TextDecoration.none,
 );
+
+const kSubTitleStyle = TextStyle(
+  fontFamily: "Outfit",
+  fontWeight: FontWeight.w700,
+  fontSize: 15,
+  color: MyColors.secondary,
+  decoration: TextDecoration.none,
+);
