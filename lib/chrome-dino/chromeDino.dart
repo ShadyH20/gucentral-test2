@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:gucentral/widgets/MyColors.dart';
 // import 'package:flutter/services.dart';
 import 'cactus.dart';
 import 'cloud.dart';
@@ -230,12 +231,12 @@ class _ChromeDinoState extends State<ChromeDino>
 
     return Scaffold(
       body: AnimatedContainer(
-        duration: const Duration(milliseconds: 5000),
+        duration: const Duration(milliseconds: 3000),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(
             15.0,
           ),
-          border: Border.all(color: Colors.black),
+          border: Border.all(color: Colors.yellow),
           color: (runDistance ~/ dayNightOffest) % 2 == 0
               ? Colors.white
               : Colors.black,
@@ -293,189 +294,200 @@ class _ChromeDinoState extends State<ChromeDino>
               Positioned(
                 right: 0,
                 top: 20,
-                child: IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    _die();
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Change Physics"),
-                          actions: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 25,
-                                width: 280,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("Gravity:"),
-                                    SizedBox(
-                                      child: TextField(
-                                        controller: gravityController,
-                                        key: UniqueKey(),
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
+                child: AnimatedContainer(
+                  duration: const Duration(seconds: 3),
+                  child: IconButton(
+                    icon: const Icon(Icons.settings),
+                    color: (runDistance ~/ dayNightOffest) % 2 == 0
+                        ? Colors.black
+                        : Colors.white,
+                    onPressed: () {
+                      _die();
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text("Change Physics"),
+                            actions: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 280,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Gravity:"),
+                                      SizedBox(
+                                        child: TextField(
+                                          controller: gravityController,
+                                          key: UniqueKey(),
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
                                           ),
                                         ),
+                                        height: 25,
+                                        width: 75,
                                       ),
-                                      height: 25,
-                                      width: 75,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 25,
-                                width: 280,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("Acceleration:"),
-                                    SizedBox(
-                                      child: TextField(
-                                        controller: accelerationController,
-                                        key: UniqueKey(),
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 280,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Acceleration:"),
+                                      SizedBox(
+                                        child: TextField(
+                                          controller: accelerationController,
+                                          key: UniqueKey(),
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
                                           ),
                                         ),
+                                        height: 25,
+                                        width: 75,
                                       ),
-                                      height: 25,
-                                      width: 75,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 25,
-                                width: 280,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("Initial Velocity:"),
-                                    SizedBox(
-                                      child: TextField(
-                                        controller: runVelocityController,
-                                        key: UniqueKey(),
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 280,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Initial Velocity:"),
+                                      SizedBox(
+                                        child: TextField(
+                                          controller: runVelocityController,
+                                          key: UniqueKey(),
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
                                           ),
                                         ),
+                                        height: 25,
+                                        width: 75,
                                       ),
-                                      height: 25,
-                                      width: 75,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 25,
-                                width: 280,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("Jump Velocity:"),
-                                    SizedBox(
-                                      child: TextField(
-                                        controller: jumpVelocityController,
-                                        key: UniqueKey(),
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 280,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Jump Velocity:"),
+                                      SizedBox(
+                                        child: TextField(
+                                          controller: jumpVelocityController,
+                                          key: UniqueKey(),
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
                                           ),
                                         ),
+                                        height: 25,
+                                        width: 75,
                                       ),
-                                      height: 25,
-                                      width: 75,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 25,
-                                width: 280,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text("Day-Night Offset:"),
-                                    SizedBox(
-                                      child: TextField(
-                                        controller: dayNightOffestController,
-                                        key: UniqueKey(),
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 280,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("Day-Night Offset:"),
+                                      SizedBox(
+                                        child: TextField(
+                                          controller: dayNightOffestController,
+                                          key: UniqueKey(),
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
                                           ),
                                         ),
+                                        height: 25,
+                                        width: 75,
                                       ),
-                                      height: 25,
-                                      width: 75,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                gravity = int.parse(gravityController.text);
-                                acceleration =
-                                    double.parse(accelerationController.text);
-                                initialVelocity =
-                                    double.parse(runVelocityController.text);
-                                jumpVelocity =
-                                    double.parse(jumpVelocityController.text);
-                                dayNightOffest =
-                                    int.parse(dayNightOffestController.text);
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text(
-                                "Done",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                            )
-                          ],
-                        );
-                      },
-                    );
-                  },
+                              TextButton(
+                                onPressed: () {
+                                  gravity = int.parse(gravityController.text);
+                                  acceleration =
+                                      double.parse(accelerationController.text);
+                                  initialVelocity =
+                                      double.parse(runVelocityController.text);
+                                  jumpVelocity =
+                                      double.parse(jumpVelocityController.text);
+                                  dayNightOffest =
+                                      int.parse(dayNightOffestController.text);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  "Done",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               // Positioned(

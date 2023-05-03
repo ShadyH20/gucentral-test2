@@ -43,8 +43,8 @@ class MyTheme {
 
     appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
-            // statusBarBrightness: Brightness.dark,
-            // statusBarIconBrightness: Brightness.light,
+            statusBarBrightness: Brightness.light,
+            statusBarIconBrightness: Brightness.dark,
             statusBarColor: light,
             systemNavigationBarContrastEnforced: false),
         centerTitle: true,
@@ -85,9 +85,9 @@ class MyTheme {
         onSurface: light),
     appBarTheme: const AppBarTheme(
         systemOverlayStyle: SystemUiOverlayStyle(
-            // statusBarBrightness: Brightness.dark,
-            // statusBarIconBrightness: Brightness.light,
-            statusBarColor: darkerGrey2,
+            statusBarBrightness: Brightness.dark,
+            statusBarIconBrightness: Brightness.light,
+            statusBarColor: Colors.transparent,
             systemNavigationBarContrastEnforced: false),
         centerTitle: true,
         titleTextStyle: TextStyle(

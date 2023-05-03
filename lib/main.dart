@@ -96,7 +96,7 @@ void main() async {
   setTestNotifications();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    // statusBarColor: Colors.green,
+    statusBarColor: Colors.transparent,
     statusBarBrightness: Brightness.dark,
     statusBarIconBrightness: Brightness.light,
     systemStatusBarContrastEnforced: false,
@@ -104,9 +104,7 @@ void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-          overlays: [SystemUiOverlay.bottom])
-      // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values)
-      .then(
+      overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom]).then(
     (_) {
       runApp(const MyApp());
     },
