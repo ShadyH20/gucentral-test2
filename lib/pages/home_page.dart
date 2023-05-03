@@ -113,7 +113,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     // ColorScheme MyColors = Theme.of(context).colorScheme;
 
     return Scaffold(
-        backgroundColor: MyColors.primary,
+        backgroundColor: MyColors.background,
         // bottomNavigationBar: FlutterAdManagerWeb(
         //   adUnitCode: adUnitCode,
         //   // debug: true,
