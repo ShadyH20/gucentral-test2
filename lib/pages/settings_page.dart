@@ -243,7 +243,9 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       title: TextField(
         controller: _nameController,
-        keyboardType: TextInputType.name,
+        keyboardType: TextInputType.text,
+        autofillHints: const [AutofillHints.nickname, AutofillHints.name],
+
         // strutStyle: const StrutStyle(height: 0.5),
         textCapitalization: TextCapitalization.words,
         textAlignVertical: TextAlignVertical.center,

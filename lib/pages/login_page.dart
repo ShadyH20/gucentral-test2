@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                                 TextFormField(
                                   focusNode: _usernameFocusNode,
                                   textInputAction: TextInputAction.next,
-                                  // keyboardType: TextInputType.name,
+                                  keyboardType: TextInputType.text,
                                   autofillHints: const [AutofillHints.username],
                                   autocorrect: false,
                                   controller: usernameController,
