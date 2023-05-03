@@ -161,21 +161,32 @@ class _TranscriptPageState extends State<TranscriptPage>
               // #### ACTUAL PAGE ####
               // #####################
               children: [
-                const Spacer(),
-                profile(),
-                const Spacer(),
-                cumulativeGPA(),
-                const Spacer(),
-                buildDropdown(),
-                const Spacer(),
                 Expanded(
-                  flex: 10,
+                  flex: 4,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Column(
+                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const SizedBox(height: 18),
+                          profile(),
+                          const SizedBox(height: 18),
+                          cumulativeGPA(),
+                          const SizedBox(height: 18),
+                        ]),
+                  ),
+                ),
+
+                Expanded(
+                  flex: 7,
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     // width: 380,
                     // height: 350,
                     child: Column(
                       children: [
+                        buildDropdown(),
+                        const SizedBox(height: 20),
                         showLoading
                             ? ListView.separated(
                                 itemBuilder: (context, index) =>
@@ -325,9 +336,11 @@ class _TranscriptPageState extends State<TranscriptPage>
   Widget profile() {
     return Column(
       children: [
-        SvgPicture.asset(
-          "assets/images/profile.svg",
-          height: 95,
+        FittedBox(
+          child: SvgPicture.asset(
+            "assets/images/profile.svg",
+            height: 95,
+          ),
         ),
         const SizedBox(height: 5),
         Text(
