@@ -25,6 +25,24 @@ class CoursesPage extends StatefulWidget {
 class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
 
+  List<Map> allWeights = [];
+  List<Map> sheetWeights = [
+    {
+      'text': 'Midterm',
+      'weight': 35,
+      'best': [],
+    },
+    {
+      'text': 'Assignments',
+      'weight': 15,
+      'best': [3, 4],
+    },
+  ];
+  List<List<Map>> allGrades = [];
+  double midterm = -1;
+  BuildSheet? weightSheet;
+  int addWeightCardNum = 1;
+
   @override
   void initState() {
     super.initState();
@@ -187,12 +205,15 @@ class _CoursesPageState extends State<CoursesPage> {
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 30),
-                  const WeightCard(text: 'Quizzes', weight: '50'),
+                  WeightList(weightList: sheetWeights),
                   const SizedBox(height: 30),
                   Column(
                     children: [
                       for (var i = 0; i < addWeightCardNum; i++)
-                        AddWeightCard(onCancel: setWeightCardNum)
+                        AddWeightCard(
+                          onCancel: setWeightCardNum,
+                          addFunction: addToWeightList,
+                        )
                     ],
                   ),
                   const SizedBox(height: 30),
@@ -235,13 +256,6 @@ class _CoursesPageState extends State<CoursesPage> {
     weightSheet?.buildNotificationSheet();
   }
 
-  List<Map> allWeights = [];
-  List<List<Map>> allGrades = [];
-  double midterm = -1;
-  BuildSheet? weightSheet;
-
-  int addWeightCardNum = 1;
-
   void setWeightCardNum({required bool increment}) {
     if (increment) {
       setState(() {
@@ -252,6 +266,12 @@ class _CoursesPageState extends State<CoursesPage> {
         if (addWeightCardNum > 0) addWeightCardNum--;
       });
     }
+  }
+
+  void addToWeightList(Map newWeight) {
+    setState(() {
+      sheetWeights.add(newWeight);
+    });
   }
 
   @override
@@ -327,7 +347,7 @@ class _CoursesPageState extends State<CoursesPage> {
         value: SystemUiOverlayStyle.dark,
         child: Container(
           padding: const EdgeInsets.symmetric(
-            horizontal: 35,
+            horizontal: 25,
             vertical: 15,
           ),
           child: Column(
@@ -441,23 +461,12 @@ class _CoursesPageState extends State<CoursesPage> {
                         const Divider(
                           thickness: 0.7,
                         ),
-                        Column(
-                          children: allWeights.isNotEmpty
-                              ? allWeights.map((item) {
-                                  return WeightCard(
-                                    text: item['text'],
-                                    weight: item['weight'],
-                                    best: item['best'] ?? [],
-                                  );
-                                }).toList()
-                              : const [
-                                  Text(
-                                    'You haven\'t added this course\'s weights yet!',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w200),
-                                  ),
-                                ],
-                        ),
+                        sheetWeights.isNotEmpty
+                            ? WeightList(weightList: sheetWeights)
+                            : const Text(
+                                'You haven\'t added this course\'s weights yet!',
+                                style: TextStyle(fontWeight: FontWeight.w200),
+                              ),
                       ],
                     ),
                     Container(
@@ -508,6 +517,34 @@ class _CoursesPageState extends State<CoursesPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class WeightList extends StatefulWidget {
+  const WeightList({super.key, required this.weightList});
+  final List<Map> weightList;
+  @override
+  State<WeightList> createState() => _WeightListState();
+}
+
+class _WeightListState extends State<WeightList> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: widget.weightList.map((item) {
+        return WeightCard(
+          text: item['text'],
+          weight: item['weight'].toString(),
+          best: item['best'].map<String>((item) {
+            return item.toString();
+          }).toList(),
+        );
+      }).toList(),
+      // children: [
+      //   WeightCard(text: 'Quizzes', weight: '50'),
+      //   WeightCard(text: 'Assignments', weight: '50'),
+      // ],
     );
   }
 }

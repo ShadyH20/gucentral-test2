@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gucentral/utils/constants.dart';
 import '../main.dart';
 import 'MyColors.dart';
@@ -7,9 +8,11 @@ class AddWeightCard extends StatefulWidget {
   const AddWeightCard({
     super.key,
     required this.onCancel,
+    required this.addFunction,
   });
 
   final Function onCancel;
+  final Function addFunction;
 
   @override
   State<AddWeightCard> createState() => _AddWeightCardState();
@@ -17,6 +20,38 @@ class AddWeightCard extends StatefulWidget {
 
 class _AddWeightCardState extends State<AddWeightCard> {
   bool checkboxState = false;
+  String text = "";
+  String weight = "";
+  String best = "";
+  String from = "";
+  final textController = TextEditingController();
+  final weightController = TextEditingController();
+  final bestController = TextEditingController();
+  final fromController = TextEditingController();
+
+  void setText(String text) {
+    setState(() {
+      this.text = text;
+    });
+  }
+
+  void setWeight(String weight) {
+    setState(() {
+      this.weight = weight;
+    });
+  }
+
+  void setBest(String best) {
+    setState(() {
+      this.best = best;
+    });
+  }
+
+  void setFrom(String from) {
+    setState(() {
+      this.from = from;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +91,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          const SizedBox(
+                          SizedBox(
                             width: 130,
                             height: 25,
                             child: Material(
@@ -64,6 +99,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                 child: WeightTextField(
                                   validatorText: 'Please enter title',
                                   hintText: 'e.g. Assignments',
+                                  onChangeFunction: setText,
+                                  textFieldController: textController,
+                                  maxLength: 20,
                                 ),
                               ),
                             ),
@@ -80,7 +118,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                             ),
                           ),
                           const SizedBox(width: 10),
-                          const SizedBox(
+                          SizedBox(
                             width: 35,
                             height: 35,
                             child: Material(
@@ -88,8 +126,10 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                 child: WeightTextField(
                                   validatorText: 'Please enter weight',
                                   hintText: '',
+                                  onChangeFunction: setWeight,
+                                  textFieldController: weightController,
                                   keyboardType: TextInputType.number,
-                                  textStyle: TextStyle(
+                                  textStyle: const TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w900),
                                 ),
@@ -135,6 +175,8 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                     child: WeightTextField(
                                       validatorText: 'Please enter best',
                                       hintText: '',
+                                      onChangeFunction: setBest,
+                                      textFieldController: bestController,
                                       keyboardType: TextInputType.number,
                                       enabled: checkboxState,
                                       textStyle: const TextStyle(
@@ -167,6 +209,8 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                     child: WeightTextField(
                                       validatorText: 'Please enter from',
                                       hintText: '',
+                                      onChangeFunction: setFrom,
+                                      textFieldController: fromController,
                                       keyboardType: TextInputType.number,
                                       enabled: checkboxState,
                                       textStyle: const TextStyle(
@@ -232,7 +276,15 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   width: 45,
                   child: TextButton(
                     onPressed: () {
-                      print('aaaaadd baaaaby');
+                      widget.addFunction({
+                        'text': text,
+                        'weight': weight,
+                        'best': [best, from]
+                      });
+                      textController.clear();
+                      weightController.clear();
+                      bestController.clear();
+                      fromController.clear();
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
                     style: TextButton.styleFrom(
@@ -283,11 +335,14 @@ class _AddWeightCardState extends State<AddWeightCard> {
   }
 }
 
-class WeightTextField extends StatelessWidget {
-  const WeightTextField({
+class WeightTextField extends StatefulWidget {
+  WeightTextField({
     super.key,
     required this.validatorText,
     required this.hintText,
+    required this.onChangeFunction,
+    required this.textFieldController,
+    this.maxLength = 2,
     this.textStyle = const TextStyle(fontSize: 12),
     this.enabled = true,
     this.keyboardType,
@@ -297,27 +352,43 @@ class WeightTextField extends StatelessWidget {
   final String hintText;
   final TextStyle textStyle;
   final bool enabled;
+  final int maxLength;
   final TextInputType? keyboardType;
+  final dynamic textFieldController;
+  Function onChangeFunction;
 
+  @override
+  State<WeightTextField> createState() => _WeightTextFieldState();
+}
+
+class _WeightTextFieldState extends State<WeightTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       textInputAction: TextInputAction.next,
-      keyboardType: keyboardType,
+      controller: widget.textFieldController,
+      // maxLength: 2,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(widget.maxLength),
+      ],
+      keyboardType: widget.keyboardType,
       autofillHints: const [AutofillHints.username],
-      enabled: enabled,
+      enabled: widget.enabled,
       autocorrect: false,
+      onChanged: (value) {
+        widget.onChangeFunction(value);
+      },
       validator: (value) =>
-          value != null && value.isEmpty ? validatorText : null,
-      style: textStyle.copyWith(
-        color: enabled
+          value != null && value.isEmpty ? widget.validatorText : null,
+      style: widget.textStyle.copyWith(
+        color: widget.enabled
             ? const Color(0xFF9F9F9F)
             : const Color(0xFF9F9F9F).withOpacity(0.2),
       ),
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.center,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: widget.hintText,
         hintStyle: TextStyle(
             fontFamily: "Outfit",
             fontWeight: FontWeight.w500,
