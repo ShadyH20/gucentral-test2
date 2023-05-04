@@ -246,6 +246,9 @@ class _LoginPageState extends State<LoginPage> {
                                   Container(height: 5),
                                   TextFormField(
                                     focusNode: _passwordFocusNode,
+                                    onFieldSubmitted: (term) {
+                                      FocusScope.of(context).unfocus();
+                                    },
                                     scrollPadding:
                                         const EdgeInsets.only(bottom: 50),
                                     autofillHints: const [
