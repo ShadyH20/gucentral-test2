@@ -9,10 +9,12 @@ class WeightCard extends StatelessWidget {
     super.key,
     required this.weightData,
     this.addRemove = false,
+    this.addReorder = false,
   });
 
   final Weight weightData;
   final bool addRemove;
+  final bool addReorder;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +22,13 @@ class WeightCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 7),
       child: Row(
         children: [
+          addReorder
+              ? Icon(
+                  Icons.menu,
+                  color: MyColors.secondary.withOpacity(0.3),
+                )
+              : Container(),
+          addReorder ? const SizedBox(width: 10) : Container(),
           Text(
             '${weightData.text}${weightData.best[0].isEmpty || weightData.best[1].isEmpty ? '' : ' | Best ${weightData.best[0]} from ${weightData.best[1]}'}',
             style: const TextStyle(

@@ -20,6 +20,12 @@ class WeightData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateWeightPosition(int oldIndex, int newIndex) {
+    final item = _allWeights.removeAt(oldIndex);
+    _allWeights.insert(newIndex, item);
+    notifyListeners();
+  }
+
   UnmodifiableListView<Weight> get allWeights {
     return UnmodifiableListView(_allWeights);
   }

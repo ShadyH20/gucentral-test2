@@ -222,18 +222,14 @@ class _CoursesPageState extends State<CoursesPage> {
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 30),
+                  AddWeightCard(
+                    onCancel: setWeightCardNum,
+                  ),
                   WeightList(
                     weightList: Provider.of<WeightData>(context).allWeights,
                     addRemove: true,
-                  ),
-                  const SizedBox(height: 30),
-                  Column(
-                    children: [
-                      for (var i = 0; i < addWeightCardNum; i++)
-                        AddWeightCard(
-                          onCancel: setWeightCardNum,
-                        )
-                    ],
+                    addReorder: true,
+                    makeReorderable: true,
                   ),
                   const SizedBox(height: 30),
                   Row(
@@ -504,10 +500,17 @@ class _CoursesPageState extends State<CoursesPage> {
 }
 
 class WeightList extends StatefulWidget {
-  const WeightList(
-      {super.key, required this.weightList, this.addRemove = false});
+  const WeightList({
+    super.key,
+    required this.weightList,
+    this.addRemove = false,
+    this.addReorder = false,
+    this.makeReorderable = false,
+  });
   final List<Weight> weightList;
   final bool addRemove;
+  final bool addReorder;
+  final bool makeReorderable;
 
   @override
   State<WeightList> createState() => _WeightListState();
@@ -519,15 +522,50 @@ class _WeightListState extends State<WeightList> {
     return [item['best'][0].toString(), item['best'][1].toString()];
   }
 
+  // ReorderableListView buildWeightCardList() {
+  //   return ReorderableListView(children: children, onReorder: onReorder)
+  // }
+
+  WeightCard buildWeightCard(Weight inputWeight) {
+    return WeightCard(
+      weightData: inputWeight,
+      addRemove: widget.addRemove,
+      addReorder: widget.addReorder,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: widget.weightList.map((item) {
-        return WeightCard(
-          weightData: item,
-          addRemove: widget.addRemove,
-        );
-      }).toList(),
-    );
+    return !widget.makeReorderable
+        ? Column(
+            children: widget.weightList.map((item) {
+              return buildWeightCard(item);
+            }).toList(),
+          )
+        : Container(
+            // width: 100,
+            height: 250,
+            // color: Colors.red,
+            child: ReorderableListView(
+              onReorder: (oldIndex, newIndex) {
+                Provider.of<WeightData>(context, listen: false)
+                    .updateWeightPosition(oldIndex, newIndex);
+              },
+              clipBehavior: Clip.antiAlias,
+              padding: const EdgeInsets.all(0),
+              children: widget.weightList.map((item) {
+                return Container(
+                  key: ValueKey(item),
+                  decoration: const BoxDecoration(
+                    // color: Colors.blue,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.only(bottom: 5),
+                  child: buildWeightCard(item),
+                );
+              }).toList(),
+            ),
+          );
   }
 }
