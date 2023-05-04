@@ -254,6 +254,9 @@ class _LoginPageState extends State<LoginPage> {
                                     obscureText: showPassword,
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.visiblePassword,
+                                    onFieldSubmitted: (term) {
+                                      FocusScope.of(context).unfocus();
+                                    },
                                     onEditingComplete: () =>
                                         TextInput.finishAutofillContext(),
                                     enableSuggestions: false,
