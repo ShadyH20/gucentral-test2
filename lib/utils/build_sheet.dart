@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gucentral/utils/weight_data.dart';
+import 'package:provider/provider.dart';
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
 import '../main.dart';
 import '../widgets/MyColors.dart';
@@ -23,6 +25,8 @@ class BuildSheet {
       context,
       builder: (context) {
         return SlidingSheetDialog(
+          isDismissable:
+              Provider.of<WeightData>(context, listen: false).isDismissable,
           duration: const Duration(milliseconds: 400),
           avoidStatusBar: true,
           minHeight: MediaQuery.of(context).size.height,

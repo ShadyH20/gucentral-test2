@@ -295,6 +295,10 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   fromController.clear();
                   from = '';
 
+                  setState(() {
+                    checkboxState = false;
+                  });
+
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
                 style: TextButton.styleFrom(

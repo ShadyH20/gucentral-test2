@@ -10,6 +10,13 @@ class WeightData extends ChangeNotifier {
     Weight(text: 'Assignments', weight: '15', best: ['3', '4']),
   ];
 
+  bool isDismissable = true;
+
+  void setIsDismissable(bool value) {
+    isDismissable = value;
+    notifyListeners();
+  }
+
   void addToWeights(Weight newWeight) {
     _allWeights.add(newWeight);
     notifyListeners();
@@ -20,9 +27,11 @@ class WeightData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateWeightPosition(int oldIndex, int newIndex) {
+  updateWeightPosition(int oldIndex, int newIndex) {
     final item = _allWeights.removeAt(oldIndex);
+    if (newIndex > oldIndex) newIndex -= 1;
     _allWeights.insert(newIndex, item);
+    // print('\n\nOLD INDEX: $oldIndex\nNEW INDEX: $newIndex\n\n');
     notifyListeners();
   }
 

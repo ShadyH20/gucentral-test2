@@ -209,43 +209,50 @@ class _CoursesPageState extends State<CoursesPage> {
             onTap: () {
               FocusManager.instance.primaryFocus?.unfocus();
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(
-                    'Edit Weights',
-                    style: kMainTitleStyle.copyWith(
-                      fontSize: 28,
-                    ),
-                    textAlign: TextAlign.left,
-                  ),
-                  const SizedBox(height: 30),
-                  AddWeightCard(
-                    onCancel: setWeightCardNum,
-                  ),
-                  WeightList(
-                    weightList: Provider.of<WeightData>(context).allWeights,
-                    addRemove: true,
-                    addReorder: true,
-                    makeReorderable: true,
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
                     children: [
-                      Expanded(
-                        // flex: 6,
-                        child: Container(
-                          color: const Color.fromARGB(30, 0, 0, 0),
-                          height: 1,
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Edit Weights',
+                          style: kMainTitleStyle.copyWith(
+                            fontSize: 28,
+                          ),
+                          textAlign: TextAlign.left,
                         ),
+                      ),
+                      const SizedBox(height: 30),
+                      AddWeightCard(
+                        onCancel: setWeightCardNum,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 90),
-                ],
-              ),
+                ),
+                WeightList(
+                  weightList: Provider.of<WeightData>(context).allWeights,
+                  addRemove: true,
+                  addReorder: true,
+                  makeReorderable: true,
+                ),
+                // const SizedBox(height: 40),
+                Row(
+                  children: [
+                    Expanded(
+                      // flex: 6,
+                      child: Container(
+                        color: const Color.fromARGB(30, 0, 0, 0),
+                        height: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 90),
+              ],
             ),
           );
         });
@@ -499,7 +506,7 @@ class _CoursesPageState extends State<CoursesPage> {
   }
 }
 
-class WeightList extends StatefulWidget {
+class WeightList extends StatelessWidget {
   const WeightList({
     super.key,
     required this.weightList,
@@ -512,11 +519,6 @@ class WeightList extends StatefulWidget {
   final bool addReorder;
   final bool makeReorderable;
 
-  @override
-  State<WeightList> createState() => _WeightListState();
-}
-
-class _WeightListState extends State<WeightList> {
   List<String> getBest(Map item) {
     if (item['best'] == null || item['best'].length != 2) return ['', ''];
     return [item['best'][0].toString(), item['best'][1].toString()];
@@ -529,31 +531,37 @@ class _WeightListState extends State<WeightList> {
   WeightCard buildWeightCard(Weight inputWeight) {
     return WeightCard(
       weightData: inputWeight,
-      addRemove: widget.addRemove,
-      addReorder: widget.addReorder,
+      addRemove: addRemove,
+      addReorder: addReorder,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return !widget.makeReorderable
+    return !makeReorderable
         ? Column(
-            children: widget.weightList.map((item) {
+            children: weightList.map((item) {
               return buildWeightCard(item);
             }).toList(),
           )
-        : Container(
+        : SizedBox(
             // width: 100,
-            height: 250,
-            // color: Colors.red,
+            height: 295,
+            // color: Color(0x44FF0000),
             child: ReorderableListView(
-              onReorder: (oldIndex, newIndex) {
+              onReorder: (oldIndex, newIndex) async {
+                Provider.of<WeightData>(context, listen: false)
+                    .setIsDismissable(false);
+
                 Provider.of<WeightData>(context, listen: false)
                     .updateWeightPosition(oldIndex, newIndex);
+
+                Provider.of<WeightData>(context, listen: false)
+                    .setIsDismissable(true);
               },
               clipBehavior: Clip.antiAlias,
               padding: const EdgeInsets.all(0),
-              children: widget.weightList.map((item) {
+              children: weightList.map((item) {
                 return Container(
                   key: ValueKey(item),
                   decoration: const BoxDecoration(
