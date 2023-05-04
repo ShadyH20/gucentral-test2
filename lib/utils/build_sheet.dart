@@ -4,15 +4,20 @@ import '../main.dart';
 import '../widgets/MyColors.dart';
 
 class BuildSheet {
-  BuildSheet(
-      {required this.context,
-      required this.builder,
-      this.hasHeader = true,
-      this.initialSnap = .75});
+  BuildSheet({
+    required this.context,
+    required this.builder,
+    this.hasHeader = true,
+    this.initialSnap = .75,
+    this.snappings = const [0.5, 0.75, .85],
+  });
+
   final BuildContext context;
   final Widget Function(BuildContext, SheetState) builder;
   final bool hasHeader;
   final double initialSnap;
+  final List<double> snappings;
+
   buildNotificationSheet() {
     showSlidingBottomSheet(
       context,
@@ -26,7 +31,7 @@ class BuildSheet {
               : const Color.fromARGB(255, 250, 250, 254),
           cornerRadius: 20,
           snapSpec: SnapSpec(
-            snappings: [0.5, 0.75, .85],
+            snappings: snappings,
             initialSnap: initialSnap,
           ),
           scrollSpec: const ScrollSpec(

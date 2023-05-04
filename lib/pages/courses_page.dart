@@ -29,18 +29,19 @@ class _CoursesPageState extends State<CoursesPage> {
   List<Map> sheetWeights = [
     {
       'text': 'Midterm',
-      'weight': 35,
+      'weight': '35',
       'best': [],
     },
     {
       'text': 'Assignments',
-      'weight': 15,
-      'best': [3, 4],
+      'weight': '15',
+      'best': ['3', '4'],
     },
   ];
   List<List<Map>> allGrades = [];
   double midterm = -1;
   BuildSheet? weightSheet;
+  BuildSheet? changeNameSheet;
   int addWeightCardNum = 1;
 
   @override
@@ -184,6 +185,30 @@ class _CoursesPageState extends State<CoursesPage> {
     return AssignmentCard(title: item[0]['title'], elements: item);
   }
 
+  buildNameSheet(BuildContext context) {
+    changeNameSheet = BuildSheet(
+        context: context,
+        initialSnap: 0.3,
+        snappings: [0.3],
+        builder: (context, state) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Column(
+              children: [
+                Text(
+                  'Change Course Name',
+                  style: kMainTitleStyle.copyWith(
+                    fontSize: 28,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            ),
+          );
+        });
+    changeNameSheet?.buildNotificationSheet();
+  }
+
   buildWeightSheet(BuildContext context) {
     weightSheet = BuildSheet(
         context: context,
@@ -226,25 +251,6 @@ class _CoursesPageState extends State<CoursesPage> {
                           height: 1,
                         ),
                       ),
-                      // const SizedBox(width: 10),
-                      // Container(
-                      //   height: 25,
-                      //   width: 25,
-                      //   decoration: BoxDecoration(
-                      //     color: MyColors.primary,
-                      //     borderRadius: BorderRadius.circular(7),
-                      //   ),
-                      //   child: GestureDetector(
-                      //     onTap: () {
-                      //       print('sup');
-                      //       setWeightCardNum(increment: true);
-                      //     },
-                      //     child: const Icon(
-                      //       Icons.add,
-                      //       color: Colors.white,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                   const SizedBox(height: 90),
@@ -391,7 +397,9 @@ class _CoursesPageState extends State<CoursesPage> {
                                 icon: SvgPicture.asset(
                                   "assets/images/edit.svg",
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  buildNameSheet(context);
+                                },
                               ),
                             ),
                             baseline: TextBaseline.alphabetic,
@@ -432,22 +440,6 @@ class _CoursesPageState extends State<CoursesPage> {
                                     onPressed: () {
                                       setState(() {
                                         buildWeightSheet(context);
-                                        // allWeights = [
-                                        //   {
-                                        //     'text': 'Quizzes',
-                                        //     'weight': '30',
-                                        //     'best': ['4', '5']
-                                        //   },
-                                        //   {
-                                        //     'text': 'In-Class Assignments',
-                                        //     'weight': '20',
-                                        //     'best': ['8', '10']
-                                        //   },
-                                        //   {
-                                        //     'text': 'Midterms',
-                                        //     'weight': '30',
-                                        //   },
-                                        // ];
                                       });
                                     },
                                   ),
@@ -529,16 +521,19 @@ class WeightList extends StatefulWidget {
 }
 
 class _WeightListState extends State<WeightList> {
+  List<String> getBest(Map item) {
+    if (item['best'] == null || item['best'].length != 2) return ['', ''];
+    return [item['best'][0].toString(), item['best'][1].toString()];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: widget.weightList.map((item) {
         return WeightCard(
-          text: item['text'],
+          text: item['text'].toString(),
           weight: item['weight'].toString(),
-          best: item['best'].map<String>((item) {
-            return item.toString();
-          }).toList(),
+          best: getBest(item),
         );
       }).toList(),
       // children: [

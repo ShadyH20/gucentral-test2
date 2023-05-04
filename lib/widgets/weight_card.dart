@@ -6,11 +6,12 @@ class WeightCard extends StatelessWidget {
       {super.key,
       required this.text,
       required this.weight,
-      this.best = const []});
+      this.best = const ['', '']});
 
   final String text;
   final String weight;
   final List<String> best;
+  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,7 +19,7 @@ class WeightCard extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            '$text${best.length == 2 ? ' | Best ${best[0]} from ${best[1]}' : ''}',
+            '$text${best[0].isEmpty || best[1].isEmpty ? '' : ' | Best ${best[0]} from ${best[1]}'}',
             style: const TextStyle(
               fontFamily: "Outfit",
               fontWeight: FontWeight.w700,
