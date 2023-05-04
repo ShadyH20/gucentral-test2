@@ -5,6 +5,7 @@ import "package:gucentral/utils/SharedPrefs.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "../utils/weight_data.dart";
 import "../widgets/Requests.dart";
 import '../widgets/weight_card.dart';
 import '../widgets/grade_card.dart';
@@ -14,6 +15,7 @@ import '../widgets/add_weight_card.dart';
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
 import "package:dropdown_button2/dropdown_button2.dart";
 import '../main.dart';
+import 'package:provider/provider.dart';
 
 class CoursesPage extends StatefulWidget {
   const CoursesPage({super.key});
@@ -26,18 +28,7 @@ class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
 
   List<Map> allWeights = [];
-  List<Map> sheetWeights = [
-    {
-      'text': 'Midterm',
-      'weight': '35',
-      'best': [],
-    },
-    {
-      'text': 'Assignments',
-      'weight': '15',
-      'best': ['3', '4'],
-    },
-  ];
+
   List<List<Map>> allGrades = [];
   double midterm = -1;
   BuildSheet? weightSheet;
@@ -230,14 +221,14 @@ class _CoursesPageState extends State<CoursesPage> {
                     textAlign: TextAlign.left,
                   ),
                   const SizedBox(height: 30),
-                  WeightList(weightList: sheetWeights),
+                  WeightList(
+                      weightList: Provider.of<WeightData>(context).allWeights),
                   const SizedBox(height: 30),
                   Column(
                     children: [
                       for (var i = 0; i < addWeightCardNum; i++)
                         AddWeightCard(
                           onCancel: setWeightCardNum,
-                          addFunction: addToWeightList,
                         )
                     ],
                   ),
@@ -276,7 +267,7 @@ class _CoursesPageState extends State<CoursesPage> {
 
   void addToWeightList(Map newWeight) {
     setState(() {
-      sheetWeights.add(newWeight);
+      Provider.of<WeightData>(context).allWeights.add(newWeight);
     });
   }
 
@@ -453,8 +444,10 @@ class _CoursesPageState extends State<CoursesPage> {
                         const Divider(
                           thickness: 0.7,
                         ),
-                        sheetWeights.isNotEmpty
-                            ? WeightList(weightList: sheetWeights)
+                        Provider.of<WeightData>(context).allWeights.isNotEmpty
+                            ? WeightList(
+                                weightList:
+                                    Provider.of<WeightData>(context).allWeights)
                             : const Text(
                                 'You haven\'t added this course\'s weights yet!',
                                 style: TextStyle(fontWeight: FontWeight.w200),
@@ -530,6 +523,7 @@ class _WeightListState extends State<WeightList> {
   Widget build(BuildContext context) {
     return Column(
       children: widget.weightList.map((item) {
+        print('CREATING CARD: ${item['text']}');
         return WeightCard(
           text: item['text'].toString(),
           weight: item['weight'].toString(),

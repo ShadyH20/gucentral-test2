@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:gucentral/utils/weight_data.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,8 @@ import "./pages/login_page.dart";
 import './widgets/Requests.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:provider/provider.dart';
+
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -268,58 +271,59 @@ class MyAppState extends State<MyApp> {
     return ValueListenableBuilder<bool>(
       valueListenable: MyApp.isDarkMode,
       builder: (context, isDarkMode, child) {
-        return MaterialApp(
-          // builder:  (context, child) {
-          //   return MediaQuery(
-          //     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          //     child: child!,
-          //   );
-          // },
-          key: mainKey,
-          navigatorKey: MyApp.navigatorKey,
-          title: 'GUCentral',
-          // home: const LoginPage(),
-          debugShowCheckedModeBanner: false,
-          initialRoute: prefs.containsKey('username') ? "/home" : "/login",
-          
-          theme: isDarkMode
-              ? MyTheme.lightTheme.copyWith(
-                  primaryColor: MyTheme.darkTheme.colorScheme.background)
-              : MyTheme.lightTheme,
-          darkTheme: MyTheme.darkTheme,
-          themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          
-          
-          
-          onGenerateRoute: (settings) {
-            // If you push the PassArguments route
-            if (settings.name == '/evaluate') {
-              // Cast the arguments to the correct
-              // type: ScreenArguments.
-              final args = settings.arguments as Map;
+        return ChangeNotifierProvider(
+          create: (context) => WeightData(),
+          child: MaterialApp(
+            // builder:  (context, child) {
+            //   return MediaQuery(
+            //     data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            //     child: child!,
+            //   );
+            // },
+            key: mainKey,
+            navigatorKey: MyApp.navigatorKey,
+            title: 'GUCentral',
+            // home: const LoginPage(),
+            debugShowCheckedModeBanner: false,
+            initialRoute: prefs.containsKey('username') ? "/home" : "/login",
 
-              // Then, extract the required data from
-              // the arguments and pass the data to the
-              // correct screen.
-              return MaterialPageRoute(
-                builder: (context) {
-                  return EvaluateACourse(course: args);
-                },
-              );
-            }
-          },
-          routes: {
-            "/login": (context) => const LoginPage(),
-            // "/evaluate": (context) => EvaluateACourse(key: key),
-            "/home": (context) => HomePageNavDrawer(
-                  gpa: "",
-                ),
-            // "home_page": (context) => HomePageNavDrawer(
-            //       key: key,
-            //       gpa: "",
-            //     )
-            // "transcript_page": (context) => TranscriptPage(key: key),
-          },
+            theme: isDarkMode
+                ? MyTheme.lightTheme.copyWith(
+                    primaryColor: MyTheme.darkTheme.colorScheme.background)
+                : MyTheme.lightTheme,
+            darkTheme: MyTheme.darkTheme,
+            themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+
+            onGenerateRoute: (settings) {
+              // If you push the PassArguments route
+              if (settings.name == '/evaluate') {
+                // Cast the arguments to the correct
+                // type: ScreenArguments.
+                final args = settings.arguments as Map;
+
+                // Then, extract the required data from
+                // the arguments and pass the data to the
+                // correct screen.
+                return MaterialPageRoute(
+                  builder: (context) {
+                    return EvaluateACourse(course: args);
+                  },
+                );
+              }
+            },
+            routes: {
+              "/login": (context) => const LoginPage(),
+              // "/evaluate": (context) => EvaluateACourse(key: key),
+              "/home": (context) => HomePageNavDrawer(
+                    gpa: "",
+                  ),
+              // "home_page": (context) => HomePageNavDrawer(
+              //       key: key,
+              //       gpa: "",
+              //     )
+              // "transcript_page": (context) => TranscriptPage(key: key),
+            },
+          ),
         );
       },
     );

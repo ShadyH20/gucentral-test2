@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gucentral/utils/constants.dart';
+import 'package:provider/provider.dart';
 import '../main.dart';
+import '../utils/weight_data.dart';
 import 'MyColors.dart';
 
 class AddWeightCard extends StatefulWidget {
   const AddWeightCard({
     super.key,
     required this.onCancel,
-    required this.addFunction,
   });
 
   final Function onCancel;
-  final Function addFunction;
 
   @override
   State<AddWeightCard> createState() => _AddWeightCardState();
@@ -273,7 +273,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
               width: 45,
               child: TextButton(
                 onPressed: () {
-                  widget.addFunction({
+                  Provider.of<WeightData>(context, listen: false).addToWeights({
                     'text': text,
                     'weight': weight,
                     'best': [best, from]

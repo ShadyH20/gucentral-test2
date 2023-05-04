@@ -44,6 +44,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_form_builder: ^7.7.0
+  flutter_launcher_icons: ^0.13.1
   flutter_linkify: ^5.0.2
   flutter_native_splash: ^2.2.19
   flutter_riverpod: ^2.3.6
@@ -60,6 +61,7 @@ dependencies:
   local_auth: ^2.1.6
   ntlm: ^2.0.1
   percent_indicator: ^4.2.3
+  provider: ^6.0.5
   pull_to_refresh: ^2.0.0
   rotating_icon_button: ^1.0.0
   sensors_plus: ^2.0.2
@@ -70,12 +72,11 @@ dependencies:
   statusbarz: ^1.0.13
   syncfusion_flutter_calendar: ^20.4.54
   table_calendar: ^3.0.9
+  timeago: ^3.4.0
+  transitioned_indexed_stack: ^1.0.2
   vibration: ^1.7.6
   vibration_web: ^1.6.5
-  timeago: ^3.4.0
   wtf_sliding_sheet: ^0.6.1
-  transitioned_indexed_stack: ^1.0.2
-  flutter_launcher_icons: ^0.13.1
 
 flutter_native_splash:
   color: "#141518"
