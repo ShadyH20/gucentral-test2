@@ -5,6 +5,7 @@ import "package:gucentral/utils/SharedPrefs.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
+import "../utils/weight.dart";
 import "../utils/weight_data.dart";
 import "../widgets/Requests.dart";
 import '../widgets/weight_card.dart';
@@ -265,12 +266,6 @@ class _CoursesPageState extends State<CoursesPage> {
     }
   }
 
-  void addToWeightList(Map newWeight) {
-    setState(() {
-      Provider.of<WeightData>(context).allWeights.add(newWeight);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // print("Building courses page");
@@ -508,7 +503,7 @@ class _CoursesPageState extends State<CoursesPage> {
 
 class WeightList extends StatefulWidget {
   const WeightList({super.key, required this.weightList});
-  final List<Map> weightList;
+  final List<Weight> weightList;
   @override
   State<WeightList> createState() => _WeightListState();
 }
@@ -523,17 +518,12 @@ class _WeightListState extends State<WeightList> {
   Widget build(BuildContext context) {
     return Column(
       children: widget.weightList.map((item) {
-        print('CREATING CARD: ${item['text']}');
         return WeightCard(
-          text: item['text'].toString(),
-          weight: item['weight'].toString(),
-          best: getBest(item),
+          text: item.text,
+          weight: item.weight,
+          best: item.best,
         );
       }).toList(),
-      // children: [
-      //   WeightCard(text: 'Quizzes', weight: '50'),
-      //   WeightCard(text: 'Assignments', weight: '50'),
-      // ],
     );
   }
 }

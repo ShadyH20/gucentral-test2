@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gucentral/utils/constants.dart';
+import 'package:gucentral/utils/weight.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../utils/weight_data.dart';
@@ -273,15 +274,27 @@ class _AddWeightCardState extends State<AddWeightCard> {
               width: 45,
               child: TextButton(
                 onPressed: () {
-                  Provider.of<WeightData>(context, listen: false).addToWeights({
-                    'text': text,
-                    'weight': weight,
-                    'best': [best, from]
-                  });
+                  if (best.isNotEmpty && from.isNotEmpty) {
+                    Provider.of<WeightData>(context, listen: false)
+                        .addToWeights(Weight(
+                            text: text, weight: weight, best: [best, from]));
+                  } else {
+                    Provider.of<WeightData>(context, listen: false)
+                        .addToWeights(Weight(text: text, weight: weight));
+                  }
+
                   textController.clear();
+                  text = '';
+
                   weightController.clear();
+                  weight = '';
+
                   bestController.clear();
+                  best = '';
+
                   fromController.clear();
+                  from = '';
+
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
                 style: TextButton.styleFrom(
