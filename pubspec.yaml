@@ -125,7 +125,7 @@ flutter:
     - assets/images/dino/
     - assets/images/cacti/
     - assets/images/ptera/
-    - assets/images/app.png
+    - assets/app.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
