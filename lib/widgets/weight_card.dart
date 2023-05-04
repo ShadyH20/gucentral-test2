@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../utils/weight.dart';
+import '../utils/weight_data.dart';
 import 'MyColors.dart';
 
 class WeightCard extends StatelessWidget {
-  const WeightCard(
-      {super.key,
-      required this.text,
-      required this.weight,
-      this.best = const ['', '']});
+  const WeightCard({
+    super.key,
+    required this.weightData,
+    this.addRemove = false,
+  });
 
-  final String text;
-  final String weight;
-  final List<String> best;
-  
+  final Weight weightData;
+  final bool addRemove;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +21,7 @@ class WeightCard extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            '$text${best[0].isEmpty || best[1].isEmpty ? '' : ' | Best ${best[0]} from ${best[1]}'}',
+            '${weightData.text}${weightData.best[0].isEmpty || weightData.best[1].isEmpty ? '' : ' | Best ${weightData.best[0]} from ${weightData.best[1]}'}',
             style: const TextStyle(
               fontFamily: "Outfit",
               fontWeight: FontWeight.w700,
@@ -38,7 +40,7 @@ class WeightCard extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            '$weight%',
+            '${weightData.weight}%',
             style: const TextStyle(
               fontFamily: "Outfit",
               fontWeight: FontWeight.w700,
@@ -47,6 +49,21 @@ class WeightCard extends StatelessWidget {
               color: MyColors.secondary,
             ),
           ),
+          const SizedBox(width: 10),
+          addRemove
+              ? GestureDetector(
+                  onTap: () {
+                    print('deleeeeete weight');
+                    Provider.of<WeightData>(context, listen: false)
+                        .removeWeight(weightData);
+                  },
+                  child: const Icon(
+                    Icons.cancel,
+                    color: MyColors.primary,
+                    size: 23,
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

@@ -223,7 +223,9 @@ class _CoursesPageState extends State<CoursesPage> {
                   ),
                   const SizedBox(height: 30),
                   WeightList(
-                      weightList: Provider.of<WeightData>(context).allWeights),
+                    weightList: Provider.of<WeightData>(context).allWeights,
+                    addRemove: true,
+                  ),
                   const SizedBox(height: 30),
                   Column(
                     children: [
@@ -502,8 +504,11 @@ class _CoursesPageState extends State<CoursesPage> {
 }
 
 class WeightList extends StatefulWidget {
-  const WeightList({super.key, required this.weightList});
+  const WeightList(
+      {super.key, required this.weightList, this.addRemove = false});
   final List<Weight> weightList;
+  final bool addRemove;
+
   @override
   State<WeightList> createState() => _WeightListState();
 }
@@ -519,9 +524,8 @@ class _WeightListState extends State<WeightList> {
     return Column(
       children: widget.weightList.map((item) {
         return WeightCard(
-          text: item.text,
-          weight: item.weight,
-          best: item.best,
+          weightData: item,
+          addRemove: widget.addRemove,
         );
       }).toList(),
     );

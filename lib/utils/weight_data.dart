@@ -15,6 +15,11 @@ class WeightData extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeWeight(Weight weightToRemove) {
+    _allWeights.remove(weightToRemove);
+    notifyListeners();
+  }
+
   UnmodifiableListView<Weight> get allWeights {
     return UnmodifiableListView(_allWeights);
   }
