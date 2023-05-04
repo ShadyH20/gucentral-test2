@@ -12,12 +12,14 @@ import "package:flutter_linkify/flutter_linkify.dart";
 import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/pages/schedule_page.dart";
+import "package:gucentral/pages/transcript_page.dart";
 import "package:gucentral/widgets/EventDataSource.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:intl/intl.dart";
 import "package:jumping_dot/jumping_dot.dart";
+import "package:simple_animations/animation_builder/mirror_animation_builder.dart";
 import 'package:url_launcher/url_launcher.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import "package:timeago/timeago.dart" as timeago;
@@ -396,37 +398,22 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                     Expanded(
                       flex: 10,
                       child: Container(
-                          // height: 50,
-                          decoration: BoxDecoration(
-                            color: MyColors.background,
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: MyColors.primary,
-                                offset: const Offset(0, -2),
-                              ),
-                            ],
-                          ),
-                          padding: const EdgeInsets.only(top: 5),
-                          child:
-                              // loadingNotifications?
-                              Center(
-                                  child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Loading Notifications ',
-                                style: TextStyle(
-                                    color: MyColors.primary, fontSize: 20),
-                              ),
-                              JumpingDots(
-                                color: MyColors.primary,
-                                radius: 7,
-                              ),
-                            ],
-                          ))
-                          // : buildNotifications(),
-                          ),
+                        // height: 50,
+                        decoration: BoxDecoration(
+                          color: MyColors.background,
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              color: MyColors.primary,
+                              offset: const Offset(0, -2),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.only(top: 5),
+                        child: loadingNotifications
+                            ? buildNotificationsSkeleton()
+                            : buildNotifications(),
+                      ),
                     ),
                   ],
                 ),
@@ -900,6 +887,24 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
         ),
       ],
     );
+  }
+
+  buildNotificationsSkeleton() {
+    return MirrorAnimationBuilder<double>(
+        duration: const Duration(seconds: 1, milliseconds: 200),
+        tween: Tween(begin: 1, end: 0.2),
+        builder: (context, value, child) => Opacity(
+            opacity: value,
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return Container(
+                    // margin: const EdgeInsets.symmetric(vertical: 10),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+                    child: const Skeleton(height: 55));
+              },
+            )));
   }
 }
 
