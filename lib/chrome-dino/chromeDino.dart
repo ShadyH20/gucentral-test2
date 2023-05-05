@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -588,6 +589,9 @@ class _ChromeDinoState extends State<ChromeDino>
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             title: const Text('Leaderboard', textAlign: TextAlign.center),
+            contentPadding: const EdgeInsets.all(15),
+            insetPadding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
             content: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('chrome_dino')
@@ -596,11 +600,8 @@ class _ChromeDinoState extends State<ChromeDino>
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final List<DocumentSnapshot> documents = snapshot.data!.docs;
-                  // design the leaderboard to make the entries as list tiles with a leading icon of gold silver and bronze for the top 3
-                  // and the rest should have their position as the leading icon
-                  // and the trailing icon should be their score
-                  return Container(
-                    height: 400,
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
                     width: MediaQuery.of(context).size.width,
                     child: AnimationLimiter(
                       key: ValueKey("$documents"),
@@ -623,7 +624,7 @@ class _ChromeDinoState extends State<ChromeDino>
                                   // convert it from a listtile to a container whose child is a row containing the 3 components
 
                                   child: Container(
-                                    height: 65,
+                                    height: 70,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     decoration: BoxDecoration(
@@ -631,6 +632,7 @@ class _ChromeDinoState extends State<ChromeDino>
                                         color: Colors.grey[100]),
                                     child: Row(children: [
                                       Expanded(
+                                        flex: 2,
                                         child: index == 0
                                             ? const Icon(Icons.emoji_events,
                                                 size: 30, color: Colors.amber)
@@ -657,19 +659,20 @@ class _ChromeDinoState extends State<ChromeDino>
                                       ),
                                       const SizedBox(width: 5),
                                       Expanded(
-                                          flex: 5,
+                                          flex: 10,
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(data['name'],
-                                                  maxLines: 2,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      height: 1.1)),
+                                              Text(
+                                                data['name'],
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    height: 1.1, fontSize: 15),
+                                              ),
                                               data['major'] != null
                                                   ? Text(data['major'],
                                                       style: TextStyle(
@@ -682,13 +685,16 @@ class _ChromeDinoState extends State<ChromeDino>
                                             ],
                                           )),
                                       const SizedBox(width: 5),
-                                      Text(
-                                        '${data['score']}',
-                                        maxLines: 1,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
+                                      Expanded(
+                                        flex: 3,
+                                        child: AutoSizeText(
+                                          '${data['score']}',
+                                          maxLines: 1,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600),
+                                        ),
                                       ),
                                     ]),
                                   ),
@@ -702,7 +708,7 @@ class _ChromeDinoState extends State<ChromeDino>
                   );
                 } else {
                   return SizedBox(
-                    height: 400,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     width: MediaQuery.of(context).size.width,
                     child: const Center(
                       child: CircularProgressIndicator(),
