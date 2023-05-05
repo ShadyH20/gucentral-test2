@@ -594,43 +594,53 @@ class _WeightCardSectionState extends State<WeightCardSection> {
 
   @override
   Widget build(BuildContext context) {
-    return !showMainWeightCard
-        ? Container(
-            height: 28,
-            width: 130,
-            margin: const EdgeInsets.only(bottom: 30),
-            child: TextButton(
-              onPressed: () {
-                print('geeeeb elcaaaard');
-                setVisibility(true);
-              },
-              style: TextButton.styleFrom(
-                backgroundColor: MyColors.primary,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: const [
-                  Icon(
-                    Icons.add_circle,
-                    color: Colors.white,
-                    size: 20,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+      height: showMainWeightCard ? 160 : 32,
+      padding: EdgeInsets.all(0),
+      margin: const EdgeInsets.only(bottom: 10),
+      child: !showMainWeightCard
+          ? Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                height: 32,
+                width: 130,
+                padding: const EdgeInsets.all(0),
+                child: TextButton(
+                  onPressed: () {
+                    print('geeeeb elcaaaard');
+                    setVisibility(true);
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: MyColors.primary,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
                   ),
-                  Text(
-                    "Add Weight",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: const [
+                      Icon(
+                        Icons.add_circle,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      Text(
+                        "Add Weight",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          )
-        : AddWeightCard(showFunction: setVisibility);
+            )
+          : AddWeightCard(showFunction: setVisibility),
+    );
   }
 }
