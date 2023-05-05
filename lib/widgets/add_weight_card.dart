@@ -27,6 +27,10 @@ class _AddWeightCardState extends State<AddWeightCard> {
   String weight = "";
   String best = "";
   String from = "";
+  bool textValid = true;
+  bool weightValid = true;
+  bool bestValid = true;
+  bool fromValid = true;
   final textController = TextEditingController();
   final weightController = TextEditingController();
   final bestController = TextEditingController();
@@ -35,24 +39,28 @@ class _AddWeightCardState extends State<AddWeightCard> {
   void setText(String text) {
     setState(() {
       this.text = text;
+      textValid = true;
     });
   }
 
   void setWeight(String weight) {
     setState(() {
       this.weight = weight;
+      weightValid = true;
     });
   }
 
   void setBest(String best) {
     setState(() {
       this.best = best;
+      bestValid = true;
     });
   }
 
   void setFrom(String from) {
     setState(() {
       this.from = from;
+      fromValid = true;
     });
   }
 
@@ -103,6 +111,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                   validatorText: 'Please enter title',
                                   hintText: 'e.g. Assignments',
                                   onChangeFunction: setText,
+                                  isValid: textValid,
                                   textFieldController: textController,
                                   maxLength: 20,
                                 ),
@@ -130,6 +139,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                   validatorText: 'Please enter weight',
                                   hintText: '',
                                   onChangeFunction: setWeight,
+                                  isValid: weightValid,
                                   textFieldController: weightController,
                                   keyboardType: TextInputType.number,
                                   textStyle: const TextStyle(
@@ -179,8 +189,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                       validatorText: 'Please enter best',
                                       hintText: '',
                                       onChangeFunction: setBest,
+                                      isValid: bestValid,
                                       textFieldController: bestController,
-                                      keyboardType: TextInputType.number,
+                                      keyboardType: TextInputType.text,
                                       enabled: checkboxState,
                                       textStyle: const TextStyle(
                                           fontSize: 17,
@@ -213,8 +224,10 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                       validatorText: 'Please enter from',
                                       hintText: '',
                                       onChangeFunction: setFrom,
+                                      isValid: fromValid,
+                                      maxLength: 3,
                                       textFieldController: fromController,
-                                      keyboardType: TextInputType.number,
+                                      keyboardType: TextInputType.text,
                                       enabled: checkboxState,
                                       textStyle: const TextStyle(
                                         fontSize: 17,
@@ -280,10 +293,36 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   child: TextButton(
                     onPressed: () {
                       print('aaaaaaaddddd');
+                      FocusManager.instance.primaryFocus?.unfocus();
+
                       if (text.isEmpty ||
                           weight.isEmpty ||
                           (checkboxState && (best.isEmpty || from.isEmpty))) {
                         // SHOW ERROR
+                        if (text.isEmpty) {
+                          setState(() {
+                            textValid = false;
+                          });
+                        }
+                        if (weight.isEmpty) {
+                          setState(() {
+                            weightValid = false;
+                          });
+                        }
+
+                        if (checkboxState) {
+                          if (best.isEmpty) {
+                            setState(() {
+                              bestValid = false;
+                            });
+                          }
+                          if (from.isEmpty) {
+                            setState(() {
+                              fromValid = false;
+                            });
+                          }
+                        }
+
                         widget.showError(true);
                         return;
                       }
@@ -317,7 +356,6 @@ class _AddWeightCardState extends State<AddWeightCard> {
 
                       widget.showFunction(false);
                       widget.showError(false);
-                      FocusManager.instance.primaryFocus?.unfocus();
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: MyColors.primary,
@@ -342,6 +380,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   child: TextButton(
                     onPressed: () {
                       widget.showFunction(false);
+                      widget.showError(false);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: MyColors.primary,
@@ -375,6 +414,7 @@ class WeightTextField extends StatefulWidget {
     this.maxLength = 2,
     this.textStyle = const TextStyle(fontSize: 12),
     this.enabled = true,
+    this.isValid = true,
     this.keyboardType,
   });
 
@@ -382,10 +422,11 @@ class WeightTextField extends StatefulWidget {
   final String hintText;
   final TextStyle textStyle;
   final bool enabled;
+  bool isValid;
   final int maxLength;
   final TextInputType? keyboardType;
   final dynamic textFieldController;
-  Function onChangeFunction;
+  final Function onChangeFunction;
 
   @override
   State<WeightTextField> createState() => _WeightTextFieldState();
@@ -426,7 +467,10 @@ class _WeightTextFieldState extends State<WeightTextField> {
         enabledBorder: !MyApp.isDarkMode.value
             ? OutlineInputBorder(
                 borderRadius: BorderRadius.circular(7.5),
-                borderSide: BorderSide(color: Colors.grey[700]!, width: 0.7))
+                borderSide: widget.isValid
+                    ? BorderSide(color: Colors.grey[700]!, width: 0.7)
+                    : BorderSide(color: Colors.red[700]!, width: 1),
+              )
             : null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(7.5),
