@@ -21,6 +21,7 @@ class SharedPrefs {
   static const id = 'id';
   static const courses = 'courses';
   static const schedule = 'schedule';
+  static const major = 'major';
   static const quizzes = 'quizzes';
   static const examSched = 'exam_sched';
   static const attendance = 'att:';

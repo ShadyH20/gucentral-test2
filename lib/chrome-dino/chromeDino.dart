@@ -561,7 +561,10 @@ class _ChromeDinoState extends State<ChromeDino>
     if (snapshot.exists) {
       final data = snapshot.data() as Map<String, dynamic>;
       if (data['score'] < highScore) {
-        await docDino.update({'score': highScore});
+        await docDino.update({
+          'score': highScore,
+          'major': buildMajor(),
+        });
         return;
       }
     }
@@ -569,6 +572,7 @@ class _ChromeDinoState extends State<ChromeDino>
     final json = {
       'name': prefs.getString('name'),
       'score': highScore,
+      'major': buildMajor(),
     };
 
     await docDino.set(json);
@@ -645,13 +649,16 @@ class _ChromeDinoState extends State<ChromeDino>
                                       // decrease line height
                                       Text(data['name'],
                                           maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(height: 1.1)),
-                                      Text('MET',
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              fontWeight: FontWeight.w300)),
+                                      data['major'] != null
+                                          ? Text(data['major'],
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                  fontWeight: FontWeight.w300))
+                                          : Container(),
                                     ],
                                   )),
                               const SizedBox(width: 5),
@@ -693,5 +700,13 @@ class _ChromeDinoState extends State<ChromeDino>
       default:
         return "${num}th";
     }
+  }
+
+  String buildMajor() {
+    String major = prefs.getString('major') ?? "";
+    print('Major: $major');
+    String id = prefs.getString('id')!;
+    String batch = id.substring(0, id.indexOf('-') + 1);
+    return '$batch$major';
   }
 }

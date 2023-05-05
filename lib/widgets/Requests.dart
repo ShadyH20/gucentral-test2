@@ -83,6 +83,7 @@ class Requests {
         prefs.setString(SharedPrefs.name, res['name']);
         prefs.setString(
             SharedPrefs.firstName, res['name'].toString().split(' ')[0]);
+        prefs.setString(SharedPrefs.major, res['major']);
 
         prefs.setBool(SharedPrefs.firstAccess, true);
       }
@@ -108,13 +109,13 @@ class Requests {
 
       var res = jsonDecode(response.body);
       if (res['success']) {
-        // SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('username', username);
         prefs.setString('password', password);
         prefs.setString('gpa', res['gpa']);
         prefs.setString('name', res['name']);
         prefs.setString('first_name', res['name'].toString().split(' ')[0]);
         prefs.setString('id', res['id']);
+        prefs.setString('major', res['major']);
         var courses = jsonEncode(res['courses']);
         prefs.setString('courses', courses);
         var schedule = jsonEncode(res['schedule']);
