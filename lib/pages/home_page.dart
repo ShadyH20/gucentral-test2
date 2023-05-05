@@ -410,7 +410,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           ],
                         ),
                         padding: const EdgeInsets.only(top: 5),
-                        child: loadingNotifications
+                        child: loadingNotifications && notifications.isEmpty
                             ? buildNotificationsSkeleton()
                             : buildNotifications(),
                       ),

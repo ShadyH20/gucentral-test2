@@ -57,7 +57,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 30),
+      // margin: const EdgeInsets.only(bottom: 30),
       height: 160,
       decoration: BoxDecoration(
         color: MyColors.primary,
@@ -391,7 +391,7 @@ class _WeightTextFieldState extends State<WeightTextField> {
         LengthLimitingTextInputFormatter(widget.maxLength),
       ],
       keyboardType: widget.keyboardType,
-      autofillHints: const [AutofillHints.username],
+      // autofillHints: const [AutofillHints.username],
       enabled: widget.enabled,
       autocorrect: false,
       onChanged: (value) {
