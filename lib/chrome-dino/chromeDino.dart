@@ -588,7 +588,21 @@ class _ChromeDinoState extends State<ChromeDino>
           return AlertDialog(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            title: const Text('Leaderboard', textAlign: TextAlign.center),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(width: 40),
+                const Text('Leaderboard', textAlign: TextAlign.center),
+                IconButton(
+                  padding: const EdgeInsets.all(0),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
             contentPadding: const EdgeInsets.all(15),
             insetPadding:
                 const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
@@ -611,6 +625,7 @@ class _ChromeDinoState extends State<ChromeDino>
                         itemBuilder: (context, index) {
                           final doc = documents[index];
                           final data = doc.data() as Map<String, dynamic>;
+
                           return AnimationConfiguration.staggeredList(
                             delay: const Duration(milliseconds: 50),
                             position: index,
@@ -621,8 +636,6 @@ class _ChromeDinoState extends State<ChromeDino>
                                 child: Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 4.0),
-                                  // convert it from a listtile to a container whose child is a row containing the 3 components
-
                                   child: Container(
                                     height: 70,
                                     padding: const EdgeInsets.symmetric(
