@@ -11,9 +11,11 @@ class AddWeightCard extends StatefulWidget {
   const AddWeightCard({
     super.key,
     required this.showFunction,
+    required this.showError,
   });
 
   final Function showFunction;
+  final Function showError;
 
   @override
   State<AddWeightCard> createState() => _AddWeightCardState();
@@ -277,6 +279,15 @@ class _AddWeightCardState extends State<AddWeightCard> {
                   width: 100,
                   child: TextButton(
                     onPressed: () {
+                      print('aaaaaaaddddd');
+                      if (text.isEmpty ||
+                          weight.isEmpty ||
+                          (checkboxState && (best.isEmpty || from.isEmpty))) {
+                        // SHOW ERROR
+                        widget.showError(true);
+                        return;
+                      }
+
                       if (best.isNotEmpty && from.isNotEmpty) {
                         Provider.of<WeightData>(context, listen: false)
                             .addToWeights(Weight(
@@ -305,7 +316,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                       });
 
                       widget.showFunction(false);
-
+                      widget.showError(false);
                       FocusManager.instance.primaryFocus?.unfocus();
                     },
                     style: TextButton.styleFrom(

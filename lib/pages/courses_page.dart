@@ -227,7 +227,8 @@ class _CoursesPageState extends State<CoursesPage> {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      WeightCardSection(),
+                      const WeightCardSection(),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
@@ -504,6 +505,34 @@ class _CoursesPageState extends State<CoursesPage> {
   }
 }
 
+class ErrorMessage extends StatefulWidget {
+  const ErrorMessage({
+    super.key,
+    required this.errorVisible,
+  });
+
+  final bool errorVisible;
+
+  @override
+  State<ErrorMessage> createState() => _ErrorMessageState();
+}
+
+class _ErrorMessageState extends State<ErrorMessage> {
+  @override
+  Widget build(BuildContext context) {
+    return Visibility(
+      visible: widget.errorVisible,
+      child: Text(
+        '*Please fill in all fields*',
+        style: kSubTitleStyle.copyWith(
+          fontWeight: FontWeight.w400,
+          color: Colors.red,
+        ),
+      ),
+    );
+  }
+}
+
 class WeightList extends StatelessWidget {
   const WeightList({
     super.key,
@@ -585,10 +614,17 @@ class WeightCardSection extends StatefulWidget {
 
 class _WeightCardSectionState extends State<WeightCardSection> {
   bool showMainWeightCard = false;
+  bool errorVisible = true;
 
   void setVisibility(bool value) {
     setState(() {
       showMainWeightCard = value;
+    });
+  }
+
+  void setErrorVisibility(bool value) {
+    setState(() {
+      errorVisible = value;
     });
   }
 
@@ -640,7 +676,18 @@ class _WeightCardSectionState extends State<WeightCardSection> {
                 ),
               ),
             )
-          : AddWeightCard(showFunction: setVisibility),
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  AddWeightCard(
+                    showFunction: setVisibility,
+                    showError: setErrorVisibility,
+                  ),
+                  const SizedBox(height: 5),
+                  ErrorMessage(errorVisible: errorVisible)
+                ],
+              ),
+            ),
     );
   }
 }
