@@ -29,6 +29,8 @@ class SharedPrefs {
   static const notifications = 'notifications';
   static const firstAccess = 'first_access';
 
+  static const dinoHi = 'dinoHi';
+
   static getString(String key) {
     return prefs.getString(key);
   }

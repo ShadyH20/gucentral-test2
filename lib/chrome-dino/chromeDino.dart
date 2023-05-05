@@ -48,7 +48,7 @@ class _ChromeDinoState extends State<ChromeDino>
   Dino dino = Dino();
   double runVelocity = initialVelocity;
   double runDistance = 0;
-  int highScore = 0;
+  int highScore = prefs.getInt(SharedPrefs.dinoHi) ?? 0;
   TextEditingController gravityController =
       TextEditingController(text: gravity.toString());
   TextEditingController accelerationController =
@@ -553,6 +553,7 @@ class _ChromeDinoState extends State<ChromeDino>
   }
 
   void updateHighScore() async {
+    prefs.setInt(SharedPrefs.dinoHi, highScore);
     // Use firestore to submit high score to 'leaderboards' collection, 'chrome_dino' document and then get the leaderboard and print it
     final docDino = FirebaseFirestore.instance
         .collection('chrome_dino')
@@ -566,8 +567,8 @@ class _ChromeDinoState extends State<ChromeDino>
           'score': highScore,
           'major': buildMajor(),
         });
-        return;
       }
+      return;
     }
 
     final json = {
@@ -715,8 +716,6 @@ class _ChromeDinoState extends State<ChromeDino>
   }
 
   getRanking(int num) {
-    // returns the number with the ranking suffix i.e 1st, 2nd, 3rd, 4th, etc.
-    // should handle multiple digit numbers as well
     if (num % 100 >= 11 && num % 100 <= 13) {
       return "${num}th";
     }
