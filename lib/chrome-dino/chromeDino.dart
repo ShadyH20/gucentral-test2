@@ -579,7 +579,9 @@ class _ChromeDinoState extends State<ChromeDino>
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('Leaderboard'),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            title: const Text('Leaderboard', textAlign: TextAlign.center),
             content: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('chrome_dino')
@@ -588,41 +590,80 @@ class _ChromeDinoState extends State<ChromeDino>
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final List<DocumentSnapshot> documents = snapshot.data!.docs;
+                  // design the leaderboard to make the entries as list tiles with a leading icon of gold silver and bronze for the top 3
+                  // and the rest should have their position as the leading icon
+                  // and the trailing icon should be their score
                   return Container(
-                    width: MediaQuery.of(context).size.width - 40,
-                    // Make it like a table with headers 'Name' and 'Score'
-                    child: DataTable(
-                      horizontalMargin: 0,
-                      columns: const [
-                        DataColumn(
-                          label: Text(
-                            'Name',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 17),
+                    height: 400,
+                    width: MediaQuery.of(context).size.width,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        final doc = documents[index];
+                        final data = doc.data() as Map<String, dynamic>;
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
+                          // convert it from a listtile to a container whose child is a row containing the 3 components
+
+                          child: Container(
+                            height: 65,
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.grey[100]),
+                            child: Row(children: [
+                              Expanded(
+                                child: index == 0
+                                    ? const Icon(Icons.emoji_events,
+                                        size: 30, color: Colors.amber)
+                                    : index == 1
+                                        ? const Icon(Icons.emoji_events,
+                                            size: 30, color: Colors.grey)
+                                        : index == 2
+                                            ? const Icon(Icons.emoji_events,
+                                                size: 30,
+                                                color: Color.fromARGB(
+                                                    255, 166, 74, 40))
+                                            : Text(
+                                                getRanking(index + 1),
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                              ),
+                              const SizedBox(width: 5),
+                              Expanded(
+                                  flex: 5,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // decrease line height
+                                      Text(data['name'],
+                                          maxLines: 2,
+                                          style: const TextStyle(height: 1.1)),
+                                      Text('MET',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              fontWeight: FontWeight.w300)),
+                                    ],
+                                  )),
+                              const SizedBox(width: 5),
+                              Expanded(
+                                  child: Text(
+                                '${data['score']}',
+                                textAlign: TextAlign.center,
+                              )),
+                            ]),
                           ),
-                        ),
-                        DataColumn(
-                          label: Text(
-                            'Score',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 17),
-                          ),
-                        ),
-                      ],
-                      rows: documents
-                          .map(
-                            (doc) => DataRow(
-                              cells: [
-                                DataCell(
-                                  Text(doc['name']),
-                                ),
-                                DataCell(
-                                  Text(doc['score'].toString()),
-                                ),
-                              ],
-                            ),
-                          )
-                          .toList(),
+                        );
+                      },
                     ),
                   );
                 } else {
@@ -634,5 +675,23 @@ class _ChromeDinoState extends State<ChromeDino>
             ),
           );
         });
+  }
+
+  getRanking(int num) {
+    // returns the number with the ranking suffix i.e 1st, 2nd, 3rd, 4th, etc.
+    // should handle multiple digit numbers as well
+    if (num % 100 >= 11 && num % 100 <= 13) {
+      return "${num}th";
+    }
+    switch (num % 10) {
+      case 1:
+        return "${num}st";
+      case 2:
+        return "${num}nd";
+      case 3:
+        return "${num}rd";
+      default:
+        return "${num}th";
+    }
   }
 }

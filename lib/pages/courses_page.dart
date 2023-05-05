@@ -614,7 +614,7 @@ class WeightCardSection extends StatefulWidget {
 
 class _WeightCardSectionState extends State<WeightCardSection> {
   bool showMainWeightCard = false;
-  bool errorVisible = true;
+  bool errorVisible = false;
 
   void setVisibility(bool value) {
     setState(() {
@@ -633,9 +633,9 @@ class _WeightCardSectionState extends State<WeightCardSection> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeInOut,
-      height: showMainWeightCard ? 160 : 32,
-      padding: EdgeInsets.all(0),
-      margin: const EdgeInsets.only(bottom: 10),
+      height: showMainWeightCard ? 184 : 32,
+      padding: const EdgeInsets.all(0),
+      // margin: const EdgeInsets.only(bottom: 10),
       child: !showMainWeightCard
           ? Align(
               alignment: Alignment.topCenter,
@@ -676,17 +676,18 @@ class _WeightCardSectionState extends State<WeightCardSection> {
                 ),
               ),
             )
-          : SingleChildScrollView(
-              child: Column(
-                children: [
-                  AddWeightCard(
+          : Column(
+              children: [
+                SizedBox(
+                  height: 160,
+                  child: AddWeightCard(
                     showFunction: setVisibility,
                     showError: setErrorVisibility,
                   ),
-                  const SizedBox(height: 5),
-                  ErrorMessage(errorVisible: errorVisible)
-                ],
-              ),
+                ),
+                const SizedBox(height: 5),
+                ErrorMessage(errorVisible: errorVisible)
+              ],
             ),
     );
   }
