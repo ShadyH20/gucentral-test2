@@ -442,7 +442,6 @@ class _DefaultPageState extends State<DefaultPage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              prefs.setString('default_page', _defaultPage.toString());
               Navigator.pop(context);
             },
           ),
@@ -482,6 +481,8 @@ class _DefaultPageState extends State<DefaultPage> {
                         onPressed: (context) {
                           setState(() {
                             _defaultPage = MenuItems.home;
+                            prefs.setString(
+                                'default_page', _defaultPage.toString());
                           });
                         },
                       ),
@@ -493,6 +494,8 @@ class _DefaultPageState extends State<DefaultPage> {
                         onPressed: (context) {
                           setState(() {
                             _defaultPage = MenuItems.courses;
+                            prefs.setString(
+                                'default_page', _defaultPage.toString());
                           });
                         },
                       ),
@@ -504,6 +507,8 @@ class _DefaultPageState extends State<DefaultPage> {
                         onPressed: (context) {
                           setState(() {
                             _defaultPage = MenuItems.schedule;
+                            prefs.setString(
+                                'default_page', _defaultPage.toString());
                           });
                         },
                       ),
@@ -515,6 +520,8 @@ class _DefaultPageState extends State<DefaultPage> {
                         onPressed: (context) {
                           setState(() {
                             _defaultPage = MenuItems.attendance;
+                            prefs.setString(
+                                'default_page', _defaultPage.toString());
                           });
                         },
                       ),
@@ -526,6 +533,8 @@ class _DefaultPageState extends State<DefaultPage> {
                         onPressed: (context) {
                           setState(() {
                             _defaultPage = MenuItems.transcript;
+                            prefs.setString(
+                                'default_page', _defaultPage.toString());
                           });
                         },
                       ),
@@ -538,6 +547,8 @@ class _DefaultPageState extends State<DefaultPage> {
                         onPressed: (context) {
                           setState(() {
                             _defaultPage = MenuItems.evaluate;
+                            prefs.setString(
+                                'default_page', _defaultPage.toString());
                           });
                         },
                       ),

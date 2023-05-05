@@ -68,10 +68,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       case MenuItems.grades:
         return 4;
       case MenuItems.transcript:
-        {
-          (pages[5] as TranscriptPage).hideGPA();
-          return 5;
-        }
+        return 5;
       case MenuItems.evaluate:
         return 6;
       case MenuItems.attendance:
