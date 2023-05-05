@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gucentral/pages/home_page.dart';
 import 'package:gucentral/widgets/MyColors.dart';
 import 'package:gucentral/widgets/Requests.dart';
@@ -600,82 +601,111 @@ class _ChromeDinoState extends State<ChromeDino>
                   return Container(
                     height: 400,
                     width: MediaQuery.of(context).size.width,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: documents.length,
-                      itemBuilder: (context, index) {
-                        final doc = documents[index];
-                        final data = doc.data() as Map<String, dynamic>;
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          // convert it from a listtile to a container whose child is a row containing the 3 components
+                    child: AnimationLimiter(
+                      key: ValueKey("$documents"),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          final doc = documents[index];
+                          final data = doc.data() as Map<String, dynamic>;
+                          return AnimationConfiguration.staggeredList(
+                            delay: const Duration(milliseconds: 50),
+                            position: index,
+                            duration: const Duration(milliseconds: 200),
+                            child: SlideAnimation(
+                              verticalOffset: 50.0,
+                              child: FadeInAnimation(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4.0),
+                                  // convert it from a listtile to a container whose child is a row containing the 3 components
 
-                          child: Container(
-                            height: 65,
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.grey[100]),
-                            child: Row(children: [
-                              Expanded(
-                                child: index == 0
-                                    ? const Icon(Icons.emoji_events,
-                                        size: 30, color: Colors.amber)
-                                    : index == 1
-                                        ? const Icon(Icons.emoji_events,
-                                            size: 30, color: Colors.grey)
-                                        : index == 2
+                                  child: Container(
+                                    height: 65,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: Colors.grey[100]),
+                                    child: Row(children: [
+                                      Expanded(
+                                        child: index == 0
                                             ? const Icon(Icons.emoji_events,
-                                                size: 30,
-                                                color: Color.fromARGB(
-                                                    255, 166, 74, 40))
-                                            : Text(
-                                                getRanking(index + 1),
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                                size: 30, color: Colors.amber)
+                                            : index == 1
+                                                ? const Icon(Icons.emoji_events,
+                                                    size: 30,
+                                                    color: Colors.grey)
+                                                : index == 2
+                                                    ? const Icon(
+                                                        Icons.emoji_events,
+                                                        size: 30,
+                                                        color: Color.fromARGB(
+                                                            255, 166, 74, 40))
+                                                    : Text(
+                                                        getRanking(index + 1),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: const TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                          flex: 5,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(data['name'],
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                      height: 1.1)),
+                                              data['major'] != null
+                                                  ? Text(data['major'],
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black
+                                                              .withOpacity(0.7),
+                                                          fontWeight:
+                                                              FontWeight.w300))
+                                                  : Container(),
+                                            ],
+                                          )),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        '${data['score']}',
+                                        maxLines: 1,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ]),
+                                  ),
+                                ),
                               ),
-                              const SizedBox(width: 5),
-                              Expanded(
-                                  flex: 5,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // decrease line height
-                                      Text(data['name'],
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(height: 1.1)),
-                                      data['major'] != null
-                                          ? Text(data['major'],
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.black
-                                                      .withOpacity(0.7),
-                                                  fontWeight: FontWeight.w300))
-                                          : Container(),
-                                    ],
-                                  )),
-                              const SizedBox(width: 5),
-                              Expanded(
-                                  child: Text(
-                                '${data['score']}',
-                                textAlign: TextAlign.center,
-                              )),
-                            ]),
-                          ),
-                        );
-                      },
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   );
                 } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return SizedBox(
+                    height: 400,
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   );
                 }
               },
@@ -704,7 +734,6 @@ class _ChromeDinoState extends State<ChromeDino>
 
   String buildMajor() {
     String major = prefs.getString('major') ?? "";
-    print('Major: $major');
     String id = prefs.getString('id')!;
     String batch = id.substring(0, id.indexOf('-') + 1);
     return '$batch$major';
