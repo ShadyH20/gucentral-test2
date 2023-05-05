@@ -10,10 +10,10 @@ import 'MyColors.dart';
 class AddWeightCard extends StatefulWidget {
   const AddWeightCard({
     super.key,
-    required this.onCancel,
+    required this.showFunction,
   });
 
-  final Function onCancel;
+  final Function showFunction;
 
   @override
   State<AddWeightCard> createState() => _AddWeightCardState();
@@ -269,53 +269,83 @@ class _AddWeightCardState extends State<AddWeightCard> {
               ),
             ),
             const SizedBox(height: 15),
-            SizedBox(
-              height: 28,
-              width: 45,
-              child: TextButton(
-                onPressed: () {
-                  if (best.isNotEmpty && from.isNotEmpty) {
-                    Provider.of<WeightData>(context, listen: false)
-                        .addToWeights(Weight(
-                            text: text, weight: weight, best: [best, from]));
-                  } else {
-                    Provider.of<WeightData>(context, listen: false)
-                        .addToWeights(Weight(text: text, weight: weight));
-                  }
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30,
+                  width: 100,
+                  child: TextButton(
+                    onPressed: () {
+                      if (best.isNotEmpty && from.isNotEmpty) {
+                        Provider.of<WeightData>(context, listen: false)
+                            .addToWeights(Weight(
+                                text: text,
+                                weight: weight,
+                                best: [best, from]));
+                      } else {
+                        Provider.of<WeightData>(context, listen: false)
+                            .addToWeights(Weight(text: text, weight: weight));
+                      }
 
-                  textController.clear();
-                  text = '';
+                      textController.clear();
+                      text = '';
 
-                  weightController.clear();
-                  weight = '';
+                      weightController.clear();
+                      weight = '';
 
-                  bestController.clear();
-                  best = '';
+                      bestController.clear();
+                      best = '';
 
-                  fromController.clear();
-                  from = '';
+                      fromController.clear();
+                      from = '';
 
-                  setState(() {
-                    checkboxState = false;
-                  });
+                      setState(() {
+                        checkboxState = false;
+                      });
 
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: MyColors.primary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  padding: const EdgeInsets.all(0),
-                ),
-                child: const Text(
-                  "Add",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
+                      widget.showFunction(false);
+
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: MyColors.primary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      padding: const EdgeInsets.all(0),
+                    ),
+                    child: const Text(
+                      "Add",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 15),
+                SizedBox(
+                  height: 30,
+                  width: 30,
+                  child: TextButton(
+                    onPressed: () {
+                      widget.showFunction(false);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: MyColors.primary,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      padding: const EdgeInsets.all(0),
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

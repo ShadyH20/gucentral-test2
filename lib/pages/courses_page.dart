@@ -227,9 +227,7 @@ class _CoursesPageState extends State<CoursesPage> {
                         ),
                       ),
                       const SizedBox(height: 30),
-                      AddWeightCard(
-                        onCancel: setWeightCardNum,
-                      ),
+                      WeightCardSection(),
                     ],
                   ),
                 ),
@@ -575,5 +573,64 @@ class WeightList extends StatelessWidget {
               }).toList(),
             ),
           );
+  }
+}
+
+class WeightCardSection extends StatefulWidget {
+  const WeightCardSection({super.key});
+
+  @override
+  State<WeightCardSection> createState() => _WeightCardSectionState();
+}
+
+class _WeightCardSectionState extends State<WeightCardSection> {
+  bool showMainWeightCard = false;
+
+  void setVisibility(bool value) {
+    setState(() {
+      showMainWeightCard = value;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return !showMainWeightCard
+        ? Container(
+            height: 28,
+            width: 130,
+            margin: const EdgeInsets.only(bottom: 30),
+            child: TextButton(
+              onPressed: () {
+                print('geeeeb elcaaaard');
+                setVisibility(true);
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: MyColors.primary,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: const [
+                  Icon(
+                    Icons.add_circle,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  Text(
+                    "Add Weight",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : AddWeightCard(showFunction: setVisibility);
   }
 }

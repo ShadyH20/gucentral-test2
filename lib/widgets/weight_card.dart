@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gucentral/utils/constants.dart';
 import 'package:provider/provider.dart';
 import '../utils/weight.dart';
 import '../utils/weight_data.dart';
@@ -29,15 +30,24 @@ class WeightCard extends StatelessWidget {
                 )
               : Container(),
           addReorder ? const SizedBox(width: 10) : Container(),
-          Text(
-            '${weightData.text}${weightData.best[0].isEmpty || weightData.best[1].isEmpty ? '' : ' | Best ${weightData.best[0]} from ${weightData.best[1]}'}',
-            style: const TextStyle(
-              fontFamily: "Outfit",
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-              decoration: TextDecoration.none,
-              color: MyColors.secondary,
+          Container(
+            constraints: addRemove ? const BoxConstraints(maxWidth: 120) : null,
+            // color: Colors.red,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                weightData.text,
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                style: kSubTitleStyle,
+              ),
             ),
+          ),
+          Text(
+            weightData.best[0].isEmpty || weightData.best[1].isEmpty
+                ? ''
+                : ' | Best ${weightData.best[0]} from ${weightData.best[1]}',
+            style: kSubTitleStyle,
           ),
           const SizedBox(width: 10),
           Expanded(
