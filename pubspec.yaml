@@ -34,6 +34,7 @@ dependencies:
   all_sensors: ^0.4.2
   auto_size_text: ^3.0.0
   awesome_notifications: any
+  cloud_firestore: ^4.6.0
   cupertino_icons: ^1.0.2
   data_table_2: ^2.3.12
   date_picker_widget: ^0.0.4

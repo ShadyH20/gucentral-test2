@@ -1,8 +1,11 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gucentral/pages/home_page.dart';
 import 'package:gucentral/widgets/MyColors.dart';
+import 'package:gucentral/widgets/Requests.dart';
 // import 'package:flutter/services.dart';
+import '../utils/SharedPrefs.dart';
 import 'cactus.dart';
 import 'cloud.dart';
 import 'dino.dart';
@@ -87,15 +90,20 @@ class _ChromeDinoState extends State<ChromeDino>
   }
 
   void _die() {
+    bool newHi = runDistance.toInt() > highScore;
     setState(() {
       worldController.stop();
       dino.die();
+      highScore = max(highScore, runDistance.toInt());
     });
+
+    if (newHi) {
+      updateHighScore();
+    }
   }
 
   void _newGame() {
     setState(() {
-      highScore = max(highScore, runDistance.toInt());
       runDistance = 0;
       runVelocity = initialVelocity;
       dino.state = DinoState.running;
@@ -289,10 +297,10 @@ class _ChromeDinoState extends State<ChromeDino>
                     animation: worldController,
                     builder: (context, _) {
                       return Positioned(
-                        left: 10,
+                        left: 35,
                         top: 10,
                         child: Text(
-                          'HIGH SCORE: ' + highScore.toString(),
+                          'HIGH SCORE: $highScore',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: (runDistance ~/ dayNightOffest) % 2 == 0
@@ -302,6 +310,16 @@ class _ChromeDinoState extends State<ChromeDino>
                         ),
                       );
                     },
+                  ),
+                  Positioned(
+                    left: -5,
+                    top: -5,
+                    child: IconButton(
+                      onPressed: () {
+                        showLeaderboard();
+                      },
+                      icon: const Icon(Icons.leaderboard, size: 20),
+                    ),
                   ),
                   Positioned(
                     right: -5,
@@ -334,6 +352,8 @@ class _ChromeDinoState extends State<ChromeDino>
                                         children: [
                                           const Text("Gravity:"),
                                           SizedBox(
+                                            height: 25,
+                                            width: 75,
                                             child: TextField(
                                               controller: gravityController,
                                               key: UniqueKey(),
@@ -346,8 +366,6 @@ class _ChromeDinoState extends State<ChromeDino>
                                                 ),
                                               ),
                                             ),
-                                            height: 25,
-                                            width: 75,
                                           ),
                                         ],
                                       ),
@@ -484,6 +502,9 @@ class _ChromeDinoState extends State<ChromeDino>
                                       ),
                                     ),
                                   ),
+
+                                  //Submit Leaderboard Score
+
                                   TextButton(
                                     onPressed: () {
                                       gravity =
@@ -525,6 +546,91 @@ class _ChromeDinoState extends State<ChromeDino>
                   // ),
                 ],
               ),
+            ),
+          );
+        });
+  }
+
+  void updateHighScore() async {
+    // Use firestore to submit high score to 'leaderboards' collection, 'chrome_dino' document and then get the leaderboard and print it
+    final docDino = FirebaseFirestore.instance
+        .collection('chrome_dino')
+        .doc(prefs.getString('username'));
+
+    final snapshot = await docDino.get();
+    if (snapshot.exists) {
+      final data = snapshot.data() as Map<String, dynamic>;
+      if (data['score'] < highScore) {
+        await docDino.update({'score': highScore});
+        return;
+      }
+    }
+
+    final json = {
+      'name': prefs.getString('name'),
+      'score': highScore,
+    };
+
+    await docDino.set(json);
+  }
+
+  showLeaderboard() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Leaderboard'),
+            content: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('chrome_dino')
+                  .orderBy('score', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final List<DocumentSnapshot> documents = snapshot.data!.docs;
+                  return Container(
+                    width: MediaQuery.of(context).size.width - 40,
+                    // Make it like a table with headers 'Name' and 'Score'
+                    child: DataTable(
+                      horizontalMargin: 0,
+                      columns: const [
+                        DataColumn(
+                          label: Text(
+                            'Name',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 17),
+                          ),
+                        ),
+                        DataColumn(
+                          label: Text(
+                            'Score',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 17),
+                          ),
+                        ),
+                      ],
+                      rows: documents
+                          .map(
+                            (doc) => DataRow(
+                              cells: [
+                                DataCell(
+                                  Text(doc['name']),
+                                ),
+                                DataCell(
+                                  Text(doc['score'].toString()),
+                                ),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
           );
         });

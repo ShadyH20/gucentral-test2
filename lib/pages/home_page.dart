@@ -853,7 +853,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   Future<void> _onOpen(LinkableElement link) async {
     Uri uri = Uri.parse(link.url);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $link';
     }
