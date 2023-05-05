@@ -124,7 +124,8 @@ flutter:
     - assets/images/arrow.svg
     - assets/images/today.svg
     - assets/sounds/notification.mp3
-    - assets/images/
+    - assets/images/dino_restart.png
+    - assets/images/game_over.png
     - assets/images/dino/
     - assets/images/cacti/
     - assets/images/ptera/

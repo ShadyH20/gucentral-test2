@@ -269,9 +269,9 @@ class _ChromeDinoState extends State<ChromeDino>
                 if (dino.state != DinoState.dead) {
                   dino.jump();
                 }
-                if (dino.state == DinoState.dead) {
-                  _newGame();
-                }
+                // if (dino.state == DinoState.dead) {
+                //   _newGame();
+                // }
               },
               child: Stack(
                 alignment: Alignment.center,
@@ -534,6 +534,31 @@ class _ChromeDinoState extends State<ChromeDino>
                       ),
                     ),
                   ),
+
+                  dino.state == DinoState.dead
+                      ? Align(
+                          alignment: Alignment.center,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/game_over.png',
+                                width: 200,
+                              ),
+                              const SizedBox(height: 12),
+                              GestureDetector(
+                                  onTap: () {
+                                    _newGame();
+                                  },
+                                  child: Image.asset(
+                                    'assets/images/dino_restart.png',
+                                    width: 35,
+                                  ))
+                            ],
+                          ),
+                        )
+                      : Container(),
+
                   // Positioned(
                   //   bottom: 10,
                   //   child: TextButton(
