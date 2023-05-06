@@ -540,8 +540,6 @@ class _DefaultPageState extends State<DefaultPage> {
                       ),
                       SettingsTile(
                         title: const Text('Evaluate'),
-                        description: const Text(
-                            'Choose the default page that is opened when you first open the app.'),
                         trailing:
                             _defaultPage == MenuItems.evaluate ? check : null,
                         onPressed: (context) {
@@ -552,16 +550,19 @@ class _DefaultPageState extends State<DefaultPage> {
                           });
                         },
                       ),
-                      // SettingsTile(
-                      //   title: const Text('Map'),
-                      //   // leading: const Icon(Icons.map_rounded),
-                      //   trailing: _defaultPage == MenuItems.map ? check : null,
-                      //   onPressed: (context) {
-                      //     setState(() {
-                      //       _defaultPage = MenuItems.map;
-                      //     });
-                      //   },
-                      // ),
+                      SettingsTile(
+                        title: const Text('Map'),
+                        description: const Text(
+                            'Choose the default page that is opened when you first open the app.'),
+                        trailing: _defaultPage == MenuItems.map ? check : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _defaultPage = MenuItems.map;
+                            prefs.setString(
+                                'default_page', _defaultPage.toString());
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ],

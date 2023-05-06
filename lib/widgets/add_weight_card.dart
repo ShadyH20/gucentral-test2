@@ -437,6 +437,7 @@ class _WeightTextFieldState extends State<WeightTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       textInputAction: TextInputAction.next,
+      textCapitalization: TextCapitalization.words,
       controller: widget.textFieldController,
       // maxLength: 2,
       inputFormatters: [

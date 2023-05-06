@@ -7,7 +7,8 @@ import '../utils/SharedPrefs.dart';
 import 'MyColors.dart';
 
 class MenuWidget extends StatelessWidget {
-  const MenuWidget({Key? key}) : super(key: key);
+  final bool noPadding;
+  const MenuWidget({Key? key, this.noPadding = false}) : super(key: key);
   @override
   Widget build(BuildContext context) => IconButton(
         icon: SvgPicture.asset(
@@ -15,7 +16,7 @@ class MenuWidget extends StatelessWidget {
           height: 15,
           color: Theme.of(context).colorScheme.secondary,
         ),
-        padding: const EdgeInsets.only(left: 20),
+        padding: EdgeInsets.only(left: noPadding ? 0 : 20),
         onPressed: () {
           if (!prefs.getBool("loading")!) {
             if (ZoomDrawer.of(context) != null) {

@@ -117,6 +117,18 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                                       bottomLeft: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                 )),
+                            menuItemStyleData: MenuItemStyleData(
+                              selectedMenuItemBuilder: (context, child) =>
+                                  DefaultTextStyle(
+                                style: TextStyle(
+                                  color: MyColors.secondary,
+                                  fontFamily: 'Outfit',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                child: child,
+                              ),
+                            ),
                             hint: const Text("Choose a Course"),
                             underline: Container(
                               color: const Color(0),

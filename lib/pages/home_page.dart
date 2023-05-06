@@ -502,100 +502,96 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                         child: GestureDetector(
                           onTap: () => buildNotificationSheet(
                               notifications[index], date),
-                          child: Container(
-                            // padding: const EdgeInsets.symmetric(
-                            //     horizontal: 10, vertical: 5),
-                            child: ListTile(
-                              contentPadding:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              dense: false,
-                              visualDensity: VisualDensity.compact,
-                              minVerticalPadding: 5,
-                              horizontalTitleGap: 15,
-                              leading: Stack(
-                                alignment: Alignment.topLeft,
-                                children: [
-                                  Container(
-                                    width: 42,
-                                    height: 42,
-                                    decoration: ShapeDecoration(
-                                        color: MyApp.isDarkMode.value
-                                            ? Colors.transparent
-                                            : Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          side: MyApp.isDarkMode.value
-                                              ? BorderSide(
-                                                  color: MyColors.secondary
-                                                      .withOpacity(0.4),
-                                                  width: 1.5)
-                                              : BorderSide(
-                                                  color: MyColors.surface
-                                                      .withOpacity(0.5),
-                                                  width: 1),
-                                        )),
-                                    child: Icon(
-                                      Icons.notifications,
-                                      color: MyColors.secondary.withOpacity(
-                                          MyApp.isDarkMode.value ? 1 : 0.9),
-                                    ),
+                          child: ListTile(
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 10),
+                            dense: false,
+                            visualDensity: VisualDensity.compact,
+                            minVerticalPadding: 5,
+                            horizontalTitleGap: 15,
+                            leading: Stack(
+                              alignment: Alignment.topLeft,
+                              children: [
+                                Container(
+                                  width: 42,
+                                  height: 42,
+                                  decoration: ShapeDecoration(
+                                      color: MyApp.isDarkMode.value
+                                          ? Colors.transparent
+                                          : Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        side: MyApp.isDarkMode.value
+                                            ? BorderSide(
+                                                color: MyColors.secondary
+                                                    .withOpacity(0.4),
+                                                width: 1.5)
+                                            : BorderSide(
+                                                color: MyColors.surface
+                                                    .withOpacity(0.5),
+                                                width: 1),
+                                      )),
+                                  child: Icon(
+                                    Icons.notifications,
+                                    color: MyColors.secondary.withOpacity(
+                                        MyApp.isDarkMode.value ? 1 : 0.9),
                                   ),
-                                  // Small orange cicle if notification is new
-                                  (DateTime.now().difference(date).inHours <=
-                                          3 * 24)
-                                      ? Container(
-                                          width: 9,
-                                          height: 9,
-                                          margin: const EdgeInsets.all(0.2),
-                                          decoration: BoxDecoration(
-                                            color: MyColors.primary,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
-                                ],
-                              ),
-                              title: Text(
-                                notifications[index]['title'],
-                                style: TextStyle(
-                                  color: MyColors.secondary,
-                                  fontWeight: FontWeight.w700,
                                 ),
+                                // Small orange cicle if notification is new
+                                // (DateTime.now().difference(date).inHours <=
+                                //         3 * 24)
+                                notifications[index]['read'] == false
+                                    ? Container(
+                                        width: 9,
+                                        height: 9,
+                                        margin: const EdgeInsets.all(0.2),
+                                        decoration: BoxDecoration(
+                                          color: MyColors.primary,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                              ],
+                            ),
+                            title: Text(
+                              notifications[index]['title'],
+                              style: TextStyle(
+                                color: MyColors.secondary,
+                                fontWeight: FontWeight.w700,
                               ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 1),
-                                  Text(
-                                    notifications[index]['course_code'],
-                                    style: TextStyle(
-                                      color: MyColors.secondary,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 11,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 1),
+                                Text(
+                                  notifications[index]['course_code'],
+                                  style: TextStyle(
+                                    color: MyColors.secondary,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 11,
                                   ),
-                                  Text(
-                                    notifications[index]['sender'],
-                                    style: TextStyle(
-                                      color: MyColors.secondary,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 11,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                              trailing: Text(
-                                timeAgo,
-                                style: TextStyle(
-                                  color: MyColors.secondary,
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
+                                Text(
+                                  notifications[index]['sender'],
+                                  style: TextStyle(
+                                    color: MyColors.secondary,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 11,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            trailing: Text(
+                              timeAgo,
+                              style: TextStyle(
+                                color: MyColors.secondary,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
                               ),
                             ),
                           ),

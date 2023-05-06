@@ -291,7 +291,7 @@ class MenuPageState extends State<MenuPage> {
   }
 
   bool comingSoon(String title) {
-    return title == 'Grades' || title == 'Map';
+    return title == 'Grades';
   }
 }
 

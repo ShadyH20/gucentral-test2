@@ -54,3 +54,80 @@ final GlobalKey<HomePageState> homeKey = GlobalKey();
 
 // Maps course code to course name
 Map<String, String> courseMap = {};
+
+// ignore: non_constant_identifier_names
+buildConfirmationDialog(context, MyColors, Color mainColor, IconData iconData,
+    String description, String confirmOption, String cancelOption) {
+  return showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      elevation: 500,
+      actionsAlignment: MainAxisAlignment.center,
+
+      // Title
+      icon: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: mainColor.withOpacity(0.25),
+        ),
+        alignment: Alignment.center,
+        child: Icon(iconData, color: mainColor, size: 30),
+      ),
+      title: const Text("Are you sure?"),
+      titleTextStyle: TextStyle(
+          fontSize: 25, fontWeight: FontWeight.bold, color: MyColors.secondary),
+      content: Text(description,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 15, color: MyColors.secondary.withOpacity(0.6))),
+      backgroundColor: MyColors.background,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+
+      // Actions
+      actionsOverflowDirection: VerticalDirection.up,
+      actionsOverflowButtonSpacing: 7,
+      actions: [
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: TextButton(
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
+            style: TextButton.styleFrom(
+              shape: const StadiumBorder(),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            child: Text(cancelOption,
+                style: TextStyle(
+                  color: MyColors.secondary.withOpacity(0.7),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                )),
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: TextButton(
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: mainColor,
+              shape: const StadiumBorder(),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
+            child: Text(confirmOption,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                )),
+          ),
+        ),
+      ],
+    ),
+  );
+}

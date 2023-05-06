@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/MenuPage.dart';
 import '../pages/attendance_page.dart';
+import '../pages/map_page.dart';
 import '../utils/local_auth_api.dart';
 import 'MeduItemList.dart';
 import 'Requests.dart';
@@ -73,10 +74,10 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
         return 6;
       case MenuItems.attendance:
         return 7;
+      case MenuItems.map:
+        return 8;
 
       // case MenuItems.login:
-      //   return const LoginPage();
-      // case MenuItems.map:
       //   return const LoginPage();
       default:
         return 0;
@@ -101,6 +102,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
       TranscriptPage(),
       const EvaluatePage(),
       const AttendancePage(),
+      const MapPage(),
     ];
     _drawerController = ZoomDrawerController();
 
@@ -165,7 +167,14 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
               onSelectedItem: (item) async {
                 if (item == MenuItems.logout) {
                   // show confirmation dialog before logging out
-                  bool logout = await buildLogoutDialog();
+                  bool logout = await buildConfirmationDialog(
+                      context,
+                      MyColors,
+                      logoutRed,
+                      Icons.logout,
+                      "All your saved data will be lost!\ne.g. quizzes, deadlines, weights, etc...",
+                      "Yes, Logout",
+                      "No, I am staying");
                   if (!logout) return;
 
                   // Clear SharedPrefs

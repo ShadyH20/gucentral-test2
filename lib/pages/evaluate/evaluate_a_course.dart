@@ -9,6 +9,7 @@ import 'package:gucentral/widgets/Requests.dart';
 import 'package:jumping_dot/jumping_dot.dart';
 
 import '../../main.dart';
+import '../../utils/SharedPrefs.dart';
 
 const labels = [
   'The timetable works efficiently as far as my activities are concerned',
@@ -166,8 +167,11 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                                 },
                                 style: ElevatedButton.styleFrom(
                                   enableFeedback: true,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 15),
+                                  padding: submitting
+                                      ? const EdgeInsets.symmetric(
+                                          horizontal: 18, vertical: 15)
+                                      : const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 15),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8)),
                                   // fixedSize:
@@ -184,13 +188,14 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: const [
+                                            SizedBox(
+                                              height: 24,
+                                              width: 24,
+                                              child: CircularProgressIndicator(
+                                                  color: Colors.white),
+                                            ),
+                                            SizedBox(width: 15),
                                             Text("Posting "),
-                                            JumpingDots(
-                                              color: Colors.white,
-                                              radius: 6,
-                                              animationDuration:
-                                                  Duration(milliseconds: 250),
-                                            )
                                           ],
                                         ),
                                       )
@@ -491,6 +496,9 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
           padding: const EdgeInsets.all(15.0),
           child: TextFormField(
               controller: _remarkController,
+              onTapOutside: (event) {
+                FocusScope.of(context).unfocus();
+              },
               maxLines: 6,
               style: const TextStyle(fontSize: 18),
               decoration: InputDecoration(
@@ -585,7 +593,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
         const SizedBox(width: 5),
         SizedBox(
           height: 35,
-          width: 125,
+          width: 126,
           child: DropdownButtonHideUnderline(
             child: DropdownButton2(
               iconStyleData: const IconStyleData(
@@ -604,7 +612,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                 ),
               ),
               dropdownStyleData: const DropdownStyleData(
-                  padding: EdgeInsets.zero,
+                  padding: EdgeInsets.only(bottom: 5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(12),
@@ -692,6 +700,16 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
     if (!isValid) {
       showSnackBar(context, "Please fill out all the required fields.");
     } else {
+      var confirm = await buildConfirmationDialog(
+          context,
+          MyColors,
+          MyColors.primary,
+          Icons.warning_amber_rounded,
+          "You are about to submit\nan evaluation to the GUC system.\n\nThis action is NOT reversible!",
+          "Yes, Post Evaluation",
+          "No, Cancel");
+
+      if (!confirm) return;
       print(widget.course);
       print("Radio 1: $radio1Vals");
       print("Radio 2: $radio2Vals");
@@ -699,13 +717,13 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
       setState(() {
         submitting = true;
       });
-      // var res = await Requests.evaluateCourse(widget.course['value'],
-      //     radio1Vals, radio2Vals, _remarkController.text);
-      Map<String, dynamic> res = {
-        'success': true,
-        'message': 'Evaluationnnnnnnnn submitted successfully!'
-      };
-      Future.delayed(Duration(seconds: 4));
+      var res = await Requests.evaluateCourse(widget.course['value'],
+          radio1Vals, radio2Vals, _remarkController.text);
+      // Map<String, dynamic> res = {
+      //   'success': true,
+      //   'message': 'Evaluationnnnnnnnn submitted successfully!'
+      // };
+      // await Future.delayed(Duration(seconds: 4));
 
       setState(() {
         submitting = false;

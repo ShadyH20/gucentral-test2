@@ -109,14 +109,28 @@ class _EvaluateAcademicsState extends State<EvaluateAcademics>
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold),
                             // dropdownColor: MyColors.secondary,
-                            dropdownStyleData: const DropdownStyleData(
-                                // maxHeight: 200,
-                                offset: Offset(0, 4),
-                                decoration: BoxDecoration(
+
+                            dropdownStyleData: DropdownStyleData(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * 0.5,
+                                offset: const Offset(0, 4),
+                                decoration: const BoxDecoration(
                                   borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(10),
                                       bottomRight: Radius.circular(10)),
                                 )),
+                            menuItemStyleData: MenuItemStyleData(
+                              selectedMenuItemBuilder: (context, child) =>
+                                  DefaultTextStyle(
+                                style: TextStyle(
+                                  color: MyColors.secondary,
+                                  fontFamily: 'Outfit',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                child: child,
+                              ),
+                            ),
                             hint: const Text("Choose a Staff Member"),
                             onChanged: (academic) {
                               // This is called when the user selects an item.

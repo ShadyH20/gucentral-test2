@@ -245,6 +245,8 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                       Container(height: 5),
                                       TextFormField(
                                         textInputAction: TextInputAction.next,
+                                        textCapitalization:
+                                            TextCapitalization.words,
                                         keyboardType: TextInputType.text,
                                         controller: _quizTitleController,
                                         validator: (value) =>

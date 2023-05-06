@@ -294,7 +294,7 @@ class Requests {
 
       return jsonDecode(response.body);
     } on Exception catch (e) {
-      print("Courses to eval exception $e");
+      print("Evaluate course exception $e");
       return {
         'success': false,
         'message': 'An error ocurred! Please try again.'
@@ -346,12 +346,10 @@ class Requests {
     }
   }
 
-  static evaluateAcademic(
-      academic, List<int> radio1vals, List radio2vals, String remark) async {
+  static evaluateAcademic(academic, List<int> radio1vals, String remark) async {
     var out = getCreds();
     out['academic'] = academic;
     out['radio1'] = radio1vals;
-    out['radio2'] = radio2vals;
     out['remark'] = remark;
     var body = jsonEncode(out);
 
@@ -363,7 +361,7 @@ class Requests {
 
       return jsonDecode(response.body);
     } on Exception catch (e) {
-      print("Courses to eval exception $e");
+      print("Evaluate academic exception $e");
       return {
         'success': false,
         'message': 'An error ocurred! Please try again.'
@@ -458,6 +456,10 @@ class Requests {
       });
 
       var notifications = jsonDecode(response.body);
+
+      // check set the notifications' read attribute
+      setNotificationsRead(notifications);
+
       if (notifications['success']) {
         prefs.setString(SharedPrefs.notifications,
             jsonEncode(notifications['notifications']));
@@ -469,6 +471,17 @@ class Requests {
         'success': false,
         'message': 'An error ocurred! Please try again.'
       };
+    }
+  }
+
+  static setNotificationsRead(notifications) {
+    var readsSaved = getNotificationsSaved();
+    for (var notification in notifications['notifications']) {
+      for (var notificationSaved in readsSaved) {
+        if (notification['id'] == notificationSaved['id']) {
+          notification['read'] = notificationSaved['read'];
+        }
+      }
     }
   }
 
