@@ -71,8 +71,10 @@ class AssignmentCard extends StatelessWidget {
             return GradeCard(
               key: UniqueKey(),
               title: item['elementName'],
-              score: item['score'].toDouble(),
-              scoreTotal: item['scoreTotal'].toDouble(),
+              score: item['score'] == 'None'
+                  ? -1
+                  : double.parse(item['score']),
+              scoreTotal: double.parse(item['scoreTotal']),
               isElement: true,
             );
           }).toList(),

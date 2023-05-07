@@ -34,17 +34,23 @@ class GradeCard extends StatelessWidget {
   }
 
   String getScore(double score) {
-    double test = double.tryParse(score.toStringAsFixed(1))! -
-        double.tryParse(score.toStringAsFixed(0))!;
+    if (score != -1) {
+      double test = double.tryParse(score.toStringAsFixed(1))! -
+          double.tryParse(score.toStringAsFixed(0))!;
 
-    if (test == 0) return score.toStringAsFixed(0);
-    return score.toStringAsFixed(1);
+      if (test == 0) return score.toStringAsFixed(0);
+      return score.toStringAsFixed(1);
+    }
+    return 'N/A';
   }
 
   @override
   Widget build(BuildContext context) {
-    double percentage = score.toDouble() / scoreTotal.toDouble();
+    double percentage =
+        score == -1 ? 0 : score.toDouble() / scoreTotal.toDouble();
     Color gradeColor = getScoreColor(percentage * 100);
+    print('PERCENTAAGGGEGEGEGEGEGEGE:::::: $percentage');
+    print('SCORE:::::: $score / $scoreTotal');
     return Container(
       padding: !isElement
           ? const EdgeInsets.symmetric(vertical: 7, horizontal: 50)
@@ -98,7 +104,9 @@ class GradeCard extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: ' / ${scoreTotal.toStringAsFixed(0)}',
+                      text: getScore(score) != 'N/A'
+                          ? ' / ${scoreTotal.toStringAsFixed(0)}'
+                          : '',
                       style: TextStyle(
                         fontFamily: "Outfit",
                         fontWeight: FontWeight.w700,

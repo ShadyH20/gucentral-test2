@@ -1,3 +1,5 @@
+import "dart:ffi";
+
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
@@ -28,9 +30,7 @@ class CoursesPage extends StatefulWidget {
 class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
 
-  List<Map> allWeights = [];
-
-  List<List<Map>> allGrades = [];
+  List<dynamic> allGrades = [];
   double midterm = -1;
   BuildSheet? weightSheet;
   BuildSheet? changeNameSheet;
@@ -98,7 +98,7 @@ class _CoursesPageState extends State<CoursesPage> {
               print(course);
               dropdownValue = course;
             });
-            // courseChosen(context, course);
+            courseChosen(context, course);
           },
           items: courses.map<DropdownMenuItem>((dynamic course) {
             return DropdownMenuItem(
@@ -128,33 +128,55 @@ class _CoursesPageState extends State<CoursesPage> {
     );
   }
 
-  List<dynamic> gradesList = [];
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
+
   Future<void> courseChosen(context, course) async {
+    Provider.of<WeightData>(context, listen: false)
+        .changeAllWeights(course['code']);
+
+    // setState(() {
+    //   isCourseLoading = true;
+    //   allGrades = Requests.getGradesSaved(course['code']);
+    // });
+
+    print('waaaaaaatinggggg');
+    final response = await Requests.getGrades(course['code']);
+    print('waaaaaaatinggggg2');
     setState(() {
-      isCourseLoading = true;
-      gradesList = Requests.getAttendanceSaved(course['code']);
+      if (!response['success']) {
+        showSnackBar(
+          context,
+          response['message'] ?? 'Something went wrong',
+        );
+        return;
+      }
+
+      print('DONE: DAFOQ: ${response['all_grades']}');
+      setState(() {
+        allGrades = response['all_grades'];
+        print('COURSEEE GRAAAADES: $allGrades');
+      });
     });
 
-    var resp = await Requests.getAttendance(course['code']);
-    var success = resp['success'];
-    setState(() {
-      isCourseLoading = false;
-      isCourseLoaded = success;
-    });
-    if (!success) {
-      showSnackBar(context, 'An error ocurred! Please try again.',
-          duration: const Duration(seconds: 5));
-      return;
-    }
-    setState(() {
-      List arr = resp['grades'];
-      if (gradesList.length != arr.length) {
-        // startAnimation = true;
-      }
-      gradesList = resp['grades'];
-    });
+    // var resp = await Requests.getAttendance(course['code']);
+    // var success = resp['success'];
+    // setState(() {
+    //   isCourseLoading = false;
+    //   isCourseLoaded = success;
+    // });
+    // if (!success) {
+    //   showSnackBar(context, 'An error ocurred! Please try again.',
+    //       duration: const Duration(seconds: 5));
+    //   return;
+    // }
+    // setState(() {
+    //   List arr = resp['grades'];
+    //   if (gradesList.length != arr.length) {
+    //     // startAnimation = true;
+    //   }
+    //   gradesList = resp['grades'];
+    // });
   }
 
   // var dropdownCourseValue;
@@ -172,13 +194,13 @@ class _CoursesPageState extends State<CoursesPage> {
     }
   }
 
-  Widget buildGradeCard(List<Map> item) {
+  Widget buildGradeCard(dynamic item) {
     if (item.length == 1) {
       return GradeCard(
         key: UniqueKey(),
         title: item[0]['title'],
-        score: item[0]['score'].toDouble(),
-        scoreTotal: item[0]['scoreTotal'].toDouble(),
+        score: item[0]['score'] == 'None' ? -1 : double.parse(item[0]['score']),
+        scoreTotal: double.parse(item[0]['scoreTotal'] ?? '-1'),
       );
     }
     return AssignmentCard(title: item[0]['title'], elements: item);
@@ -304,33 +326,33 @@ class _CoursesPageState extends State<CoursesPage> {
                 midterm = 67.123796782314;
                 allGrades = [
                   [
-                    {'title': 'Quiz 1', 'score': 4.0, 'scoreTotal': 10.0}
+                    {'title': 'Quiz 1', 'score': 'None', 'scoreTotal': '10.0'}
                   ],
                   [
-                    {'title': 'Quiz 2', 'score': 8, 'scoreTotal': 10.0}
+                    {'title': 'Quiz 2', 'score': '8', 'scoreTotal': '10.0'}
                   ],
                   [
                     {
                       'title': 'Assignment 1',
                       'elementName': 'Question 1',
-                      'score': 6.3,
-                      'scoreTotal': 10.0
+                      'score': '6.3',
+                      'scoreTotal': '10.0'
                     },
                     {
                       'title': 'Assignment 1',
                       'elementName': 'Question 2',
-                      'score': 9,
-                      'scoreTotal': 10.0
+                      'score': '9',
+                      'scoreTotal': '10.0'
                     },
                     {
                       'title': 'Assignment 1',
                       'elementName': 'Question 3',
-                      'score': 2,
-                      'scoreTotal': 10.0
+                      'score': '2',
+                      'scoreTotal': '10.0'
                     }
                   ],
                   [
-                    {'title': 'Quiz 3', 'score': 5, 'scoreTotal': 10.0}
+                    {'title': 'Quiz 3', 'score': '5', 'scoreTotal': '10.0'}
                   ],
                 ];
               });
@@ -364,155 +386,163 @@ class _CoursesPageState extends State<CoursesPage> {
                 ],
               ),
               const SizedBox(height: 30),
-              Expanded(
-                child: ListView(
-                  children: [
-                    RichText(
-                      text: TextSpan(
+              dropdownValue != null
+                  ? Expanded(
+                      child: ListView(
                         children: [
-                          TextSpan(
-                            text: dropdownValue['name'],
-                            style: kMainTitleStyle.copyWith(
-                                fontSize: 26, color: MyColors.primary),
-                          ),
-                          const WidgetSpan(child: SizedBox(width: 10)),
-                          WidgetSpan(
-                            child: SizedBox(
-                              // margin: const EdgeInsets.only(bottom: 1),
-                              height: 18,
-                              width: 18,
-                              child: IconButton(
-                                padding: const EdgeInsets.all(0),
-                                // iconSize: 5,
-                                splashRadius: 17,
-                                iconSize: 15,
-                                alignment: Alignment.center,
-                                icon: SvgPicture.asset(
-                                  "assets/images/edit.svg",
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: dropdownValue['name'],
+                                  style: kMainTitleStyle.copyWith(
+                                      fontSize: 26, color: MyColors.primary),
                                 ),
-                                onPressed: () {
-                                  buildNameSheet(context);
-                                },
-                              ),
-                            ),
-                            baseline: TextBaseline.alphabetic,
-                            // alignment: PlaceholderAlignment.middle,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Weights',
-                                style: kMainTitleStyle.copyWith(
-                                  color: MyColors.primary,
-                                ),
-                              ),
-                              const WidgetSpan(child: SizedBox(width: 10)),
-                              WidgetSpan(
-                                child: SizedBox(
-                                  // margin: const EdgeInsets.only(bottom: 5),
-                                  height: 18,
-                                  width: 18,
-                                  child: IconButton(
-                                    padding: const EdgeInsets.all(0),
-                                    // iconSize: 5,
-                                    splashRadius: 17,
-                                    iconSize: 15,
-                                    alignment: Alignment.center,
-                                    icon: SvgPicture.asset(
-                                      "assets/images/edit.svg",
-                                      // fit: BoxFit.scaleDown,
+                                const WidgetSpan(child: SizedBox(width: 10)),
+                                WidgetSpan(
+                                  child: SizedBox(
+                                    // margin: const EdgeInsets.only(bottom: 1),
+                                    height: 18,
+                                    width: 18,
+                                    child: IconButton(
+                                      padding: const EdgeInsets.all(0),
+                                      // iconSize: 5,
+                                      splashRadius: 17,
+                                      iconSize: 15,
+                                      alignment: Alignment.center,
+                                      icon: SvgPicture.asset(
+                                        "assets/images/edit.svg",
+                                      ),
+                                      onPressed: () {
+                                        buildNameSheet(context);
+                                      },
                                     ),
-                                    onPressed: () {
-                                      setState(() {
-                                        buildWeightSheet(context);
-                                      });
-                                    },
                                   ),
+                                  baseline: TextBaseline.alphabetic,
+                                  // alignment: PlaceholderAlignment.middle,
                                 ),
-                                baseline: TextBaseline.alphabetic,
-                                // alignment: PlaceholderAlignment.middle,
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Divider(
-                          thickness: 0.7,
-                          color: MyColors.secondary.withOpacity(0.5),
-                        ),
-                        Provider.of<WeightData>(context).allWeights.isNotEmpty
-                            ? WeightList(
-                                weightList:
-                                    Provider.of<WeightData>(context).allWeights)
-                            : const Text(
-                                'You haven\'t added this course\'s weights yet!',
-                                style: TextStyle(fontWeight: FontWeight.w200),
-                              ),
-                      ],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 45),
-                      child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Grades',
-                                style: kMainTitleStyle.copyWith(
-                                  color: MyColors.primary,
-                                ),
-                              ),
-                              midterm >= 0
-                                  ? Row(
-                                      children: [
-                                        Text(
-                                          'Midterm  |  ',
-                                          style: kMainTitleStyle.copyWith(
-                                            color: MyColors.primary,
-                                          ),
-                                        ),
-                                        Text(
-                                          '${midterm.toStringAsFixed(1)}%',
-                                          style: kMainTitleStyle.copyWith(
-                                            color: getScoreColor(midterm),
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : const Text(''),
-                            ],
-                          ),
-                          Divider(
-                            thickness: 0.7,
-                            color: MyColors.secondary.withOpacity(0.5),
+                          const SizedBox(
+                            height: 30,
                           ),
                           Column(
-                            children: allGrades.map((item) {
-                              return buildGradeCard(item);
-                            }).toList(),
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Weights',
+                                      style: kMainTitleStyle.copyWith(
+                                        color: MyColors.primary,
+                                      ),
+                                    ),
+                                    const WidgetSpan(
+                                        child: SizedBox(width: 10)),
+                                    WidgetSpan(
+                                      child: SizedBox(
+                                        // margin: const EdgeInsets.only(bottom: 5),
+                                        height: 18,
+                                        width: 18,
+                                        child: IconButton(
+                                          padding: const EdgeInsets.all(0),
+                                          // iconSize: 5,
+                                          splashRadius: 17,
+                                          iconSize: 15,
+                                          alignment: Alignment.center,
+                                          icon: SvgPicture.asset(
+                                            "assets/images/edit.svg",
+                                            // fit: BoxFit.scaleDown,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              buildWeightSheet(context);
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      baseline: TextBaseline.alphabetic,
+                                      // alignment: PlaceholderAlignment.middle,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Divider(
+                                thickness: 0.7,
+                                color: MyColors.secondary.withOpacity(0.5),
+                              ),
+                              Provider.of<WeightData>(context)
+                                      .allWeights
+                                      .isNotEmpty
+                                  ? WeightList(
+                                      weightList:
+                                          Provider.of<WeightData>(context)
+                                              .allWeights)
+                                  : const Text(
+                                      'You haven\'t added this course\'s weights yet!',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w200),
+                                    ),
+                            ],
                           ),
-                          // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
-                          //   print("Building grade card $index");
-                          //   return buildGradeCard(allGrades[index]);
-                          // }),
-                          const SizedBox(height: 150),
+                          Container(
+                            padding: const EdgeInsets.only(top: 45),
+                            child: Column(
+                              // crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Grades',
+                                      style: kMainTitleStyle.copyWith(
+                                        color: MyColors.primary,
+                                      ),
+                                    ),
+                                    midterm >= 0
+                                        ? Row(
+                                            children: [
+                                              Text(
+                                                'Midterm  |  ',
+                                                style: kMainTitleStyle.copyWith(
+                                                  color: MyColors.primary,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${midterm.toStringAsFixed(1)}%',
+                                                style: kMainTitleStyle.copyWith(
+                                                  color: getScoreColor(midterm),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : const Text(''),
+                                  ],
+                                ),
+                                Divider(
+                                  thickness: 0.7,
+                                  color: MyColors.secondary.withOpacity(0.5),
+                                ),
+                                Column(
+                                  children: allGrades.map((item) {
+                                    return buildGradeCard(item);
+                                  }).toList(),
+                                ),
+                                // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
+                                //   print("Building grade card $index");
+                                //   return buildGradeCard(allGrades[index]);
+                                // }),
+                                const SizedBox(height: 150),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
+                    )
+                  : Container(),
             ],
           ),
         ),
