@@ -490,10 +490,10 @@ class _DefaultPageState extends State<DefaultPage> {
                         title: const Text('Courses'),
                         // leading: const Icon(Icons.menu_book_rounded),
                         trailing:
-                            _defaultPage == MenuItems.courses ? check : null,
+                            _defaultPage == MenuItems.grades ? check : null,
                         onPressed: (context) {
                           setState(() {
-                            _defaultPage = MenuItems.courses;
+                            _defaultPage = MenuItems.grades;
                             prefs.setString(
                                 'default_page', _defaultPage.toString());
                           });

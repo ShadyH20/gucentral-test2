@@ -60,7 +60,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
     switch (currentItem) {
       case MenuItems.home:
         return 0;
-      case MenuItems.courses:
+      case MenuItems.grades:
         return 1;
       case MenuItems.schedule:
         return 2;

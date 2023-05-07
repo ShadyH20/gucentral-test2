@@ -291,7 +291,8 @@ class MenuPageState extends State<MenuPage> {
   }
 
   bool comingSoon(String title) {
-    return title == 'Grades';
+    // return title == 'Grades';
+    return false;
   }
 }
 
@@ -301,7 +302,6 @@ class MenuItems {
   static const transcript = MenuItemlist('Transcript');
   static const home = MenuItemlist('Home');
   static const grades = MenuItemlist('Grades');
-  static const courses = MenuItemlist('Courses');
   static const schedule = MenuItemlist('Schedule');
   static const map = MenuItemlist('Map');
   static const settings = MenuItemlist('Settings', Icons.settings);
@@ -312,7 +312,7 @@ class MenuItems {
     // profile,
     home,
     // grades,
-    courses,
+    grades,
     schedule,
     attendance,
     transcript,
@@ -331,8 +331,6 @@ class MenuItems {
         return transcript;
       case 'Grades':
         return grades;
-      case 'Courses':
-        return courses;
       case 'Schedule':
         return schedule;
       case 'Map':

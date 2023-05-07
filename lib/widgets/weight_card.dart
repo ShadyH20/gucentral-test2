@@ -41,7 +41,9 @@ class WeightCard extends StatelessWidget {
                 weightData.text,
                 overflow: TextOverflow.fade,
                 maxLines: 1,
-                style: kSubTitleStyle,
+                style: kSubTitleStyle.copyWith(
+                  color: MyColors.secondary,
+                ),
               ),
             ),
           ),
@@ -49,7 +51,9 @@ class WeightCard extends StatelessWidget {
             weightData.best[0].isEmpty || weightData.best[1].isEmpty
                 ? ''
                 : ' | Best ${weightData.best[0]} from ${weightData.best[1]}',
-            style: kSubTitleStyle,
+            style: kSubTitleStyle.copyWith(
+              color: MyColors.secondary,
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -74,7 +78,6 @@ class WeightCard extends StatelessWidget {
           addRemove
               ? GestureDetector(
                   onTap: () {
-                    print('deleeeeete weight');
                     Provider.of<WeightData>(context, listen: false)
                         .removeWeight(weightData);
                   },

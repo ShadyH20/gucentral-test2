@@ -4,8 +4,9 @@ import 'package:gucentral/utils/constants.dart';
 import 'package:gucentral/utils/weight.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
+import '../utils/SharedPrefs.dart';
 import '../utils/weight_data.dart';
-import 'MyColors.dart';
+// import 'MyColors.dart';
 
 class AddWeightCard extends StatefulWidget {
   const AddWeightCard({
@@ -78,7 +79,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
         margin: const EdgeInsets.only(top: 1, bottom: 1),
         padding: const EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
-          color: const Color(0xFFF2F2F2),
+          color: MyApp.isDarkMode.value
+              ? MyColors.surface
+              : const Color(0xFFF2F2F2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -104,8 +107,11 @@ class _AddWeightCardState extends State<AddWeightCard> {
                           const SizedBox(width: 10),
                           SizedBox(
                             width: 130,
-                            height: 25,
+                            height: 30,
                             child: Material(
+                              color: MyApp.isDarkMode.value
+                                  ? Colors.transparent
+                                  : null,
                               child: Form(
                                 child: WeightTextField(
                                   validatorText: 'Please enter title',
@@ -114,6 +120,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                   isValid: textValid,
                                   textFieldController: textController,
                                   maxLength: 20,
+                                  textStyle: const TextStyle(fontSize: 12.5),
                                 ),
                               ),
                             ),
@@ -134,6 +141,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                             width: 35,
                             height: 35,
                             child: Material(
+                              color: MyApp.isDarkMode.value
+                                  ? Colors.transparent
+                                  : null,
                               child: Form(
                                 child: WeightTextField(
                                   validatorText: 'Please enter weight',
@@ -144,7 +154,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                   keyboardType: TextInputType.number,
                                   textStyle: const TextStyle(
                                       fontSize: 17,
-                                      fontWeight: FontWeight.w900),
+                                      fontWeight: FontWeight.w700),
                                 ),
                               ),
                             ),
@@ -184,6 +194,9 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                 width: 35,
                                 height: 35,
                                 child: Material(
+                                  color: MyApp.isDarkMode.value
+                                      ? Colors.transparent
+                                      : null,
                                   child: Form(
                                     child: WeightTextField(
                                       validatorText: 'Please enter best',
@@ -195,7 +208,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                       enabled: checkboxState,
                                       textStyle: const TextStyle(
                                           fontSize: 17,
-                                          fontWeight: FontWeight.w900),
+                                          fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                 ),
@@ -215,10 +228,15 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                 ),
                               ),
                               const SizedBox(width: 10),
-                              SizedBox(
+                              Container(
                                 width: 35,
                                 height: 35,
+                                // color: Colors.blue,
+                                // decoration: BoxDecoration(borderRadius: BorderRadius.all()),
                                 child: Material(
+                                  color: MyApp.isDarkMode.value
+                                      ? Colors.transparent
+                                      : null,
                                   child: Form(
                                     child: WeightTextField(
                                       validatorText: 'Please enter from',
@@ -231,7 +249,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                       enabled: checkboxState,
                                       textStyle: const TextStyle(
                                         fontSize: 17,
-                                        fontWeight: FontWeight.w900,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ),
@@ -245,11 +263,13 @@ class _AddWeightCardState extends State<AddWeightCard> {
                         children: [
                           Transform.scale(
                             scale: 0.85,
-                            child: Container(
+                            child: SizedBox(
                               height: 18,
                               width: 18,
-                              color: Colors.red,
                               child: Material(
+                                color: MyApp.isDarkMode.value
+                                    ? Colors.transparent
+                                    : null,
                                 child: Checkbox(
                                   value: checkboxState,
                                   onChanged: (value) {
@@ -439,6 +459,9 @@ class _WeightTextFieldState extends State<WeightTextField> {
       textInputAction: TextInputAction.next,
       textCapitalization: TextCapitalization.words,
       controller: widget.textFieldController,
+      onTapOutside: (event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       // maxLength: 2,
       inputFormatters: [
         LengthLimitingTextInputFormatter(widget.maxLength),
@@ -460,6 +483,8 @@ class _WeightTextFieldState extends State<WeightTextField> {
       textAlignVertical: TextAlignVertical.center,
       textAlign: TextAlign.center,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: MyColors.background.withOpacity(0.6),
         hintText: widget.hintText,
         hintStyle: TextStyle(
             fontFamily: "Outfit",
@@ -478,8 +503,7 @@ class _WeightTextFieldState extends State<WeightTextField> {
         ),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(7.5),
-            borderSide:
-                const BorderSide(width: 2, color: MyColors.primaryVariant)),
+            borderSide: BorderSide(width: 2, color: MyColors.primaryVariant)),
         contentPadding: const EdgeInsets.symmetric(vertical: 7, horizontal: 0),
       ),
     );
