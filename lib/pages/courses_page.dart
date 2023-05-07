@@ -4,7 +4,7 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/utils/SharedPrefs.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
-import "package:gucentral/widgets/MyColors.dart";
+// import "package:gucentral/widgets/MyColors.dart";
 import "../utils/weight.dart";
 import "../utils/weight_data.dart";
 import "../widgets/Requests.dart";
@@ -285,9 +285,8 @@ class _CoursesPageState extends State<CoursesPage> {
         centerTitle: true,
         leadingWidth: 50.0,
         leading: const MenuWidget(),
-        title: const Text(
+        title: Text(
           "Courses",
-          style: TextStyle(color: MyColors.primary),
         ),
         actions: [
           IconButton(

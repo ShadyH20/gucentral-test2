@@ -52,6 +52,8 @@ final GlobalKey<MenuPageState> menuPageKey = GlobalKey();
 final GlobalKey<MyAppState> mainKey = GlobalKey();
 final GlobalKey<HomePageState> homeKey = GlobalKey();
 
+ColorScheme MyColors = Theme.of(mainKey.currentContext!).colorScheme;
+
 // Maps course code to course name
 Map<String, String> courseMap = {};
 

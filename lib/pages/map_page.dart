@@ -102,11 +102,11 @@ class _MapPageState extends State<MapPage> {
                       target: gucLocation,
                       zoom: 17,
                     ),
-                    mapType: MapType.hybrid,
+                    mapType: MapType.normal,
                     buildingsEnabled: true,
                     myLocationEnabled: true,
                     myLocationButtonEnabled: true,
-                    minMaxZoomPreference: const MinMaxZoomPreference(12, 25),
+                    minMaxZoomPreference: const MinMaxZoomPreference(16, 25),
                     cameraTargetBounds: CameraTargetBounds(LatLngBounds(
                       southwest: const LatLng(29.980406, 31.428271),
                       northeast:

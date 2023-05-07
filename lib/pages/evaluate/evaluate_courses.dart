@@ -131,7 +131,7 @@ class _EvaluateCoursesState extends State<EvaluateCourses>
                             ),
                             hint: const Text("Choose a Course"),
                             underline: Container(
-                              color: const Color(0),
+                              color: Colors.transparent,
                             ),
                             onChanged: (course) {
                               // This is called when the user selects an item.
