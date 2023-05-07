@@ -41,13 +41,15 @@ class WeightData extends ChangeNotifier {
 
   void addToWeights(Weight newWeight) {
     _allWeights.add(newWeight);
-    prefs.setString('weights:$courseCode', jsonEncode(_allWeights));
+    prefs.setString(
+        '${SharedPrefs.weights}$courseCode', jsonEncode(_allWeights));
     notifyListeners();
   }
 
   void removeWeight(Weight weightToRemove) {
     _allWeights.remove(weightToRemove);
-    prefs.setString('weights:$courseCode', jsonEncode(_allWeights));
+    prefs.setString(
+        '${SharedPrefs.weights}}$courseCode', jsonEncode(_allWeights));
     notifyListeners();
   }
 

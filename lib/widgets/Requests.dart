@@ -504,9 +504,12 @@ class Requests {
       });
 
       var grades = jsonDecode(response.body);
+      grades['courseCode'] = course;
       if (grades['success']) {
         prefs.setString(
             '${SharedPrefs.grades}$course', jsonEncode(grades['all_grades']));
+        prefs.setString(
+            '${SharedPrefs.midterm}$course', jsonEncode(grades['midterm']));
       }
       return grades;
     } on Exception catch (e) {
@@ -523,6 +526,13 @@ class Requests {
       return jsonDecode(prefs.getString('${SharedPrefs.grades}$course')!);
     }
     return [];
+  }
+
+  static getMidtermSaved(String course) {
+    if (prefs.containsKey('${SharedPrefs.midterm}$course')) {
+      return prefs.getString('${SharedPrefs.midterm}$course');
+    }
+    return '';
   }
 
   ////////////////////////////////

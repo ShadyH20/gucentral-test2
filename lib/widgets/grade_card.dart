@@ -49,12 +49,10 @@ class GradeCard extends StatelessWidget {
     double percentage =
         score == -1 ? 0 : score.toDouble() / scoreTotal.toDouble();
     Color gradeColor = getScoreColor(percentage * 100);
-    print('PERCENTAAGGGEGEGEGEGEGEGE:::::: $percentage');
-    print('SCORE:::::: $score / $scoreTotal');
     return Container(
       padding: !isElement
-          ? const EdgeInsets.symmetric(vertical: 7, horizontal: 50)
-          : const EdgeInsets.only(top: 7, bottom: 7, right: 50, left: 100),
+          ? const EdgeInsets.symmetric(vertical: 6, horizontal: 50)
+          : const EdgeInsets.only(top: 6, bottom: 6, right: 50, left: 100),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -111,6 +109,7 @@ class GradeCard extends StatelessWidget {
                         fontFamily: "Outfit",
                         fontWeight: FontWeight.w700,
                         fontSize: 9,
+                        height: 1,
                         color: gradeColor,
                       ),
                     ),

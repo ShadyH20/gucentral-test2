@@ -135,15 +135,19 @@ class _CoursesPageState extends State<CoursesPage> {
     Provider.of<WeightData>(context, listen: false)
         .changeAllWeights(course['code']);
 
-    // setState(() {
-    //   isCourseLoading = true;
-    //   allGrades = Requests.getGradesSaved(course['code']);
-    // });
-
-    print('waaaaaaatinggggg');
-    final response = await Requests.getGrades(course['code']);
-    print('waaaaaaatinggggg2');
     setState(() {
+      isCourseLoading = true;
+      allGrades = Requests.getGradesSaved(course['code']);
+      String temp =
+          Requests.getMidtermSaved(course['code']).replaceAll('"', '');
+
+      midterm = temp != '' ? double.parse(temp) : -1;
+    });
+
+    final response = await Requests.getGrades(course['code']);
+
+    setState(() {
+      isCourseLoading = false;
       if (!response['success']) {
         showSnackBar(
           context,
@@ -152,11 +156,11 @@ class _CoursesPageState extends State<CoursesPage> {
         return;
       }
 
-      print('DONE: DAFOQ: ${response['all_grades']}');
-      setState(() {
+      if (response['courseCode'] == dropdownValue['code']) {
         allGrades = response['all_grades'];
-        print('COURSEEE GRAAAADES: $allGrades');
-      });
+        midterm =
+            response['midterm'] != '' ? double.parse(response['midterm']) : -1;
+      }
     });
 
     // var resp = await Requests.getAttendance(course['code']);
@@ -195,12 +199,13 @@ class _CoursesPageState extends State<CoursesPage> {
   }
 
   Widget buildGradeCard(dynamic item) {
+    if (item.isEmpty) return Container();
     if (item.length == 1) {
       return GradeCard(
         key: UniqueKey(),
         title: item[0]['title'],
         score: item[0]['score'] == 'None' ? -1 : double.parse(item[0]['score']),
-        scoreTotal: double.parse(item[0]['scoreTotal'] ?? '-1'),
+        scoreTotal: double.parse(item[0]['score_total'] ?? '-1'),
       );
     }
     return AssignmentCard(title: item[0]['title'], elements: item);
@@ -314,52 +319,17 @@ class _CoursesPageState extends State<CoursesPage> {
           "Courses",
         ),
         actions: [
-          IconButton(
-            // padding: EdgeInsets.symmetric(horizontal: 20.0),
-            icon: SvgPicture.asset(
-              "assets/images/edit.svg",
-              height: 30,
-              // color: MyColors.secondary,
-            ),
-            onPressed: () {
-              setState(() {
-                midterm = 67.123796782314;
-                allGrades = [
-                  [
-                    {'title': 'Quiz 1', 'score': 'None', 'scoreTotal': '10.0'}
-                  ],
-                  [
-                    {'title': 'Quiz 2', 'score': '8', 'scoreTotal': '10.0'}
-                  ],
-                  [
-                    {
-                      'title': 'Assignment 1',
-                      'elementName': 'Question 1',
-                      'score': '6.3',
-                      'scoreTotal': '10.0'
-                    },
-                    {
-                      'title': 'Assignment 1',
-                      'elementName': 'Question 2',
-                      'score': '9',
-                      'scoreTotal': '10.0'
-                    },
-                    {
-                      'title': 'Assignment 1',
-                      'elementName': 'Question 3',
-                      'score': '2',
-                      'scoreTotal': '10.0'
-                    }
-                  ],
-                  [
-                    {'title': 'Quiz 3', 'score': '5', 'scoreTotal': '10.0'}
-                  ],
-                ];
-              });
-            },
-          ),
+          isCourseLoading
+              ? const Center(
+                  child: SizedBox(
+                    width: 25,
+                    height: 25,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : Container(),
           Container(
-            width: 10,
+            width: 25,
           )
         ],
       ),
