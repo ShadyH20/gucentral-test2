@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'MyColors.dart';
+
+import '../main.dart';
+import '../utils/SharedPrefs.dart';
+// import 'MyColors.dart';
 
 class GradeCard extends StatelessWidget {
   const GradeCard({
@@ -61,7 +64,7 @@ class GradeCard extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Container(
-              color: const Color.fromARGB(30, 0, 0, 0),
+              color: MyColors.secondary.withOpacity(0.3),
               height: 1,
               // width: 30,
             ),
@@ -74,7 +77,9 @@ class GradeCard extends StatelessWidget {
             animateFromLastPercent: true,
             percent: percentage,
             progressColor: gradeColor,
-            backgroundColor: const Color(0xFFdedede),
+            backgroundColor: MyApp.isDarkMode.value
+                ? const Color.fromARGB(255, 52, 52, 52)
+                : const Color(0xFFdedede),
             circularStrokeCap: CircularStrokeCap.round,
             center: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),

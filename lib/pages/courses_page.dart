@@ -44,6 +44,12 @@ class _CoursesPageState extends State<CoursesPage> {
 
   dynamic dropdownValue;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
   buildDropdown() {
     return Container(
       height: 55,
@@ -89,9 +95,10 @@ class _CoursesPageState extends State<CoursesPage> {
           onChanged: (course) {
             // This is called when the user selects an item.
             setState(() {
+              print(course);
               dropdownValue = course;
             });
-            courseChosen(context, course);
+            // courseChosen(context, course);
           },
           items: courses.map<DropdownMenuItem>((dynamic course) {
             return DropdownMenuItem(
@@ -274,18 +281,14 @@ class _CoursesPageState extends State<CoursesPage> {
   Widget build(BuildContext context) {
     // print("Building courses page");
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: MyColors.background,
       appBar: AppBar(
-        systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            // statusBarIconBrightness: Brightness.dark,
-            statusBarBrightness: Brightness.light),
         elevation: 0,
         backgroundColor: MyColors.background,
         centerTitle: true,
         leadingWidth: 50.0,
         leading: const MenuWidget(),
-        title: Text(
+        title: const Text(
           "Courses",
         ),
         actions: [
@@ -368,8 +371,9 @@ class _CoursesPageState extends State<CoursesPage> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Computer System Architecture',
-                            style: kMainTitleStyle.copyWith(fontSize: 26),
+                            text: dropdownValue['name'],
+                            style: kMainTitleStyle.copyWith(
+                                fontSize: 26, color: MyColors.primary),
                           ),
                           const WidgetSpan(child: SizedBox(width: 10)),
                           WidgetSpan(
@@ -406,9 +410,11 @@ class _CoursesPageState extends State<CoursesPage> {
                         RichText(
                           text: TextSpan(
                             children: [
-                              const TextSpan(
+                              TextSpan(
                                 text: 'Weights',
-                                style: kMainTitleStyle,
+                                style: kMainTitleStyle.copyWith(
+                                  color: MyColors.primary,
+                                ),
                               ),
                               const WidgetSpan(child: SizedBox(width: 10)),
                               WidgetSpan(
@@ -439,8 +445,9 @@ class _CoursesPageState extends State<CoursesPage> {
                             ],
                           ),
                         ),
-                        const Divider(
+                        Divider(
                           thickness: 0.7,
+                          color: MyColors.secondary.withOpacity(0.5),
                         ),
                         Provider.of<WeightData>(context).allWeights.isNotEmpty
                             ? WeightList(
@@ -460,12 +467,21 @@ class _CoursesPageState extends State<CoursesPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Grades', style: kMainTitleStyle),
+                              Text(
+                                'Grades',
+                                style: kMainTitleStyle.copyWith(
+                                  color: MyColors.primary,
+                                ),
+                              ),
                               midterm >= 0
                                   ? Row(
                                       children: [
-                                        const Text('Midterm  |  ',
-                                            style: kMainTitleStyle),
+                                        Text(
+                                          'Midterm  |  ',
+                                          style: kMainTitleStyle.copyWith(
+                                            color: MyColors.primary,
+                                          ),
+                                        ),
                                         Text(
                                           '${midterm.toStringAsFixed(1)}%',
                                           style: kMainTitleStyle.copyWith(
@@ -477,8 +493,9 @@ class _CoursesPageState extends State<CoursesPage> {
                                   : const Text(''),
                             ],
                           ),
-                          const Divider(
+                          Divider(
                             thickness: 0.7,
+                            color: MyColors.secondary.withOpacity(0.5),
                           ),
                           Column(
                             children: allGrades.map((item) {

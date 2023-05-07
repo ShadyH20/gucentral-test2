@@ -9,7 +9,7 @@ import "package:gucentral/utils/local_auth_api.dart";
 import "package:gucentral/widgets/MeduItemList.dart";
 // import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
-import "package:gucentral/widgets/MyColors.dart";
+// import "package:gucentral/widgets/MyColors.dart";
 import "package:settings_ui/settings_ui.dart";
 import "package:vibration/vibration.dart";
 import "../main.dart";
@@ -425,7 +425,7 @@ class DefaultPage extends StatefulWidget {
 class _DefaultPageState extends State<DefaultPage> {
   MenuItemlist _defaultPage =
       MenuItems.getItem(prefs.getString('default_page') ?? 'Home');
-  Icon check = const Icon(Icons.check, color: MyColors.primary);
+  Icon check = Icon(Icons.check, color: MyColors.primary);
   @override
   Widget build(BuildContext context) {
     // page that lets you choose one page to be the default from a list of pages: Home, Courses, Schedule, Attendance, transcript, evaluate, map
@@ -591,7 +591,7 @@ class IconBuilder extends StatelessWidget {
       decoration: BoxDecoration(
           // color: color,
           borderRadius: BorderRadius.circular(10),
-          border: const Border.fromBorderSide(
+          border: Border.fromBorderSide(
               BorderSide(color: MyColors.primaryVariant))),
       child: Icon(icon,
           color: Theme.of(context).colorScheme.secondary.withOpacity(0.9),

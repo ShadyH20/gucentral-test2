@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gucentral/utils/constants.dart';
 import 'package:provider/provider.dart';
+import '../utils/SharedPrefs.dart';
 import '../utils/weight.dart';
 import '../utils/weight_data.dart';
-import 'MyColors.dart';
+// import 'MyColors.dart';
+// import 'Shared'
 
 class WeightCard extends StatelessWidget {
   const WeightCard({
@@ -52,7 +54,7 @@ class WeightCard extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Container(
-              color: const Color.fromARGB(30, 0, 0, 0),
+              color: MyColors.secondary.withOpacity(0.25),
               height: 1,
               // width: 30,
             ),
@@ -60,7 +62,7 @@ class WeightCard extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             '${weightData.weight}%',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: "Outfit",
               fontWeight: FontWeight.w700,
               fontSize: 15,
@@ -76,7 +78,7 @@ class WeightCard extends StatelessWidget {
                     Provider.of<WeightData>(context, listen: false)
                         .removeWeight(weightData);
                   },
-                  child: const Icon(
+                  child: Icon(
                     Icons.cancel,
                     color: MyColors.primary,
                     size: 23,

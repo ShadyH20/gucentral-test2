@@ -10,7 +10,7 @@ import 'package:gucentral/pages/settings_page.dart';
 import 'package:gucentral/pages/grades_page.dart';
 import 'package:gucentral/pages/transcript_page.dart';
 import 'package:gucentral/utils/SharedPrefs.dart';
-import 'package:gucentral/widgets/MyColors.dart';
+// import 'package:gucentral/widgets/MyColors.dart';
 import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,7 +31,7 @@ class HomePageNavDrawer extends StatefulWidget {
 
 class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   // ignore: non_constant_identifier_names
-  late ColorScheme MyColors;
+  // late ColorScheme MyColors;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();

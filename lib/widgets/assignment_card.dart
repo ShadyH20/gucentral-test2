@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../utils/SharedPrefs.dart';
 import 'grade_card.dart';
-import 'MyColors.dart';
+// import 'MyColors.dart';
 
 class AssignmentCard extends StatelessWidget {
   const AssignmentCard(
@@ -44,7 +45,7 @@ class AssignmentCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: "Outfit",
                   fontWeight: FontWeight.w700,
                   fontSize: 16,
@@ -54,7 +55,7 @@ class AssignmentCard extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Container(
-                  color: const Color.fromARGB(30, 0, 0, 0),
+                  color: MyColors.secondary.withOpacity(0.3),
                   height: 1,
                   // width: 30,
                 ),
