@@ -372,191 +372,196 @@ class _CoursesPageState extends State<CoursesPage> {
             ),
           ],
         ),
-        body: TabBarView(
-          children: [
-            AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.dark,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 15,
-                ),
-                child: Column(
-                  children: [
-                    buildDropdown(),
-                    const SizedBox(height: 30),
-                    dropdownValue != null
-                        ? Expanded(
-                            child: ListView(
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: dropdownValue['name'],
-                                        style: kMainTitleStyle.copyWith(
-                                            fontSize: 26,
-                                            color: MyColors.primary),
-                                      ),
-                                      const WidgetSpan(
-                                          child: SizedBox(width: 10)),
-                                      WidgetSpan(
-                                        child: SizedBox(
-                                          // margin: const EdgeInsets.only(bottom: 1),
-                                          height: 18,
-                                          width: 18,
-                                          child: IconButton(
-                                            padding: const EdgeInsets.all(0),
-                                            // iconSize: 5,
-                                            splashRadius: 17,
-                                            iconSize: 15,
-                                            alignment: Alignment.center,
-                                            icon: SvgPicture.asset(
-                                              "assets/images/edit.svg",
-                                            ),
-                                            onPressed: () {
-                                              buildNameSheet(context);
-                                            },
-                                          ),
+        body: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 25),
+          child: TabBarView(
+            children: [
+              AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle.dark,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 0,
+                    vertical: 15,
+                  ),
+                  child: Column(
+                    children: [
+                      buildDropdown(),
+                      const SizedBox(height: 30),
+                      dropdownValue != null
+                          ? Expanded(
+                              child: ListView(
+                                children: [
+                                  RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: dropdownValue['name'],
+                                          style: kMainTitleStyle.copyWith(
+                                              fontSize: 26,
+                                              color: MyColors.primary),
                                         ),
-                                        baseline: TextBaseline.alphabetic,
-                                        // alignment: PlaceholderAlignment.middle,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 30,
-                                ),
-                                Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: 'Weights',
-                                            style: kMainTitleStyle.copyWith(
-                                              color: MyColors.primary,
+                                        const WidgetSpan(
+                                            child: SizedBox(width: 10)),
+                                        WidgetSpan(
+                                          child: SizedBox(
+                                            // margin: const EdgeInsets.only(bottom: 1),
+                                            height: 18,
+                                            width: 18,
+                                            child: IconButton(
+                                              padding: const EdgeInsets.all(0),
+                                              // iconSize: 5,
+                                              splashRadius: 17,
+                                              iconSize: 15,
+                                              alignment: Alignment.center,
+                                              icon: SvgPicture.asset(
+                                                "assets/images/edit.svg",
+                                              ),
+                                              onPressed: () {
+                                                buildNameSheet(context);
+                                              },
                                             ),
                                           ),
-                                          const WidgetSpan(
-                                              child: SizedBox(width: 10)),
-                                          WidgetSpan(
-                                            child: SizedBox(
-                                              // margin: const EdgeInsets.only(bottom: 5),
-                                              height: 18,
-                                              width: 18,
-                                              child: IconButton(
-                                                padding:
-                                                    const EdgeInsets.all(0),
-                                                // iconSize: 5,
-                                                splashRadius: 17,
-                                                iconSize: 15,
-                                                alignment: Alignment.center,
-                                                icon: SvgPicture.asset(
-                                                  "assets/images/edit.svg",
-                                                  // fit: BoxFit.scaleDown,
-                                                ),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    buildWeightSheet(context);
-                                                  });
-                                                },
+                                          baseline: TextBaseline.alphabetic,
+                                          // alignment: PlaceholderAlignment.middle,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Weights',
+                                              style: kMainTitleStyle.copyWith(
+                                                color: MyColors.primary,
                                               ),
                                             ),
-                                            baseline: TextBaseline.alphabetic,
-                                            // alignment: PlaceholderAlignment.middle,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Divider(
-                                      thickness: 0.7,
-                                      color:
-                                          MyColors.secondary.withOpacity(0.5),
-                                    ),
-                                    Provider.of<WeightData>(context)
-                                            .allWeights
-                                            .isNotEmpty
-                                        ? WeightList(
-                                            weightList:
-                                                Provider.of<WeightData>(context)
-                                                    .allWeights)
-                                        : const Text(
-                                            'You haven\'t added this course\'s weights yet!',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w200),
-                                          ),
-                                  ],
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(top: 45),
-                                  child: Column(
-                                    // crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            'Grades',
-                                            style: kMainTitleStyle.copyWith(
-                                              color: MyColors.primary,
+                                            const WidgetSpan(
+                                                child: SizedBox(width: 10)),
+                                            WidgetSpan(
+                                              child: SizedBox(
+                                                // margin: const EdgeInsets.only(bottom: 5),
+                                                height: 18,
+                                                width: 18,
+                                                child: IconButton(
+                                                  padding:
+                                                      const EdgeInsets.all(0),
+                                                  // iconSize: 5,
+                                                  splashRadius: 17,
+                                                  iconSize: 15,
+                                                  alignment: Alignment.center,
+                                                  icon: SvgPicture.asset(
+                                                    "assets/images/edit.svg",
+                                                    // fit: BoxFit.scaleDown,
+                                                  ),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      buildWeightSheet(context);
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                              baseline: TextBaseline.alphabetic,
+                                              // alignment: PlaceholderAlignment.middle,
                                             ),
-                                          ),
-                                          midterm >= 0
-                                              ? Row(
-                                                  children: [
-                                                    Text(
-                                                      'Midterm  |  ',
-                                                      style: kMainTitleStyle
-                                                          .copyWith(
-                                                        color: MyColors.primary,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      '${midterm.toStringAsFixed(1)}%',
-                                                      style: kMainTitleStyle
-                                                          .copyWith(
-                                                        color: getScoreColor(
-                                                            midterm),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                )
-                                              : const Text(''),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                       Divider(
                                         thickness: 0.7,
                                         color:
                                             MyColors.secondary.withOpacity(0.5),
                                       ),
-                                      Column(
-                                        children: allGrades.map((item) {
-                                          return buildGradeCard(item);
-                                        }).toList(),
-                                      ),
-                                      // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
-                                      //   print("Building grade card $index");
-                                      //   return buildGradeCard(allGrades[index]);
-                                      // }),
-                                      const SizedBox(height: 150),
+                                      Provider.of<WeightData>(context)
+                                              .allWeights
+                                              .isNotEmpty
+                                          ? WeightList(
+                                              weightList:
+                                                  Provider.of<WeightData>(
+                                                          context)
+                                                      .allWeights)
+                                          : const Text(
+                                              'You haven\'t added this course\'s weights yet!',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w200),
+                                            ),
                                     ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(),
-                  ],
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 45),
+                                    child: Column(
+                                      // crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Grades',
+                                              style: kMainTitleStyle.copyWith(
+                                                color: MyColors.primary,
+                                              ),
+                                            ),
+                                            midterm >= 0
+                                                ? Row(
+                                                    children: [
+                                                      Text(
+                                                        'Midterm  |  ',
+                                                        style: kMainTitleStyle
+                                                            .copyWith(
+                                                          color:
+                                                              MyColors.primary,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        '${midterm.toStringAsFixed(1)}%',
+                                                        style: kMainTitleStyle
+                                                            .copyWith(
+                                                          color: getScoreColor(
+                                                              midterm),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : const Text(''),
+                                          ],
+                                        ),
+                                        Divider(
+                                          thickness: 0.7,
+                                          color: MyColors.secondary
+                                              .withOpacity(0.5),
+                                        ),
+                                        Column(
+                                          children: allGrades.map((item) {
+                                            return buildGradeCard(item);
+                                          }).toList(),
+                                        ),
+                                        // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
+                                        //   print("Building grade card $index");
+                                        //   return buildGradeCard(allGrades[index]);
+                                        // }),
+                                        const SizedBox(height: 150),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Text('sup'),
-          ],
+              Text('sup'),
+            ],
+          ),
         ),
       ),
     );
