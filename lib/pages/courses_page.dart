@@ -312,9 +312,12 @@ class _CoursesPageState extends State<CoursesPage> {
   Widget build(BuildContext context) {
     // print("Building courses page");
 
-    final upperTab = ClipRRect(
-      // borderRadius: BorderRadius.circular(30),
+    final upperTab = Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15.0),
       child: TabBar(
+        labelPadding: EdgeInsets.zero,
+        padding: EdgeInsets.zero,
+        indicatorPadding: EdgeInsets.zero,
         indicatorColor: MyColors.primary,
         splashBorderRadius:
             BorderRadius.only(topLeft: topLeftBorder, topRight: topRightBorder),
@@ -330,13 +333,13 @@ class _CoursesPageState extends State<CoursesPage> {
           Tab(
             child: Text(
               'Grades',
-              style: TextStyle(fontSize: 23),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
             ),
           ),
           Tab(
             child: Text(
               'Midterms',
-              style: TextStyle(fontSize: 23),
+              style: TextStyle(fontSize: 23, fontWeight: FontWeight.w600),
             ),
           ),
         ],
@@ -354,22 +357,6 @@ class _CoursesPageState extends State<CoursesPage> {
           leadingWidth: 50.0,
           leading: const MenuWidget(),
           title: upperTab,
-          // title: NavigationBar(
-          //   destinations: const [
-          //     Text(
-          //       "Grades",
-          //       style: TextStyle(
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //     Text(
-          //       "Grades",
-          //       style: TextStyle(
-          //         fontSize: 15,
-          //       ),
-          //     ),
-          //   ],
-          // ),
           actions: [
             isCourseLoading
                 ? const Center(
@@ -379,15 +366,10 @@ class _CoursesPageState extends State<CoursesPage> {
                       child: CircularProgressIndicator(),
                     ),
                   )
-                : Container(),
+                : Container(width: 25),
             Container(
               width: 25,
             ),
-            // TextButton(
-            //   child: Text('Midterms'),
-            //   style: TextButton.styleFrom(),
-            //   onPressed: () {},
-            // ),
           ],
         ),
         body: TabBarView(

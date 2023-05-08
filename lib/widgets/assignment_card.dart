@@ -8,7 +8,7 @@ class AssignmentCard extends StatelessWidget {
       {super.key, required this.title, required this.elements});
 
   final String title;
-  final List<Map> elements;
+  final List<dynamic> elements;
 
   Color getScoreColor(double percentage) {
     if (percentage > 80) {
@@ -70,7 +70,7 @@ class AssignmentCard extends StatelessWidget {
           children: elements.map((item) {
             return GradeCard(
               key: UniqueKey(),
-              title: item['elementName'],
+              title: item['element_name'],
               score: item['score'] == 'None' ? -1 : double.parse(item['score']),
               scoreTotal: double.parse(item['score_total']),
               isElement: true,
