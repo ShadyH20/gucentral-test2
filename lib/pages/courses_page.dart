@@ -31,7 +31,7 @@ class CoursesPage extends StatefulWidget {
 
 class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
-
+  String newCourseName = '';
   List<dynamic> allGrades = [];
   List<dynamic> allMidterms = [];
   double midterm = -1;
@@ -169,7 +169,11 @@ class _CoursesPageState extends State<CoursesPage> {
         .changeAllWeights(courseCode);
 
     setState(() {
+      newCourseName = dropdownValue['name'];
       allGrades = Requests.getGradesSaved(courseCode);
+      if (allGrades.isEmpty) requestCourseData();
+      print('AAAALLLLLL GRAAADESSSS: $allGrades');
+      // print('WWEEEEIGHTTSSSSS: ${}');
       String temp =
           Requests.getCourseMidtermSaved(courseCode).replaceAll('"', '');
 
@@ -262,54 +266,58 @@ class _CoursesPageState extends State<CoursesPage> {
             color: MyColors.primary,
           ),
         ),
-        child: ListView.builder(
-          itemCount: allMidterms.length,
-          itemBuilder: (context, index) {
-            var item = allMidterms[index];
-            return AnimationConfiguration.staggeredList(
-              position: index,
-              duration: const Duration(milliseconds: 600),
-              delay: const Duration(milliseconds: 50),
-              child: SlideAnimation(
-                verticalOffset: 50.0,
-                child: FadeInAnimation(
-                  child: Container(
-                    margin: const EdgeInsets.only(bottom: 13),
-                    child: Row(
-                      children: [
-                        Container(
-                          constraints: const BoxConstraints(maxWidth: 275),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              courseMap[item['course_code']]!,
-                              style: kSubTitleStyle.copyWith(
-                                  fontSize: 18, fontWeight: FontWeight.w500),
-                            ),
+        child: allMidterms.isNotEmpty
+            ? ListView.builder(
+                itemCount: allMidterms.length,
+                itemBuilder: (context, index) {
+                  var item = allMidterms[index];
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 50),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 13),
+                          child: Row(
+                            children: [
+                              Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 275),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    courseMap[item['course_code']]!,
+                                    style: kSubTitleStyle.copyWith(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  color: MyColors.secondary.withOpacity(0.3),
+                                  height: 1,
+                                  // width: 30,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                '${double.parse(item['grade']).toStringAsFixed(2)} %',
+                                style: kSubTitleStyle.copyWith(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Container(
-                            color: MyColors.secondary.withOpacity(0.3),
-                            height: 1,
-                            // width: 30,
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          '${double.parse(item['grade']).toStringAsFixed(2)} %',
-                          style: kSubTitleStyle.copyWith(
-                              fontSize: 18, fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+                  );
+                },
+              )
+            : Center(child: const Text('Nothing to see here!')),
       ),
     );
   }
@@ -317,21 +325,77 @@ class _CoursesPageState extends State<CoursesPage> {
   buildNameSheet(BuildContext context) {
     changeNameSheet = BuildSheet(
         context: context,
-        initialSnap: 0.3,
-        snappings: [0.3],
+        initialSnap: 0.5,
+        snappings: [0.5],
         builder: (context, state) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                Text(
-                  'Change Course Name',
-                  style: kMainTitleStyle.copyWith(
-                    fontSize: 28,
+          return Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              padding: const EdgeInsets.all(0),
+              // height: 200,
+              width: 400,
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(0),
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Change Course Name',
+                            style: kMainTitleStyle.copyWith(
+                              fontSize: 28,
+                              color: MyColors.primary,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Material(
+                          color: Colors.transparent,
+                          child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                newCourseName = value;
+                              });
+                            },
+                            initialValue: dropdownValue['name'],
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: MyApp.isDarkMode.value
+                                  ? const Color.fromARGB(255, 20, 21, 24)
+                                  : Color.fromARGB(58, 173, 173, 173),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(7.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: 115,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: MyColors.primary,
+                              foregroundColor: Colors.white,
+                            ),
+                            onPressed: () {
+                              courseMap[dropdownValue['code']] = newCourseName;
+                            },
+                            child: const Text(
+                              'Change',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  textAlign: TextAlign.left,
-                ),
-              ],
+                ],
+              ),
             ),
           );
         });
@@ -528,6 +592,7 @@ class _CoursesPageState extends State<CoursesPage> {
                                               alignment: Alignment.center,
                                               icon: SvgPicture.asset(
                                                 "assets/images/edit.svg",
+                                                color: MyColors.secondary,
                                               ),
                                               onPressed: () {
                                                 buildNameSheet(context);
@@ -572,6 +637,7 @@ class _CoursesPageState extends State<CoursesPage> {
                                                   alignment: Alignment.center,
                                                   icon: SvgPicture.asset(
                                                     "assets/images/edit.svg",
+                                                    color: MyColors.secondary,
                                                     // fit: BoxFit.scaleDown,
                                                   ),
                                                   onPressed: () {
@@ -600,10 +666,13 @@ class _CoursesPageState extends State<CoursesPage> {
                                                   Provider.of<WeightData>(
                                                           context)
                                                       .allWeights)
-                                          : const Text(
-                                              'You haven\'t added this course\'s weights yet!',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w200),
+                                          : const Center(
+                                              child: Text(
+                                                'You haven\'t added this course\'s weights yet!',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w200),
+                                              ),
                                             ),
                                     ],
                                   ),
@@ -651,17 +720,28 @@ class _CoursesPageState extends State<CoursesPage> {
                                           color: MyColors.secondary
                                               .withOpacity(0.5),
                                         ),
-                                        allGrades[0].isNotEmpty
-                                            ? Column(
-                                                children: allGrades.map((item) {
-                                                  return buildGradeCard(item);
-                                                }).toList(),
-                                              )
-                                            : const Text(
-                                                'No grades have been posted!',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w200),
+                                        allGrades.isNotEmpty
+                                            ? allGrades[0].isNotEmpty
+                                                ? Column(
+                                                    children:
+                                                        allGrades.map((item) {
+                                                      return buildGradeCard(
+                                                          item);
+                                                    }).toList(),
+                                                  )
+                                                : const Text(
+                                                    'No grades have been posted!',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w200),
+                                                  )
+                                            : const Center(
+                                                child: Text(
+                                                  'Nothing to see here!',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w200),
+                                                ),
                                               ),
                                         // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
                                         //   print("Building grade card $index");
