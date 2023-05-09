@@ -210,7 +210,8 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
       margin: EdgeInsets.only(
           left: 7, right: 7, bottom: pinned ? 0 : 5, top: pinned ? 0 : 5),
       color: MyApp.isDarkMode.value ? MyColors.surface : Colors.white,
-      child: Center(child: PlayerCard(data, index, MyColors.surface)),
+      child: Center(
+          child: PlayerCard(data, index, MyColors.surface, isCurr: true)),
     );
   }
 
@@ -231,7 +232,10 @@ class PlayerCard extends StatelessWidget {
   final int index;
   final Color background;
 
-  const PlayerCard(this.data, this.index, this.background, {Key? key})
+  final bool isCurr;
+
+  const PlayerCard(this.data, this.index, this.background,
+      {Key? key, this.isCurr = false})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -252,7 +256,9 @@ class PlayerCard extends StatelessWidget {
                 width: 50,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: background.withOpacity(0.06),
+                  color: isCurr && MyApp.isDarkMode.value
+                      ? Color.fromARGB(255, 48, 50, 61)
+                      : background.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: FittedBox(
