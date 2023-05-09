@@ -29,6 +29,7 @@ class SharedPrefs {
   static const grades = 'grades:';
   static const weights = 'weights:';
   static const notifications = 'notifications';
+  static const notifRead = 'notifRead';
   static const firstAccess = 'first_access';
 
   static const dinoHi = 'dinoHi';

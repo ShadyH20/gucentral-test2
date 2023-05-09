@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "dart:convert";
 import "package:http/http.dart" as http;
+import "package:intl/intl.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
@@ -458,7 +459,7 @@ class Requests {
       var notifications = jsonDecode(response.body);
 
       // check set the notifications' read attribute
-      setNotificationsRead(notifications);
+      setNotificationsRead(notifications['notifications']);
 
       if (notifications['success']) {
         prefs.setString(SharedPrefs.notifications,
@@ -474,13 +475,29 @@ class Requests {
     }
   }
 
+  // set notification 'read' to true if it was already read
   static setNotificationsRead(notifications) {
-    var readsSaved = getNotificationsSaved();
-    for (var notification in notifications['notifications']) {
-      for (var notificationSaved in readsSaved) {
-        if (notification['id'] == notificationSaved['id']) {
-          notification['read'] = notificationSaved['read'];
-        }
+    List<dynamic> readsSaved = getReadNotifications();
+    int readIndex = 0;
+    int notifIndex = 0;
+
+    while (readIndex < readsSaved.length && notifIndex < notifications.length) {
+      var date = DateFormat('dd/MM/yyyy HH:mm:ss')
+          .parse(notifications[notifIndex]['date']);
+      print(
+          'Comparing these 2 dates: ${DateTime.parse(readsSaved[readIndex])} & $date');
+      if ((DateTime.parse(readsSaved[readIndex])).isAtSameMomentAs(date)) {
+        print('SAME MOMENT');
+        notifications[notifIndex]['read'] = true;
+
+        notifIndex++;
+        readIndex++;
+      } else if ((DateTime.parse(readsSaved[readIndex])).isBefore(date)) {
+        print('IS BEFORE');
+        notifIndex++;
+      } else {
+        print('IS AFTER');
+        readIndex++;
       }
     }
   }
@@ -490,6 +507,32 @@ class Requests {
       return jsonDecode(prefs.getString(SharedPrefs.notifications)!);
     }
     return [];
+  }
+
+  static getReadNotifications() {
+    if (prefs.containsKey(SharedPrefs.notifRead)) {
+      return jsonDecode(prefs.getString(SharedPrefs.notifRead)!);
+    }
+    return [];
+  }
+
+  static addReadNotification(date) {
+    List<dynamic> readsSaved = getReadNotifications();
+
+    print("adding read notification: $date");
+    print("reads saved: $readsSaved");
+    readsSaved.add(date.toIso8601String());
+
+    readsSaved = [
+      ...{...readsSaved}
+    ];
+
+    readsSaved.sort((a, b) {
+      return b.compareTo(a);
+    });
+    print("reads saved after sort: $readsSaved");
+    // convert this aaray of strings to an array of datetimes
+    prefs.setString(SharedPrefs.notifRead, jsonEncode(readsSaved));
   }
 
   static getGrades(String course) async {

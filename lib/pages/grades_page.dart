@@ -4,9 +4,10 @@ import "package:flutter/rendering.dart";
 import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
-import "package:gucentral/widgets/MyColors.dart";
 import "package:http/http.dart" as http;
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+
+import "../utils/SharedPrefs.dart";
 // import 'package:navigation_drawer_animation/widet/menu_widget'
 
 class GradesPage extends StatefulWidget {
@@ -31,7 +32,7 @@ class _GradesPageState extends State<GradesPage> {
           centerTitle: true,
           leadingWidth: 50.0,
           leading: const MenuWidget(),
-          title: const Text(
+          title: Text(
             "Grades",
             style: TextStyle(color: MyColors.primary),
           ),
@@ -69,7 +70,7 @@ class _GradesPageState extends State<GradesPage> {
               ),
               Container(height: 100.0),
               Container(
-                color: MyColors.accent,
+                color: MyColors.tertiary,
                 width: 300.0,
                 height: 300.0,
                 child: ListView(

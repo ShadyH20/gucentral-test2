@@ -176,15 +176,11 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                             content: NotificationContent(
                                 id: 10,
                                 channelKey: 'basic_channel',
-                                title: 'Welcom to GUCentral!',
+                                title: 'Welcome to GUCentral!',
                                 body: 'We hope you enjoy our app!',
-                                actionType: ActionType.Default));
+                                actionType: ActionType.Default,
+                                payload: {'uuid': 'user-profile-uuid'}));
                       });
-
-                      if (kIsWeb) {
-                        MyNotification.sendNotification('Welcome to GUCentral!',
-                            'We hope you enjoy our app!');
-                      }
                     },
                   ),
             Container(
@@ -454,10 +450,10 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   // this is 1 notification: {'title': 'SE Project Repository', 'course_code': 'CSEN603', 'date': '28/03/2023 09:24:28', 'message': "Dear All,\n\nPlease note that you should NOT set your team's GitHub repository as public otherwise it will be considered a cheating case because this means everyone can
 // see your submission.\n\nKind regards,\n\n------------------------------\nMs. Marina Nader Nabil Amin Eskander \nDepartment: Computer Science", 'sender': 'Ms. Marina Nader Nabil Amin Eskander'}
   // i wanto to make me a listview with all notifications from the notifications list. I want to show a notification's title, sender, and how much time ago was the notification sent (e.g. 20m ago) if the sent time is today, or the date if it was sent yesterday or before
-  final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
 
   Widget buildNotifications() {
+    final RefreshController _refreshController =
+        RefreshController(initialRefresh: false);
     return AnimationLimiter(
       key: ValueKey("$notifications"),
       child: SmartRefresher(
@@ -500,8 +496,15 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                                   MyApp.isDarkMode.value ? 0.2 : 0.1),
                         ),
                         child: GestureDetector(
-                          onTap: () => buildNotificationSheet(
-                              notifications[index], date),
+                          onTap: () {
+                            buildNotificationSheet(notifications[index], date);
+                            if (notifications[index]['read'] == false) {
+                              Requests.addReadNotification(date);
+                            }
+                            setState(() {
+                              notifications[index]['read'] = true;
+                            });
+                          },
                           child: ListTile(
                             contentPadding:
                                 const EdgeInsets.symmetric(horizontal: 10),
@@ -612,6 +615,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     setState(() {
       loadingNotifications = true;
     });
+    Requests.setNotificationsRead(notifications);
     var result = await Requests.getNotifications();
     var success = result['success'];
     if (success) {

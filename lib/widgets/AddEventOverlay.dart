@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gucentral/widgets/Requests.dart';
 import '../pages/add_quiz.dart';
-import 'MyColors.dart';
+import '../utils/SharedPrefs.dart';
 // import 'package:flutter_overlay_library/flutter_overlay_library.dart';
 
 class AddEventOverlay extends StatefulWidget {
@@ -73,7 +73,7 @@ class _AddEventOverlayState extends State<AddEventOverlay> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _showAddEventOverlay,
-      child: const Icon(
+      child: Icon(
         Icons.add_rounded,
         color: MyColors.primary,
         size: 35,

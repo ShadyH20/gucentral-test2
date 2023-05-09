@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../utils/SharedPrefs.dart';
 import '../../widgets/MyColors.dart';
 
 class SemesterRange extends StatefulWidget {

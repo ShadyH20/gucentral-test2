@@ -1,7 +1,6 @@
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
-import "package:gucentral/pages/schedule_page%20copy.dart";
 import "package:gucentral/pages/schedule_page.dart";
 import 'package:gucentral/pages/settings/update_password.dart';
 import "package:gucentral/pages/settings/semester_range.dart";
