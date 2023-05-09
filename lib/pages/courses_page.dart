@@ -652,11 +652,18 @@ class _CoursesPageState extends State<CoursesPage> {
                                           color: MyColors.secondary
                                               .withOpacity(0.5),
                                         ),
-                                        Column(
-                                          children: allGrades.map((item) {
-                                            return buildGradeCard(item);
-                                          }).toList(),
-                                        ),
+                                        allGrades[0].isNotEmpty
+                                            ? Column(
+                                                children: allGrades.map((item) {
+                                                  return buildGradeCard(item);
+                                                }).toList(),
+                                              )
+                                            : const Text(
+                                                'No grades have been posted!',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w200),
+                                              ),
                                         // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
                                         //   print("Building grade card $index");
                                         //   return buildGradeCard(allGrades[index]);
