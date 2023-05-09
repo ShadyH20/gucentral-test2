@@ -479,7 +479,7 @@ class _CoursesPageState extends State<CoursesPage> {
     // print("Building courses page");
 
     final upperTab = Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15.0),
+      margin: const EdgeInsets.symmetric(horizontal: 5.0),
       child: TabBar(
         labelPadding: EdgeInsets.zero,
         padding: EdgeInsets.zero,
