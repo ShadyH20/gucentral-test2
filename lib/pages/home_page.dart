@@ -13,6 +13,7 @@ import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/pages/schedule_page.dart";
 import "package:gucentral/pages/transcript_page.dart";
+import 'package:gucentral/widgets/ExpandableChromeDino.dart';
 import "package:gucentral/widgets/EventDataSource.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
 import "package:gucentral/widgets/MyColors.dart";
@@ -54,6 +55,7 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   static ValueNotifier<Size> cardSize = ValueNotifier(const Size(300, 200));
+  static double cardDy = 100;
 
   @override
   State<HomePage> createState() => HomePageState();
@@ -69,6 +71,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   }
 
   // Size cardSize = const Size(300, 200);
+  GlobalKey gameCardKey = GlobalKey();
 
   @override
   void initState() {
@@ -87,10 +90,10 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   bool loadingEverything = true;
   void initializeEverything() async {
     await Requests.initializeEverything();
-    setState(() {
-      loadingEverything = false;
-      prefs.setBool("loading", false);
-    });
+    // setState(() {
+    loadingEverything = false;
+    prefs.setBool("loading", false);
+    // });
     // Set the course map
     var courses = Requests.getCourses();
     courseMap = {for (var course in courses) course['code']: course['name']};
@@ -118,6 +121,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
   @override
   Widget build(BuildContext context) {
+    // super.build(context);
     // ColorScheme MyColors = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -188,234 +192,252 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             )
           ],
         ),
-        body: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 5),
-              //// HELLO STUDENT ////
-              Row(
-                children: [
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        "Hello, ${prefs.getString('first_name') ?? "Student"}!",
-                        style: TextStyle(
-                            color: MyColors.secondary,
-                            fontSize: 36,
-                            fontWeight: FontWeight.w800),
-                        textAlign: TextAlign.start,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-
-              //// THE 3 BOXES ////
-              Expanded(
-                flex: 4,
-                child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
+        body: Stack(
+          alignment: Alignment.center,
+          children: [
+            Positioned(
+              // top: 0,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 5),
+                    //// HELLO STUDENT ////
+                    Row(
                       children: [
-                        //// SUMMARY ////
-                        Expanded(
-                          flex: 3,
-                          child: MeasureSize(
-                            child: Container(
-                              // height: 250,
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  15.0,
-                                ),
-                                color: MyColors.primary,
-                              ),
-                              child: ChromeDino(),
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              "Hello, ${prefs.getString('first_name') ?? "Student"}!",
+                              style: TextStyle(
+                                  color: MyColors.secondary,
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w800),
+                              textAlign: TextAlign.start,
+                              maxLines: 1,
                             ),
-                            onChange: (size) {
-                              print('Size changed to $size');
-                              setState(() {
-                                HomePage.cardSize.value = size;
-                                // chromeDino = ChromeDino(size: HomePage.cardSize.value);
-                              });
-                            },
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+
+                    //// THE 3 BOXES ////
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
                             children: [
-                              //// THIS WEEK QUIZZES ////
+                              //// SUMMARY ////
                               Expanded(
-                                flex: 1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      15.0,
-                                    ),
-                                    color: MyColors.surface,
-                                  ),
-                                  child: DefaultTextStyle(
-                                    style: const TextStyle(
-                                        fontSize: 15, color: Colors.white),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 11.0),
-                                      child: FittedBox(
-                                        child: Column(
-                                            // mainAxisAlignment:
-                                            // MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              const Text(
-                                                "this week",
-                                              ),
-                                              FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  getNumberOfQuizzesThisWeek(),
-                                                  textScaleFactor: 5.5,
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text(
-                                                  "exam${nQuizzesThisWeek == 1 ? "" : "s"}")
-                                            ]),
+                                key: gameCardKey,
+                                flex: 3,
+                                child: MeasureSize(
+                                  child: Container(
+                                    // height: 250,
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                        15.0,
                                       ),
+                                      color: MyColors.primary,
                                     ),
+                                    // child: const Authorized(),
+                                    // ChromeDino(),
                                   ),
+                                  onChange: (size) {
+                                    setState(() {
+                                      HomePage.cardDy = getCardDisplacement();
+                                      HomePage.cardSize.value = size;
+                                      // chromeDino = ChromeDino(size: HomePage.cardSize.value);
+                                    });
+                                  },
                                 ),
                               ),
-                              const SizedBox(width: 20),
-                              //// CURRENT WEEK ////
+                              const SizedBox(height: 20),
                               Expanded(
                                 flex: 2,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      15.0,
-                                    ),
-                                    color: MyColors.tertiary,
-                                  ),
-                                  child: Column(children: [
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    //// THIS WEEK QUIZZES ////
                                     Expanded(
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: const [
-                                          Positioned(
-                                            top: 15,
-                                            child: Text(
-                                              "current week",
+                                      flex: 1,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            15.0,
+                                          ),
+                                          color: MyColors.surface,
+                                        ),
+                                        child: DefaultTextStyle(
+                                          style: const TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.white),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 11.0),
+                                            child: FittedBox(
+                                              child: Column(
+                                                  // mainAxisAlignment:
+                                                  // MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text(
+                                                      "this week",
+                                                    ),
+                                                    FittedBox(
+                                                      fit: BoxFit.scaleDown,
+                                                      child: Text(
+                                                        getNumberOfQuizzesThisWeek(),
+                                                        textScaleFactor: 5.5,
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                        "exam${nQuizzesThisWeek == 1 ? "" : "s"}")
+                                                  ]),
                                             ),
                                           ),
-                                          Positioned(
-                                            // right: 10,
-                                            child: Text("Week 5",
-                                                style: TextStyle(
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 43)),
-                                          )
-                                        ],
+                                        ),
                                       ),
-                                    )
-                                  ]),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                      ],
-                    )),
-              ),
-
-              //// NOTIFICATIONS ////
-              Expanded(
-                flex: 4,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      // height: 50,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text.rich(
-                                TextSpan(
-                                  text: "Today, ",
-                                  style: TextStyle(
-                                      color: MyColors.secondary,
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700),
-                                  children: [
-                                    TextSpan(
-                                      text: DateFormat("d MMMM")
-                                          .format(DateTime.now()),
-                                      style: const TextStyle(
-                                          // color: MyColors.background,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.normal),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    //// CURRENT WEEK ////
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                            15.0,
+                                          ),
+                                          color: MyColors.tertiary,
+                                        ),
+                                        child: Column(children: [
+                                          Expanded(
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: const [
+                                                Positioned(
+                                                  top: 15,
+                                                  child: Text(
+                                                    "current week",
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  // right: 10,
+                                                  child: Text("Week 5",
+                                                      style: TextStyle(
+                                                          decoration:
+                                                              TextDecoration
+                                                                  .underline,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 43)),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ]),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ),
-                            // show a loading indicator if the notifications are loading
-                            loadingNotifications
-                                ? const SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                          ],
-                        ),
-                      ),
+                              const SizedBox(height: 15),
+                            ],
+                          )),
                     ),
-                    const SizedBox(height: 5),
+
+                    //// NOTIFICATIONS ////
                     Expanded(
-                      flex: 10,
-                      child: Container(
-                        // height: 50,
-                        decoration: BoxDecoration(
-                          color: MyColors.background,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: MyColors.primary,
-                              offset: const Offset(0, -2),
+                      flex: 4,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            // height: 50,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text.rich(
+                                      TextSpan(
+                                        text: "Today, ",
+                                        style: TextStyle(
+                                            color: MyColors.secondary,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w700),
+                                        children: [
+                                          TextSpan(
+                                            text: DateFormat("d MMMM")
+                                                .format(DateTime.now()),
+                                            style: const TextStyle(
+                                                // color: MyColors.background,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // show a loading indicator if the notifications are loading
+                                  loadingNotifications
+                                      ? const SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                        padding: const EdgeInsets.only(top: 5),
-                        child: loadingNotifications && notifications.isEmpty
-                            ? buildNotificationsSkeleton()
-                            : buildNotifications(),
+                          ),
+                          const SizedBox(height: 5),
+                          Expanded(
+                            flex: 10,
+                            child: Container(
+                              // height: 50,
+                              decoration: BoxDecoration(
+                                color: MyColors.background,
+                                borderRadius: BorderRadius.circular(15),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: MyColors.primary,
+                                    offset: const Offset(0, -2),
+                                  ),
+                                ],
+                              ),
+                              padding: const EdgeInsets.only(top: 5),
+                              child:
+                                  loadingNotifications && notifications.isEmpty
+                                      ? buildNotificationsSkeleton()
+                                      : buildNotifications(),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+            const ExpandableChromeDino(),
+          ],
         ));
   }
 
@@ -452,16 +474,16 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   // i wanto to make me a listview with all notifications from the notifications list. I want to show a notification's title, sender, and how much time ago was the notification sent (e.g. 20m ago) if the sent time is today, or the date if it was sent yesterday or before
 
   Widget buildNotifications() {
-    final RefreshController _refreshController =
+    final RefreshController refreshController =
         RefreshController(initialRefresh: false);
     return AnimationLimiter(
       key: ValueKey("$notifications"),
       child: SmartRefresher(
-        controller: _refreshController,
+        controller: refreshController,
         enablePullDown: true,
         onRefresh: () async {
           await refreshNotifications();
-          _refreshController.refreshCompleted();
+          refreshController.refreshCompleted();
         },
         header: WaterDropHeader(
           waterDropColor: MyColors.primary,
@@ -905,6 +927,18 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                     child: const Skeleton(height: 55));
               },
             )));
+  }
+
+  getCardDisplacement() {
+    final RenderBox renderBox =
+        gameCardKey.currentContext?.findRenderObject() as RenderBox;
+
+    final Size size = renderBox.size; // or _widgetKey.currentContext?.size
+    print('Size: ${size.width}, ${size.height}');
+
+    final Offset offset = renderBox.localToGlobal(Offset.zero);
+    print('Offset: ${offset.dx}, ${offset.dy}');
+    return offset.dy;
   }
 }
 

@@ -484,19 +484,14 @@ class Requests {
     while (readIndex < readsSaved.length && notifIndex < notifications.length) {
       var date = DateFormat('dd/MM/yyyy HH:mm:ss')
           .parse(notifications[notifIndex]['date']);
-      print(
-          'Comparing these 2 dates: ${DateTime.parse(readsSaved[readIndex])} & $date');
       if ((DateTime.parse(readsSaved[readIndex])).isAtSameMomentAs(date)) {
-        print('SAME MOMENT');
         notifications[notifIndex]['read'] = true;
 
         notifIndex++;
         readIndex++;
       } else if ((DateTime.parse(readsSaved[readIndex])).isBefore(date)) {
-        print('IS BEFORE');
         notifIndex++;
       } else {
-        print('IS AFTER');
         readIndex++;
       }
     }

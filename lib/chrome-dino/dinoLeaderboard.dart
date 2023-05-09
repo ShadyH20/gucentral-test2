@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gucentral/chrome-dino/cactus.dart';
 import 'package:intl/intl.dart';
+import '../main.dart';
 import '../utils/SharedPrefs.dart';
 
 class DinoLeaderboard extends StatefulWidget {
@@ -14,156 +15,203 @@ class DinoLeaderboard extends StatefulWidget {
 
 class _DinoLeaderboardState extends State<DinoLeaderboard>
     with SingleTickerProviderStateMixin {
-  // The height of each card in the leaderboard
+  late final myStream = FirebaseFirestore.instance
+      .collection('col')
+      .orderBy('score', descending: true)
+      .snapshots();
+
   final double _cardHeight = 80.0;
 
-  // The number of cards in the leaderboard
-  final int _numCards = 50;
-
-  // The index of the current player's card
   int _currentPlayerIndex = -1;
 
-  // The animation controller for the current player's card
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
   );
 
-  // The scroll controller for the list view
-  final ScrollController _scrollController = ScrollController();
+  late ScrollController _scrollController;
 
-  // The position of the current player's card
-  // late double _cardPosition = _cardHeight * _currentPlayerIndex;
-
-  // The number of visible items in the list view
-  int visibleItemCount = 0;
+  bool firstTime = true;
 
   @override
   void initState() {
-    super.initState();
+    _scrollController = ScrollController();
     _scrollController.addListener(_onScroll);
+
+    super.initState();
+    // var db = FirebaseFirestore.instance;
+    // var batch = db.batch();
+
+    // var array = List.filled(
+    //     40, {"name": "Shady Hanii Emill", "score": 798, "major": "CSEN"});
+
+    // for (var doc in array) {
+    //   var docRef =
+    //       db.collection("col").doc(); //automatically generate unique id
+    //   batch.set(docRef, doc);
+    // }
+
+    // batch.commit();
   }
 
+  @override
   dispose() {
+    super.dispose();
     _controller.dispose();
     _scrollController.dispose();
-    super.dispose();
   }
 
+  bool showBottomCard = false;
+  bool showTopCard = false;
+
   void _onScroll() {
-    final scrollOffset = _scrollController.offset;
-    final viewportHeight = _scrollController.position.viewportDimension;
-    visibleItemCount = (viewportHeight / _cardHeight).ceil();
-    // final firstVisibleIndex = (scrollOffset / _cardHeight).floor();
+    if (_currentPlayerIndex == -1) return;
+
+    double offset = _scrollController.offset;
+
+    var willShowBottomCard = offset <
+        _cardHeight * _currentPlayerIndex - MediaQuery.of(context).size.height;
+    if (willShowBottomCard != showBottomCard) {
+      setState(() {
+        showBottomCard = willShowBottomCard;
+      });
+    }
+
+    var willShowTopCard =
+        offset > (_cardHeight * _currentPlayerIndex - 160 + 4);
+    if (willShowTopCard != showTopCard) {
+      setState(() {
+        showTopCard = willShowTopCard;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: MyColors.background,
+        backgroundColor: MyApp.isDarkMode.value
+            ? MyColors.background
+            : const Color.fromARGB(255, 230, 230, 230),
         appBar: AppBar(
+          elevation: 0,
+          backgroundColor: MyColors.background,
           title: const Text('Leaderboard'),
+          foregroundColor: MyColors.secondary,
         ),
-        body: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('chrome_dino')
-                .orderBy('score', descending: true)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final List<DocumentSnapshot> documents = snapshot.data!.docs;
+        body: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: StreamBuilder<QuerySnapshot>(
+              stream: myStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  // check if first time
+                  if (firstTime) {
+                    if (_scrollController.hasClients) {
+                      firstTime = false;
+                      _scrollController.animateTo(150,
+                          duration: const Duration(milliseconds: 100),
+                          curve: Curves.easeInOut);
+                    }
+                  }
 
-                findCurrentPlayer(documents);
+                  final List<DocumentSnapshot> documents = snapshot.data!.docs;
 
-                return Stack(
-                  children: [
-                    Expanded(
-                        child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: documents.length,
-                      itemBuilder: (context, index) {
-                        final doc = documents[index];
-                        final data = doc.data() as Map<String, dynamic>;
-                        if (index == _currentPlayerIndex) {
+                  findCurrentPlayer(documents);
+
+                  return Stack(
+                    children: [
+                      ListView.builder(
+                        controller: _scrollController,
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          final doc = documents[index];
+                          final data = doc.data() as Map<String, dynamic>;
+                          if (index == _currentPlayerIndex) {
+                            //// CURRENT PLAYER CARD ////
+                            return currentPlayerCard(data, index, false);
+                          }
+                          //// ALL PLAYER CARDS ////
                           return Card(
-                            elevation: 20,
+                            elevation: 0,
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: MyColors.secondary,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(7),
                             ),
-                            margin: const EdgeInsets.all(3),
-                            color: MyColors.surface,
-                            child: PlayerCard(data, index, MyColors.surface),
-                          ); // don't render the current player's card here
-                        }
-                        return Card(
-                          margin: const EdgeInsets.all(3),
-                          color: MyColors.secondary.withOpacity(0.1),
-                          child: PlayerCard(data, index, MyColors.secondary),
-                        );
-                      },
-                    )),
-                    // The Shady Hani Card only appears when the current player's card is not visible
-                    // only when i have scrolled past the current player's card
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 7, vertical: 3),
+                            color: MyApp.isDarkMode.value
+                                ? const Color.fromARGB(255, 28, 28, 30)
+                                : Colors.white,
+                            child: PlayerCard(data, index, MyColors.secondary),
+                          );
+                        },
+                      ),
 
-                    if (_scrollController.hasClients &&
-                        _currentPlayerIndex != -1 &&
-                        _scrollController.offset >
-                            _cardHeight * _currentPlayerIndex)
-                      Positioned(
-                        left: 0.0,
-                        right: 0.0,
-                        top: 0,
-                        height: _cardHeight,
-                        child: Card(
-                          margin: const EdgeInsets.all(1),
-                          color: MyColors.surface.withOpacity(0.7),
-                          child: Card(
-                            elevation: 20,
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: MyColors.secondary,
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            margin: const EdgeInsets.all(3),
-                            color: MyColors.surface,
-                            child: PlayerCard(
+                      //// PINNED TOP CURRENT PLAYER CARD ////
+                      if (showTopCard)
+                        Positioned(
+                          left: 0.0,
+                          right: 0.0,
+                          top: 0,
+                          height: _cardHeight - 10,
+                          child: Container(
+                            color: MyApp.isDarkMode.value
+                                ? Colors.black
+                                : const Color.fromARGB(255, 230, 230, 230),
+                            child: currentPlayerCard(
                                 documents[_currentPlayerIndex].data()
                                     as Map<String, dynamic>,
                                 _currentPlayerIndex,
-                                MyColors.surface),
+                                true,
+                                isTop: true),
                           ),
                         ),
-                      ),
 
-                    // if the shady hani card is yet to come
-                    // - height of appbar
-                    if (_scrollController.hasClients &&
-                        _currentPlayerIndex != -1 &&
-                        _scrollController.offset <
-                            _cardHeight * _currentPlayerIndex -
-                                MediaQuery.of(context).size.height +
-                                2 * _cardHeight)
-                      Positioned(
-                        left: 0.0,
-                        right: 0.0,
-                        bottom: 0,
-                        height: _cardHeight,
-                        child: const CurrentPlayerCard(),
-                      ),
-                  ],
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }));
+                      //// PINNED BOTTOM CURRENT PLAYER CARD ////
+                      if (showBottomCard)
+                        Positioned(
+                          left: 0.0,
+                          right: 0.0,
+                          bottom: 0,
+                          height: _cardHeight - 10,
+                          child: Container(
+                            color: MyApp.isDarkMode.value
+                                ? Colors.black
+                                : const Color.fromARGB(255, 230, 230, 230),
+                            child: currentPlayerCard(
+                                documents[_currentPlayerIndex].data()
+                                    as Map<String, dynamic>,
+                                _currentPlayerIndex,
+                                true,
+                                isTop: false),
+                          ),
+                        ),
+                    ],
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+        ));
+  }
+
+  Card currentPlayerCard(Map<String, dynamic> data, int index, bool pinned,
+      {bool isTop = false}) {
+    return Card(
+      elevation: pinned ? 8 : 20,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(
+          color: MyApp.isDarkMode.value ? MyColors.secondary : MyColors.primary,
+          width: 2.5,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: EdgeInsets.only(
+          left: 7, right: 7, bottom: pinned ? 0 : 5, top: pinned ? 0 : 5),
+      color: MyApp.isDarkMode.value ? MyColors.surface : Colors.white,
+      child: Center(child: PlayerCard(data, index, MyColors.surface)),
+    );
   }
 
   void findCurrentPlayer(List<DocumentSnapshot<Object?>> documents) {
@@ -192,30 +240,32 @@ class PlayerCard extends StatelessWidget {
         title: AutoSizeText(
           data['name'].split(' ').sublist(0, 3).join(' '),
           maxLines: 1,
-          style: const TextStyle(fontSize: 20),
+          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
         ),
         subtitle: Text(data['major'],
             style:
-                TextStyle(fontSize: 15, height: 1.2, color: MyColors.tertiary)),
-        leading: Container(
-          alignment: Alignment.center,
-          width: 50,
-          height: 40,
-          decoration: BoxDecoration(
-            color: background.withOpacity(0.04),
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              '${index + 1}',
-              style: const TextStyle(
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
+                TextStyle(fontSize: 14, height: 1.2, color: MyColors.tertiary)),
+        leading: index < 3
+            ? top3Icon(index)
+            : Container(
+                alignment: Alignment.center,
+                width: 50,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: background.withOpacity(0.06),
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${index + 1}',
+                    style: const TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
         trailing: Container(
           width: 70,
           alignment: Alignment.centerRight,
@@ -246,6 +296,15 @@ class PlayerCard extends StatelessWidget {
           ),
         ));
   }
+
+  top3Icon(int index) {
+    return Stack(alignment: Alignment.center, children: [
+      Text(
+        ['🥇', '🥈', '🥉'][index],
+        style: const TextStyle(fontSize: 39),
+      ),
+    ]);
+  }
 }
 
 class CurrentPlayerCard extends StatelessWidget {
@@ -255,8 +314,8 @@ class CurrentPlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(0),
+    return const Card(
+      margin: EdgeInsets.all(0),
       color: Colors.black,
       child: ListTile(
         title: Text('Shady Hani'),
