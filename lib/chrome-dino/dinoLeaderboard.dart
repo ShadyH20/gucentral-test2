@@ -257,7 +257,7 @@ class PlayerCard extends StatelessWidget {
                 height: 40,
                 decoration: BoxDecoration(
                   color: isCurr && MyApp.isDarkMode.value
-                      ? Color.fromARGB(255, 48, 50, 61)
+                      ? const Color.fromARGB(255, 48, 50, 61)
                       : background.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(7),
                 ),
