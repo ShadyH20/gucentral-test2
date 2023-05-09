@@ -2,10 +2,12 @@ import "dart:ffi";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/utils/SharedPrefs.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
+import "package:pull_to_refresh/pull_to_refresh.dart";
 // import "package:gucentral/widgets/MyColors.dart";
 import "../utils/weight.dart";
 import "../utils/weight_data.dart";
@@ -31,6 +33,7 @@ class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
 
   List<dynamic> allGrades = [];
+  List<dynamic> allMidterms = [];
   double midterm = -1;
   BuildSheet? weightSheet;
   BuildSheet? changeNameSheet;
@@ -95,7 +98,6 @@ class _CoursesPageState extends State<CoursesPage> {
           onChanged: (course) {
             // This is called when the user selects an item.
             setState(() {
-              print(course);
               dropdownValue = course;
             });
             courseChosen(context, course);
@@ -131,20 +133,15 @@ class _CoursesPageState extends State<CoursesPage> {
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
 
-  Future<void> courseChosen(context, course) async {
-    Provider.of<WeightData>(context, listen: false)
-        .changeAllWeights(course['code']);
+  Future<void> requestCourseData() async {
+    String courseCode = dropdownValue['code'];
 
     setState(() {
       isCourseLoading = true;
-      allGrades = Requests.getGradesSaved(course['code']);
-      String temp =
-          Requests.getCourseMidtermSaved(course['code']).replaceAll('"', '');
-
-      midterm = temp != '' ? double.parse(temp) : -1;
     });
 
-    final response = await Requests.getGrades(course['code']);
+    print('waaaaitinggg for coursesssss');
+    final response = await Requests.getGrades(courseCode);
 
     setState(() {
       isCourseLoading = false;
@@ -161,6 +158,21 @@ class _CoursesPageState extends State<CoursesPage> {
         midterm =
             response['midterm'] != '' ? double.parse(response['midterm']) : -1;
       }
+    });
+  }
+
+  Future<void> courseChosen(context, course) async {
+    String courseCode = dropdownValue['code'];
+
+    Provider.of<WeightData>(context, listen: false)
+        .changeAllWeights(courseCode);
+
+    setState(() {
+      allGrades = Requests.getGradesSaved(courseCode);
+      String temp =
+          Requests.getCourseMidtermSaved(courseCode).replaceAll('"', '');
+
+      midterm = temp != '' ? double.parse(temp) : -1;
     });
 
     // var resp = await Requests.getAttendance(course['code']);
@@ -181,6 +193,26 @@ class _CoursesPageState extends State<CoursesPage> {
     //   }
     //   gradesList = resp['grades'];
     // });
+  }
+
+  Future<void> midtermsChosen() async {
+    setState(() {
+      isCourseLoading = true;
+    });
+
+    final response = await Requests.getMidterms();
+
+    setState(() {
+      isCourseLoading = false;
+      if (!response['success']) {
+        showSnackBar(
+          context,
+          response['message'] ?? 'Something went wrong',
+        );
+        return;
+      }
+      allMidterms = response['all_midterms'];
+    });
   }
 
   // var dropdownCourseValue;
@@ -209,6 +241,75 @@ class _CoursesPageState extends State<CoursesPage> {
       );
     }
     return AssignmentCard(title: item[0]['title'], elements: item);
+  }
+
+  buildMidtermCards() {
+    final RefreshController refreshControllerMidterm = RefreshController();
+    return AnimationLimiter(
+      key: ValueKey("$allMidterms"),
+      child: SmartRefresher(
+        controller: refreshControllerMidterm,
+        enablePullDown: true,
+        onRefresh: () async {
+          await midtermsChosen();
+          refreshControllerMidterm.refreshCompleted();
+        },
+        header: WaterDropHeader(
+          waterDropColor: MyColors.primary,
+          complete: Icon(
+            Icons.check,
+            color: MyColors.primary,
+          ),
+        ),
+        child: ListView.builder(
+          itemCount: allMidterms.length,
+          itemBuilder: (context, index) {
+            var item = allMidterms[index];
+            return AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 200),
+              child: SlideAnimation(
+                verticalOffset: 50.0,
+                child: FadeInAnimation(
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 13),
+                    child: Row(
+                      children: [
+                        Container(
+                          constraints: const BoxConstraints(maxWidth: 275),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              courseMap[item['course_code']]!,
+                              style: kSubTitleStyle.copyWith(
+                                  fontSize: 18, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Container(
+                            color: MyColors.secondary.withOpacity(0.3),
+                            height: 1,
+                            // width: 30,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          '${double.parse(item['grade']).toStringAsFixed(2)} %',
+                          style: kSubTitleStyle.copyWith(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   buildNameSheet(BuildContext context) {
@@ -305,8 +406,7 @@ class _CoursesPageState extends State<CoursesPage> {
     }
   }
 
-  Radius topLeftBorder = Radius.circular(15);
-  Radius topRightBorder = Radius.circular(15);
+  int tabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -319,14 +419,14 @@ class _CoursesPageState extends State<CoursesPage> {
         padding: EdgeInsets.zero,
         indicatorPadding: EdgeInsets.zero,
         indicatorColor: MyColors.primary,
-        splashBorderRadius:
-            BorderRadius.only(topLeft: topLeftBorder, topRight: topRightBorder),
+        // splashBorderRadius:
+        //     BorderRadius.only(topLeft: topLeftBorder, topRight: topRightBorder),
         onTap: (index) {
+          if (index == 1) {
+            allMidterms = Requests.getMidtermsSaved();
+          }
           setState(() {
-            topLeftBorder =
-                index == 1 ? Radius.circular(15) : Radius.circular(0);
-            topRightBorder =
-                index == 0 ? Radius.circular(0) : Radius.circular(15);
+            tabIndex = index;
           });
         },
         tabs: const <Tab>[
@@ -366,7 +466,20 @@ class _CoursesPageState extends State<CoursesPage> {
                       child: CircularProgressIndicator(),
                     ),
                   )
-                : Container(width: 25),
+                : GestureDetector(
+                    onTap: () {
+                      if (tabIndex == 0) {
+                        // courseChosen(context, dropdownValue);
+                        requestCourseData();
+                      } else {
+                        midtermsChosen();
+                      }
+                    },
+                    child: const Icon(
+                      Icons.refresh,
+                      size: 29,
+                    ),
+                  ),
             Container(
               width: 25,
             ),
@@ -559,7 +672,10 @@ class _CoursesPageState extends State<CoursesPage> {
                   ),
                 ),
               ),
-              Text('sup'),
+              Container(
+                padding: const EdgeInsets.only(top: 40),
+                child: Expanded(child: buildMidtermCards()),
+              ),
             ],
           ),
         ),

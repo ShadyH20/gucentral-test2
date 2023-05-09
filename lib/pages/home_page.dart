@@ -452,16 +452,16 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   // i wanto to make me a listview with all notifications from the notifications list. I want to show a notification's title, sender, and how much time ago was the notification sent (e.g. 20m ago) if the sent time is today, or the date if it was sent yesterday or before
 
   Widget buildNotifications() {
-    final RefreshController _refreshController =
+    final RefreshController refreshController =
         RefreshController(initialRefresh: false);
     return AnimationLimiter(
       key: ValueKey("$notifications"),
       child: SmartRefresher(
-        controller: _refreshController,
+        controller: refreshController,
         enablePullDown: true,
         onRefresh: () async {
           await refreshNotifications();
-          _refreshController.refreshCompleted();
+          refreshController.refreshCompleted();
         },
         header: WaterDropHeader(
           waterDropColor: MyColors.primary,
