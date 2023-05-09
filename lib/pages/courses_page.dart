@@ -43,6 +43,7 @@ class _CoursesPageState extends State<CoursesPage> {
   void initState() {
     super.initState();
     courses = Requests.getCourses();
+    allMidterms = Requests.getMidtermsSaved();
   }
 
   dynamic dropdownValue;
@@ -423,9 +424,6 @@ class _CoursesPageState extends State<CoursesPage> {
         // splashBorderRadius:
         //     BorderRadius.only(topLeft: topLeftBorder, topRight: topRightBorder),
         onTap: (index) {
-          if (index == 1) {
-            allMidterms = Requests.getMidtermsSaved();
-          }
           setState(() {
             tabIndex = index;
           });
