@@ -139,7 +139,7 @@ class _CoursesPageState extends State<CoursesPage> {
       isCourseLoading = true;
       allGrades = Requests.getGradesSaved(course['code']);
       String temp =
-          Requests.getMidtermSaved(course['code']).replaceAll('"', '');
+          Requests.getCourseMidtermSaved(course['code']).replaceAll('"', '');
 
       midterm = temp != '' ? double.parse(temp) : -1;
     });
