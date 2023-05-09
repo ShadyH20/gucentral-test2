@@ -474,9 +474,10 @@ class _CoursesPageState extends State<CoursesPage> {
                         midtermsChosen();
                       }
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.refresh,
                       size: 29,
+                      color: MyColors.secondary,
                     ),
                   ),
             Container(
@@ -679,7 +680,7 @@ class _CoursesPageState extends State<CoursesPage> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.only(top: 40),
+                padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
                 child: Expanded(child: buildMidtermCards()),
               ),
             ],
