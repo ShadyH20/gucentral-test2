@@ -267,7 +267,8 @@ class _CoursesPageState extends State<CoursesPage> {
             var item = allMidterms[index];
             return AnimationConfiguration.staggeredList(
               position: index,
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 600),
+              delay: const Duration(milliseconds: 50),
               child: SlideAnimation(
                 verticalOffset: 50.0,
                 child: FadeInAnimation(
