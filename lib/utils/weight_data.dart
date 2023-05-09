@@ -27,15 +27,10 @@ class WeightData extends ChangeNotifier {
     if (weights == null) {
       _allWeights = [];
     } else {
-      print('JSONNNNN: ${jsonDecode(weights)}');
       _allWeights = jsonDecode(weights).map<Weight>((item) {
         return Weight.fromJson(item);
       }).toList();
     }
-
-    print('COURSE CODE: $courseCode');
-    print('WEIGHTS: $weights');
-    print('ALL-WEIGHTS: $_allWeights');
     notifyListeners();
   }
 

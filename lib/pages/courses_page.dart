@@ -2,10 +2,12 @@ import "dart:ffi";
 
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "package:flutter_staggered_animations/flutter_staggered_animations.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/utils/SharedPrefs.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
+import "package:pull_to_refresh/pull_to_refresh.dart";
 // import "package:gucentral/widgets/MyColors.dart";
 import "../utils/weight.dart";
 import "../utils/weight_data.dart";
@@ -29,8 +31,9 @@ class CoursesPage extends StatefulWidget {
 
 class _CoursesPageState extends State<CoursesPage> {
   List<dynamic> courses = [];
-
+  String newCourseName = '';
   List<dynamic> allGrades = [];
+  List<dynamic> allMidterms = [];
   double midterm = -1;
   BuildSheet? weightSheet;
   BuildSheet? changeNameSheet;
@@ -40,6 +43,7 @@ class _CoursesPageState extends State<CoursesPage> {
   void initState() {
     super.initState();
     courses = Requests.getCourses();
+    allMidterms = Requests.getMidtermsSaved();
   }
 
   dynamic dropdownValue;
@@ -95,7 +99,6 @@ class _CoursesPageState extends State<CoursesPage> {
           onChanged: (course) {
             // This is called when the user selects an item.
             setState(() {
-              print(course);
               dropdownValue = course;
             });
             courseChosen(context, course);
@@ -131,20 +134,15 @@ class _CoursesPageState extends State<CoursesPage> {
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
 
-  Future<void> courseChosen(context, course) async {
-    Provider.of<WeightData>(context, listen: false)
-        .changeAllWeights(course['code']);
+  Future<void> requestCourseData() async {
+    String courseCode = dropdownValue['code'];
 
     setState(() {
       isCourseLoading = true;
-      allGrades = Requests.getGradesSaved(course['code']);
-      String temp =
-          Requests.getMidtermSaved(course['code']).replaceAll('"', '');
-
-      midterm = temp != '' ? double.parse(temp) : -1;
     });
 
-    final response = await Requests.getGrades(course['code']);
+    print('waaaaitinggg for coursesssss');
+    final response = await Requests.getGrades(courseCode);
 
     setState(() {
       isCourseLoading = false;
@@ -161,6 +159,25 @@ class _CoursesPageState extends State<CoursesPage> {
         midterm =
             response['midterm'] != '' ? double.parse(response['midterm']) : -1;
       }
+    });
+  }
+
+  Future<void> courseChosen(context, course) async {
+    String courseCode = dropdownValue['code'];
+
+    Provider.of<WeightData>(context, listen: false)
+        .changeAllWeights(courseCode);
+
+    setState(() {
+      newCourseName = dropdownValue['name'];
+      allGrades = Requests.getGradesSaved(courseCode);
+      if (allGrades.isEmpty) requestCourseData();
+      print('AAAALLLLLL GRAAADESSSS: $allGrades');
+      // print('WWEEEEIGHTTSSSSS: ${}');
+      String temp =
+          Requests.getCourseMidtermSaved(courseCode).replaceAll('"', '');
+
+      midterm = temp != '' ? double.parse(temp) : -1;
     });
 
     // var resp = await Requests.getAttendance(course['code']);
@@ -181,6 +198,26 @@ class _CoursesPageState extends State<CoursesPage> {
     //   }
     //   gradesList = resp['grades'];
     // });
+  }
+
+  Future<void> midtermsChosen() async {
+    setState(() {
+      isCourseLoading = true;
+    });
+
+    final response = await Requests.getMidterms();
+
+    setState(() {
+      isCourseLoading = false;
+      if (!response['success']) {
+        showSnackBar(
+          context,
+          response['message'] ?? 'Something went wrong',
+        );
+        return;
+      }
+      allMidterms = response['all_midterms'];
+    });
   }
 
   // var dropdownCourseValue;
@@ -211,24 +248,154 @@ class _CoursesPageState extends State<CoursesPage> {
     return AssignmentCard(title: item[0]['title'], elements: item);
   }
 
+  buildMidtermCards() {
+    final RefreshController refreshControllerMidterm = RefreshController();
+    return AnimationLimiter(
+      key: ValueKey("$allMidterms"),
+      child: SmartRefresher(
+        controller: refreshControllerMidterm,
+        enablePullDown: true,
+        onRefresh: () async {
+          await midtermsChosen();
+          refreshControllerMidterm.refreshCompleted();
+        },
+        header: WaterDropHeader(
+          waterDropColor: MyColors.primary,
+          complete: Icon(
+            Icons.check,
+            color: MyColors.primary,
+          ),
+        ),
+        child: allMidterms.isNotEmpty
+            ? ListView.builder(
+                itemCount: allMidterms.length,
+                itemBuilder: (context, index) {
+                  var item = allMidterms[index];
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 600),
+                    delay: const Duration(milliseconds: 50),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 13),
+                          child: Row(
+                            children: [
+                              Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 275),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    courseMap[item['course_code']]!,
+                                    style: kSubTitleStyle.copyWith(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Container(
+                                  color: MyColors.secondary.withOpacity(0.3),
+                                  height: 1,
+                                  // width: 30,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                '${double.parse(item['grade']).toStringAsFixed(2)} %',
+                                style: kSubTitleStyle.copyWith(
+                                    fontSize: 18, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              )
+            : Center(child: const Text('Nothing to see here!')),
+      ),
+    );
+  }
+
   buildNameSheet(BuildContext context) {
     changeNameSheet = BuildSheet(
         context: context,
-        initialSnap: 0.3,
-        snappings: [0.3],
+        initialSnap: 0.5,
+        snappings: [0.5],
         builder: (context, state) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                Text(
-                  'Change Course Name',
-                  style: kMainTitleStyle.copyWith(
-                    fontSize: 28,
+          return Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              padding: const EdgeInsets.all(0),
+              // height: 200,
+              width: 400,
+              child: ListView(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(0),
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Change Course Name',
+                            style: kMainTitleStyle.copyWith(
+                              fontSize: 28,
+                              color: MyColors.primary,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        Material(
+                          color: Colors.transparent,
+                          child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                newCourseName = value;
+                              });
+                            },
+                            initialValue: dropdownValue['name'],
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: MyApp.isDarkMode.value
+                                  ? const Color.fromARGB(255, 20, 21, 24)
+                                  : Color.fromARGB(58, 173, 173, 173),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(7.5),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          width: 115,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: MyColors.primary,
+                              foregroundColor: Colors.white,
+                            ),
+                            onPressed: () {
+                              courseMap[dropdownValue['code']] = newCourseName;
+                            },
+                            child: const Text(
+                              'Change',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  textAlign: TextAlign.left,
-                ),
-              ],
+                ],
+              ),
             ),
           );
         });
@@ -305,8 +472,7 @@ class _CoursesPageState extends State<CoursesPage> {
     }
   }
 
-  Radius topLeftBorder = Radius.circular(15);
-  Radius topRightBorder = Radius.circular(15);
+  int tabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -319,14 +485,11 @@ class _CoursesPageState extends State<CoursesPage> {
         padding: EdgeInsets.zero,
         indicatorPadding: EdgeInsets.zero,
         indicatorColor: MyColors.primary,
-        splashBorderRadius:
-            BorderRadius.only(topLeft: topLeftBorder, topRight: topRightBorder),
+        // splashBorderRadius:
+        //     BorderRadius.only(topLeft: topLeftBorder, topRight: topRightBorder),
         onTap: (index) {
           setState(() {
-            topLeftBorder =
-                index == 1 ? Radius.circular(15) : Radius.circular(0);
-            topRightBorder =
-                index == 0 ? Radius.circular(0) : Radius.circular(15);
+            tabIndex = index;
           });
         },
         tabs: const <Tab>[
@@ -366,7 +529,21 @@ class _CoursesPageState extends State<CoursesPage> {
                       child: CircularProgressIndicator(),
                     ),
                   )
-                : Container(width: 25),
+                : GestureDetector(
+                    onTap: () {
+                      if (tabIndex == 0) {
+                        // courseChosen(context, dropdownValue);
+                        requestCourseData();
+                      } else {
+                        midtermsChosen();
+                      }
+                    },
+                    child: Icon(
+                      Icons.refresh,
+                      size: 29,
+                      color: MyColors.secondary,
+                    ),
+                  ),
             Container(
               width: 25,
             ),
@@ -415,6 +592,7 @@ class _CoursesPageState extends State<CoursesPage> {
                                               alignment: Alignment.center,
                                               icon: SvgPicture.asset(
                                                 "assets/images/edit.svg",
+                                                color: MyColors.secondary,
                                               ),
                                               onPressed: () {
                                                 buildNameSheet(context);
@@ -459,6 +637,7 @@ class _CoursesPageState extends State<CoursesPage> {
                                                   alignment: Alignment.center,
                                                   icon: SvgPicture.asset(
                                                     "assets/images/edit.svg",
+                                                    color: MyColors.secondary,
                                                     // fit: BoxFit.scaleDown,
                                                   ),
                                                   onPressed: () {
@@ -487,10 +666,13 @@ class _CoursesPageState extends State<CoursesPage> {
                                                   Provider.of<WeightData>(
                                                           context)
                                                       .allWeights)
-                                          : const Text(
-                                              'You haven\'t added this course\'s weights yet!',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w200),
+                                          : const Center(
+                                              child: Text(
+                                                'You haven\'t added this course\'s weights yet!',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w200),
+                                              ),
                                             ),
                                     ],
                                   ),
@@ -538,11 +720,29 @@ class _CoursesPageState extends State<CoursesPage> {
                                           color: MyColors.secondary
                                               .withOpacity(0.5),
                                         ),
-                                        Column(
-                                          children: allGrades.map((item) {
-                                            return buildGradeCard(item);
-                                          }).toList(),
-                                        ),
+                                        allGrades.isNotEmpty
+                                            ? allGrades[0].isNotEmpty
+                                                ? Column(
+                                                    children:
+                                                        allGrades.map((item) {
+                                                      return buildGradeCard(
+                                                          item);
+                                                    }).toList(),
+                                                  )
+                                                : const Text(
+                                                    'No grades have been posted!',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w200),
+                                                  )
+                                            : const Center(
+                                                child: Text(
+                                                  'Nothing to see here!',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w200),
+                                                ),
+                                              ),
                                         // ListView.builder(itemCount: allGrades.length ,itemBuilder: (context, index) {
                                         //   print("Building grade card $index");
                                         //   return buildGradeCard(allGrades[index]);
@@ -559,7 +759,10 @@ class _CoursesPageState extends State<CoursesPage> {
                   ),
                 ),
               ),
-              Text('sup'),
+              Container(
+                padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
+                child: Expanded(child: buildMidtermCards()),
+              ),
             ],
           ),
         ),

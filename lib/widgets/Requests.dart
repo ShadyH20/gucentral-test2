@@ -28,6 +28,7 @@ class Requests {
   static Uri examSchedURL = Uri.parse('$backendURL/examSched');
   static Uri attendanceURL = Uri.parse('$backendURL/attendance');
   static Uri gradesURL = Uri.parse('$backendURL/grades');
+  static Uri midtermsURL = Uri.parse('$backendURL/midterms');
   static Uri notificationsURL = Uri.parse('$backendURL/notifications');
 
   // static SharedPreferences prefs = getPrefs();
@@ -566,11 +567,43 @@ class Requests {
     return [];
   }
 
-  static getMidtermSaved(String course) {
+  static getCourseMidtermSaved(String course) {
     if (prefs.containsKey('${SharedPrefs.midterm}$course')) {
       return prefs.getString('${SharedPrefs.midterm}$course');
     }
     return '';
+  }
+
+  static getMidterms() async {
+    var out = getCreds();
+    var body = jsonEncode(out);
+
+    try {
+      var response = await http.post(midtermsURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      var midterms = jsonDecode(response.body);
+      if (midterms['success']) {
+        prefs.setString(
+            SharedPrefs.midterms, jsonEncode(midterms['all_midterms']));
+      }
+      return midterms;
+    } on Exception catch (e) {
+      print("Midterms exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
+  static getMidtermsSaved() {
+    if (prefs.containsKey(SharedPrefs.midterms)) {
+      return jsonDecode(prefs.getString(SharedPrefs.midterms)!);
+    }
+    return [];
   }
 
   ////////////////////////////////

@@ -24,16 +24,6 @@ class _AttendancePageState extends State<AttendancePage> {
   bool loading = false;
   List courses = [];
 
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
-
-  void _onRefresh() async {
-    // monitor network fetch
-    await Future.delayed(Duration(milliseconds: 1000));
-    // if failed,use refreshFailed()
-    _refreshController.refreshCompleted();
-  }
-
 // ignore: non_constant_identifier_names
   late ColorScheme MyColors;
   @override
@@ -248,14 +238,16 @@ class _AttendancePageState extends State<AttendancePage> {
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   buildAttendance() {
+    final RefreshController refreshController =
+        RefreshController(initialRefresh: false);
     return AnimationLimiter(
       key: ValueKey("$attendanceList"),
       child: SmartRefresher(
-        controller: _refreshController,
+        controller: refreshController,
         enablePullDown: true,
         onRefresh: () async {
           await courseChosen(context, dropdownCourseValue);
-          _refreshController.refreshCompleted();
+          refreshController.refreshCompleted();
         },
         header: WaterDropHeader(
           waterDropColor: MyColors.primary,

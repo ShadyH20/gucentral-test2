@@ -27,6 +27,7 @@ class SharedPrefs {
   static const examSched = 'exam_sched';
   static const attendance = 'att:';
   static const grades = 'grades:';
+  static const midterms = 'midterms';
   static const weights = 'weights:';
   static const notifications = 'notifications';
   static const notifRead = 'notifRead';
