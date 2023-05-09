@@ -515,8 +515,6 @@ class Requests {
   static addReadNotification(date) {
     List<dynamic> readsSaved = getReadNotifications();
 
-    print("adding read notification: $date");
-    print("reads saved: $readsSaved");
     readsSaved.add(date.toIso8601String());
 
     readsSaved = [
@@ -526,7 +524,7 @@ class Requests {
     readsSaved.sort((a, b) {
       return b.compareTo(a);
     });
-    print("reads saved after sort: $readsSaved");
+
     // convert this aaray of strings to an array of datetimes
     prefs.setString(SharedPrefs.notifRead, jsonEncode(readsSaved));
   }

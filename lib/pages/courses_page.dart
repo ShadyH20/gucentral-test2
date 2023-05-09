@@ -7,6 +7,7 @@ import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/utils/SharedPrefs.dart";
 import "package:gucentral/utils/build_sheet.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
+import "package:intl/intl.dart";
 import "package:pull_to_refresh/pull_to_refresh.dart";
 // import "package:gucentral/widgets/MyColors.dart";
 import "../utils/weight.dart";
@@ -29,7 +30,8 @@ class CoursesPage extends StatefulWidget {
   State<CoursesPage> createState() => _CoursesPageState();
 }
 
-class _CoursesPageState extends State<CoursesPage> {
+class _CoursesPageState extends State<CoursesPage>
+    with TickerProviderStateMixin {
   List<dynamic> courses = [];
   String newCourseName = '';
   List<dynamic> allGrades = [];
@@ -44,6 +46,12 @@ class _CoursesPageState extends State<CoursesPage> {
     super.initState();
     courses = Requests.getCourses();
     allMidterms = Requests.getMidtermsSaved();
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
   }
 
   dynamic dropdownValue;
@@ -135,6 +143,9 @@ class _CoursesPageState extends State<CoursesPage> {
   bool isCourseLoaded = false;
 
   Future<void> requestCourseData() async {
+    // Importanttt
+    if (dropdownValue == null) return;
+
     String courseCode = dropdownValue['code'];
 
     setState(() {
@@ -248,8 +259,8 @@ class _CoursesPageState extends State<CoursesPage> {
     return AssignmentCard(title: item[0]['title'], elements: item);
   }
 
+  late final RefreshController refreshControllerMidterm = RefreshController();
   buildMidtermCards() {
-    final RefreshController refreshControllerMidterm = RefreshController();
     return AnimationLimiter(
       key: ValueKey("$allMidterms"),
       child: SmartRefresher(
@@ -283,8 +294,11 @@ class _CoursesPageState extends State<CoursesPage> {
                           child: Row(
                             children: [
                               Container(
-                                constraints:
-                                    const BoxConstraints(maxWidth: 275),
+                                constraints: BoxConstraints(
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width -
+                                            50 -
+                                            110),
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
@@ -305,7 +319,8 @@ class _CoursesPageState extends State<CoursesPage> {
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                '${double.parse(item['grade']).toStringAsFixed(2)} %',
+                                // '${double.parse(item['grade']).toStringAsFixed(2)} %',
+                                '${NumberFormat("###.0#", "en_US").format(double.parse(item['grade']))} %',
                                 style: kSubTitleStyle.copyWith(
                                     fontSize: 18, fontWeight: FontWeight.w500),
                               ),
@@ -472,6 +487,7 @@ class _CoursesPageState extends State<CoursesPage> {
     }
   }
 
+  late TabController tabController = TabController(length: 2, vsync: this);
   int tabIndex = 0;
 
   @override
@@ -481,17 +497,19 @@ class _CoursesPageState extends State<CoursesPage> {
     final upperTab = Container(
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       child: TabBar(
+        controller: tabController,
         labelPadding: EdgeInsets.zero,
         padding: EdgeInsets.zero,
         indicatorPadding: EdgeInsets.zero,
         indicatorColor: MyColors.primary,
         // splashBorderRadius:
         //     BorderRadius.only(topLeft: topLeftBorder, topRight: topRightBorder),
-        onTap: (index) {
-          setState(() {
-            tabIndex = index;
-          });
-        },
+
+        // onTap: (index) {
+        //   setState(() {
+        //     tabIndex = index;
+        //   });
+        // },
         tabs: const <Tab>[
           Tab(
             child: Text(
@@ -531,7 +549,7 @@ class _CoursesPageState extends State<CoursesPage> {
                   )
                 : GestureDetector(
                     onTap: () {
-                      if (tabIndex == 0) {
+                      if (tabController.index == 0) {
                         // courseChosen(context, dropdownValue);
                         requestCourseData();
                       } else {
@@ -552,6 +570,7 @@ class _CoursesPageState extends State<CoursesPage> {
         body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 25),
           child: TabBarView(
+            controller: tabController,
             children: [
               AnnotatedRegion<SystemUiOverlayStyle>(
                 value: SystemUiOverlayStyle.dark,
@@ -761,7 +780,7 @@ class _CoursesPageState extends State<CoursesPage> {
               ),
               Container(
                 padding: const EdgeInsets.only(top: 40, left: 10, right: 10),
-                child: Expanded(child: buildMidtermCards()),
+                child: buildMidtermCards(),
               ),
             ],
           ),

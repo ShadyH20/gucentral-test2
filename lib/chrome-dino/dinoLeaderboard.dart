@@ -108,7 +108,7 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
                   if (firstTime) {
                     if (_scrollController.hasClients) {
                       firstTime = false;
-                      _scrollController.animateTo(150,
+                      _scrollController.animateTo(0,
                           duration: const Duration(milliseconds: 100),
                           curve: Curves.easeInOut);
                     }

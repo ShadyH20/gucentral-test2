@@ -473,11 +473,11 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 // see your submission.\n\nKind regards,\n\n------------------------------\nMs. Marina Nader Nabil Amin Eskander \nDepartment: Computer Science", 'sender': 'Ms. Marina Nader Nabil Amin Eskander'}
   // i wanto to make me a listview with all notifications from the notifications list. I want to show a notification's title, sender, and how much time ago was the notification sent (e.g. 20m ago) if the sent time is today, or the date if it was sent yesterday or before
 
+  late final RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   Widget buildNotifications() {
-    final RefreshController refreshController =
-        RefreshController(initialRefresh: false);
     return AnimationLimiter(
-      key: ValueKey("$notifications"),
+      key: ValueKey(getNotifsValueKey()),
       child: SmartRefresher(
         controller: refreshController,
         enablePullDown: true,
@@ -629,6 +629,14 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
             }),
       ),
     );
+  }
+
+  getNotifsValueKey() {
+    var key = "";
+    for (var notif in notifications) {
+      key += notif['date'];
+    }
+    return key;
   }
 
   List<dynamic> notifications = Requests.getNotificationsSaved();
