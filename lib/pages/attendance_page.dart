@@ -466,17 +466,24 @@ class _AttendancePageState extends State<AttendancePage> {
     }
   }
 
-  // Color getAttColor(int remaining, int total) {
-  //   if (level == 0) {
-  //     return const Color(0xFF38c37d);
-  //   } else if (level == 1) {
-  //     return const Color(0xFF75d4d0);
-  //   } else if (level == 2) {
-  //     return const Color(0xFFffcb00);
-  //   } else {
-  //     return const Color(0xFFff5a64);
-  //   }
-  // }
+  Color getAttColor(int remaining, int total) {
+    // total here is 3 or 6 or ...
+    // remaining starts with total as initial value
+    double percentage = remaining.toDouble() / total * 100;
+    if (percentage > 84) {
+      return const Color(0xFF38c37d);
+    } else if (percentage > 68) {
+      return const Color(0xFF75d4d0);
+    } else if (percentage > 52) {
+      return const Color(0xFFffcb00);
+    } else if (percentage > 36) {
+      return const Color(0xFFffaf00);
+    } else if (percentage > 34) {
+      return const Color(0xFFffaf00);
+    } else {
+      return const Color(0xFFff5a64);
+    }
+  }
 
   buildAttLevel() {
     return Row(
@@ -508,7 +515,7 @@ class _AttendancePageState extends State<AttendancePage> {
             Text(
               '2',
               style: kMainTitleStyle.copyWith(
-                  color: MyColors.primary, fontSize: 20),
+                  color: getAttColor(1, 3), fontSize: 20),
             ),
           ],
         ),
