@@ -55,3 +55,7 @@ String getGpaEndpoint =
 // first login
 String firstLoginEndpoint =
     "https://ik6lo3ue7aitmuoenwep4qzs7e0vrono.lambda-url.us-east-2.on.aws/";
+
+String midtermsEndpoint = 
+    "https://rlp7x46co6fn4arz7uxpf2jtvq0mflhn.lambda-url.us-east-2.on.aws/";
+
