@@ -10,7 +10,7 @@ String transcriptEndpoint =
 
 // check credentials
 String checkCredentialsEndpoint =
-    "https://xldruxmytivrurvmmyqy7p7o6y0xzdbl.lambda-url.us-east-2.on.aws/";
+    "https://dcdgjqycwchnrllywu7dkpkguy0vtfcp.lambda-url.us-east-2.on.aws/";
 
 // check academics to evaluate
 String checkAcademicToEvalEndpoint =
