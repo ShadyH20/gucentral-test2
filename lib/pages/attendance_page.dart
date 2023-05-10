@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gucentral/utils/SharedPrefs.dart';
 import 'package:gucentral/utils/constants.dart';
+import 'package:gucentral/widgets/ExpandableChromeDino.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -18,10 +19,11 @@ class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
 
   @override
-  State<AttendancePage> createState() => _AttendancePageState();
+  State<AttendancePage> createState() => AttendancePageState();
 }
 
-class _AttendancePageState extends State<AttendancePage> {
+class AttendancePageState extends State<AttendancePage>
+    with TickerProviderStateMixin {
   bool loading = false;
   List courses = [];
 
@@ -149,9 +151,12 @@ class _AttendancePageState extends State<AttendancePage> {
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
   Future<void> courseChosen(context, course) async {
+    animController.reverse();
+    animateLevel(animController.reverseDuration);
     setState(() {
       startAnimation = false;
     });
+
     setState(() {
       isCourseLoading = true;
       attendanceList = Requests.getAttendanceSaved(course['code']);
@@ -485,41 +490,63 @@ class _AttendancePageState extends State<AttendancePage> {
     }
   }
 
+  late AnimationController animController = AnimationController(
+      vsync: this, duration: 100.ms, reverseDuration: 50.ms);
+
   buildAttLevel() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Row(
+    return AnimatedBuilder(
+      animation: animController,
+      builder: (context, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text(
-              'Level:',
-              style: kMainTitleStyle.copyWith(
-                  color: MyColors.secondary, fontSize: 20),
+            SlideTransition(
+              position: Tween<Offset>(begin: Offset(0, 0.2), end: Offset.zero)
+                  .animate(CurvedAnimation(
+                      parent: animController, curve: Curves.easeIn)),
+              child: Opacity(
+                opacity: Tween<double>(begin: 0.0, end: 1.0)
+                    .evaluate(animController),
+                child: Row(
+                  children: [
+                    Text(
+                      'Level:',
+                      style: kMainTitleStyle.copyWith(
+                          color: MyColors.secondary, fontSize: 20),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '2',
+                      style: kMainTitleStyle.copyWith(
+                          color: getLevelColor(2), fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            const SizedBox(width: 10),
-            Text(
-              '2',
-              style: kMainTitleStyle.copyWith(
-                  color: getLevelColor(2), fontSize: 20),
+            Row(
+              children: [
+                Text(
+                  'Absences Left:',
+                  style: kMainTitleStyle.copyWith(
+                      color: MyColors.secondary, fontSize: 20),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  '2',
+                  style: kMainTitleStyle.copyWith(
+                      color: getAttColor(1, 3), fontSize: 20),
+                ),
+              ],
             ),
           ],
-        ),
-        Row(
-          children: [
-            Text(
-              'Absences Left:',
-              style: kMainTitleStyle.copyWith(
-                  color: MyColors.secondary, fontSize: 20),
-            ),
-            const SizedBox(width: 10),
-            Text(
-              '2',
-              style: kMainTitleStyle.copyWith(
-                  color: getAttColor(1, 3), fontSize: 20),
-            ),
-          ],
-        ),
-      ],
+        );
+      },
     );
+  }
+
+  void animateLevel(Duration? reverseDuration) {
+    Future<void>.delayed(reverseDuration!)
+        .then((value) => animController.forward());
   }
 }
