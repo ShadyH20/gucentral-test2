@@ -38,7 +38,8 @@ import 'constants.dart';
 // }
 
 class ChromeDino extends StatefulWidget {
-  ChromeDino({Key? key}) : super(key: key);
+  final void Function() closeGame;
+  ChromeDino({Key? key, required this.closeGame}) : super(key: key);
   @override
   _ChromeDinoState createState() => _ChromeDinoState();
 }
@@ -83,7 +84,7 @@ class _ChromeDinoState extends State<ChromeDino>
     super.initState();
 
     screenSize = Size(
-        HomePage.cardSize.value.width, HomePage.cardSize.value.height * 1.25);
+        HomePage.cardSize.value.width, HomePage.cardSize.value.height * 1.5);
     print('Chrom dino size: $screenSize');
 
     worldController =
@@ -106,12 +107,13 @@ class _ChromeDinoState extends State<ChromeDino>
     }
   }
 
-  void _newGame() {
+  void _newGame() async {
     setState(() {
       runDistance = 0;
       runVelocity = initialVelocity;
       dino.state = DinoState.running;
       dino.dispY = 0;
+      print('Set runvelocity: $runVelocity');
       worldController.reset();
       cacti = [
         Cactus(worldLocation: const Offset(200, 0)),
@@ -134,6 +136,8 @@ class _ChromeDinoState extends State<ChromeDino>
 
       worldController.forward();
     });
+
+    await Future.delayed(const Duration(milliseconds: 50));
   }
 
   _update() {
@@ -145,15 +149,18 @@ class _ChromeDinoState extends State<ChromeDino>
             (worldController.lastElapsedDuration! - lastUpdateCall)
                     .inMilliseconds /
                 1000;
+        // print('Elapsed time init: $elapsedTimeSeconds');
+        if (elapsedTimeSeconds < 0) {
+          elapsedTimeSeconds = 0;
+        }
       } catch (_) {
         elapsedTimeSeconds = 0;
       }
-
       runDistance += runVelocity * elapsedTimeSeconds;
       if (runDistance < 0) runDistance = 0;
       runVelocity += acceleration * elapsedTimeSeconds;
 
-      Size screenSize = MediaQuery.of(context).size;
+      // Size screenSize = MediaQuery.of(context).size;
 
       Rect dinoRect = dino.getRect(screenSize, runDistance);
       for (Cactus cactus in cacti) {
@@ -253,14 +260,15 @@ class _ChromeDinoState extends State<ChromeDino>
         valueListenable: HomePage.cardSize,
         builder: (context, cardS, child) {
           screenSize = Size(HomePage.cardSize.value.width,
-              HomePage.cardSize.value.height * 1.25);
+              HomePage.cardSize.value.height * 1.5);
           return AnimatedContainer(
-            duration: const Duration(milliseconds: 3000),
+            duration: const Duration(milliseconds: 2000),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                15.0,
-              ),
-              // border: Border.all(color: MyColors.secondary),
+              // borderRadius: BorderRadius.circular(
+              //   15.0,
+              // ),
+              border: Border.symmetric(
+                  horizontal: BorderSide(color: MyColors.secondary, width: 2)),
               color: (runDistance ~/ dayNightOffest) % 2 == 0
                   ? Colors.white
                   : Colors.black,
@@ -283,11 +291,13 @@ class _ChromeDinoState extends State<ChromeDino>
                     animation: worldController,
                     builder: (context, _) {
                       return Positioned(
-                        right: 15,
-                        top: 10,
+                        right: 35,
+                        top: 14,
                         child: Text(
                           runDistance.toInt().toString(),
                           style: TextStyle(
+                            fontFamily: 'ChromeDino',
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: (runDistance ~/ dayNightOffest) % 2 == 0
                                 ? Colors.black
@@ -302,10 +312,12 @@ class _ChromeDinoState extends State<ChromeDino>
                     builder: (context, _) {
                       return Positioned(
                         left: 35,
-                        top: 10,
+                        top: 14,
                         child: Text(
                           'HIGH SCORE: $highScore',
                           style: TextStyle(
+                            fontFamily: 'ChromeDino',
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: (runDistance ~/ dayNightOffest) % 2 == 0
                                 ? Colors.black
@@ -338,6 +350,23 @@ class _ChromeDinoState extends State<ChromeDino>
                               : Colors.white),
                     ),
                   ),
+
+                  // Exit Game
+                  Positioned(
+                    right: -5,
+                    top: -5,
+                    child: IconButton(
+                      onPressed: () {
+                        widget.closeGame();
+                      },
+                      icon: Icon(Icons.exit_to_app_rounded,
+                          size: 20,
+                          color: (runDistance ~/ dayNightOffest) % 2 == 0
+                              ? Colors.black
+                              : Colors.white),
+                    ),
+                  ),
+
                   // Positioned(
                   //   right: -5,
                   //   top: -5,
@@ -519,9 +548,7 @@ class _ChromeDinoState extends State<ChromeDino>
                   //                     ),
                   //                   ),
                   //                 ),
-
                   //                 //Submit Leaderboard Score
-
                   //                 TextButton(
                   //                   onPressed: () {
                   //                     gravity =

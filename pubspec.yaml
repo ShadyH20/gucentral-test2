@@ -113,23 +113,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/logo-text.svg
-    - assets/images/main-logo.svg
-    - assets/images/main-logo.png
-    - assets/images/nav-bar.svg
-    - assets/images/profile.svg
-    - assets/images/profile-dark.svg
-    - assets/images/edit.svg
-    - assets/images/refresh.svg
-    - assets/images/nav-bar.png
-    - assets/images/location.svg
-    - assets/images/home.svg
-    - assets/images/deadline-new.svg
-    - assets/images/arrow.svg
-    - assets/images/today.svg
-    - assets/sounds/notification.mp3
-    - assets/images/dino_restart.png
-    - assets/images/game_over.png
     - assets/images/dino/
     - assets/images/cacti/
     - assets/images/ptera/
@@ -154,6 +137,10 @@ flutter:
         - asset: assets/fonts/Outfit-SemiBold.ttf #600
         - asset: assets/fonts/Outfit-Light.ttf #300
         - asset: assets/fonts/Outfit-ExtraBold.ttf #800
+
+    - family: ChromeDino
+      fonts:
+        - asset: assets\fonts\PressStart2P-Regular.ttf
           # weight: 900
   #   - family: Trajan Pro
   #     fonts:

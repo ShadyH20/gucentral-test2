@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gucentral/utils/SharedPrefs.dart';
+import 'package:gucentral/utils/constants.dart';
+import 'package:gucentral/widgets/ExpandableChromeDino.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -17,10 +19,11 @@ class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
 
   @override
-  State<AttendancePage> createState() => _AttendancePageState();
+  State<AttendancePage> createState() => AttendancePageState();
 }
 
-class _AttendancePageState extends State<AttendancePage> {
+class AttendancePageState extends State<AttendancePage>
+    with TickerProviderStateMixin {
   bool loading = false;
   List courses = [];
 
@@ -47,6 +50,7 @@ class _AttendancePageState extends State<AttendancePage> {
           appBar: attendanceAppBar(),
           backgroundColor: MyColors.background,
           body: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.center,
             width: double.infinity,
             height: double.infinity,
@@ -60,10 +64,14 @@ class _AttendancePageState extends State<AttendancePage> {
                       //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                       // ),
                       // const SizedBox(height: 15),
+                      buildAttLevel(),
+
+                      const SizedBox(height: 25),
+
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
                         // width: ,
                         height: 55,
+                        margin: EdgeInsets.zero,
                         // padding: const EdgeInsets.only(left: 10),
                         decoration: BoxDecoration(
                             color: MyApp.isDarkMode.value
@@ -143,9 +151,12 @@ class _AttendancePageState extends State<AttendancePage> {
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
   Future<void> courseChosen(context, course) async {
+    animController.reverse();
+    animateLevel(animController.reverseDuration);
     setState(() {
       startAnimation = false;
     });
+
     setState(() {
       isCourseLoading = true;
       attendanceList = Requests.getAttendanceSaved(course['code']);
@@ -380,7 +391,7 @@ class _AttendancePageState extends State<AttendancePage> {
             ? [const Color(0xfffa9d9d), const Color(0xff5a3232)]
             : [MyColors.secondary, MyColors.secondary];
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: BoxDecoration(
           color: attendanceStatusColor[0],
@@ -446,5 +457,96 @@ class _AttendancePageState extends State<AttendancePage> {
     var date = DateFormat('yyyy.MM.dd').parse(attendanceDate);
     var res = DateFormat('EEEE, MMMM d, yyyy').format(date);
     return res;
+  }
+
+  Color getLevelColor(int level) {
+    if (level == 0) {
+      return const Color(0xFF38c37d);
+    } else if (level == 1) {
+      return const Color(0xFF75d4d0);
+    } else if (level == 2) {
+      return const Color(0xFFffcb00);
+    } else {
+      return const Color(0xFFff5a64);
+    }
+  }
+
+  Color getAttColor(int remaining, int total) {
+    // total here is 3 or 6 or ...
+    // remaining starts with total as initial value
+    double percentage = remaining.toDouble() / total * 100;
+    if (percentage > 84) {
+      return const Color(0xFF38c37d);
+    } else if (percentage > 68) {
+      return const Color(0xFF75d4d0);
+    } else if (percentage > 52) {
+      return const Color(0xFFffcb00);
+    } else if (percentage > 36) {
+      return const Color(0xFFffaf00);
+    } else if (percentage > 34) {
+      return const Color(0xFFffaf00);
+    } else {
+      return const Color(0xFFff5a64);
+    }
+  }
+
+  late AnimationController animController = AnimationController(
+      vsync: this, duration: 100.ms, reverseDuration: 50.ms);
+
+  buildAttLevel() {
+    return AnimatedBuilder(
+      animation: animController,
+      builder: (context, child) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            SlideTransition(
+              position: Tween<Offset>(begin: Offset(0, 0.2), end: Offset.zero)
+                  .animate(CurvedAnimation(
+                      parent: animController, curve: Curves.easeIn)),
+              child: Opacity(
+                opacity: Tween<double>(begin: 0.0, end: 1.0)
+                    .evaluate(animController),
+                child: Row(
+                  children: [
+                    Text(
+                      'Level:',
+                      style: kMainTitleStyle.copyWith(
+                          color: MyColors.secondary, fontSize: 20),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '2',
+                      style: kMainTitleStyle.copyWith(
+                          color: getLevelColor(2), fontSize: 20),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Absences Left:',
+                  style: kMainTitleStyle.copyWith(
+                      color: MyColors.secondary, fontSize: 20),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  '2',
+                  style: kMainTitleStyle.copyWith(
+                      color: getAttColor(1, 3), fontSize: 20),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void animateLevel(Duration? reverseDuration) {
+    Future<void>.delayed(reverseDuration!)
+        .then((value) => animController.forward());
   }
 }

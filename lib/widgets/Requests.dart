@@ -6,6 +6,7 @@ import "package:shared_preferences/shared_preferences.dart";
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
 import "HomePageNavDrawer.dart";
+import "../api/apiEndpoints.dart";
 // import "MyColors.dart";
 
 class Requests {
@@ -13,7 +14,7 @@ class Requests {
       'https://gucentralbackend-production.up.railway.app';
   static Uri transcriptURL = Uri.parse('$backendURL/transcript');
   static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
-  static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
+  static Uri firstLoginURL = Uri.parse('https://ik6lo3ue7aitmuoenwep4qzs7e0vrono.lambda-url.us-east-2.on.aws/');
   static Uri loginURL = Uri.parse('$backendURL/login');
 
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
@@ -176,6 +177,10 @@ class Requests {
   static dynamic getCourses() {
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     return jsonDecode(prefs.getString('courses')!);
+  }
+
+  static void setCourses(List courses) {
+    prefs.setString(SharedPrefs.courses, jsonEncode(courses));
   }
 
   static dynamic getSchedule() {
@@ -485,19 +490,14 @@ class Requests {
     while (readIndex < readsSaved.length && notifIndex < notifications.length) {
       var date = DateFormat('dd/MM/yyyy HH:mm:ss')
           .parse(notifications[notifIndex]['date']);
-      print(
-          'Comparing these 2 dates: ${DateTime.parse(readsSaved[readIndex])} & $date');
       if ((DateTime.parse(readsSaved[readIndex])).isAtSameMomentAs(date)) {
-        print('SAME MOMENT');
         notifications[notifIndex]['read'] = true;
 
         notifIndex++;
         readIndex++;
       } else if ((DateTime.parse(readsSaved[readIndex])).isBefore(date)) {
-        print('IS BEFORE');
         notifIndex++;
       } else {
-        print('IS AFTER');
         readIndex++;
       }
     }
@@ -520,8 +520,6 @@ class Requests {
   static addReadNotification(date) {
     List<dynamic> readsSaved = getReadNotifications();
 
-    print("adding read notification: $date");
-    print("reads saved: $readsSaved");
     readsSaved.add(date.toIso8601String());
 
     readsSaved = [
@@ -531,7 +529,7 @@ class Requests {
     readsSaved.sort((a, b) {
       return b.compareTo(a);
     });
-    print("reads saved after sort: $readsSaved");
+
     // convert this aaray of strings to an array of datetimes
     prefs.setString(SharedPrefs.notifRead, jsonEncode(readsSaved));
   }

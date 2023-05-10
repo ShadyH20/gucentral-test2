@@ -30,7 +30,7 @@ class BuildSheet {
               Provider.of<WeightData>(context, listen: false).isDismissable,
           duration: const Duration(milliseconds: 400),
           avoidStatusBar: true,
-          minHeight: MediaQuery.of(context).size.height,
+          // minHeight: MediaQuery.of(context).size.height,
           color: MyApp.isDarkMode.value
               ? MyColors.background
               : const Color.fromARGB(255, 250, 250, 254),
@@ -41,6 +41,7 @@ class BuildSheet {
           ),
           scrollSpec: const ScrollSpec(
             overscroll: false,
+            physics: NeverScrollableScrollPhysics(),
           ),
           headerBuilder: (context, state) =>
               hasHeader ? _buildNotificationHeader(context) : const Text(''),

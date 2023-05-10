@@ -28,9 +28,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  // ignore: non_constant_identifier_names
-  ColorScheme MyColors = MyTheme.lightTheme.colorScheme;
-
   //// TILE TITLE TEXT STYLE ////
   late TextStyle titleTS;
   late TextStyle sectionTitleTs;
@@ -65,19 +62,12 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: SizedBox(
         width: double.infinity,
-        // color: Colors.red,
         child: SettingsList(
           // shrinkWrap: true,
           platform: DevicePlatform.iOS,
-          // lightTheme: SettingsThemeData(
-          //     settingsListBackground: MyColors.background,
-          //     settingsSectionBackground: Colors.black.withOpacity(0.0),
-          //     ),
+
           darkTheme: SettingsThemeData(
             titleTextColor: Colors.white70,
-            // settingsTileTextColor: Colors.green,
-            // tileHighlightColor: Colors.yellow,
-            // tileDescriptionTextColor: Colors.lightBlue,
             settingsListBackground: MyColors.background,
           ),
           sections: [
@@ -161,6 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
           setState(() {
             prefs.setBool('dark_mode', value);
             MyApp.isDarkMode.value = value;
+            MyColors = Theme.of(context).colorScheme;
             vibrate();
 
             // mainKey.currentState!.setDarkMode(value);
@@ -190,7 +181,6 @@ class _SettingsPageState extends State<SettingsPage> {
       leading: IconBuilder(
         icon: Icons.access_time_filled,
         color: MyColors.primary,
-        // MyColors.accent,
       ),
       title: Text(
         '24-Hour Time',
@@ -201,11 +191,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   buildDefaultPage() {
     return SettingsTile.navigation(
-      // onToggle: (value) {
-      //   setState(() {
-      //     prefs.setBool('is_24h', value);
-      //   });
-      // },
       value: Text(prefs.getString('default_page') ?? 'Home'),
       onPressed: (context) async {
         await Navigator.of(context).push(
@@ -217,9 +202,6 @@ class _SettingsPageState extends State<SettingsPage> {
         );
         setState(() {});
       },
-      // trailing: Icon(Icons.arrow_forward_ios_rounded),
-      // onPressed: (context) => ,
-      // initialValue: prefs.getBool('is_24h') ?? false,
       leading: IconBuilder(
         icon: Icons.phonelink_setup_rounded,
         color: MyColors.primary,
@@ -244,6 +226,16 @@ class _SettingsPageState extends State<SettingsPage> {
         controller: _nameController,
         keyboardType: TextInputType.text,
         autofillHints: const [AutofillHints.nickname, AutofillHints.name],
+
+        onTapOutside: (value) {
+          //unfocus textfield
+          if (_nameController.text.isNotEmpty) {
+            setState(() {
+              prefs.setString('first_name', _nameController.text);
+            });
+          }
+          FocusScope.of(context).unfocus();
+        },
 
         // strutStyle: const StrutStyle(height: 0.5),
         textCapitalization: TextCapitalization.words,
