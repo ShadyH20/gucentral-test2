@@ -178,6 +178,10 @@ class Requests {
     return jsonDecode(prefs.getString('courses')!);
   }
 
+  static void setCourses(List courses) {
+    prefs.setString(SharedPrefs.courses, jsonEncode(courses));
+  }
+
   static dynamic getSchedule() {
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     return jsonDecode(prefs.getString('schedule')!);

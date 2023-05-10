@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:gucentral/utils/SharedPrefs.dart';
+import 'package:gucentral/utils/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -47,6 +48,7 @@ class _AttendancePageState extends State<AttendancePage> {
           appBar: attendanceAppBar(),
           backgroundColor: MyColors.background,
           body: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
             alignment: Alignment.center,
             width: double.infinity,
             height: double.infinity,
@@ -60,10 +62,14 @@ class _AttendancePageState extends State<AttendancePage> {
                       //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
                       // ),
                       // const SizedBox(height: 15),
+                      buildAttLevel(),
+
+                      const SizedBox(height: 25),
+
                       Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
                         // width: ,
                         height: 55,
+                        margin: EdgeInsets.zero,
                         // padding: const EdgeInsets.only(left: 10),
                         decoration: BoxDecoration(
                             color: MyApp.isDarkMode.value
@@ -380,7 +386,7 @@ class _AttendancePageState extends State<AttendancePage> {
             ? [const Color(0xfffa9d9d), const Color(0xff5a3232)]
             : [MyColors.secondary, MyColors.secondary];
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
       decoration: BoxDecoration(
           color: attendanceStatusColor[0],
@@ -446,5 +452,67 @@ class _AttendancePageState extends State<AttendancePage> {
     var date = DateFormat('yyyy.MM.dd').parse(attendanceDate);
     var res = DateFormat('EEEE, MMMM d, yyyy').format(date);
     return res;
+  }
+
+  Color getLevelColor(int level) {
+    if (level == 0) {
+      return const Color(0xFF38c37d);
+    } else if (level == 1) {
+      return const Color(0xFF75d4d0);
+    } else if (level == 2) {
+      return const Color(0xFFffcb00);
+    } else {
+      return const Color(0xFFff5a64);
+    }
+  }
+
+  // Color getAttColor(int remaining, int total) {
+  //   if (level == 0) {
+  //     return const Color(0xFF38c37d);
+  //   } else if (level == 1) {
+  //     return const Color(0xFF75d4d0);
+  //   } else if (level == 2) {
+  //     return const Color(0xFFffcb00);
+  //   } else {
+  //     return const Color(0xFFff5a64);
+  //   }
+  // }
+
+  buildAttLevel() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Level:',
+              style: kMainTitleStyle.copyWith(
+                  color: MyColors.secondary, fontSize: 20),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '2',
+              style: kMainTitleStyle.copyWith(
+                  color: getLevelColor(2), fontSize: 20),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Text(
+              'Absences Left:',
+              style: kMainTitleStyle.copyWith(
+                  color: MyColors.secondary, fontSize: 20),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              '2',
+              style: kMainTitleStyle.copyWith(
+                  color: MyColors.primary, fontSize: 20),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

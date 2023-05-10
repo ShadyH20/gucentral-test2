@@ -261,6 +261,7 @@ class _CoursesPageState extends State<CoursesPage>
 
   late final RefreshController refreshControllerMidterm = RefreshController();
   buildMidtermCards() {
+    print('Coursesmap: $courseMap');
     return AnimationLimiter(
       key: ValueKey("$allMidterms"),
       child: SmartRefresher(
@@ -302,7 +303,7 @@ class _CoursesPageState extends State<CoursesPage>
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Text(
-                                    courseMap[item['course_code']]!,
+                                    courseMap[item['course_code']] ?? "",
                                     style: kSubTitleStyle.copyWith(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500),
@@ -349,67 +350,66 @@ class _CoursesPageState extends State<CoursesPage>
               padding: const EdgeInsets.all(0),
               // height: 200,
               width: 400,
-              child: ListView(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(0),
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Change Course Name',
-                            style: kMainTitleStyle.copyWith(
-                              fontSize: 28,
-                              color: MyColors.primary,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Change Course Name',
+                        style: kMainTitleStyle.copyWith(
+                          fontSize: 28,
+                          color: MyColors.primary,
                         ),
-                        const SizedBox(height: 20),
-                        Material(
-                          color: Colors.transparent,
-                          child: TextFormField(
-                            onChanged: (value) {
-                              setState(() {
-                                newCourseName = value;
-                              });
-                            },
-                            initialValue: dropdownValue['name'],
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: MyApp.isDarkMode.value
-                                  ? const Color.fromARGB(255, 20, 21, 24)
-                                  : Color.fromARGB(58, 173, 173, 173),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(7.5),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: 115,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: MyColors.primary,
-                              foregroundColor: Colors.white,
-                            ),
-                            onPressed: () {
-                              courseMap[dropdownValue['code']] = newCourseName;
-                            },
-                            child: const Text(
-                              'Change',
-                            ),
-                          ),
-                        ),
-                      ],
+                        textAlign: TextAlign.left,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                    Material(
+                      color: Colors.transparent,
+                      child: TextFormField(
+                        onChanged: (value) {
+                          setState(() {
+                            newCourseName = value;
+                          });
+                        },
+                        initialValue: dropdownValue['name'],
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: MyApp.isDarkMode.value
+                              ? const Color.fromARGB(255, 20, 21, 24)
+                              : Color.fromARGB(58, 173, 173, 173),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(7.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: 115,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: MyColors.primary,
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: () {
+                          print(dropdownValue['code']);
+                          setState(() {
+                            courseMap[dropdownValue['code']] = newCourseName;
+                            updateCourseNames(dropdownValue['code']);
+                          });
+                          print(courseMap);
+                        },
+                        child: const Text(
+                          'Change',
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 150),
+                  ],
+                ),
               ),
             ),
           );
@@ -420,6 +420,7 @@ class _CoursesPageState extends State<CoursesPage>
   buildWeightSheet(BuildContext context) {
     weightSheet = BuildSheet(
         context: context,
+        // snappings: [1],
         builder: (context, state) {
           return GestureDetector(
             onTap: () {
@@ -583,91 +584,93 @@ class _CoursesPageState extends State<CoursesPage>
                     children: [
                       buildDropdown(),
                       const SizedBox(height: 30),
+                      GestureDetector(
+                          onTap: () {
+                            buildNameSheet(context);
+                          },
+                          child: dropdownValue != null
+                              ? Text.rich(TextSpan(
+                                  text:
+                                      courseMap[dropdownValue['code']] ?? "N/A",
+                                  style: kMainTitleStyle.copyWith(
+                                      fontSize: 26, color: MyColors.primary),
+                                  children: [
+                                    WidgetSpan(
+                                      child: SizedBox(width: 10),
+                                    ),
+                                    WidgetSpan(
+                                      child: SizedBox(
+                                        // margin: const EdgeInsets.only(bottom: 1),
+                                        height: 18,
+                                        width: 18,
+                                        child: IconButton(
+                                          padding: const EdgeInsets.all(0),
+                                          // iconSize: 5,
+                                          splashRadius: 17,
+                                          iconSize: 15,
+                                          alignment: Alignment.center,
+                                          icon: SvgPicture.asset(
+                                            "assets/images/edit.svg",
+                                            color: MyColors.secondary,
+                                          ),
+                                          onPressed: () {
+                                            buildNameSheet(context);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                              : Container()),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       dropdownValue != null
                           ? Expanded(
                               child: ListView(
                                 children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: dropdownValue['name'],
-                                          style: kMainTitleStyle.copyWith(
-                                              fontSize: 26,
-                                              color: MyColors.primary),
-                                        ),
-                                        const WidgetSpan(
-                                            child: SizedBox(width: 10)),
-                                        WidgetSpan(
-                                          child: SizedBox(
-                                            // margin: const EdgeInsets.only(bottom: 1),
-                                            height: 18,
-                                            width: 18,
-                                            child: IconButton(
-                                              padding: const EdgeInsets.all(0),
-                                              // iconSize: 5,
-                                              splashRadius: 17,
-                                              iconSize: 15,
-                                              alignment: Alignment.center,
-                                              icon: SvgPicture.asset(
-                                                "assets/images/edit.svg",
-                                                color: MyColors.secondary,
-                                              ),
-                                              onPressed: () {
-                                                buildNameSheet(context);
-                                              },
-                                            ),
-                                          ),
-                                          baseline: TextBaseline.alphabetic,
-                                          // alignment: PlaceholderAlignment.middle,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
                                   const SizedBox(
-                                    height: 30,
+                                    height: 15,
                                   ),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      RichText(
-                                        text: TextSpan(
+                                      GestureDetector(
+                                        onTap: () {
+                                          buildWeightSheet(context);
+                                        },
+                                        child: Row(
                                           children: [
-                                            TextSpan(
-                                              text: 'Weights',
+                                            Text(
+                                              'Weights',
                                               style: kMainTitleStyle.copyWith(
                                                 color: MyColors.primary,
                                               ),
                                             ),
-                                            const WidgetSpan(
-                                                child: SizedBox(width: 10)),
-                                            WidgetSpan(
-                                              child: SizedBox(
-                                                // margin: const EdgeInsets.only(bottom: 5),
-                                                height: 18,
-                                                width: 18,
-                                                child: IconButton(
-                                                  padding:
-                                                      const EdgeInsets.all(0),
-                                                  // iconSize: 5,
-                                                  splashRadius: 17,
-                                                  iconSize: 15,
-                                                  alignment: Alignment.center,
-                                                  icon: SvgPicture.asset(
-                                                    "assets/images/edit.svg",
-                                                    color: MyColors.secondary,
-                                                    // fit: BoxFit.scaleDown,
-                                                  ),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      buildWeightSheet(context);
-                                                    });
-                                                  },
+                                            const SizedBox(width: 10),
+                                            SizedBox(
+                                              // margin: const EdgeInsets.only(bottom: 5),
+                                              height: 18,
+                                              width: 18,
+                                              child: IconButton(
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                // iconSize: 5,
+                                                splashRadius: 17,
+                                                iconSize: 15,
+                                                alignment: Alignment.center,
+                                                icon: SvgPicture.asset(
+                                                  "assets/images/edit.svg",
+                                                  color: MyColors.secondary,
+                                                  // fit: BoxFit.scaleDown,
                                                 ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    buildWeightSheet(context);
+                                                  });
+                                                },
                                               ),
-                                              baseline: TextBaseline.alphabetic,
-                                              // alignment: PlaceholderAlignment.middle,
                                             ),
                                           ],
                                         ),
@@ -787,6 +790,17 @@ class _CoursesPageState extends State<CoursesPage>
         ),
       ),
     );
+  }
+
+  void updateCourseNames(code) {
+    for (int i = 0; i < courses.length; i++) {
+      if (courses[i]['code'] == code) {
+        courses[i]['name'] = newCourseName;
+        break;
+      }
+    }
+
+    Requests.setCourses(courses);
   }
 }
 

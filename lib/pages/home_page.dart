@@ -57,6 +57,8 @@ class HomePage extends StatefulWidget {
   static ValueNotifier<Size> cardSize = ValueNotifier(const Size(300, 200));
   static double cardDy = 100;
 
+  static AppBar appBar = AppBar();
+
   @override
   State<HomePage> createState() => HomePageState();
 }
@@ -123,7 +125,66 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     // super.build(context);
     // ColorScheme MyColors = Theme.of(context).colorScheme;
-
+    HomePage.appBar = AppBar(
+      elevation: 0,
+      backgroundColor: MyColors.background,
+      centerTitle: true,
+      leadingWidth: 50.0,
+      leading: const MenuWidget(),
+      title: const Text(
+        "Home",
+      ),
+      actions: [
+        loadingEverything
+            ? const Center(
+                child: SizedBox(
+                  width: 25,
+                  height: 25,
+                  child: CircularProgressIndicator(),
+                ),
+              )
+            : IconButton(
+                // padding: EdgeInsets.symmetric(horizontal: 20.0),
+                icon: Icon(
+                  Icons.notifications_rounded,
+                  size: 30,
+                  color: MyColors.secondary,
+                ),
+                // SvgPicture.asset(
+                //   "assets/images/edit.svg",
+                //   height: 30,
+                //   color: MyColors.secondary,
+                // ),
+                onPressed: () async {
+                  /// REQUEST NOTIFICATIONS PERMISSION
+                  AwesomeNotifications()
+                      .isNotificationAllowed()
+                      .then((isAllowed) {
+                    print(
+                        "Notifications are ${isAllowed ? "allowed" : "not allowed"}");
+                    if (!isAllowed) {
+                      // This is just a basic example. For real apps, you must show some
+                      // friendly dialog box before call the request method.
+                      // This is very important to not harm the user experience
+                      AwesomeNotifications()
+                          .requestPermissionToSendNotifications();
+                    }
+                    AwesomeNotifications().createNotification(
+                        content: NotificationContent(
+                            id: 10,
+                            channelKey: 'basic_channel',
+                            title: 'Welcome to GUCentral!',
+                            body: 'We hope you enjoy our app!',
+                            actionType: ActionType.Default,
+                            payload: {'uuid': 'user-profile-uuid'}));
+                  });
+                },
+              ),
+        Container(
+          width: 10,
+        )
+      ],
+    );
     return Scaffold(
         backgroundColor: MyColors.background,
         // bottomNavigationBar: FlutterAdManagerWeb(
@@ -132,66 +193,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
         //   width: MediaQuery.of(context).size.width,
         //   height: 70,
         // ),
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: MyColors.background,
-          centerTitle: true,
-          leadingWidth: 50.0,
-          leading: const MenuWidget(),
-          title: const Text(
-            "Home",
-          ),
-          actions: [
-            loadingEverything
-                ? const Center(
-                    child: SizedBox(
-                      width: 25,
-                      height: 25,
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
-                : IconButton(
-                    // padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    icon: Icon(
-                      Icons.notifications_rounded,
-                      size: 30,
-                      color: MyColors.secondary,
-                    ),
-                    // SvgPicture.asset(
-                    //   "assets/images/edit.svg",
-                    //   height: 30,
-                    //   color: MyColors.secondary,
-                    // ),
-                    onPressed: () async {
-                      /// REQUEST NOTIFICATIONS PERMISSION
-                      AwesomeNotifications()
-                          .isNotificationAllowed()
-                          .then((isAllowed) {
-                        print(
-                            "Notifications are ${isAllowed ? "allowed" : "not allowed"}");
-                        if (!isAllowed) {
-                          // This is just a basic example. For real apps, you must show some
-                          // friendly dialog box before call the request method.
-                          // This is very important to not harm the user experience
-                          AwesomeNotifications()
-                              .requestPermissionToSendNotifications();
-                        }
-                        AwesomeNotifications().createNotification(
-                            content: NotificationContent(
-                                id: 10,
-                                channelKey: 'basic_channel',
-                                title: 'Welcome to GUCentral!',
-                                body: 'We hope you enjoy our app!',
-                                actionType: ActionType.Default,
-                                payload: {'uuid': 'user-profile-uuid'}));
-                      });
-                    },
-                  ),
-            Container(
-              width: 10,
-            )
-          ],
-        ),
+        appBar: HomePage.appBar,
         body: Stack(
           alignment: Alignment.center,
           children: [
@@ -946,6 +948,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
     final Offset offset = renderBox.localToGlobal(Offset.zero);
     print('Offset: ${offset.dx}, ${offset.dy}');
+
     return offset.dy;
   }
 }

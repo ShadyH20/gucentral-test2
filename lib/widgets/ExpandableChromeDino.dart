@@ -22,7 +22,7 @@ extension IntToDuration on int {
 class _ExpandableChromeDinoState extends State<ExpandableChromeDino>
     with SingleTickerProviderStateMixin {
   late final _menuAC = AnimationController(
-      vsync: this, duration: 1000.ms, reverseDuration: 300.ms);
+      vsync: this, duration: 700.ms, reverseDuration: 300.ms);
   late final isFilterOpen = ValueNotifier(false)
     ..addListener(_handleFilterOpenChanged);
 
@@ -65,6 +65,7 @@ class _ExpandableChromeDinoState extends State<ExpandableChromeDino>
   @override
   Widget build(BuildContext context) {
     double iconSize = 70.0;
+    double cardDy = 5 + 15 + 41.0;
     return LayoutBuilder(
       builder: (context, cons) => SizedBox(
         width: cons.maxWidth,
@@ -72,6 +73,7 @@ class _ExpandableChromeDinoState extends State<ExpandableChromeDino>
         child: ValueListenableBuilder<Size>(
             valueListenable: HomePage.cardSize,
             builder: (context, size, child) {
+              print('Card dy: ${HomePage.cardDy}');
               return Stack(
                 alignment: Alignment.center,
                 children: [
@@ -80,19 +82,19 @@ class _ExpandableChromeDinoState extends State<ExpandableChromeDino>
                       builder: (context, child) {
                         return Positioned(
                           top: Tween(
-                                  begin:
-                                      (HomePage.cardDy - kToolbarHeight - 24) +
-                                          HomePage.cardSize.value.height / 2 -
-                                          iconSize / 2,
-                                  end:
-                                      HomePage.cardDy - kToolbarHeight - 24 - 5)
+                                  begin: cardDy +
+                                      HomePage.cardSize.value.height / 2 -
+                                      iconSize / 2,
+                                  end: cardDy)
                               .evaluate(_menuAC),
                           height: Tween(
                                   begin: iconSize,
                                   end: HomePage.cardSize.value.height + 10)
                               .evaluate(_menuAC),
                           child: Card(
+                            color: Colors.transparent,
                             elevation: 7,
+                            margin: const EdgeInsets.all(0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   Tween<double>(begin: 14, end: 0)
@@ -123,7 +125,7 @@ class _ExpandableChromeDinoState extends State<ExpandableChromeDino>
                                         begin: iconSize,
                                         end: HomePage.cardSize.value.height)
                                     .evaluate(curvedAnimation),
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   // color: filterColor.value,
                                   color: Colors.white,
                                 ),
