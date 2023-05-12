@@ -16,7 +16,7 @@ class DinoLeaderboard extends StatefulWidget {
 class _DinoLeaderboardState extends State<DinoLeaderboard>
     with SingleTickerProviderStateMixin {
   late final myStream = FirebaseFirestore.instance
-      .collection('col')
+      .collection('chrome_dino')
       .orderBy('score', descending: true)
       .snapshots();
 
