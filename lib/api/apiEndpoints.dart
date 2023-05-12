@@ -56,6 +56,18 @@ String getGpaEndpoint =
 String firstLoginEndpoint =
     "https://ik6lo3ue7aitmuoenwep4qzs7e0vrono.lambda-url.us-east-2.on.aws/";
 
-String midtermsEndpoint = 
+// midterms
+String midtermsEndpoint =
     "https://rlp7x46co6fn4arz7uxpf2jtvq0mflhn.lambda-url.us-east-2.on.aws/";
 
+// courses to evaluate
+String coursesToEvalEndpoint =
+    "https://zbv43s5jonu5nfw7keudjbngsa0rofxd.lambda-url.us-east-2.on.aws/coursesToEval";
+
+// check course evaluates
+String checkCourseEvaluated =
+    "https://zbv43s5jonu5nfw7keudjbngsa0rofxd.lambda-url.us-east-2.on.aws/checkCourseEvaluated";
+
+// evaluate course
+String evaluateCourse =
+    "https://zbv43s5jonu5nfw7keudjbngsa0rofxd.lambda-url.us-east-2.on.aws/evaluateCourse";
