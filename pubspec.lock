@@ -933,14 +933,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.2+1"
-  statusbarz:
-    dependency: "direct main"
-    description:
-      name: statusbarz
-      sha256: bf6431a82502157122d4f48b9a033f40680e492d4c7bf0c462f7beb97b037b31
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.13"
   stream_channel:
     dependency: transitive
     description:
@@ -965,6 +957,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  sync_http:
+    dependency: transitive
+    description:
+      name: sync_http
+      sha256: "7f0cd72eca000d2e026bcd6f990b81d0ca06022ef4e32fb257b30d3d1014a961"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   syncfusion_flutter_calendar:
     dependency: "direct main"
     description:
@@ -1165,6 +1165,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.5"
+  webdriver:
+    dependency: "direct main"
+    description:
+      name: webdriver
+      sha256: "3c923e918918feeb90c4c9fdf1fe39220fa4c0e8e2c0fffaded174498ef86c49"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   win32:
     dependency: transitive
     description:

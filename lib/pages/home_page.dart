@@ -25,6 +25,7 @@ import 'package:url_launcher/url_launcher.dart';
 import "package:pull_to_refresh/pull_to_refresh.dart";
 import "package:timeago/timeago.dart" as timeago;
 import "package:wtf_sliding_sheet/wtf_sliding_sheet.dart";
+import "../api/Scrapper.dart";
 import "../chrome-dino/chromeDino.dart";
 import "../main.dart";
 import "../utils/MeasureSize.dart";
@@ -178,6 +179,12 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                             actionType: ActionType.Default,
                             payload: {'uuid': 'user-profile-uuid'}));
                   });
+
+                  // TESTINGG //
+                  // Requests.testScraping();
+                  // var res = await Requests.getNotifications();
+                  // await Scrapper.getGrades('CSEN601');
+                  // print(res);
                 },
               ),
         Container(

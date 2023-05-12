@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:statusbarz/statusbarz.dart';
 
 import '../utils/SharedPrefs.dart';
 import 'MyColors.dart';

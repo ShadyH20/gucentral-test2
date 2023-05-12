@@ -73,7 +73,6 @@ class _ExpandableChromeDinoState extends State<ExpandableChromeDino>
         child: ValueListenableBuilder<Size>(
             valueListenable: HomePage.cardSize,
             builder: (context, size, child) {
-              print('Card dy: ${HomePage.cardDy}');
               return Stack(
                 alignment: Alignment.center,
                 children: [

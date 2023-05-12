@@ -1,11 +1,12 @@
+import "dart:math";
+
 import 'package:flutter/material.dart';
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:intl/intl.dart";
-import "package:shared_preferences/shared_preferences.dart";
+import "../api/Scrapper.dart";
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
-import "HomePageNavDrawer.dart";
 import "../api/apiEndpoints.dart";
 // import "MyColors.dart";
 
@@ -14,7 +15,8 @@ class Requests {
       'https://gucentralbackend-production.up.railway.app';
   static Uri transcriptURL = Uri.parse('$backendURL/transcript');
   static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
-  static Uri firstLoginURL = Uri.parse('https://ik6lo3ue7aitmuoenwep4qzs7e0vrono.lambda-url.us-east-2.on.aws/');
+  static Uri firstLoginURL = Uri.parse(
+      'https://ik6lo3ue7aitmuoenwep4qzs7e0vrono.lambda-url.us-east-2.on.aws/');
   static Uri loginURL = Uri.parse('$backendURL/login');
 
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
@@ -26,6 +28,7 @@ class Requests {
       Uri.parse('$backendURL/checkAcademicEvaluated');
   static Uri evaluateAcademicURL = Uri.parse('$backendURL/evaluateAcademic');
 
+  static Uri scheduleURL = Uri.parse('$backendURL/schedule');
   static Uri examSchedURL = Uri.parse('$backendURL/examSched');
   static Uri attendanceURL = Uri.parse('$backendURL/attendance');
   static Uri gradesURL = Uri.parse('$backendURL/grades');
@@ -86,6 +89,7 @@ class Requests {
         prefs.setString(SharedPrefs.name, res['name']);
         prefs.setString(
             SharedPrefs.firstName, res['name'].toString().split(' ')[0]);
+        prefs.setString(SharedPrefs.schedule, res['schedule']);
         prefs.setString(SharedPrefs.major, res['major']);
 
         prefs.setBool(SharedPrefs.firstAccess, true);
@@ -377,6 +381,31 @@ class Requests {
   }
   ////////////////////
 
+  static requestSchedule() async {
+    var creds = getCreds();
+    var body = jsonEncode(creds);
+
+    try {
+      var response = await http.post(scheduleURL, body: body, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      var schedule = jsonDecode(response.body);
+      if (schedule['success']) {
+        prefs.setString(SharedPrefs.schedule, jsonEncode(schedule['schedule']));
+        prefs.setString(SharedPrefs.major, schedule['major']);
+      }
+      return schedule;
+    } on Exception catch (e) {
+      print("Schedule exception $e");
+      return {
+        'success': false,
+        'message': 'An error ocurred! Please try again.'
+      };
+    }
+  }
+
   static getExamSchedule() async {
     var creds = getCreds();
     var body = jsonEncode(creds);
@@ -434,6 +463,8 @@ class Requests {
       if (attendance['success']) {
         prefs.setString('${SharedPrefs.attendance}$course',
             jsonEncode(attendance['attendance']));
+        prefs.setString(
+            '${SharedPrefs.attendance}lvl:$course', attendance['level']);
       }
       return attendance;
     } on Exception catch (e) {
@@ -452,17 +483,35 @@ class Requests {
     return [];
   }
 
+  static getAttendanceLevelSaved(String course) {
+    if (prefs.containsKey('${SharedPrefs.attendance}lvl:$course')) {
+      return prefs.getString('${SharedPrefs.attendance}lvl:$course');
+    }
+    return '0';
+  }
+
   static getNotifications() async {
-    var creds = getCreds();
-    var body = jsonEncode(creds);
+    // var creds = getCreds();
+    // var body = jsonEncode(creds);
 
     try {
-      var response = await http.post(notificationsURL, body: body, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      });
+      // var response = await http.post(notificationsURL, body: body, headers: {
+      //   'Content-Type': 'application/json',
+      //   'Accept': 'application/json'
+      // });
 
-      var notifications = jsonDecode(response.body);
+      // var notifications = jsonDecode(response.body);
+
+      // // check set the notifications' read attribute
+      // setNotificationsRead(notifications['notifications']);
+
+      // if (notifications['success']) {
+      //   prefs.setString(SharedPrefs.notifications,
+      //       jsonEncode(notifications['notifications']));
+      // }
+      // return notifications;
+
+      var notifications = await Scrapper.get_notifications();
 
       // check set the notifications' read attribute
       setNotificationsRead(notifications['notifications']);
@@ -471,6 +520,8 @@ class Requests {
         prefs.setString(SharedPrefs.notifications,
             jsonEncode(notifications['notifications']));
       }
+
+      // debugPrint("Got notifications: ${notifications.toString()}");
       return notifications;
     } on Exception catch (e) {
       print("Notifications exception $e");
@@ -519,6 +570,11 @@ class Requests {
 
   static addReadNotification(date) {
     List<dynamic> readsSaved = getReadNotifications();
+
+    // Remove oldest read notification if there are more than 20
+    if (readsSaved.length >= 20) {
+      readsSaved.removeLast();
+    }
 
     readsSaved.add(date.toIso8601String());
 

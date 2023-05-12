@@ -75,13 +75,13 @@ dependencies:
   settings_ui: ^2.0.2
   shared_preferences: ^2.0.18
   simple_animations: ^5.0.0+3
-  statusbarz: ^1.0.13
   syncfusion_flutter_calendar: ^20.4.54
   table_calendar: ^3.0.9
   timeago: ^3.4.0
   transitioned_indexed_stack: ^1.0.2
   vibration: ^1.7.6
   vibration_web: ^1.6.5
+  webdriver: ^3.0.2
   wtf_sliding_sheet: ^0.6.1
 
 flutter_native_splash:

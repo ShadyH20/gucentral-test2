@@ -59,14 +59,10 @@ class AttendancePageState extends State<AttendancePage>
                 : Column(
                     children: [
                       const SizedBox(height: 20),
-                      // const Text(
-                      //   "Courses To Evaluate",
-                      //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
-                      // ),
-                      // const SizedBox(height: 15),
+
                       buildAttLevel(),
 
-                      const SizedBox(height: 25),
+                      const SizedBox(height: 15),
 
                       Container(
                         // width: ,
@@ -147,6 +143,7 @@ class AttendancePageState extends State<AttendancePage>
   }
 
   List<dynamic> attendanceList = [];
+  int attendanceLevel = 0;
 
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
@@ -160,12 +157,9 @@ class AttendancePageState extends State<AttendancePage>
     setState(() {
       isCourseLoading = true;
       attendanceList = Requests.getAttendanceSaved(course['code']);
+      attendanceLevel =
+          int.parse(Requests.getAttendanceLevelSaved(course['code']));
     });
-    // Future.delayed(const Duration(milliseconds: 500)).then((value) {
-    //   setState(() {
-    //     startAnimation = true;
-    //   });
-    // });
     var resp = await Requests.getAttendance(course['code']);
     var success = resp['success'];
     setState(() {
@@ -183,6 +177,7 @@ class AttendancePageState extends State<AttendancePage>
         startAnimation = true;
       }
       attendanceList = resp['attendance'];
+      attendanceLevel = int.parse(resp['level']);
     });
     setState(() {
       startAnimation = true;
@@ -213,7 +208,7 @@ class AttendancePageState extends State<AttendancePage>
       centerTitle: true,
       leadingWidth: 60.0,
       leading: const MenuWidget(),
-      title: Text(
+      title: const Text(
         "Attendance",
         // textScaleFactor: 0.95,
         // style: TextStyle(color: MyColors.primary),
@@ -501,9 +496,10 @@ class AttendancePageState extends State<AttendancePage>
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             SlideTransition(
-              position: Tween<Offset>(begin: Offset(0, 0.2), end: Offset.zero)
-                  .animate(CurvedAnimation(
-                      parent: animController, curve: Curves.easeIn)),
+              position:
+                  Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
+                      .animate(CurvedAnimation(
+                          parent: animController, curve: Curves.easeIn)),
               child: Opacity(
                 opacity: Tween<double>(begin: 0.0, end: 1.0)
                     .evaluate(animController),
@@ -516,9 +512,9 @@ class AttendancePageState extends State<AttendancePage>
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      '2',
+                      attendanceLevel.toString(),
                       style: kMainTitleStyle.copyWith(
-                          color: getLevelColor(2), fontSize: 20),
+                          color: getLevelColor(attendanceLevel), fontSize: 20),
                     ),
                   ],
                 ),

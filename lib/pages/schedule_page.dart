@@ -73,7 +73,6 @@ class SchedulePageState extends State<SchedulePage> {
   List<dynamic> courses = [];
   List<dynamic> schedule = [];
   Map<int, List<Event>> groupedEvents = {};
-  late final ValueNotifier<List<Event>> _selectedEvents;
   final CalendarController _controller = CalendarController();
 
   late EventDataSource _quizDataSource;
@@ -115,7 +114,6 @@ class SchedulePageState extends State<SchedulePage> {
     super.initState();
     initializeSchedulePage();
     setState(() {});
-    _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay));
     colorIndex = 0;
   }
 
@@ -176,6 +174,7 @@ class SchedulePageState extends State<SchedulePage> {
                   calendarFormat: _calendarFormat,
                   daysOfWeekVisible: _calendarFormat == CalendarFormat.month,
                   rowHeight: _calendarFormat == CalendarFormat.week ? 75 : 50,
+                  daysOfWeekHeight: 20,
                   selectedDayPredicate: (day) {
                     return isSameDay(_selectedDay, day);
                   },
@@ -222,11 +221,14 @@ class SchedulePageState extends State<SchedulePage> {
                         textAlign: TextAlign.center,
                       );
                     },
+                    outsideBuilder: _calendarFormat == CalendarFormat.month
+                        ? null
+                        : (context, day, focusedDay) =>
+                            defaultDayBuilder(context, day, focusedDay),
                   ),
                   calendarStyle: const CalendarStyle(
+                    cellAlignment: Alignment(0, 0.5),
                     tablePadding: EdgeInsets.symmetric(vertical: 8),
-                    outsideDaysVisible: true,
-                    isTodayHighlighted: true,
                   ),
                   headerVisible: false,
                   availableCalendarFormats: const {
@@ -298,82 +300,85 @@ class SchedulePageState extends State<SchedulePage> {
                                         ? Colors.white12
                                         : Colors.black12))
                             : null),
-                    child: Column(
-                      children: [
-                        _eventDataSource
-                                .getVisibleAppointments(
-                                    _controller.displayDate!, '')
-                                .isEmpty
-                            ? Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                                child: Text(
-                                  "No Classes Today!",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400,
-                                      color: MyColors.secondary),
+                    child: scheduleError
+                        ? buildScheduleError()
+                        : Column(
+                            children: [
+                              _eventDataSource
+                                      .getVisibleAppointments(
+                                          _controller.displayDate!, '')
+                                      .isEmpty
+                                  ? Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 15),
+                                      child: Text(
+                                        "No Classes Today!",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w400,
+                                            color: MyColors.secondary),
+                                      ),
+                                    )
+                                  : Container(),
+                              Expanded(
+                                child: SfCalendar(
+                                  controller: _controller,
+                                  view: CalendarView.day,
+                                  viewNavigationMode: ViewNavigationMode.none,
+                                  initialDisplayDate: DateTime.now(),
+                                  initialSelectedDate: DateTime.now(),
+                                  todayHighlightColor: MyColors.primary,
+                                  // cellBorderColor: Colors.green,
+                                  //       // cellBorderColor: Colors.transparent,
+                                  viewHeaderHeight: 0,
+                                  headerHeight: 0,
+                                  showCurrentTimeIndicator: true,
+                                  selectionDecoration: const BoxDecoration(
+                                    color: Colors.transparent,
+                                    border: Border(),
+                                  ),
+                                  // onViewChanged: ,
+                                  onTap: (calendarTapDetails) {
+                                    setState(() {
+                                      tappedEvent = calendarTapDetails
+                                          .appointments!.first;
+                                      alignment1 = editButtonsToggle
+                                          ? const Alignment(-0.16, -2.7)
+                                          : const Alignment(0, 0.8);
+                                      alignment2 = editButtonsToggle
+                                          ? const Alignment(0.16, -2.7)
+                                          : const Alignment(0, 0.8);
+                                      editButtonsToggle = !editButtonsToggle;
+                                    });
+                                  },
+                                  //onViewChanged: (details) {
+                                  //setState(() {
+                                  //  _selectedDay = _controller.displayDate ?? _selectedDay;
+                                  // });
+                                  //},
+                                  timeSlotViewSettings: TimeSlotViewSettings(
+                                    startHour: 7,
+                                    endHour: 19,
+                                    timeInterval: const Duration(hours: 1),
+                                    timeIntervalHeight: 65,
+                                    timeFormat: is24h ? "k:mm" : "h a",
+                                    timeRulerSize: 40,
+                                    timeTextStyle: TextStyle(
+                                        color: MyColors.secondary,
+                                        fontFamily: 'Outfit',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500),
+                                    // nonWorkingDays: const <int>[
+                                    //   DateTime.friday,
+                                    // ],
+                                  ),
+                                  dataSource: EventDataSource(
+                                      events + quizzes + examEvents),
+                                  appointmentBuilder: appointmentBuilder,
                                 ),
-                              )
-                            : Container(),
-                        Expanded(
-                          child: SfCalendar(
-                            controller: _controller,
-                            view: CalendarView.day,
-                            viewNavigationMode: ViewNavigationMode.none,
-                            initialDisplayDate: DateTime.now(),
-                            initialSelectedDate: DateTime.now(),
-                            todayHighlightColor: MyColors.primary,
-                            // cellBorderColor: Colors.green,
-                            //       // cellBorderColor: Colors.transparent,
-                            viewHeaderHeight: 0,
-                            headerHeight: 0,
-                            showCurrentTimeIndicator: true,
-                            selectionDecoration: const BoxDecoration(
-                              color: Colors.transparent,
-                              border: Border(),
-                            ),
-                            // onViewChanged: ,
-                            onTap: (calendarTapDetails) {
-                              setState(() {
-                                tappedEvent =
-                                    calendarTapDetails.appointments!.first;
-                                alignment1 = editButtonsToggle
-                                    ? const Alignment(-0.16, -2.7)
-                                    : const Alignment(0, 0.8);
-                                alignment2 = editButtonsToggle
-                                    ? const Alignment(0.16, -2.7)
-                                    : const Alignment(0, 0.8);
-                                editButtonsToggle = !editButtonsToggle;
-                              });
-                            },
-                            //onViewChanged: (details) {
-                            //setState(() {
-                            //  _selectedDay = _controller.displayDate ?? _selectedDay;
-                            // });
-                            //},
-                            timeSlotViewSettings: TimeSlotViewSettings(
-                                startHour: 7,
-                                endHour: 19,
-                                timeInterval: const Duration(hours: 1),
-                                timeIntervalHeight: 65,
-                                timeFormat: is24h ? "k:mm" : "h a",
-                                timeRulerSize: 40,
-                                timeTextStyle: TextStyle(
-                                    color: MyColors.secondary,
-                                    fontFamily: 'Outfit',
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500),
-                                nonWorkingDays: const <int>[
-                                  DateTime.friday,
-                                ]),
-                            dataSource:
-                                EventDataSource(events + quizzes + examEvents),
-                            appointmentBuilder: appointmentBuilder,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ],
@@ -765,9 +770,16 @@ class SchedulePageState extends State<SchedulePage> {
         .add(Duration(hours: hour, minutes: minute));
   }
 
+  bool scheduleError = false;
   createEvents() {
     events = [];
-    print(schedule);
+    if (schedule.length > 6) {
+      //something is wrong
+      print("Schedule Error");
+      scheduleError = true;
+      return;
+    }
+    scheduleError = false;
     for (int i = 0; i < schedule.length; i++) {
       String day = schedule[i][0];
       int dayIndex = dayIndexMap[day]!;
@@ -1604,6 +1616,65 @@ class SchedulePageState extends State<SchedulePage> {
     for (Event event in events) {
       event.setRecurrenceExceptionDates(datesBetween);
     }
+  }
+
+  bool loadingSchedule = false;
+  buildScheduleError() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: const EdgeInsets.only(left: 5),
+          child: Text(
+            "Looks like the schedule is down on the GUC system right now.\n\nPlease try again in a few minutes.",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: MyColors.secondary,
+              fontSize: 23,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: MyColors.primary,
+          ),
+          child: loadingSchedule
+              ? const Center(
+                  child: SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(color: Colors.white)),
+                )
+              : IconButton(
+                  icon: const Icon(
+                    Icons.refresh,
+                    size: 30,
+                  ),
+                  onPressed: () async {
+                    setState(() {
+                      loadingSchedule = true;
+                    });
+                    await Requests.requestSchedule();
+
+                    // init state
+                    initializeSchedulePage();
+                    setState(() {});
+                    colorIndex = 0;
+
+                    setState(() {
+                      loadingSchedule = false;
+                    });
+                  },
+                ),
+        ),
+        const SizedBox(height: 20),
+      ],
+    );
   }
 }
 
