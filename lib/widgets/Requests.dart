@@ -76,10 +76,8 @@ class Requests {
     });
 
     try {
-      var response = await http.post(firstLoginURL, body: body, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      });
+      var response = await http.post(firstLoginURL,
+          body: body, headers: {'Content-Type': 'application/json'});
       var res = jsonDecode(response.body);
       var success = res['success'];
       if (success) {
@@ -89,7 +87,7 @@ class Requests {
         prefs.setString(SharedPrefs.name, res['name']);
         prefs.setString(
             SharedPrefs.firstName, res['name'].toString().split(' ')[0]);
-        prefs.setString(SharedPrefs.schedule, res['schedule']);
+        prefs.setString(SharedPrefs.schedule, jsonEncode(res['schedule']));
         prefs.setString(SharedPrefs.major, res['major']);
 
         prefs.setBool(SharedPrefs.firstAccess, true);
