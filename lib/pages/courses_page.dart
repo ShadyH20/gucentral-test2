@@ -589,38 +589,41 @@ class _CoursesPageState extends State<CoursesPage>
                             buildNameSheet(context);
                           },
                           child: dropdownValue != null
-                              ? Text.rich(TextSpan(
-                                  text:
-                                      courseMap[dropdownValue['code']] ?? "N/A",
-                                  style: kMainTitleStyle.copyWith(
-                                      fontSize: 26, color: MyColors.primary),
-                                  children: [
-                                    WidgetSpan(
-                                      child: SizedBox(width: 10),
-                                    ),
-                                    WidgetSpan(
-                                      child: SizedBox(
-                                        // margin: const EdgeInsets.only(bottom: 1),
-                                        height: 18,
-                                        width: 18,
-                                        child: IconButton(
-                                          padding: const EdgeInsets.all(0),
-                                          // iconSize: 5,
-                                          splashRadius: 17,
-                                          iconSize: 15,
-                                          alignment: Alignment.center,
-                                          icon: SvgPicture.asset(
-                                            "assets/images/edit.svg",
-                                            color: MyColors.secondary,
+                              ? Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text.rich(TextSpan(
+                                    text: courseMap[dropdownValue['code']] ??
+                                        "N/A",
+                                    style: kMainTitleStyle.copyWith(
+                                        fontSize: 26, color: MyColors.primary),
+                                    children: [
+                                      WidgetSpan(
+                                        child: SizedBox(width: 10),
+                                      ),
+                                      WidgetSpan(
+                                        child: SizedBox(
+                                          // margin: const EdgeInsets.only(bottom: 1),
+                                          height: 18,
+                                          width: 18,
+                                          child: IconButton(
+                                            padding: const EdgeInsets.all(0),
+                                            // iconSize: 5,
+                                            splashRadius: 17,
+                                            iconSize: 15,
+                                            alignment: Alignment.center,
+                                            icon: SvgPicture.asset(
+                                              "assets/images/edit.svg",
+                                              color: MyColors.secondary,
+                                            ),
+                                            onPressed: () {
+                                              buildNameSheet(context);
+                                            },
                                           ),
-                                          onPressed: () {
-                                            buildNameSheet(context);
-                                          },
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ))
+                                    ],
+                                  )),
+                                )
                               : Container()),
                       const SizedBox(
                         height: 15,
