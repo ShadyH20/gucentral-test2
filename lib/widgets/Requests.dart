@@ -17,7 +17,7 @@ class Requests {
   static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
 //   static Uri firstLoginURL = Uri.parse(
 //       'https://ik6lo3ue7aitmuoenwep4qzs7e0vrono.lambda-url.us-east-2.on.aws/');
-   static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
+  static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
   static Uri loginURL = Uri.parse('$backendURL/login');
 
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
@@ -88,8 +88,30 @@ class Requests {
         prefs.setString(SharedPrefs.name, res['name']);
         prefs.setString(
             SharedPrefs.firstName, res['name'].toString().split(' ')[0]);
+
         prefs.setString(SharedPrefs.schedule, jsonEncode(res['schedule']));
-        prefs.setString(SharedPrefs.major, res['major']);
+
+        // List<dynamic> allSchedule = res['schedule'];
+        // print('ALL SCHEDULE: $allSchedule');
+
+        // for (dynamic day in allSchedule) {
+        //   dynamic allSlots = day.sublist(1);
+        //   for (dynamic slot in allSlots) {
+        //     if (slot is List) {
+        //       String courseCode = (slot[2] as String).replaceAll(" ", "");
+        //       try {
+        //         dynamic attNumSaved = prefs.getString('$courseCode:attNum')!;
+        //         print('ATT NUM: $attNumSaved');
+        //         // print(attNumSaved == null);
+        //       } catch (e) {
+        //         print('ATT NUM NOT YET SAVED!');
+        //         // prefs.setString('$courseCode:attNum', jsonEncode());
+        //       }
+        //     }
+        //   }
+        // }
+
+        prefs.setString(SharedPrefs.major, jsonEncode(res['major']));
 
         prefs.setBool(SharedPrefs.firstAccess, true);
       }
@@ -383,7 +405,7 @@ class Requests {
   static requestSchedule() async {
     var creds = getCreds();
     var body = jsonEncode(creds);
-
+    print('REQUESTINGG SCHEDULING =================');
     try {
       var response = await http.post(scheduleURL, body: body, headers: {
         'Content-Type': 'application/json',
@@ -395,6 +417,10 @@ class Requests {
         prefs.setString(SharedPrefs.schedule, jsonEncode(schedule['schedule']));
         prefs.setString(SharedPrefs.major, schedule['major']);
       }
+
+      List<dynamic> allSchedule = schedule['schedule'];
+      print('================ ALL SCHEDULE: $allSchedule');
+
       return schedule;
     } on Exception catch (e) {
       print("Schedule exception $e");
@@ -487,6 +513,21 @@ class Requests {
       return prefs.getString('${SharedPrefs.attendance}lvl:$course');
     }
     return '0';
+  }
+
+  static getAttendanceLeftSaved(String course) {
+    if (prefs.containsKey('${SharedPrefs.attendance}left:$course')) {
+      return int.parse(
+          prefs.getString('${SharedPrefs.attendance}left:$course')!);
+    }
+    return 0;
+  }
+
+  static getAttendanceMaxAbsencesSaved(String course) {
+    if (prefs.containsKey('$course:maxAbsences')) {
+      return int.parse(prefs.getString('$course:maxAbsences')!);
+    }
+    return 0;
   }
 
   static getNotifications() async {

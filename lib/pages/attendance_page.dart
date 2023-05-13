@@ -144,6 +144,8 @@ class AttendancePageState extends State<AttendancePage>
 
   List<dynamic> attendanceList = [];
   int attendanceLevel = 0;
+  int absencesLeft = 0;
+  int courseMaxAbsences = 0;
 
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
@@ -157,8 +159,13 @@ class AttendancePageState extends State<AttendancePage>
     setState(() {
       isCourseLoading = true;
       attendanceList = Requests.getAttendanceSaved(course['code']);
-      attendanceLevel =
-          int.parse(Requests.getAttendanceLevelSaved(course['code']));
+      String attLevel =
+          (Requests.getAttendanceLevelSaved(course['code']) as String)
+              .replaceAll('"', '');
+      absencesLeft = Requests.getAttendanceLeftSaved(course['code']);
+      courseMaxAbsences =
+          Requests.getAttendanceMaxAbsencesSaved(course['code']);
+      attendanceLevel = int.parse(attLevel);
     });
     var resp = await Requests.getAttendance(course['code']);
     var success = resp['success'];
@@ -171,8 +178,45 @@ class AttendancePageState extends State<AttendancePage>
           duration: const Duration(seconds: 5));
       return;
     }
+    List arr = resp['attendance'];
+    int latestDay = -1;
+    int attendanceCounter = 0;
+    String maxAbs;
+    try {
+      maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
+      print('ALREADY WRITTEN MAX ABSENCES::: ${course['code']} -> $maxAbs');
+    } catch (e) {
+      print('MAX ABSENCES NOT WRITTEN YET');
+      for (Map<String, dynamic> day in arr) {
+        var date = DateFormat('y.MM.dd').parse(day['date']);
+        if (date.weekday > latestDay) {
+          latestDay = date.weekday;
+          attendanceCounter++;
+        } else {
+          break;
+        }
+      }
+      prefs.setString(
+          '${course['code']}:maxAbsences', (attendanceCounter * 3).toString());
+      maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
+      print('ATT COUNTER::::::${course['code']} ${attendanceCounter * 3}');
+    }
+
+    int absenceCounter = 0;
+    for (Map<String, dynamic> day in arr) {
+      if (day['attendance'] == 'Absent') {
+        absenceCounter++;
+      }
+    }
+
     setState(() {
-      List arr = resp['attendance'];
+      courseMaxAbsences = int.parse(maxAbs.replaceAll('"', ''));
+      absencesLeft = courseMaxAbsences - absenceCounter;
+      prefs.setString('${SharedPrefs.attendance}left:${course['code']}',
+          absencesLeft.toString());
+    });
+
+    setState(() {
       if (attendanceList.length != arr.length) {
         startAnimation = true;
       }
@@ -529,9 +573,10 @@ class AttendancePageState extends State<AttendancePage>
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  '2',
+                  absencesLeft.toString(),
                   style: kMainTitleStyle.copyWith(
-                      color: getAttColor(1, 3), fontSize: 20),
+                      color: getAttColor(absencesLeft, courseMaxAbsences),
+                      fontSize: 20),
                 ),
               ],
             ),
