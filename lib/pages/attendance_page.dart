@@ -179,7 +179,7 @@ class AttendancePageState extends State<AttendancePage>
       return;
     }
     List arr = resp['attendance'];
-    int latestDay = -1;
+    var latestDate = DateTime.parse("1990-01-05 00:00:00");
     int attendanceCounter = 0;
     String maxAbs;
     try {
@@ -189,15 +189,18 @@ class AttendancePageState extends State<AttendancePage>
       print('MAX ABSENCES NOT WRITTEN YET');
       for (Map<String, dynamic> day in arr) {
         var date = DateFormat('y.MM.dd').parse(day['date']);
-        if (date.weekday > latestDay) {
-          latestDay = date.weekday;
+        // FRIDAY IS INITIAL VALUE
+        if (latestDate.weekday == 5 || date.weekday > latestDate.weekday) {
+          latestDate = date;
+          attendanceCounter++;
+        } else if (date.compareTo(latestDate) == 0) {
           attendanceCounter++;
         } else {
           break;
         }
+        prefs.setString('${course['code']}:maxAbsences',
+            (attendanceCounter * 3).toString());
       }
-      prefs.setString(
-          '${course['code']}:maxAbsences', (attendanceCounter * 3).toString());
       maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
       print('ATT COUNTER::::::${course['code']} ${attendanceCounter * 3}');
     }
@@ -287,9 +290,9 @@ class AttendancePageState extends State<AttendancePage>
   }
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  late final RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   buildAttendance() {
-    final RefreshController refreshController =
-        RefreshController(initialRefresh: false);
     return AnimationLimiter(
       key: ValueKey("$attendanceList"),
       child: SmartRefresher(
@@ -514,15 +517,13 @@ class AttendancePageState extends State<AttendancePage>
     // total here is 3 or 6 or ...
     // remaining starts with total as initial value
     double percentage = remaining.toDouble() / total * 100;
-    if (percentage > 84) {
+    if (percentage > 75) {
       return const Color(0xFF38c37d);
-    } else if (percentage > 68) {
+    } else if (percentage > 50) {
       return const Color(0xFF75d4d0);
-    } else if (percentage > 52) {
+    } else if (percentage > 25) {
       return const Color(0xFFffcb00);
-    } else if (percentage > 36) {
-      return const Color(0xFFffaf00);
-    } else if (percentage > 34) {
+    } else if (percentage > 0) {
       return const Color(0xFFffaf00);
     } else {
       return const Color(0xFFff5a64);
@@ -552,11 +553,15 @@ class AttendancePageState extends State<AttendancePage>
                     Text(
                       'Level:',
                       style: kMainTitleStyle.copyWith(
-                          color: MyColors.secondary, fontSize: 20),
+                          color: MyColors.secondary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      attendanceLevel.toString(),
+                      attendanceLevel.toString() == '0'
+                          ? '-'
+                          : attendanceLevel.toString(),
                       style: kMainTitleStyle.copyWith(
                           color: getLevelColor(attendanceLevel), fontSize: 20),
                     ),
@@ -569,11 +574,13 @@ class AttendancePageState extends State<AttendancePage>
                 Text(
                   'Absences Left:',
                   style: kMainTitleStyle.copyWith(
-                      color: MyColors.secondary, fontSize: 20),
+                      color: MyColors.secondary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  absencesLeft.toString(),
+                  '${absencesLeft.toString()}/$courseMaxAbsences',
                   style: kMainTitleStyle.copyWith(
                       color: getAttColor(absencesLeft, courseMaxAbsences),
                       fontSize: 20),
