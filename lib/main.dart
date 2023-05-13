@@ -95,7 +95,7 @@ void main() async {
 
   tz.initializeTimeZones();
 
-  setTestNotifications();
+  // setTestNotifications();
 
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,

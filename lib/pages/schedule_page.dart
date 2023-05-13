@@ -5,6 +5,7 @@ import "dart:convert";
 import "dart:math";
 import "dart:ui";
 import "package:auto_size_text/auto_size_text.dart";
+import "package:awesome_notifications/awesome_notifications.dart";
 import "package:dropdown_button2/dropdown_button2.dart";
 import "package:fading_edge_scrollview/fading_edge_scrollview.dart";
 import "package:flutter/material.dart";
@@ -84,6 +85,7 @@ class SchedulePageState extends State<SchedulePage> {
     getSchedule();
 
     createEvents();
+
     _eventDataSource = EventDataSource(events + quizzes);
     _quizDataSource = EventDataSource(quizzes);
     _deadlineDataSource = EventDataSource(deadlines);
@@ -100,7 +102,7 @@ class SchedulePageState extends State<SchedulePage> {
     courses = coursesR;
   }
 
-// ignore: non_constant_identifier_names
+  // ignore: non_constant_identifier_names
   late ColorScheme MyColors;
   @override
   void didChangeDependencies() {
@@ -113,7 +115,6 @@ class SchedulePageState extends State<SchedulePage> {
   void initState() {
     super.initState();
     initializeSchedulePage();
-    setState(() {});
     colorIndex = 0;
   }
 
@@ -771,15 +772,22 @@ class SchedulePageState extends State<SchedulePage> {
   }
 
   bool scheduleError = false;
-  createEvents() {
+  createEvents() async {
     events = [];
     if (schedule.length > 6) {
       //something is wrong
-      print("Schedule Error");
+      debugPrint("Schedule Error");
       scheduleError = true;
       return;
     }
     scheduleError = false;
+
+    //get local time zone
+    String timeZoneName =
+        await AwesomeNotifications().getLocalTimeZoneIdentifier();
+    print(timeZoneName);
+    AwesomeNotifications().cancelAll();
+
     for (int i = 0; i < schedule.length; i++) {
       String day = schedule[i][0];
       int dayIndex = dayIndexMap[day]!;
@@ -800,6 +808,14 @@ class SchedulePageState extends State<SchedulePage> {
           DateTime startTime = getTime(dayIndex, timeSlot.split("-")[0].trim());
           DateTime endTime = getTime(dayIndex, timeSlot.split("-")[1].trim());
 
+          String day = DateFormat("dd MMMM").format(startTime);
+          String timeFrom =
+              DateFormat(is24h ? "k:mm" : 'h:mm a').format(startTime);
+
+          // REMINDER TIME //
+          DateTime reminderTime =
+              startTime.subtract(const Duration(minutes: 15));
+
           // Create the event and add it to the list
           Event event = Event(
             title: eventTitle,
@@ -815,11 +831,72 @@ class SchedulePageState extends State<SchedulePage> {
             group: eventGroup,
           );
           events.add(event);
+
+          // Create its notification
+          String notificationBody =
+              '${courseMap[event.title.split(' ').join('')] ?? event.title.split(' ').join('')}, $eventDescription in $eventLocation - $timeFrom';
+          String notificationTitle = '$eventDescription in 15 mins';
+
+          await AwesomeNotifications().createNotification(
+            content: NotificationContent(
+              id: -1,
+              channelKey: 'scheduled',
+              title: notificationTitle,
+              body: notificationBody,
+              wakeUpScreen: true,
+              category: NotificationCategory.Reminder,
+            ),
+            schedule: NotificationCalendar(
+                preciseAlarm: true,
+                hour: reminderTime.hour,
+                minute: reminderTime.minute,
+                allowWhileIdle: true,
+                weekday: startTime.weekday,
+                timeZone: timeZoneName),
+          );
         }
       }
     }
-    // print("Events $events");
-    // _eventDataSource = EventDataSource(events);
+    debugPrint(
+        "Current notifications: ${(await AwesomeNotifications().listScheduledNotifications())}");
+  }
+
+  createNotifications() async {
+    {
+      //get local time zone
+      String timeZoneName =
+          await AwesomeNotifications().getLocalTimeZoneIdentifier();
+      print(timeZoneName);
+      AwesomeNotifications().cancelAll();
+
+      for (Event event in events) {
+        await AwesomeNotifications().createNotification(
+          content: NotificationContent(
+            id: -1,
+            channelKey: 'scheduled',
+            title: 'Lab',
+            body: '3 May, 8:15 AM - Network & Media Lab, Lab in C6.209',
+            wakeUpScreen: true,
+            category: NotificationCategory.Reminder,
+          ),
+          schedule: NotificationCalendar(
+              preciseAlarm: true,
+              hour: 1,
+              minute: 55,
+              // second: 0,
+              // millisecond: 0,
+              allowWhileIdle: true,
+              day: 3,
+              month: 5,
+              year: 2023,
+              timeZone: timeZoneName),
+        );
+      }
+
+      List nots = await AwesomeNotifications().listScheduledNotifications();
+      print(nots.length);
+      print(nots);
+    }
   }
 
 //   EventDataSource _getCalendarDataSource() {
@@ -1545,7 +1622,11 @@ class SchedulePageState extends State<SchedulePage> {
   bool loadingExamSched = false;
   List<dynamic> examSchedule =
       jsonDecode(prefs.getString(SharedPrefs.examSched) ?? '[]');
+
   void getExamSchedule() {
+    // Saved exams
+    createExamEvents();
+
     setState(() {
       loadingExamSched = true;
     });
@@ -1595,7 +1676,7 @@ class SchedulePageState extends State<SchedulePage> {
           location: '$seat in $hall',
           start: examDateTime,
           end: examEndDateTime,
-          color: MyColors.primary,
+          color: Colors.blue,
           isAllDay: false);
       exams.add(examEvent);
       // dates.add(examDateTime);
