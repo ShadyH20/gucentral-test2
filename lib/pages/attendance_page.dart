@@ -204,9 +204,9 @@ class AttendancePageState extends State<AttendancePage>
         } else {
           break;
         }
-        prefs.setString('${course['code']}:maxAbsences',
-            (attendanceCounter * 3).toString());
       }
+      prefs.setString(
+          '${course['code']}:maxAbsences', (attendanceCounter * 3).toString());
       maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
       print('ATT COUNTER::::::${course['code']} ${attendanceCounter * 3}');
     }
