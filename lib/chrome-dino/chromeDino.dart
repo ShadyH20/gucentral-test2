@@ -117,8 +117,8 @@ class _ChromeDinoState extends State<ChromeDino>
       worldController.reset();
       cacti = [
         Cactus(worldLocation: const Offset(200, 0)),
-        Cactus(worldLocation: const Offset(300, 0)),
-        Cactus(worldLocation: const Offset(450, 0)),
+        // Cactus(worldLocation: const Offset(300, 0)),
+        // Cactus(worldLocation: const Offset(450, 0)),
       ];
 
       ground = [
@@ -171,13 +171,29 @@ class _ChromeDinoState extends State<ChromeDino>
 
         if (obstacleRect.right < 0) {
           setState(() {
+            print('veloooo: ' + runVelocity.toString());
             cacti.remove(cactus);
-            cacti.add(Cactus(
+            double randomNum = Random().nextInt(50) * (1 + (runVelocity / 100));
+            cacti.add(
+              Cactus(
                 worldLocation: Offset(
                     runDistance +
-                        Random().nextInt(100) +
+                        randomNum +
                         MediaQuery.of(context).size.width / worlToPixelRatio,
-                    0)));
+                    0),
+              ),
+            );
+            // cacti.add(
+            //   Cactus(
+            //     worldLocation: Offset(
+            //         runDistance +
+            //             randomNum +
+            //             Random().nextInt(200) * (1 + (runVelocity / 100)) +
+            //             150 +
+            //             MediaQuery.of(context).size.width / worlToPixelRatio,
+            //         0),
+            //   ),
+            // );
           });
         }
       }

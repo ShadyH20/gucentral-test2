@@ -31,8 +31,9 @@ List<Sprite> cacti = [
     ..imageHeight = (70 * scale).toInt(),
   Sprite()
     ..imagePath = "assets/images/cacti/cacti_small_3.png"
-    ..imageWidth = 107
-    ..imageHeight = (70 * scale).toInt(),
+    ..imageWidth = (107 * scale).toInt()
+    ..imageHeight = (107 * scale).toInt()
+  // ..imageHeight = (70 * scale).toInt(),
 ];
 
 class Cactus extends GameObject {
