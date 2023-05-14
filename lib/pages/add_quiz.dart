@@ -43,6 +43,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
   // Create controllers for the form fields
   final _formKey = GlobalKey<FormState>();
   final _quizTitleController = TextEditingController();
+  final _quizDescriptionController = TextEditingController();
   final _locationController = TextEditingController();
 
   String? _selectedValue;
@@ -66,6 +67,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
           hour: widget.event!.end.hour, minute: widget.event!.end.minute);
       _quizTitleController.text = widget.event!.description;
       _locationController.text = widget.event!.location;
+      // _quizDescriptionController.text = widget.event!.description;
       _selectedValue = widget.event!.title.split(" ").join("");
     } else {
       debugPrint("Init dates and timw to now");
@@ -80,6 +82,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
     super.dispose();
     _quizTitleController.dispose();
     _locationController.dispose();
+    _quizDescriptionController.dispose();
   }
 
   @override
@@ -281,6 +284,64 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                       ),
                                     ],
                                   ),
+                                  const SizedBox(height: 12),
+                                  // make height of TextFormField 300
+
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Description",
+                                        style: TextStyle(
+                                          fontFamily: "Outfit",
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 20,
+                                          color: MyColors.secondary,
+                                        ),
+                                      ),
+                                      Container(height: 5),
+                                      TextFormField(
+                                        textInputAction: TextInputAction.next,
+                                        textCapitalization:
+                                            TextCapitalization.words,
+                                        keyboardType: TextInputType.text,
+                                        controller: _quizDescriptionController,
+                                        // validator: (value) =>
+                                        //     value != null && value.isEmpty
+                                        //         ? 'Please enter a description'
+                                        //         : null,
+                                        style: const TextStyle(fontSize: 18),
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              "e.g. Coming in Lectures X & Y",
+                                          hintStyle: TextStyle(
+                                              fontFamily: "Outfit",
+                                              fontWeight: FontWeight.w500,
+                                              color: MyColors.secondary
+                                                  .withOpacity(.15)),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(7.5),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(7.5),
+                                              borderSide: BorderSide(
+                                                  width: 2,
+                                                  color:
+                                                      MyColors.primaryVariant)),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: 7, horizontal: 15),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -385,6 +446,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                   child: Container(
                     alignment: FractionalOffset.bottomCenter,
                     margin: const EdgeInsets.only(bottom: 40),
+                    padding: const EdgeInsets.all(0),
                     width: 200,
                     // height: double.infinity,
                     child: TextButton(
@@ -392,7 +454,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         onDeletePresed();
                       },
                       style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(0),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7)),
                           side: BorderSide(color: MyColors.error)),

@@ -395,12 +395,11 @@ class _CoursesPageState extends State<CoursesPage>
                           foregroundColor: Colors.white,
                         ),
                         onPressed: () {
-                          print(dropdownValue['code']);
                           setState(() {
                             courseMap[dropdownValue['code']] = newCourseName;
                             updateCourseNames(dropdownValue['code']);
                           });
-                          print(courseMap);
+                          Navigator.pop(context);
                         },
                         child: const Text(
                           'Change',
@@ -597,7 +596,7 @@ class _CoursesPageState extends State<CoursesPage>
                                     style: kMainTitleStyle.copyWith(
                                         fontSize: 26, color: MyColors.primary),
                                     children: [
-                                      WidgetSpan(
+                                      const WidgetSpan(
                                         child: SizedBox(width: 10),
                                       ),
                                       WidgetSpan(
