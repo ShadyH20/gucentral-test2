@@ -78,7 +78,7 @@ class WeightCard extends StatelessWidget {
           addRemove
               ? GestureDetector(
                   onTap: () {
-                    Provider.of<WeightData>(context, listen: false)
+                    Provider.of<ProviderData>(context, listen: false)
                         .removeWeight(weightData);
                   },
                   child: Icon(

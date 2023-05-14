@@ -225,7 +225,7 @@ Future<void> setTestNotifications() async {
         year: 2023,
         timeZone: timeZoneName),
   );
-  
+
   List nots = await AwesomeNotifications().listScheduledNotifications();
   print(nots.length);
   print(nots);
@@ -267,7 +267,7 @@ class MyAppState extends State<MyApp> {
       valueListenable: MyApp.isDarkMode,
       builder: (context, isDarkMode, child) {
         return ChangeNotifierProvider(
-          create: (context) => WeightData(),
+          create: (context) => ProviderData(),
           child: MaterialApp(
             builder: (context, child) {
               return MediaQuery(

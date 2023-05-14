@@ -5,7 +5,15 @@ import 'package:flutter/material.dart';
 import 'weight.dart';
 import 'SharedPrefs.dart';
 
-class WeightData extends ChangeNotifier {
+class ProviderData extends ChangeNotifier {
+  // Dino Data
+  bool isFilterOpen = false;
+
+  void setIsFilterOpen(bool value) {
+    isFilterOpen = value;
+    notifyListeners();
+  }
+
   // ignore: prefer_final_fields
   List<Weight> _allWeights = [
     Weight(text: 'Midterm', weight: '35'),

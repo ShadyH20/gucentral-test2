@@ -176,7 +176,7 @@ class _CoursesPageState extends State<CoursesPage>
   Future<void> courseChosen(context, course) async {
     String courseCode = dropdownValue['code'];
 
-    Provider.of<WeightData>(context, listen: false)
+    Provider.of<ProviderData>(context, listen: false)
         .changeAllWeights(courseCode);
 
     setState(() {
@@ -451,7 +451,7 @@ class _CoursesPageState extends State<CoursesPage>
                   ),
                 ),
                 WeightList(
-                  weightList: Provider.of<WeightData>(context).allWeights,
+                  weightList: Provider.of<ProviderData>(context).allWeights,
                   addRemove: true,
                   addReorder: true,
                   makeReorderable: true,
@@ -683,12 +683,12 @@ class _CoursesPageState extends State<CoursesPage>
                                         color:
                                             MyColors.secondary.withOpacity(0.5),
                                       ),
-                                      Provider.of<WeightData>(context)
+                                      Provider.of<ProviderData>(context)
                                               .allWeights
                                               .isNotEmpty
                                           ? WeightList(
                                               weightList:
-                                                  Provider.of<WeightData>(
+                                                  Provider.of<ProviderData>(
                                                           context)
                                                       .allWeights)
                                           : const Center(
@@ -879,13 +879,13 @@ class WeightList extends StatelessWidget {
             // color: Color(0x44FF0000),
             child: ReorderableListView(
               onReorder: (oldIndex, newIndex) async {
-                Provider.of<WeightData>(context, listen: false)
+                Provider.of<ProviderData>(context, listen: false)
                     .setIsDismissable(false);
 
-                Provider.of<WeightData>(context, listen: false)
+                Provider.of<ProviderData>(context, listen: false)
                     .updateWeightPosition(oldIndex, newIndex);
 
-                Provider.of<WeightData>(context, listen: false)
+                Provider.of<ProviderData>(context, listen: false)
                     .setIsDismissable(true);
               },
               proxyDecorator: (child, index, animation) => Material(

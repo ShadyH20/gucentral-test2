@@ -27,7 +27,7 @@ class BuildSheet {
       builder: (context) {
         return SlidingSheetDialog(
           isDismissable:
-              Provider.of<WeightData>(context, listen: false).isDismissable,
+              Provider.of<ProviderData>(context, listen: false).isDismissable,
           duration: const Duration(milliseconds: 400),
           avoidStatusBar: true,
           // minHeight: MediaQuery.of(context).size.height,

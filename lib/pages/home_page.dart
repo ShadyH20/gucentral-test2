@@ -64,7 +64,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   // ignore: non_constant_identifier_names
   late ColorScheme MyColors;
   @override
@@ -82,12 +82,30 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     Timer.periodic(const Duration(seconds: 5), (Timer t) {
       setState(() {});
     });
+    WidgetsBinding.instance.addObserver(this);
 
     // Override "en" locale messages with custom messages that are more precise and short
     timeago.setLocaleMessages('en', MyCustomMessages());
     super.initState();
     initializeEverything();
     initNotifications();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+          
+        }
   }
 
   bool loadingEverything = true;
