@@ -116,8 +116,8 @@ class _ChromeDinoState extends State<ChromeDino>
       print('Set runvelocity: $runVelocity');
       worldController.reset();
       cacti = [
-        Cactus(worldLocation: const Offset(200, 0)),
-        // Cactus(worldLocation: const Offset(300, 0)),
+        Cactus(worldLocation: const Offset(100, 0)),
+        // Cactus(worldLocation: const Offset(110, 0)),
         // Cactus(worldLocation: const Offset(450, 0)),
       ];
 
@@ -173,7 +173,7 @@ class _ChromeDinoState extends State<ChromeDino>
           setState(() {
             print('veloooo: ' + runVelocity.toString());
             cacti.remove(cactus);
-            double randomNum = Random().nextInt(50) * (1 + (runVelocity / 100));
+            double randomNum = Random().nextInt(20) * (1 + (runVelocity / 100));
             cacti.add(
               Cactus(
                 worldLocation: Offset(
@@ -183,17 +183,20 @@ class _ChromeDinoState extends State<ChromeDino>
                     0),
               ),
             );
-            // cacti.add(
-            //   Cactus(
-            //     worldLocation: Offset(
-            //         runDistance +
-            //             randomNum +
-            //             Random().nextInt(200) * (1 + (runVelocity / 100)) +
-            //             150 +
-            //             MediaQuery.of(context).size.width / worlToPixelRatio,
-            //         0),
-            //   ),
-            // );
+            //   bool shouldAdd = Random().nextInt(2) == 1;
+            //   shouldAdd
+            //       ? cacti.add(
+            //           Cactus(
+            //             worldLocation: Offset(
+            //                 runDistance +
+            //                     randomNum +
+            //                     20 +
+            //                     MediaQuery.of(context).size.width /
+            //                         worlToPixelRatio,
+            //                 0),
+            //           ),
+            //         )
+            //       : null;
           });
         }
       }
