@@ -506,7 +506,7 @@ class _TranscriptPageState extends State<TranscriptPage>
     return Container(
       width: 180,
       height: 40,
-      padding: const EdgeInsets.only(left: 0),
+      // padding: const EdgeInsets.only(left: 0, right: 10),
       decoration: BoxDecoration(
           color: MyApp.isDarkMode.value
               ? MyColors.surface
@@ -524,12 +524,12 @@ class _TranscriptPageState extends State<TranscriptPage>
               fontSize: 18,
               fontWeight: FontWeight.bold),
           dropdownStyleData: const DropdownStyleData(
-              offset: Offset(0, 3),
+              // offset: Offset(0, 3),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10)),
-              )),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+          )),
           hint: Text("Select A Year"),
           alignment: Alignment.centerRight,
           onChanged: (dynamic value) {

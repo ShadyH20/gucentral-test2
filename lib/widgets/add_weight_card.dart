@@ -348,13 +348,13 @@ class _AddWeightCardState extends State<AddWeightCard> {
                       }
 
                       if (best.isNotEmpty && from.isNotEmpty) {
-                        Provider.of<WeightData>(context, listen: false)
+                        Provider.of<ProviderData>(context, listen: false)
                             .addToWeights(Weight(
                                 text: text,
                                 weight: weight,
                                 best: [best, from]));
                       } else {
-                        Provider.of<WeightData>(context, listen: false)
+                        Provider.of<ProviderData>(context, listen: false)
                             .addToWeights(Weight(text: text, weight: weight));
                       }
 

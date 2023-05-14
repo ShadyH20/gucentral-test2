@@ -246,7 +246,7 @@ class PlayerCard extends StatelessWidget {
           maxLines: 1,
           style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
         ),
-        subtitle: Text(data['major'],
+        subtitle: Text('${data['major'].replaceAll('"', '')}',
             style:
                 TextStyle(fontSize: 14, height: 1.2, color: MyColors.tertiary)),
         leading: index < 3

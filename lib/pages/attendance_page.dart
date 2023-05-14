@@ -144,12 +144,16 @@ class AttendancePageState extends State<AttendancePage>
 
   List<dynamic> attendanceList = [];
   int attendanceLevel = 0;
+  int absencesLeft = 0;
+  int courseMaxAbsences = 0;
 
   bool isCourseLoading = false;
   bool isCourseLoaded = false;
-  Future<void> courseChosen(context, course) async {
-    animController.reverse();
-    animateLevel(animController.reverseDuration);
+  Future<void> courseChosen(context, course, [isPullRefresh = false]) async {
+    if (!isPullRefresh) {
+      await animController.reverse();
+    }
+    // await animateLevel(animController.reverseDuration);
     setState(() {
       startAnimation = false;
     });
@@ -157,8 +161,16 @@ class AttendancePageState extends State<AttendancePage>
     setState(() {
       isCourseLoading = true;
       attendanceList = Requests.getAttendanceSaved(course['code']);
-      attendanceLevel =
-          int.parse(Requests.getAttendanceLevelSaved(course['code']));
+      String attLevel =
+          (Requests.getAttendanceLevelSaved(course['code']) as String)
+              .replaceAll('"', '');
+      absencesLeft = Requests.getAttendanceLeftSaved(course['code']);
+      courseMaxAbsences =
+          Requests.getAttendanceMaxAbsencesSaved(course['code']);
+      attendanceLevel = int.parse(attLevel);
+      if (!isPullRefresh) {
+        animController.forward();
+      }
     });
     var resp = await Requests.getAttendance(course['code']);
     var success = resp['success'];
@@ -171,13 +183,55 @@ class AttendancePageState extends State<AttendancePage>
           duration: const Duration(seconds: 5));
       return;
     }
+    List arr = resp['attendance'];
+    var latestDate = DateTime.parse("1990-01-05 00:00:00");
+    int attendanceCounter = 0;
+    String maxAbs;
+    await animController.reverse();
+    try {
+      maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
+      print('ALREADY WRITTEN MAX ABSENCES::: ${course['code']} -> $maxAbs');
+    } catch (e) {
+      print('MAX ABSENCES NOT WRITTEN YET');
+      for (Map<String, dynamic> day in arr) {
+        var date = DateFormat('y.MM.dd').parse(day['date']);
+        // FRIDAY IS INITIAL VALUE
+        if (latestDate.weekday == 5 || date.weekday > latestDate.weekday) {
+          latestDate = date;
+          attendanceCounter++;
+        } else if (date.compareTo(latestDate) == 0) {
+          attendanceCounter++;
+        } else {
+          break;
+        }
+      }
+      prefs.setString(
+          '${course['code']}:maxAbsences', (attendanceCounter * 3).toString());
+      maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
+      print('ATT COUNTER::::::${course['code']} ${attendanceCounter * 3}');
+    }
+
+    int absenceCounter = 0;
+    for (Map<String, dynamic> day in arr) {
+      if (day['attendance'] == 'Absent') {
+        absenceCounter++;
+      }
+    }
+
     setState(() {
-      List arr = resp['attendance'];
+      courseMaxAbsences = int.parse(maxAbs.replaceAll('"', ''));
+      absencesLeft = courseMaxAbsences - absenceCounter;
+      prefs.setString('${SharedPrefs.attendance}left:${course['code']}',
+          absencesLeft.toString());
+    });
+
+    setState(() {
       if (attendanceList.length != arr.length) {
         startAnimation = true;
       }
       attendanceList = resp['attendance'];
       attendanceLevel = int.parse(resp['level']);
+      animController.forward();
     });
     setState(() {
       startAnimation = true;
@@ -243,16 +297,16 @@ class AttendancePageState extends State<AttendancePage>
   }
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  late RefreshController refreshController;
   buildAttendance() {
+    refreshController = RefreshController(initialRefresh: false);
     return AnimationLimiter(
       key: ValueKey("$attendanceList"),
       child: SmartRefresher(
         controller: refreshController,
         enablePullDown: true,
         onRefresh: () async {
-          await courseChosen(context, dropdownCourseValue);
+          await courseChosen(context, dropdownCourseValue, true);
           refreshController.refreshCompleted();
         },
         header: WaterDropHeader(
@@ -470,15 +524,13 @@ class AttendancePageState extends State<AttendancePage>
     // total here is 3 or 6 or ...
     // remaining starts with total as initial value
     double percentage = remaining.toDouble() / total * 100;
-    if (percentage > 84) {
+    if (percentage > 75) {
       return const Color(0xFF38c37d);
-    } else if (percentage > 68) {
+    } else if (percentage > 50) {
       return const Color(0xFF75d4d0);
-    } else if (percentage > 52) {
+    } else if (percentage > 25) {
       return const Color(0xFFffcb00);
-    } else if (percentage > 36) {
-      return const Color(0xFFffaf00);
-    } else if (percentage > 34) {
+    } else if (percentage > 0) {
       return const Color(0xFFffaf00);
     } else {
       return const Color(0xFFff5a64);
@@ -486,7 +538,7 @@ class AttendancePageState extends State<AttendancePage>
   }
 
   late AnimationController animController = AnimationController(
-      vsync: this, duration: 100.ms, reverseDuration: 50.ms);
+      vsync: this, duration: 200.ms, reverseDuration: 200.ms);
 
   buildAttLevel() {
     return AnimatedBuilder(
@@ -508,11 +560,15 @@ class AttendancePageState extends State<AttendancePage>
                     Text(
                       'Level:',
                       style: kMainTitleStyle.copyWith(
-                          color: MyColors.secondary, fontSize: 20),
+                          color: MyColors.secondary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      attendanceLevel.toString(),
+                      attendanceLevel.toString() == '0'
+                          ? '-'
+                          : attendanceLevel.toString(),
                       style: kMainTitleStyle.copyWith(
                           color: getLevelColor(attendanceLevel), fontSize: 20),
                     ),
@@ -520,20 +576,33 @@ class AttendancePageState extends State<AttendancePage>
                 ),
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  'Absences Left:',
-                  style: kMainTitleStyle.copyWith(
-                      color: MyColors.secondary, fontSize: 20),
+            SlideTransition(
+              position:
+                  Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
+                      .animate(CurvedAnimation(
+                          parent: animController, curve: Curves.easeIn)),
+              child: Opacity(
+                opacity: Tween<double>(begin: 0.0, end: 1.0)
+                    .evaluate(animController),
+                child: Row(
+                  children: [
+                    Text(
+                      'Absences Left:',
+                      style: kMainTitleStyle.copyWith(
+                          color: MyColors.secondary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      '${absencesLeft.toString()}/$courseMaxAbsences',
+                      style: kMainTitleStyle.copyWith(
+                          color: getAttColor(absencesLeft, courseMaxAbsences),
+                          fontSize: 20),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 10),
-                Text(
-                  '2',
-                  style: kMainTitleStyle.copyWith(
-                      color: getAttColor(1, 3), fontSize: 20),
-                ),
-              ],
+              ),
             ),
           ],
         );
@@ -541,8 +610,8 @@ class AttendancePageState extends State<AttendancePage>
     );
   }
 
-  void animateLevel(Duration? reverseDuration) {
-    Future<void>.delayed(reverseDuration!)
+  Future<void> animateLevel(Duration? reverseDuration) {
+    return Future<void>.delayed(reverseDuration!)
         .then((value) => animController.forward());
   }
 }
