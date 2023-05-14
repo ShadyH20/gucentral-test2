@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:gucentral/main.dart";
 import "package:gucentral/pages/home_page.dart";
+import "package:gucentral/pages/schedule_page.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
@@ -55,6 +56,7 @@ class SharedPrefs {
 final GlobalKey<MenuPageState> menuPageKey = GlobalKey();
 final GlobalKey<MyAppState> mainKey = GlobalKey();
 final GlobalKey<HomePageState> homeKey = GlobalKey();
+final GlobalKey<SchedulePageState> scheduleKey = GlobalKey<SchedulePageState>();
 
 ColorScheme MyColors = Theme.of(mainKey.currentContext!).colorScheme;
 

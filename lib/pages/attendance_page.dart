@@ -126,7 +126,7 @@ class AttendancePageState extends State<AttendancePage>
                           ),
                         ),
                       ),
-                      SizedBox(height: isCourseLoaded ? 10 : 0),
+                      const SizedBox(height: 10),
 
                       /// if the user has chosen a course to evaluate
                       Expanded(
@@ -243,9 +243,9 @@ class AttendancePageState extends State<AttendancePage>
   }
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   buildAttendance() {
-    final RefreshController refreshController =
-        RefreshController(initialRefresh: false);
     return AnimationLimiter(
       key: ValueKey("$attendanceList"),
       child: SmartRefresher(

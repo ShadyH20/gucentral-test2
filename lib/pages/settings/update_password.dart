@@ -36,10 +36,6 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // systemOverlayStyle: const SystemUiOverlayStyle(
-        //     statusBarColor: MyColors.background,
-        //     statusBarIconBrightness: Brightness.dark,
-        //     statusBarBrightness: Brightness.dark),
         backgroundColor: MyColors.background,
         foregroundColor: MyColors.secondary,
         elevation: 0,

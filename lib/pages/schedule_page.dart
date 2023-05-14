@@ -3,24 +3,20 @@
 import "dart:async";
 import "dart:convert";
 import "dart:math";
-import "dart:ui";
 import "package:auto_size_text/auto_size_text.dart";
 import "package:awesome_notifications/awesome_notifications.dart";
 import "package:dropdown_button2/dropdown_button2.dart";
-import "package:fading_edge_scrollview/fading_edge_scrollview.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:flutter_svg/flutter_svg.dart";
 import "package:gucentral/pages/add_deadline.dart";
 import 'package:gucentral/pages/add_quiz.dart';
+import "package:gucentral/pages/settings_page.dart";
 import "package:gucentral/widgets/MenuWidget.dart";
-import "package:gucentral/widgets/MyColors.dart";
 import "package:gucentral/widgets/Requests.dart";
 import "package:hijri/hijri_calendar.dart";
 import 'package:intl/intl.dart';
 import "package:table_calendar/table_calendar.dart";
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:flutter/cupertino.dart';
 import "../main.dart";
 import "../widgets/EventDataSource.dart";
 import "../utils/SharedPrefs.dart";
@@ -79,7 +75,10 @@ class SchedulePageState extends State<SchedulePage> {
   late EventDataSource _quizDataSource;
   late EventDataSource _deadlineDataSource;
 
-  initializeSchedulePage() {
+  initializeSchedulePage({bool fromSettings = false}) {
+    if (fromSettings) print("Actually!!! schedule init from settings");
+
+    getTimeZone();
     _controller.displayDate = DateTime.now().at8am();
     setTimeSlots();
     getSchedule();
@@ -91,15 +90,21 @@ class SchedulePageState extends State<SchedulePage> {
     _deadlineDataSource = EventDataSource(deadlines);
     _controller.displayDate = _selectedDay;
     groupedEvents = groupEvents(events);
-    getExamSchedule();
     setState(() {});
+    getExamSchedule();
   }
 
   getSchedule() {
-    schedule = Requests.getSchedule();
+    schedule = Requests.getSchedule(); // Done in firstLogin already
     var coursesR = Requests.getCourses();
     courseMap = {for (var course in coursesR) course['code']: course['name']};
     courses = coursesR;
+  }
+
+  String timeZoneName = 'Africa/Cairo';
+  getTimeZone() async {
+    //get local time zone
+    timeZoneName = await AwesomeNotifications().getLocalTimeZoneIdentifier();
   }
 
   // ignore: non_constant_identifier_names
@@ -771,8 +776,14 @@ class SchedulePageState extends State<SchedulePage> {
         .add(Duration(hours: hour, minutes: minute));
   }
 
+  reInitNotifications() {
+    print("Reinit nots");
+    createEvents();
+    setState(() {});
+  }
+
   bool scheduleError = false;
-  createEvents() async {
+  createEvents() {
     events = [];
     if (schedule.length > 6) {
       //something is wrong
@@ -782,10 +793,6 @@ class SchedulePageState extends State<SchedulePage> {
     }
     scheduleError = false;
 
-    //get local time zone
-    String timeZoneName =
-        await AwesomeNotifications().getLocalTimeZoneIdentifier();
-    print(timeZoneName);
     AwesomeNotifications().cancelAll();
 
     for (int i = 0; i < schedule.length; i++) {
@@ -800,9 +807,7 @@ class SchedulePageState extends State<SchedulePage> {
           String eventLocation = schedule[i][j][1];
           List semesterAndGroup = schedule[i][j][0].split(' ');
           String eventSemester = semesterAndGroup[0];
-          String eventGroup = semesterAndGroup[1]
-              // .replaceAll(RegExp(r'(?<=\D)0+(?=\d)'), '');
-              .replaceFirst('0', '');
+          String eventGroup = semesterAndGroup[1].replaceFirst('0', '');
 
           // Convert the time slot to start and end times
           DateTime startTime = getTime(dayIndex, timeSlot.split("-")[0].trim());
@@ -811,10 +816,6 @@ class SchedulePageState extends State<SchedulePage> {
           String day = DateFormat("dd MMMM").format(startTime);
           String timeFrom =
               DateFormat(is24h ? "k:mm" : 'h:mm a').format(startTime);
-
-          // REMINDER TIME //
-          DateTime reminderTime =
-              startTime.subtract(const Duration(minutes: 15));
 
           // Create the event and add it to the list
           Event event = Event(
@@ -832,33 +833,52 @@ class SchedulePageState extends State<SchedulePage> {
           );
           events.add(event);
 
-          // Create its notification
-          String notificationBody =
-              '${courseMap[event.title.split(' ').join('')] ?? event.title.split(' ').join('')}, $eventDescription in $eventLocation - $timeFrom';
-          String notificationTitle = '$eventDescription in 15 mins';
-
-          await AwesomeNotifications().createNotification(
-            content: NotificationContent(
-              id: -1,
-              channelKey: 'scheduled',
-              title: notificationTitle,
-              body: notificationBody,
-              wakeUpScreen: true,
-              category: NotificationCategory.Reminder,
-            ),
-            schedule: NotificationCalendar(
-                preciseAlarm: true,
-                hour: reminderTime.hour,
-                minute: reminderTime.minute,
-                allowWhileIdle: true,
-                weekday: startTime.weekday,
-                timeZone: timeZoneName),
-          );
+          if (Notifications.on.value) {
+            createOneNotification(event, day, eventDescription, eventLocation,
+                timeFrom, startTime);
+          }
         }
       }
     }
-    debugPrint(
-        "Current notifications: ${(await AwesomeNotifications().listScheduledNotifications())}");
+  }
+
+  createOneNotification(Event event, String day, String description,
+      String location, String timeFrom, DateTime startTime) async {
+    int minutesBefore = prefs.getInt('reminder_minutes') ?? 15;
+    DateTime reminderTime =
+        startTime.subtract(Duration(minutes: minutesBefore));
+
+    // Create its notification
+    String notificationBody =
+        '${courseMap[event.title.split(' ').join('')] ?? event.title.split(' ').join('')}, $description in $location - $timeFrom';
+    String notificationTitle = '$description in $minutesBefore mins!';
+
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: -1,
+        channelKey: 'scheduled',
+        title: notificationTitle,
+        body: notificationBody,
+        wakeUpScreen: true,
+        category: NotificationCategory.Reminder,
+      ),
+      schedule: NotificationCalendar(
+          preciseAlarm: true,
+          hour: reminderTime.hour,
+          minute: reminderTime.minute,
+          allowWhileIdle: true,
+          weekday: startTime.weekday,
+          timeZone: timeZoneName),
+    );
+    // bigPicture: 'asset://assets/images/reminder.jpg',
+    // notificationLayout: NotificationLayout.BigPicture,
+    // notificationLayout: NotificationLayout.Default,
+    // notificationLayout: NotificationLayout.BigPicture,
+    // notificationLayout: NotificationLayout.MediaPlayer,
+    // notificationLayout: NotificationLayout.ProgressBar,
+    // notificationLayout: NotificationLayout.Inbox,
+    // notificationLayout: NotificationLayout.Messaging,
+    // notificationLayout
   }
 
   createNotifications() async {
@@ -1672,7 +1692,7 @@ class SchedulePageState extends State<SchedulePage> {
       // print('Start time: $examDateTime');
       var examEvent = Event(
           title: courseName,
-          description: 'Midterm',
+          description: 'Exam',
           location: '$seat in $hall',
           start: examDateTime,
           end: examEndDateTime,

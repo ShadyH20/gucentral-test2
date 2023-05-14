@@ -1,7 +1,6 @@
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import "package:flutter/services.dart";
 import "package:gucentral/pages/schedule_page.dart";
+import "package:gucentral/pages/settings/notifications.dart";
 import 'package:gucentral/pages/settings/update_password.dart';
 import "package:gucentral/pages/settings/semester_range.dart";
 import "package:gucentral/utils/local_auth_api.dart";
@@ -13,8 +12,6 @@ import "package:settings_ui/settings_ui.dart";
 import "package:vibration/vibration.dart";
 import "../main.dart";
 import "../utils/SharedPrefs.dart";
-import "../utils/Theme.dart";
-import "../widgets/Requests.dart";
 import "MenuPage.dart";
 // import 'package:vibration_web/vibration_web.dart';
 
@@ -63,6 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: SizedBox(
         width: double.infinity,
         child: SettingsList(
+          // contentPadding: EdgeInsets.zero,
           // shrinkWrap: true,
           platform: DevicePlatform.iOS,
 
@@ -78,7 +76,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: sectionTitleTs,
                 softWrap: true,
               ),
-              margin: const EdgeInsetsDirectional.all(20),
+              margin: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 20, vertical: 10),
               tiles: <SettingsTile>[
                 buildDarkMode(),
                 buildTimeFormat(),
@@ -94,10 +93,25 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: sectionTitleTs,
                 softWrap: true,
               ),
-              margin: const EdgeInsetsDirectional.all(20),
+              margin: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 20, vertical: 10),
               tiles: <SettingsTile>[
-                buildSemStartEnd(),
+                // buildSemStartEnd(),
                 build3rdSlot(),
+              ],
+            ),
+
+            //// NOTIFICATIONS SECTION ////
+            SettingsSection(
+              title: Text(
+                'Notifications',
+                style: sectionTitleTs,
+                softWrap: true,
+              ),
+              margin: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 20, vertical: 10),
+              tiles: <SettingsTile>[
+                buildNotifications(),
               ],
             ),
 
@@ -108,16 +122,13 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: sectionTitleTs,
                 softWrap: true,
               ),
-              margin: const EdgeInsetsDirectional.all(20),
+              margin: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 20, vertical: 10),
               tiles: <SettingsTile>[
                 buildLockApp(),
                 buildUpdatePassword(),
               ],
             ),
-            // SettingsSection(
-            //   tiles: [],
-            //   margin: const EdgeInsetsDirectional.all(20),
-            // )
           ],
         ),
       ),
@@ -152,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
             prefs.setBool('dark_mode', value);
             MyApp.isDarkMode.value = value;
             MyColors = Theme.of(context).colorScheme;
-            vibrate();
+            // vibrate();
 
             // mainKey.currentState!.setDarkMode(value);
           });
@@ -254,13 +265,6 @@ class _SettingsPageState extends State<SettingsPage> {
           hintStyle: TextStyle(
               fontSize: 18, color: MyColors.secondary.withOpacity(0.2)),
         ),
-        // onEditingComplete: () {
-        //   if (_nameController.text.isNotEmpty) {
-        //     setState(() {
-        //       prefs.setString('first_name', _nameController.text);
-        //     });
-        //   }
-        // },
         onSubmitted: (value) {
           if (_nameController.text.isNotEmpty) {
             setState(() {
@@ -268,20 +272,8 @@ class _SettingsPageState extends State<SettingsPage> {
             });
           }
         },
-        // onChanged: (value) {
-        //   setState(() {
-        //     prefs.setString('first_name', value);
-        //   });
-        // },
       ),
       description: const Text('Change how you are greeted in the home screen!'),
-      // initialValue: prefs.getBool('dark_mode') ?? false,
-      // onToggle: (value) {
-      //   setState(() {
-      //     prefs.setBool('dark_mode', value);
-      //   });
-      // },
-      // trailing:
     );
   }
 
@@ -308,7 +300,6 @@ class _SettingsPageState extends State<SettingsPage> {
         activeColor: MyColors.primary,
         value: prefs.getBool('delayed_3rd') ?? false,
         onChanged: (value) {
-          print("Settings: Set Delayed 3rd to $value");
           widget.callScheduleInit(value);
           setState(() {
             prefs.setBool('delayed_3rd', value);
@@ -396,6 +387,29 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
+  buildNotifications() {
+    return SettingsTile.navigation(
+      value: Text((prefs.getBool('notifications_on') ?? true) ? 'On' : 'Off'),
+      leading: IconBuilder(
+        color: MyColors.primaryVariant,
+        icon: Icons.notifications_rounded,
+      ),
+      title: Text(
+        'Notifications',
+        style: titleTS,
+      ),
+      description: const Text('Schedule reminders, email notitifications, etc'),
+      onPressed: (context) async {
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Notifications(),
+            ));
+        setState(() {});
+      },
+    );
+  }
+
   buildLogout() {}
 
   void vibrate() {
@@ -479,7 +493,6 @@ class _DefaultPageState extends State<DefaultPage> {
                       ),
                       SettingsTile(
                         title: const Text('Courses'),
-                        // leading: const Icon(Icons.menu_book_rounded),
                         trailing:
                             _defaultPage == MenuItems.grades ? check : null,
                         onPressed: (context) {
@@ -588,5 +601,375 @@ class IconBuilder extends StatelessWidget {
           color: Theme.of(context).colorScheme.secondary.withOpacity(0.9),
           size: 20),
     );
+  }
+}
+
+class Notifications extends StatefulWidget {
+  const Notifications({super.key});
+
+  // value notifier for whether notifications are on or off
+  static ValueNotifier<bool> on =
+      ValueNotifier<bool>(prefs.getBool('notifications_on') ?? true);
+
+  @override
+  State<Notifications> createState() => _NotificationsState();
+}
+
+class _NotificationsState extends State<Notifications> {
+  // ignore: non_constant_identifier_names
+  late ColorScheme MyColors;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    MyColors = Theme.of(context).colorScheme;
+  }
+
+  TextStyle titleTS =
+      const TextStyle(fontWeight: FontWeight.w400, fontSize: 18);
+  TextStyle sectionTitleTs = const TextStyle(fontSize: 20);
+
+  @override
+  Widget build(BuildContext context) {
+    int minutes = prefs.getInt('reminder_minutes') ?? 15;
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: MyColors.background,
+        foregroundColor: MyColors.secondary,
+        elevation: 0,
+        title: const Text(
+          "Notifications",
+        ),
+      ),
+      backgroundColor: MyColors.background,
+      // Settings tile for notifications
+      body: SizedBox(
+        width: double.infinity,
+        child: SettingsList(
+          platform: DevicePlatform.iOS,
+          darkTheme: SettingsThemeData(
+            titleTextColor: Colors.white70,
+            settingsListBackground: MyColors.background,
+          ),
+          sections: [
+            //// SWITCH ////
+            SettingsSection(
+              title: Text(
+                'Notifications',
+                style: sectionTitleTs,
+                softWrap: true,
+              ),
+              margin: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 20, vertical: 10),
+              tiles: <SettingsTile>[
+                buildNotificationsSwitch(),
+                // SettingsTile(
+                //   title: Text('New Messages'),
+                //   // subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.message,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+                // SettingsTile(
+                //   title: 'New Matches',
+                //   subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.favorite,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+                // SettingsTile(
+                //   title: 'Super Likes',
+                //   subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.star,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+                // SettingsTile(
+                //   title: 'Top Picks',
+                //   subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.star,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+                // SettingsTile(
+                //   title: 'Messages',
+                //   subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.message,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+                // SettingsTile(
+                //   title: 'Reminders',
+                //   subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.notifications,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+                // SettingsTile(
+                //   title: 'Emails',
+                //   subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.email,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+                // SettingsTile(
+                //   title: 'Push Notifications',
+                //   subtitle: 'On',
+                //   leading: Icon(
+                //     Icons.notifications,
+                //     color: MyColors.secondary,
+                //   ),
+                //   onPressed: (BuildContext context) {},
+                // ),
+              ],
+            ),
+
+            // section for controlling how many muntes a reminder should be sent before the class starts
+            SettingsSection(
+              title: Text(
+                'Reminders',
+                style: sectionTitleTs,
+                softWrap: true,
+              ),
+              margin: const EdgeInsetsDirectional.symmetric(
+                  horizontal: 20, vertical: 10),
+              tiles: <SettingsTile>[
+                SettingsTile(
+                  title: const Text('Classes'),
+                  trailing: Row(
+                    children: [
+                      Text(
+                          minutes == 0
+                              ? 'On time'
+                              : '${prefs.getInt('reminder_minutes') ?? 15} minutes before',
+                          style: TextStyle(
+                            color:
+                                MyApp.isDarkMode.value ? Colors.white60 : null,
+                          )),
+                      const SizedBox(width: 5),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 14,
+                        color: MyApp.isDarkMode.value ? Colors.white60 : null,
+                      ),
+                    ],
+                  ),
+                  leading: IconBuilder(
+                    icon: Icons.timer,
+                    color: MyColors.secondary,
+                  ),
+                  onPressed: (BuildContext context) async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const ReminderMinutes();
+                        },
+                      ),
+                    );
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  buildNotificationsSwitch() {
+    return SettingsTile.switchTile(
+      leading: IconBuilder(
+        color: MyColors.primaryVariant,
+        // Colors.blue[300]!,
+        icon: Icons.notifications_rounded,
+      ),
+      title: Text(
+        'Notifications',
+        style: titleTS,
+      ),
+      initialValue: prefs.getBool('notifications_on') ?? true,
+      onToggle: (value) {},
+      trailing: Switch.adaptive(
+        activeColor: MyColors.primary,
+        value: prefs.getBool('notifications_on') ?? true,
+        onChanged: (value) async {
+          setState(() {
+            prefs.setBool('notifications_on', value);
+          });
+          if (Notifications.on.value != value) {
+            Notifications.on.value = value;
+          }
+
+          print("Settings: Set notifications to $value");
+          if (value) scheduleKey.currentState?.reInitNotifications();
+        },
+      ),
+    );
+  }
+}
+
+// create ReminderMinutes page just like defaultpage page
+class ReminderMinutes extends StatefulWidget {
+  const ReminderMinutes({super.key});
+
+  @override
+  State<ReminderMinutes> createState() => _ReminderMinutesState();
+}
+
+class _ReminderMinutesState extends State<ReminderMinutes> {
+  int _reminderMinutes = prefs.getInt('reminder_minutes') ?? 15;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: MyApp.isDarkMode.value
+            ? Theme.of(context).colorScheme.background
+            : const Color(0xfff3f3fa),
+        appBar: AppBar(
+          title: const Text('Classes'),
+          backgroundColor: Theme.of(context).colorScheme.background,
+          foregroundColor: Theme.of(context).colorScheme.secondary,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: SizedBox(
+          width: double.infinity,
+          // color: Colors.red,
+          child: ListView(
+            // padding: EdgeInsets.all(20),
+            children: [
+              SettingsList(
+                shrinkWrap: true,
+                platform: DevicePlatform.iOS,
+                darkTheme: SettingsThemeData(
+                  titleTextColor: Colors.white70,
+                  settingsListBackground:
+                      Theme.of(context).colorScheme.background,
+                ),
+                sections: [
+                  SettingsSection(
+                    margin: const EdgeInsetsDirectional.all(20),
+                    tiles: [
+                      SettingsTile(
+                        title: const Text('On time'),
+                        trailing: _reminderMinutes == 0
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 0;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('5 minutes before'),
+                        trailing: _reminderMinutes == 5
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 5;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('10 minutes before'),
+                        trailing: _reminderMinutes == 10
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 10;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('15 minutes before'),
+                        trailing: _reminderMinutes == 15
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 15;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('20 minutes before'),
+                        trailing: _reminderMinutes == 20
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 20;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('30 minutes before'),
+                        trailing: _reminderMinutes == 30
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 30;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('1 hour before'),
+                        trailing: _reminderMinutes == 60
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 60;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                      SettingsTile(
+                        title: const Text('2 hours before'),
+                        trailing: _reminderMinutes == 120
+                            ? Icon(Icons.check, color: MyColors.primary)
+                            : null,
+                        onPressed: (context) {
+                          setState(() {
+                            _reminderMinutes = 120;
+                            prefs.setInt('reminder_minutes', _reminderMinutes);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
   }
 }

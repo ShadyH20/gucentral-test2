@@ -95,6 +95,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
     await Requests.initializeEverything();
     // setState(() {
     loadingEverything = false;
+    MyApp.isLoading.value = false;
     prefs.setBool("loading", false);
     // });
     // Set the course map
@@ -171,13 +172,32 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                           .requestPermissionToSendNotifications();
                     }
                     AwesomeNotifications().createNotification(
-                        content: NotificationContent(
-                            id: 10,
-                            channelKey: 'basic_channel',
-                            title: 'Welcome to GUCentral!',
-                            body: 'We hope you enjoy our app!',
-                            actionType: ActionType.Default,
-                            payload: {'uuid': 'user-profile-uuid'}));
+                      content: NotificationContent(
+                          id: 10,
+                          channelKey: 'basic_channel',
+                          title: 'Welcome to GUCentral!',
+                          body: 'We hope you enjoy our app!',
+                          actionType: ActionType.SilentAction,
+                          payload: {'uuid': 'user-profile-uuid'}),
+                      actionButtons: [
+                        NotificationActionButton(
+                          key: 'READ',
+                          label: 'Read',
+                          autoDismissible: true,
+                          actionType: ActionType.Default,
+                          enabled: true,
+                          // icon: 'assets/images/profile.svg',
+                        ),
+                        NotificationActionButton(
+                          key: 'PROFILE',
+                          label: 'Profile',
+                          autoDismissible: true,
+                          actionType: ActionType.Default,
+                          enabled: true,
+                          // icon: 'assets/images/profile.svg',
+                        ),
+                      ],
+                    );
                   });
 
                   // TESTINGG //
@@ -508,6 +528,9 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                   .parse(notifications[index]['date']);
               // print(date);
               var timeAgo = timeago.format(date, locale: 'en');
+              if (timeAgo == "now ago") {
+                timeAgo = "now";
+              }
               return AnimationConfiguration.staggeredList(
                 delay: const Duration(milliseconds: 50),
                 position: index,
@@ -532,8 +555,13 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                             if (notifications[index]['read'] == false) {
                               Requests.addReadNotification(date);
                             }
-                            setState(() {
-                              notifications[index]['read'] = true;
+
+                            // To prevent the notification from being marked as read before the sheet is built
+                            Future.delayed(const Duration(milliseconds: 300))
+                                .then((value) {
+                              setState(() {
+                                notifications[index]['read'] = true;
+                              });
                             });
                           },
                           child: ListTile(

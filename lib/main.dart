@@ -238,6 +238,9 @@ class MyApp extends StatefulWidget {
   static final ValueNotifier<bool> isDarkMode =
       ValueNotifier(prefs.getBool('dark_mode') ?? false);
 
+  static ValueNotifier<bool> isLoading =
+      ValueNotifier(prefs.getBool("loading") ?? false);
+
   const MyApp({super.key});
 
   @override

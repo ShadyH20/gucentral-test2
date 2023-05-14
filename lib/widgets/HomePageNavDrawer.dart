@@ -43,6 +43,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
   final GlobalKey<HomePageState> _homeKey = GlobalKey<HomePageState>();
 
   void callScheduleInit(bool val) {
+    print("Calling schedule init from settings");
     _scheduleKey.currentState?.initializeSchedulePage();
   }
 
@@ -96,7 +97,7 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
     pages = [
       HomePage(key: _homeKey),
       const CoursesPage(),
-      SchedulePage(key: _scheduleKey, notifyHomePage: notifyHomePage),
+      SchedulePage(key: scheduleKey, notifyHomePage: notifyHomePage),
       SettingsPage(callScheduleInit: callScheduleInit),
       const GradesPage(),
       TranscriptPage(),
@@ -112,88 +113,119 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
 
   handleLockApp() async {
     if (prefs.getBool('lock') ?? false) {
+      // display a blank bluured overlay on top of the app
+      // to prevent the user from interacting with the app
+      // until they authenticate
+      // OverlayEntry overlayEntry = OverlayEntry(
+      //   builder: (context) => Container(
+      //     color: Colors.black.withOpacity(0.5),
+      //     child: Center(
+      //       child: CircularProgressIndicator(
+      //         color: MyColors.secondary,
+      //       ),
+      //     ),
+      //   ),
+      // );
+      // Overlay.of(context)!.insert(overlayEntry);
+
       var isAuthenticated = false;
       do {
         isAuthenticated = await LocalAuthApi.authenticate();
       } while (!isAuthenticated);
+
+      // overlayEntry.remove();
     }
   }
 
   @override
-  Widget build(BuildContext context) => WillPopScope(
-      onWillPop: () async => false,
-      child: ZoomDrawer(
-        controller: ZoomDrawerController(),
-        dragOffset: 120,
-        openDragSensitivity: 300,
-        mainScreenScale: 0,
-        borderRadius: 0,
-        angle: 0,
+  Widget build(BuildContext context) {
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: ZoomDrawer(
+          controller: ZoomDrawerController(),
+          dragOffset: 120,
+          // disableDragGesture: (prefs.getBool("loading") ?? true),
+          openDragSensitivity: 300,
+          mainScreenScale: 0,
+          borderRadius: 0,
+          angle: 0,
 
-        // make a drawer style so that the drawer appears on top of the main screen
-        drawerStyleBuilder:
-            (context, animationValue, slideWidth, menuScreen, mainScreen) {
-          double slide = slideWidth * animationValue;
-          // print('Slide: $slide');
-          return Stack(children: [
-            Transform(
-              transform: Matrix4.identity()..translate(slide),
-              alignment: Alignment.center,
-              child: mainScreen,
-            ),
-            slide == 0.0
-                ? Container()
-                : SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: menuScreen,
-                  ),
-          ]);
-        },
-        // moveMenuScreen: true,
-        menuScreenWidth: MediaQuery.of(context).size.width * 0.7,
-        // menuScreenOverlayColor: MyColors.background,
-        mainScreenTapClose: true,
-        // menuBackgroundColor: Colors.transparent,
-        // mainScreenOverlayColor: MyColors.background,
-        slideWidth: MediaQuery.of(context).size.width * 0.7,
-        mainScreen: LazyLoadIndexedStack(
-          index: selectedIndex,
-          children: pages,
-        ),
-        menuScreen: Builder(
-          builder: (context) => MenuPage(
-              key: menuPageKey,
-              currentItem: currentItem,
-              onSelectedItem: (item) async {
-                if (item == MenuItems.logout) {
-                  // show confirmation dialog before logging out
-                  bool logout = await buildConfirmationDialog(
-                      context,
-                      MyColors,
-                      logoutRed,
-                      Icons.logout,
-                      "All your saved data will be lost!\ne.g. quizzes, deadlines, weights, etc...",
-                      "Yes, Logout",
-                      "No, I am staying");
-                  if (!logout) return;
+          // make a drawer style so that the drawer appears on top of the main screen
+          drawerStyleBuilder:
+              (context, animationValue, slideWidth, menuScreen, mainScreen) {
+            double slide = slideWidth * animationValue;
+            // print('Slide: $slide');
+            return Stack(children: [
+              Transform(
+                transform: Matrix4.identity()..translate(slide),
+                alignment: Alignment.center,
+                child: mainScreen,
+              ),
+              slide == 0.0
+                  ? Container()
+                  : SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: menuScreen,
+                    ),
+            ]);
+          },
+          // moveMenuScreen: true,
+          menuScreenWidth: MediaQuery.of(context).size.width * 0.7,
+          // menuScreenOverlayColor: MyColors.background,
+          mainScreenTapClose: true,
+          // menuBackgroundColor: Colors.transparent,
+          // mainScreenOverlayColor: MyColors.background,
+          slideWidth: MediaQuery.of(context).size.width * 0.7,
+          mainScreen: (prefs.getBool("loading") ?? true)
+              ? LazyLoadIndexedStack(
+                  index: selectedIndex,
+                  children: pages,
+                )
+              : IndexedStack(
+                  index: selectedIndex,
+                  children: pages,
+                ),
+          menuScreen: Builder(
+            builder: (context) => MenuPage(
+                key: menuPageKey,
+                currentItem: currentItem,
+                onSelectedItem: (item) async {
+                  if (item == MenuItems.logout) {
+                    // show confirmation dialog before logging out
+                    bool logout = await buildConfirmationDialog(
+                        context,
+                        MyColors,
+                        logoutRed,
+                        Icons.logout,
+                        "All your saved data will be lost!\ne.g. quizzes, deadlines, weights, etc...",
+                        "Yes, Logout",
+                        "No, I am staying");
+                    if (!logout) return;
 
-                  // Clear SharedPrefs
-                  bool dark = prefs.getBool('dark_mode') ?? false;
-                  prefs.clear();
-                  prefs.setBool('dark_mode', dark);
-                  // Navigate to login page
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, '/login', (route) => false);
-                }
-                setState(() {
-                  currentItem = item;
-                  selectedIndex = getIndex(item);
-                });
-                // ignore: use_build_context_synchronously
-                ZoomDrawer.of(context)!.close() ?? false;
-              }),
-        ),
-      ));
+                    // Clear SharedPrefs
+                    bool dark = prefs.getBool('dark_mode') ?? false;
+                    prefs.clear();
+                    prefs.setBool('dark_mode', dark);
+                    // Navigate to login page
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', (route) => false);
+                  }
+                  if (!(prefs.getBool("loading")!)) {
+                    setState(() {
+                      currentItem = item;
+                      selectedIndex = getIndex(item);
+                    });
+                    // ignore: use_build_context_synchronously
+                  } else {
+                    showSnackBar(context,
+                        'Please wait for a moment for the app to load!');
+                  }
+                  ZoomDrawer.of(context)!.close() ?? false;
+                }),
+          ),
+        ));
+  }
+
   Color logoutRed = const Color.fromARGB(255, 223, 70, 67);
 
   buildLogoutDialog() {

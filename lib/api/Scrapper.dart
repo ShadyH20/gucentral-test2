@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import "package:http/http.dart" as http;
 import 'package:html/parser.dart' as parser;
 import 'package:ntlm/ntlm.dart';
-import 'package:webdriver/io.dart';
+import 'package:universal_html/html.dart';
+// import 'package:universal_html/html.dart';
+import 'package:webdriver/async_io.dart';
 
 import '../utils/SharedPrefs.dart';
 
@@ -205,7 +207,7 @@ class Scrapper {
   }
 
   static Future<void> getGrades(String courseCode) async {
-    var client = Scrapper.client();
+    NTLMClient client = Scrapper.client();
 
     try {
       // Get the grades URL and extract the list of courses
@@ -218,16 +220,43 @@ class Scrapper {
       var html = response.body;
 
       var gradesDoc = parser.parse(html);
+      print('Grades doc: $gradesDoc');
 
-      // Find the login form by name
-      // Find the login form by name
+      // Select this form to then submit it
+
       final formElement = gradesDoc.querySelector('form[id="form2"]');
+      print('Form element: $formElement');
 
       var options = extractCourses(html);
 
       // Select the course with the specified code
       var selectedCourse =
           options.firstWhere((option) => option['code'] == courseCode);
+
+      // this is the html for the dropdown menu
+      /*
+          <p align="left">Course:
+												<select name="ctl00$UnFormMainContent$smCrsLst" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$UnFormMainContent$smCrsLst\&#39;,\&#39;\&#39;)&#39;, 0)" id="UnFormMainContent_smCrsLst" style="Z-INDEX: 0">
+	<option selected="selected" value="">Choose a Course</option>
+	<option value="258">MET Computer Science 6th Semester - CSEN601 Computer System Architecture</option>
+	<option value="259">MET Computer Science 6th Semester - CSEN602 Operating Systems</option>
+	<option value="260">MET Computer Science 6th Semester - MNGT601 Introduction to Management</option>
+	<option value="523">MET Computer Science 6th Semester - DMET602 Network &amp; Media lab</option>
+	<option value="561">MET Computer Science 6th Semester - CSEN604 Data Bases II</option>
+	<option value="563">MET Computer Science 6th Semester - CSEN603 Software Engineering</option>
+
+</select></p>
+          */
+
+      var gradesSelect = (gradesDoc.querySelector('#UnFormMainContent_smCrsLst')
+          as SelectElement?);
+      debugPrint('Grades form before: ${gradesSelect?.innerHtml}');
+
+      gradesSelect?.attributes['value'] = selectedCourse['value'] ?? "258";
+
+      debugPrint('Grades form after: ${gradesSelect?.innerHtml}');
+
+      debugPrint('Grades doc after selecting course: $gradesDoc');
 
       // Submit the form to get the grades for the selected course
       var formData = {

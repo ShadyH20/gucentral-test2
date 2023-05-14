@@ -1,6 +1,7 @@
 import "dart:math";
 
 import 'package:flutter/material.dart';
+import "package:gucentral/widgets/MenuWidget.dart";
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:intl/intl.dart";
@@ -17,7 +18,7 @@ class Requests {
   static Uri checkCredsURL = Uri.parse('$backendURL/checkCredentials');
 //   static Uri firstLoginURL = Uri.parse(
 //       'https://ik6lo3ue7aitmuoenwep4qzs7e0vrono.lambda-url.us-east-2.on.aws/');
-   static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
+  static Uri firstLoginURL = Uri.parse('$backendURL/firstLogin');
   static Uri loginURL = Uri.parse('$backendURL/login');
 
   static Uri coursesEvalURL = Uri.parse('$backendURL/coursesToEval');
@@ -137,6 +138,7 @@ class Requests {
   static dynamic initializeEverything() async {
     if (prefs.getBool(SharedPrefs.firstAccess) ?? false) {
       prefs.setBool(SharedPrefs.firstAccess, false);
+      // MyApp.isLoading.value = true;
       prefs.setBool("loading", true);
 
       var body = jsonEncode(getCreds());
@@ -168,18 +170,34 @@ class Requests {
   }
 
   static dynamic getIdName() {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return [prefs.getString('id'), prefs.getString('name')];
   }
 
   static dynamic getUsernameId() {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return [prefs.getString('username'), prefs.getString('id')];
   }
 
   static dynamic getCourses() {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    return jsonDecode(prefs.getString('courses')!);
+    if (prefs.containsKey('courses')) {
+      return jsonDecode(prefs.getString('courses')!);
+    }
+    // Courses still not loaded
+    // // Send request for courses
+    // var body = jsonEncode(getCreds());
+
+    // try {
+    //   var response = await http.post(transcriptURL, body: body, headers: {
+    //     'Content-Type': 'application/json',
+    //     'Accept': 'application/json'
+    //   });
+    //   return jsonDecode(response.body);
+    // } on Exception catch (e) {
+    //   print("transcript exception $e");
+    //   return {
+    //     'success': false,
+    //     'message': 'An error ocurred! Please try again.'
+    //   };
+    // }
   }
 
   static void setCourses(List courses) {
@@ -187,7 +205,6 @@ class Requests {
   }
 
   static dynamic getSchedule() {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
     return jsonDecode(prefs.getString('schedule')!);
   }
 
@@ -490,26 +507,7 @@ class Requests {
   }
 
   static getNotifications() async {
-    // var creds = getCreds();
-    // var body = jsonEncode(creds);
-
     try {
-      // var response = await http.post(notificationsURL, body: body, headers: {
-      //   'Content-Type': 'application/json',
-      //   'Accept': 'application/json'
-      // });
-
-      // var notifications = jsonDecode(response.body);
-
-      // // check set the notifications' read attribute
-      // setNotificationsRead(notifications['notifications']);
-
-      // if (notifications['success']) {
-      //   prefs.setString(SharedPrefs.notifications,
-      //       jsonEncode(notifications['notifications']));
-      // }
-      // return notifications;
-
       var notifications = await Scrapper.get_notifications();
 
       // check set the notifications' read attribute
@@ -803,7 +801,7 @@ void showSnackBar(BuildContext context, String text,
         ? Theme.of(context).colorScheme.surface
         : Color.fromARGB(255, 113, 118, 121),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    width: MediaQuery.of(context).size.width * 0.8,
+    width: MediaQuery.of(context).size.width * 0.9,
     content: Text(
       text,
       textAlign: TextAlign.center,
@@ -815,7 +813,7 @@ void showSnackBar(BuildContext context, String text,
       ),
     ),
     showCloseIcon: true,
-    closeIconColor: MyColors.background,
+    closeIconColor: Colors.white70,
   );
   // Find the ScaffoldMessenger in the widget tree
   // and use it to show a SnackBar.
