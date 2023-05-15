@@ -676,12 +676,13 @@ class Requests {
     var body = jsonEncode(out);
 
     try {
-      var response = await http.post(midtermsURL, body: body, headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      });
+      // var response = await http.post(midtermsURL, body: body, headers: {
+      //   'Content-Type': 'application/json',
+      //   'Accept': 'application/json'
+      // });
+      // var midterms = jsonDecode(response.body);
+      var midterms = await Scrapper.get_midterms();
 
-      var midterms = jsonDecode(response.body);
       if (midterms['success']) {
         prefs.setString(
             SharedPrefs.midterms, jsonEncode(midterms['all_midterms']));

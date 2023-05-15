@@ -261,7 +261,8 @@ class _CoursesPageState extends State<CoursesPage>
 
   late final RefreshController refreshControllerMidterm = RefreshController();
   buildMidtermCards() {
-    print('Coursesmap: $courseMap');
+    // print('Coursesmap: $courseMap');
+    // print('COURSE CODE:::: ${item['course_code']}');
     return AnimationLimiter(
       key: ValueKey("$allMidterms"),
       child: SmartRefresher(
@@ -283,6 +284,9 @@ class _CoursesPageState extends State<CoursesPage>
                 itemCount: allMidterms.length,
                 itemBuilder: (context, index) {
                   var item = allMidterms[index];
+                  print('ALL MIDTERMS:::: $allMidterms');
+                  print('COURSE CODE::: ${item['course_code']}');
+                  print('COURSE MAP::: $courseMap');
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     duration: const Duration(milliseconds: 600),
@@ -301,9 +305,8 @@ class _CoursesPageState extends State<CoursesPage>
                                             50 -
                                             110),
                                 child: FittedBox(
-                                  fit: BoxFit.scaleDown,
                                   child: Text(
-                                    courseMap[item['course_code']] ?? "",
+                                    courseMap[item['course_code']] ?? "N/A",
                                     style: kSubTitleStyle.copyWith(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500),
