@@ -305,4 +305,27 @@ class Scrapper {
 
     return dict['title'] ?? "";
   }
+
+  static get_midterms() async {
+    NTLMClient client = Scrapper.client();
+
+    var url = grades_url;
+    var res = await client.get(Uri.parse(url));
+    if (res.statusCode != 200) {
+      return {'all_midterms': [], 'success': false};
+    }
+    var doc = parser.parse(res.body);
+    var midterm_html =
+        doc.querySelectorAll("#UnFormMainContent_midDg tr").sublist(1);
+    var all_midterms = [];
+
+    for (var midterm in midterm_html) {
+      var details = midterm.querySelectorAll("td");
+      var course_code = details[0].text.split(" ")[details.length - 1];
+      var grade = details[1].text;
+      all_midterms.add({'course_code': course_code, 'grade': grade});
+    }
+
+    return {'all_midterms': all_midterms, 'success': true};
+  }
 }

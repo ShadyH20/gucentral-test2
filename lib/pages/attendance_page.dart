@@ -592,7 +592,9 @@ class AttendancePageState extends State<AttendancePage>
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      '${absencesLeft.toString()}/$courseMaxAbsences',
+                      courseMaxAbsences > 0
+                          ? '${absencesLeft.toString()}/$courseMaxAbsences'
+                          : '-',
                       style: kMainTitleStyle.copyWith(
                           color: getAttColor(absencesLeft, courseMaxAbsences),
                           fontSize: 20),

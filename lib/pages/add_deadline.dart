@@ -391,7 +391,7 @@ class _AddDeadlinePageState extends State<AddDeadlinePage> {
                         onDeletePresed();
                       },
                       style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(0),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(7)),
                           side: BorderSide(color: MyColors.error)),
