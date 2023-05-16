@@ -41,6 +41,7 @@ class EventDataSource extends CalendarDataSource {
       'description': _getEventData(index).description,
       'slot': _getEventData(index).slot,
       'group': _getEventData(index).group,
+      'reminder': _getEventData(index).reminder,
     });
   }
 
@@ -93,6 +94,7 @@ class EventDataSource extends CalendarDataSource {
       location: appointment.location ?? "",
       slot: notes['slot'] ?? "0",
       group: notes['group'] ?? "",
+      reminder: notes['reminder'],
     );
   }
 }

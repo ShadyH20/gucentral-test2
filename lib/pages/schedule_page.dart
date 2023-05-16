@@ -794,6 +794,11 @@ class SchedulePageState extends State<SchedulePage> {
     scheduleError = false;
 
     AwesomeNotifications().cancelAll();
+    // //cancel notifications in a specific channel
+    // AwesomeNotifications().cancelSchedule("scheduled");
+    // // pause notifications then resume
+    // AwesomeNotifications().;
+    // AwesomeNotifications().resume();
 
     for (int i = 0; i < schedule.length; i++) {
       String day = schedule[i][0];

@@ -281,7 +281,8 @@ class PlayerCard extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: NumberFormat.compact().format(data['score']),
+                    // text: NumberFormat.compact().format(data['score']),
+                    text: NumberFormat.decimalPattern().format(data['score']),
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

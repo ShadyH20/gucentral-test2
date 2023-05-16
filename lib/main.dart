@@ -31,15 +31,7 @@ void main() async {
 
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    announcement: false,
-    badge: true,
-    carPlay: false,
-    criticalAlert: false,
-    provisional: false,
-    sound: true,
-  );
+  NotificationSettings settings = await messaging.requestPermission();
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');
@@ -67,8 +59,10 @@ void main() async {
           channelKey: 'basic_channel',
           channelName: 'Basic notifications',
           channelDescription: 'Notification channel for basic tests',
+          // the sound is in "assets\sounds\notification.mp3"
+          soundSource: 'resource://raw/notification',
           // defaultColor: const Color(0xFF9D50DD),
-          ledColor: Colors.white,
+          channelShowBadge: true,
         ),
         NotificationChannel(
           channelGroupKey: 'scheduled_group',

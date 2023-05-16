@@ -62,122 +62,59 @@ class _ExpandableChromeDinoState extends State<ExpandableChromeDino>
     super.dispose();
   }
 
+  double iconSize = 65.0;
   @override
   Widget build(BuildContext context) {
-    double iconSize = 70.0;
-    double cardDy = 5 + 15 + 41.0;
-    return LayoutBuilder(
-      builder: (context, cons) => SizedBox(
-        width: cons.maxWidth,
-        height: cons.maxHeight,
-        child: ValueListenableBuilder<Size>(
-            valueListenable: HomePage.cardSize,
-            builder: (context, size, child) {
-              return Stack(
-                alignment: Alignment.center,
-                children: [
-                  AnimatedBuilder(
-                      animation: _menuAC,
-                      builder: (context, child) {
-                        return Positioned(
-                          top: Tween(
-                                  begin: cardDy +
-                                      HomePage.cardSize.value.height / 2 -
-                                      iconSize / 2,
-                                  end: cardDy)
-                              .evaluate(_menuAC),
-                          height: Tween(
-                                  begin: iconSize,
-                                  end: HomePage.cardSize.value.height + 10)
-                              .evaluate(_menuAC),
-                          child: Card(
-                            color: Colors.transparent,
-                            elevation: 7,
-                            margin: const EdgeInsets.all(0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  Tween<double>(begin: 14, end: 0)
-                                      .evaluate(_menuAC)),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                // const Radius.circular(12.0),
-                                topLeft: Radius.circular(
-                                    Tween<double>(begin: 14, end: 0)
-                                        .evaluate(_menuAC)),
-                                topRight: Radius.circular(
-                                    Tween<double>(begin: 14, end: 0)
-                                        .evaluate(_menuAC)),
-                                bottomLeft: Radius.circular(
-                                    Tween<double>(begin: 14, end: 0)
-                                        .evaluate(_menuAC)),
-                                bottomRight: Radius.circular(
-                                    Tween<double>(begin: 14, end: 0)
-                                        .evaluate(_menuAC)),
-                              ),
-                              child: Container(
-                                width: Tween(
-                                        begin: iconSize,
-                                        end: MediaQuery.of(context).size.width)
-                                    .evaluate(curvedAnimation),
-                                height: Tween(
-                                        begin: iconSize,
-                                        end: HomePage.cardSize.value.height)
-                                    .evaluate(curvedAnimation),
-                                decoration: const BoxDecoration(
-                                  // color: filterColor.value,
-                                  color: Colors.white,
-                                ),
-                                child: child,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            isFilterOpen.value = !isFilterOpen.value;
-                            // myChild = myChild == dinoIcon ? dinoGame : dinoIcon;
-                          });
-                        },
-                        child: Center(
-                          child: isFilterOpen.value
-                              ? dinoGame
-                              : Image.asset(
-                                  'assets/images/dino/dino_icon.png',
-                                ),
-                        ),
-                      )),
-                  isFilterOpen.value
-                      ? Container()
-                      : Positioned(
-                          top: (HomePage.cardDy - kToolbarHeight - 24) +
-                              HomePage.cardSize.value.height / 2 +
-                              iconSize / 2 +
-                              5,
-                          child: Text(
-                            'Chrome Dino',
-                            style: TextStyle(
-                              fontFamily: 'Outfit',
-                              color: MyColors.secondary,
-                              fontSize: 17.0,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                ],
-              );
-            }),
+    // double pageWidth = MediaQuery.of(context).size.width;
+    return Container(
+      decoration: BoxDecoration(
+        border: !isFilterOpen.value
+            ? null
+            : Border.symmetric(
+                horizontal: BorderSide(
+                  color: MyColors.secondary,
+                  width: 1.5,
+                ),
+              ),
+      ),
+      child: AnimatedSize(
+        curve: Curves.easeInOut,
+        duration: 700.ms,
+        reverseDuration: 300.ms,
+        child: SizedBox(
+          width: _size,
+          height: _size,
+          child: _size != 65
+              ? dinoGame
+              : Card(
+                  clipBehavior: Clip.hardEdge,
+                  color: Colors.transparent,
+                  elevation: 7,
+                  margin: const EdgeInsets.all(0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        // isFilterOpen.value = !isFilterOpen.value;
+                        _size = _size == iconSize ? null : iconSize;
+                      });
+                    },
+                    child: Image.asset(
+                      'assets/images/dino/dino_icon.png',
+                    ),
+                  )),
+        ),
       ),
     );
   }
 
+  late double? _size = iconSize;
   void closeGame() {
-    isFilterOpen.value = !isFilterOpen.value;
+    // isFilterOpen.value = !isFilterOpen.value;
     setState(() {
-      // myChild = dinoIcon;
+      _size = _size == iconSize ? null : iconSize;
     });
   }
 }

@@ -750,6 +750,9 @@ class Event implements Comparable<Event> {
   String slot;
   String group;
 
+  // Minutes before the event to send a reminder. -1 if no reminder
+  int reminder;
+
   Event({
     required this.title,
     required this.description,
@@ -762,6 +765,7 @@ class Event implements Comparable<Event> {
     this.location = "",
     this.slot = "0",
     this.group = "",
+    this.reminder = -1,
   });
 
   setRecurrenceExceptionDates(List<DateTime> dates) {
@@ -813,7 +817,8 @@ class Event implements Comparable<Event> {
             (json['re'] as List).map((e) => DateTime.parse(e)).toList(),
         location = json['l'],
         slot = json['slot'],
-        group = json['group'];
+        group = json['group'],
+        reminder = json['reminder'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -828,6 +833,7 @@ class Event implements Comparable<Event> {
       'l': location,
       'slot': slot,
       'group': group,
+      'reminder': reminder,
     };
   }
 }

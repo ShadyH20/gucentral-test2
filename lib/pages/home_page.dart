@@ -103,9 +103,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (state == AppLifecycleState.detached ||
         state == AppLifecycleState.paused ||
-        state == AppLifecycleState.inactive) {
-          
-        }
+        state == AppLifecycleState.inactive) {}
   }
 
   bool loadingEverything = true;
@@ -239,252 +237,259 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
         //   height: 70,
         // ),
         appBar: HomePage.appBar,
-        body: Stack(
-          alignment: Alignment.center,
-          children: [
-            Positioned(
-              // top: 0,
-              child: Container(
-                width: double.infinity,
+        body: Container(
+          width: double.infinity,
+          padding: EdgeInsets.zero,
+          margin: EdgeInsets.zero,
+          child: Column(
+            children: [
+              const SizedBox(height: 5),
+              //// HELLO STUDENT ////
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
+                child: Row(
                   children: [
-                    const SizedBox(height: 5),
-                    //// HELLO STUDENT ////
-                    Row(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          width: MediaQuery.of(context).size.width * 0.7,
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              "Hello, ${prefs.getString('first_name') ?? "Student"}!",
-                              style: TextStyle(
-                                  color: MyColors.secondary,
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w800),
-                              textAlign: TextAlign.start,
-                              maxLines: 1,
-                            ),
-                          ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          "Hello, ${prefs.getString('first_name') ?? "Student"}!",
+                          style: TextStyle(
+                              color: MyColors.secondary,
+                              fontSize: 36,
+                              fontWeight: FontWeight.w800),
+                          textAlign: TextAlign.start,
+                          maxLines: 1,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-
-                    //// THE 3 BOXES ////
-                    Expanded(
-                      flex: 4,
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            children: [
-                              //// SUMMARY ////
-                              Expanded(
-                                key: gameCardKey,
-                                flex: 3,
-                                child: MeasureSize(
-                                  child: Container(
-                                    // height: 250,
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(
-                                        15.0,
-                                      ),
-                                      color: MyColors.primary,
-                                    ),
-                                    // child: const Authorized(),
-                                    // ChromeDino(),
-                                  ),
-                                  onChange: (size) {
-                                    setState(() {
-                                      HomePage.cardDy = getCardDisplacement();
-                                      HomePage.cardSize.value = size;
-                                      // chromeDino = ChromeDino(size: HomePage.cardSize.value);
-                                    });
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Expanded(
-                                flex: 2,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    //// THIS WEEK QUIZZES ////
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            15.0,
-                                          ),
-                                          color: MyColors.surface,
-                                        ),
-                                        child: DefaultTextStyle(
-                                          style: const TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 11.0),
-                                            child: FittedBox(
-                                              child: Column(
-                                                  // mainAxisAlignment:
-                                                  // MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    const Text(
-                                                      "this week",
-                                                    ),
-                                                    FittedBox(
-                                                      fit: BoxFit.scaleDown,
-                                                      child: Text(
-                                                        getNumberOfQuizzesThisWeek(),
-                                                        textScaleFactor: 5.5,
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                        "exam${nQuizzesThisWeek == 1 ? "" : "s"}")
-                                                  ]),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    //// CURRENT WEEK ////
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            15.0,
-                                          ),
-                                          color: MyColors.tertiary,
-                                        ),
-                                        child: Column(children: [
-                                          Expanded(
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: const [
-                                                Positioned(
-                                                  top: 15,
-                                                  child: Text(
-                                                    "current week",
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  // right: 10,
-                                                  child: Text("Week 5",
-                                                      style: TextStyle(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .underline,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 43)),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        ]),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                            ],
-                          )),
-                    ),
-
-                    //// NOTIFICATIONS ////
-                    Expanded(
-                      flex: 4,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            // height: 50,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 15),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text.rich(
-                                      TextSpan(
-                                        text: "Today, ",
-                                        style: TextStyle(
-                                            color: MyColors.secondary,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w700),
-                                        children: [
-                                          TextSpan(
-                                            text: DateFormat("d MMMM")
-                                                .format(DateTime.now()),
-                                            style: const TextStyle(
-                                                // color: MyColors.background,
-                                                fontSize: 22,
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  // show a loading indicator if the notifications are loading
-                                  loadingNotifications
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Expanded(
-                            flex: 10,
-                            child: Container(
-                              // height: 50,
-                              decoration: BoxDecoration(
-                                color: MyColors.background,
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: MyColors.primary,
-                                    offset: const Offset(0, -2),
-                                  ),
-                                ],
-                              ),
-                              padding: const EdgeInsets.only(top: 5),
-                              child:
-                                  loadingNotifications && notifications.isEmpty
-                                      ? buildNotificationsSkeleton()
-                                      : buildNotifications(),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-            const ExpandableChromeDino(),
-          ],
+              const SizedBox(height: 15),
+
+              //// THE 3 BOXES ////
+              Expanded(
+                flex: 4,
+                child: Column(
+                  children: [
+                    //// SUMMARY ////
+                    Expanded(
+                      key: gameCardKey,
+                      flex: 3,
+                      child: MeasureSize(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          clipBehavior: Clip.none,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
+                              child: Container(
+                                // height: 250,
+                                // padding: EdgeInsets.zero,
+                                // padding: const EdgeInsets.symmetric(
+                                //     vertical: 10, horizontal: 20),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    15.0,
+                                  ),
+                                  color: MyColors.primary,
+                                ),
+                                // child: ChromeDino(
+                                //   closeGame: () {},
+                                // ),
+                                // ChromeDino(),
+                              ),
+                            ),
+                            const ExpandableChromeDino(),
+                          ],
+                        ),
+                        onChange: (size) {
+                          setState(() {
+                            HomePage.cardDy = getCardDisplacement();
+                            HomePage.cardSize.value = size;
+                            // chromeDino = ChromeDino(size: HomePage.cardSize.value);
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            //// THIS WEEK QUIZZES ////
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    15.0,
+                                  ),
+                                  color: MyColors.surface,
+                                ),
+                                child: DefaultTextStyle(
+                                  style: const TextStyle(
+                                      fontSize: 15, color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 11.0),
+                                    child: FittedBox(
+                                      child: Column(
+                                          // mainAxisAlignment:
+                                          // MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              "this week",
+                                            ),
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Text(
+                                                getNumberOfQuizzesThisWeek(),
+                                                textScaleFactor: 5.5,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                                "exam${nQuizzesThisWeek == 1 ? "" : "s"}")
+                                          ]),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            //// CURRENT WEEK ////
+                            Expanded(
+                              flex: 2,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    15.0,
+                                  ),
+                                  color: MyColors.tertiary,
+                                ),
+                                child: Column(children: [
+                                  Expanded(
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: const [
+                                        Positioned(
+                                          top: 15,
+                                          child: Text(
+                                            "current week",
+                                          ),
+                                        ),
+                                        Positioned(
+                                          // right: 10,
+                                          child: Text("Week 5",
+                                              style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 43)),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ]),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                  ],
+                ),
+              ),
+
+              //// NOTIFICATIONS ////
+              Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        // height: 50,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text.rich(
+                                  TextSpan(
+                                    text: "Today, ",
+                                    style: TextStyle(
+                                        color: MyColors.secondary,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700),
+                                    children: [
+                                      TextSpan(
+                                        text: DateFormat("d MMMM")
+                                            .format(DateTime.now()),
+                                        style: const TextStyle(
+                                            // color: MyColors.background,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.normal),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              // show a loading indicator if the notifications are loading
+                              loadingNotifications
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Expanded(
+                        flex: 10,
+                        child: Container(
+                          // height: 50,
+                          decoration: BoxDecoration(
+                            color: MyColors.background,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: MyColors.primary,
+                                offset: const Offset(0, -2),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.only(top: 5),
+                          child: loadingNotifications && notifications.isEmpty
+                              ? buildNotificationsSkeleton()
+                              : buildNotifications(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ));
   }
 

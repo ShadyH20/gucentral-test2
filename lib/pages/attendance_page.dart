@@ -253,10 +253,6 @@ class AttendancePageState extends State<AttendancePage>
 
   attendanceAppBar() {
     return AppBar(
-      // systemOverlayStyle: SystemUiOverlayStyle(
-      //     statusBarColor: MyColors.primary,
-      //     statusBarIconBrightness: Brightness.dark,
-      //     statusBarBrightness: Brightness.dark),
       elevation: 0,
       backgroundColor: MyColors.background,
       centerTitle: true,
@@ -317,6 +313,7 @@ class AttendancePageState extends State<AttendancePage>
           ),
         ),
         child: ListView.builder(
+          padding: const EdgeInsets.only(bottom: 20),
           itemCount: attendanceList.length,
           itemBuilder: (context, index) {
             var attendance = attendanceList[attendanceList.length - 1 - index];

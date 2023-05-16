@@ -461,10 +461,6 @@ class _DefaultPageState extends State<DefaultPage> {
               SettingsList(
                 shrinkWrap: true,
                 platform: DevicePlatform.iOS,
-                // lightTheme: SettingsThemeData(
-                //     settingsListBackground: MyColors.background,
-                //     settingsSectionBackground: Colors.black.withOpacity(0.0),
-                //     ),
                 darkTheme: SettingsThemeData(
                   titleTextColor: Colors.white70,
                   settingsListBackground:
@@ -492,7 +488,7 @@ class _DefaultPageState extends State<DefaultPage> {
                         },
                       ),
                       SettingsTile(
-                        title: const Text('Courses'),
+                        title: const Text('Grades'),
                         trailing:
                             _defaultPage == MenuItems.grades ? check : null,
                         onPressed: (context) {
@@ -936,30 +932,6 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                         onPressed: (context) {
                           setState(() {
                             _reminderMinutes = 30;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
-                        },
-                      ),
-                      SettingsTile(
-                        title: const Text('1 hour before'),
-                        trailing: _reminderMinutes == 60
-                            ? Icon(Icons.check, color: MyColors.primary)
-                            : null,
-                        onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 60;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
-                        },
-                      ),
-                      SettingsTile(
-                        title: const Text('2 hours before'),
-                        trailing: _reminderMinutes == 120
-                            ? Icon(Icons.check, color: MyColors.primary)
-                            : null,
-                        onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 120;
                             prefs.setInt('reminder_minutes', _reminderMinutes);
                           });
                         },

@@ -278,16 +278,17 @@ class _ChromeDinoState extends State<ChromeDino>
           screenSize = Size(HomePage.cardSize.value.width,
               HomePage.cardSize.value.height * 1.5);
           return AnimatedContainer(
-            duration: const Duration(milliseconds: 2000),
+            duration: const Duration(milliseconds: 1500),
             decoration: BoxDecoration(
               // borderRadius: BorderRadius.circular(
               //   15.0,
               // ),
               border: Border.symmetric(
-                  horizontal: BorderSide(color: MyColors.secondary, width: 2)),
+                  horizontal:
+                      BorderSide(color: MyColors.secondary, width: 1.5)),
               color: (runDistance ~/ dayNightOffest) % 2 == 0
                   ? Colors.white
-                  : Colors.black,
+                  : const Color(0xFF141518),
             ),
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
@@ -316,7 +317,7 @@ class _ChromeDinoState extends State<ChromeDino>
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: (runDistance ~/ dayNightOffest) % 2 == 0
-                                ? Colors.black
+                                ? const Color(0xFF141518)
                                 : Colors.white,
                           ),
                         ),
@@ -336,7 +337,7 @@ class _ChromeDinoState extends State<ChromeDino>
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
                             color: (runDistance ~/ dayNightOffest) % 2 == 0
-                                ? Colors.black
+                                ? const Color(0xFF141518)
                                 : Colors.white,
                           ),
                         ),
@@ -362,7 +363,7 @@ class _ChromeDinoState extends State<ChromeDino>
                       icon: Icon(Icons.leaderboard,
                           size: 20,
                           color: (runDistance ~/ dayNightOffest) % 2 == 0
-                              ? Colors.black
+                              ? const Color(0xFF141518)
                               : Colors.white),
                     ),
                   ),
@@ -378,7 +379,7 @@ class _ChromeDinoState extends State<ChromeDino>
                       icon: Icon(Icons.exit_to_app_rounded,
                           size: 20,
                           color: (runDistance ~/ dayNightOffest) % 2 == 0
-                              ? Colors.black
+                              ? const Color(0xFF141518)
                               : Colors.white),
                     ),
                   ),
@@ -602,6 +603,9 @@ class _ChromeDinoState extends State<ChromeDino>
                               Image.asset(
                                 'assets/images/game_over.png',
                                 width: 200,
+                                color: (runDistance ~/ dayNightOffest) % 2 == 0
+                                    ? null
+                                    : Colors.white,
                               ),
                               const SizedBox(height: 12),
                               GestureDetector(

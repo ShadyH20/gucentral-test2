@@ -48,6 +48,20 @@ class _AddQuizPageState extends State<AddQuizPage> {
   String? _selectedValue;
   late List<dynamic> courses;
 
+  late int _reminderValue;
+  List<int?> reminderTimes = [
+    -1,
+    0,
+    5,
+    10,
+    15,
+    20,
+    30,
+    45,
+    60,
+    120,
+  ];
+
   // Create variables to store the selected date and times
   late DateTime _selectedDate;
   late TimeOfDay _selectedFromTime;
@@ -67,11 +81,13 @@ class _AddQuizPageState extends State<AddQuizPage> {
       _quizTitleController.text = widget.event!.description;
       _locationController.text = widget.event!.location;
       _selectedValue = widget.event!.title.split(" ").join("");
+      _reminderValue = widget.event!.reminder;
     } else {
       debugPrint("Init dates and timw to now");
       _selectedDate = widget.initialDate ?? DateTime.now();
       _selectedFromTime = TimeOfDay.now();
       _selectedToTime = TimeOfDay.now();
+      _reminderValue = 15;
     }
   }
 
@@ -93,7 +109,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
         elevation: 0,
         title: Text(
           '${widget.event == null ? 'Add' : 'Edit'} Quiz',
-          style: TextStyle(fontSize: 25),
+          style: const TextStyle(fontSize: 25),
         ),
         actions: [
           TextButton.icon(
@@ -122,7 +138,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            flex: 9,
+            // flex: 9,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -367,6 +383,111 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                 ],
                               ),
                             ),
+                            const SizedBox(height: 12),
+
+                            //// REMINDER ////
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Reminder",
+                                    style: TextStyle(
+                                      fontFamily: "Outfit",
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                      color: MyColors.secondary,
+                                    ),
+                                  ),
+                                  Container(height: 5),
+                                  DropdownButtonFormField2(
+                                    value: _reminderValue,
+                                    decoration: InputDecoration(
+                                      constraints: const BoxConstraints(),
+                                      border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(7.5),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(7.5),
+                                          borderSide: BorderSide(
+                                              width: 2,
+                                              color: MyColors.primaryVariant)),
+                                      contentPadding:
+                                          const EdgeInsets.only(bottom: 5),
+                                    ),
+                                    isExpanded: true,
+                                    buttonStyleData: const ButtonStyleData(
+                                        height: 40,
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 5)),
+                                    dropdownStyleData: const DropdownStyleData(
+                                      isOverButton: true,
+                                      maxHeight: 200,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10)),
+                                      ),
+                                    ),
+                                    menuItemStyleData: MenuItemStyleData(
+                                      selectedMenuItemBuilder:
+                                          (context, child) => Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          child,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 15.0),
+                                            child: Icon(
+                                              Icons.check_rounded,
+                                              color: MyColors.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    alignment: Alignment.centerLeft,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _reminderValue = value as int;
+                                      });
+                                    },
+                                    onSaved: (value) {
+                                      setState(() {
+                                        _reminderValue = value as int;
+                                      });
+                                    },
+                                    items: reminderTimes.map((int? time) {
+                                      String text = "";
+                                      if (time != null) {
+                                        if (time == -1) {
+                                          text = "No Reminder";
+                                        } else if (time == 0) {
+                                          text = "On Time";
+                                        } else if (time > 0 && time < 60) {
+                                          text = "$time minutes before";
+                                        } else if (time == 60) {
+                                          text = "1 hour before";
+                                        } else if (time == 120) {
+                                          text = "2 hours before";
+                                        }
+                                      }
+                                      return DropdownMenuItem(
+                                        value: time,
+                                        child: Text(text),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -380,38 +501,35 @@ class _AddQuizPageState extends State<AddQuizPage> {
           //  SizedBox(height: 40),
           widget.event == null
               ? Container()
-              : Expanded(
-                  flex: 2,
-                  child: Container(
-                    alignment: FractionalOffset.bottomCenter,
-                    margin: const EdgeInsets.only(bottom: 40),
-                    width: 200,
-                    // height: double.infinity,
-                    child: TextButton(
-                      onPressed: () {
-                        onDeletePresed();
-                      },
-                      style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(10),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(7)),
-                          side: BorderSide(color: MyColors.error)),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.delete_rounded,
-                              color: MyColors.error,
-                              size: 25,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              "Delete",
-                              style: TextStyle(
-                                  fontSize: 17, color: MyColors.error),
-                            ),
-                          ]),
-                    ),
+              : Container(
+                  alignment: FractionalOffset.bottomCenter,
+                  margin: const EdgeInsets.only(bottom: 40, top: 30),
+                  width: 200,
+                  // height: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      onDeletePresed();
+                    },
+                    style: TextButton.styleFrom(
+                        padding: const EdgeInsets.all(10),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(7)),
+                        side: BorderSide(color: MyColors.error)),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.delete_rounded,
+                            color: MyColors.error,
+                            size: 25,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            "Delete",
+                            style:
+                                TextStyle(fontSize: 17, color: MyColors.error),
+                          ),
+                        ]),
                   ),
                 ),
         ],
@@ -432,8 +550,9 @@ class _AddQuizPageState extends State<AddQuizPage> {
         end: date.add(Duration(
             hours: _selectedToTime.hour, minutes: _selectedToTime.minute)),
         location: _locationController.text,
-        color: Colors.blue,
+        // color: Colors.blue,
         isAllDay: false,
+        reminder: _reminderValue,
       );
       Navigator.pop(context, quiz);
     }
