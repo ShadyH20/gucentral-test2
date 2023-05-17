@@ -1294,19 +1294,9 @@ class SchedulePageState extends State<SchedulePage> {
                     }
                     _eventDataSource = EventDataSource(events + quizzes);
                     Requests.updateQuizzes(quizzes);
+                    updateQuizReminders();
 
                     setState(() {});
-
-                    // setState(() {
-                    //   tappedEvent = event;
-                    //   alignment1 = editButtonsToggle
-                    //       ? const Alignment(-0.16, -2.7)
-                    //       : const Alignment(0, 0.8);
-                    //   alignment2 = editButtonsToggle
-                    //       ? const Alignment(0.16, -2.7)
-                    //       : const Alignment(0, 0.8);
-                    //   editButtonsToggle = !editButtonsToggle;
-                    // });
                   },
                   child: Container(
                     constraints: const BoxConstraints(
@@ -1781,6 +1771,18 @@ class SchedulePageState extends State<SchedulePage> {
         const SizedBox(height: 20),
       ],
     );
+  }
+
+  void updateQuizReminders() {
+    if (Notifications.on.value) {
+      AwesomeNotifications().cancelAll();
+      for (Event event in events) {
+        if (quizzes.contains(event)) {
+          createOneNotification(
+              event, '', event.description, event.location, '', event.start);
+        }
+      }
+    }
   }
 }
 
