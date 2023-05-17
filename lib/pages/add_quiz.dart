@@ -83,6 +83,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
       _locationController.text = widget.event!.location;
       // _quizDescriptionController.text = widget.event!.description;
       _selectedValue = widget.event!.title.split(" ").join("");
+      _quizDescriptionController.text = widget.event!.myDescription;
       _reminderValue = widget.event!.reminder;
     } else {
       debugPrint("Init dates and timw to now");
@@ -99,6 +100,68 @@ class _AddQuizPageState extends State<AddQuizPage> {
     _quizTitleController.dispose();
     _locationController.dispose();
     _quizDescriptionController.dispose();
+  }
+
+  buildDropdown() {
+    return Container(
+      // width: 180,
+      height: 40,
+      // margin: const EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.zero,
+      decoration: BoxDecoration(
+          color: MyApp.isDarkMode.value
+              ? MyColors.surface
+              : const Color.fromARGB(255, 230, 230, 230),
+          borderRadius: BorderRadius.circular(10)),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButtonFormField2(
+          iconStyleData: const IconStyleData(
+              icon: Icon(Icons.arrow_drop_down_outlined), iconSize: 30),
+          isExpanded: true,
+          value: _selectedValue,
+          style: TextStyle(
+              color: MyApp.isDarkMode.value ? Colors.white70 : Colors.black54,
+              fontFamily: 'Outfit',
+              fontSize: 18,
+              fontWeight: FontWeight.bold),
+
+          dropdownStyleData: const DropdownStyleData(
+              // offset: Offset(0, 3),
+              decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
+          )),
+          hint: Text("Select A Year"),
+          alignment: Alignment.centerRight,
+          onChanged: (value) {
+            setState(() {
+              _selectedValue = value;
+            });
+          },
+          // onSaved: (value) {
+          //   setState(() {
+          //     _selectedValue = value;
+          //   });
+          // },
+          // validator: (String? value) {
+          //   if (value == null || value.isEmpty) {
+          //     return "    Please choose a course!";
+          //   } else {
+          //     return null;
+          //   }
+          // },
+          items: widget.courses.map((dynamic course) {
+            return DropdownMenuItem(
+              value: course['code'] as String,
+              child: Text(
+                course['name'] ?? "",
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -146,7 +209,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: Form(
                       key: _formKey,
                       child: SizedBox(
@@ -173,74 +236,85 @@ class _AddQuizPageState extends State<AddQuizPage> {
                                         style: TextStyle(
                                           fontFamily: "Outfit",
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           color: MyColors.secondary,
                                         ),
                                       ),
                                       Container(height: 5),
-                                      DropdownButtonFormField2(
-                                        value: _selectedValue,
-                                        hint: const Text(
-                                          'Select A Course',
-                                        ),
-                                        decoration: InputDecoration(
-                                          constraints: const BoxConstraints(),
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(7.5),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(7.5),
-                                              borderSide: BorderSide(
-                                                  width: 2,
-                                                  color:
-                                                      MyColors.primaryVariant)),
-                                          contentPadding:
-                                              const EdgeInsets.only(bottom: 5),
-                                        ),
-                                        isExpanded: true,
-                                        buttonStyleData: const ButtonStyleData(
-                                            height: 40,
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 5)),
-                                        dropdownStyleData:
-                                            const DropdownStyleData(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(10),
-                                                bottomRight:
-                                                    Radius.circular(10)),
-                                          ),
-                                        ),
-                                        alignment: Alignment.centerLeft,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            _selectedValue = value;
-                                          });
-                                        },
-                                        onSaved: (value) {
-                                          setState(() {
-                                            _selectedValue = value;
-                                          });
-                                        },
-                                        validator: (String? value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "    Please choose a course!";
-                                          } else {
-                                            return null;
-                                          }
-                                        },
-                                        items: widget.courses
-                                            .map((dynamic course) {
-                                          return DropdownMenuItem(
-                                            value: course['code'] as String,
-                                            child: Text(
-                                              course['name'] ?? "",
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
+                                      // DropdownButtonFormField2(
+                                      //   value: _selectedValue,
+                                      //   hint: const Text(
+                                      //     'Select A Course',
+                                      //   ),
+                                      //   // decoration: InputDecoration(
+                                      //   // constraints: const BoxConstraints(
+                                      //   //     maxHeight: 40),
+                                      //   // border: OutlineInputBorder(
+                                      //   //   borderRadius:
+                                      //   //       BorderRadius.circular(7.5),
+                                      //   // ),
+                                      //   // focusedBorder: OutlineInputBorder(
+                                      //   //     borderRadius:
+                                      //   //         BorderRadius.circular(7.5),
+                                      //   //     borderSide: BorderSide(
+                                      //   //         width: 2,
+                                      //   //         color:
+                                      //   //             MyColors.primaryVariant)),
+                                      //   // contentPadding:
+                                      //   //     const EdgeInsets.symmetric(
+                                      //   //         vertical: 15),
+                                      //   // ),
+                                      //   // isExpanded: true,
+                                      //   buttonStyleData: const ButtonStyleData(
+                                      //     height: 30,
+                                      //     //   decoration: BoxDecoration(
+                                      //     //     borderRadius: BorderRadius.only(
+                                      //     //         bottomLeft: Radius.circular(10),
+                                      //     //         bottomRight:
+                                      //     //             Radius.circular(10)),
+                                      //     //   ),
+                                      //     //   padding:
+                                      //     //       EdgeInsets.symmetric(vertical: 0),
+                                      //     // ),
+                                      //     // dropdownStyleData:
+                                      //     //     const DropdownStyleData(
+                                      //     //   decoration: BoxDecoration(
+                                      //     //     borderRadius: BorderRadius.only(
+                                      //     //         bottomLeft: Radius.circular(10),
+                                      //     //         bottomRight:
+                                      //     //             Radius.circular(10)),
+                                      //     //   ),
+                                      //   ),
+                                      //   // alignment: Alignment.centerLeft,
+                                      //   onChanged: (value) {
+                                      //     setState(() {
+                                      //       _selectedValue = value;
+                                      //     });
+                                      //   },
+                                      //   onSaved: (value) {
+                                      //     setState(() {
+                                      //       _selectedValue = value;
+                                      //     });
+                                      //   },
+                                      //   validator: (String? value) {
+                                      //     if (value == null || value.isEmpty) {
+                                      //       return "    Please choose a course!";
+                                      //     } else {
+                                      //       return null;
+                                      //     }
+                                      //   },
+                                      //   items: widget.courses
+                                      //       .map((dynamic course) {
+                                      //     return DropdownMenuItem(
+                                      //       value: course['code'] as String,
+                                      //       child: Text(
+                                      //         course['name'] ?? "",
+                                      //       ),
+                                      //     );
+                                      //   }).toList(),
+                                      // ),
+
+                                      buildDropdown(),
                                     ],
                                   ),
                                   const SizedBox(height: 12),
@@ -613,6 +687,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
         location: _locationController.text,
         // color: Colors.blue,
         isAllDay: false,
+        myDescription: _quizDescriptionController.text.trim(),
         reminder: _reminderValue,
       );
       Navigator.pop(context, quiz);

@@ -77,8 +77,7 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
       });
     }
 
-    var willShowTopCard =
-        offset > (_cardHeight * _currentPlayerIndex - 160 + 4);
+    var willShowTopCard = offset > (_cardHeight * _currentPlayerIndex);
     if (willShowTopCard != showTopCard) {
       setState(() {
         showTopCard = willShowTopCard;

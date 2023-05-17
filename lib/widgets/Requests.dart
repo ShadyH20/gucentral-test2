@@ -750,7 +750,7 @@ class Event implements Comparable<Event> {
   String location;
   String slot;
   String group;
-
+  String myDescription;
   // Minutes before the event to send a reminder. -1 if no reminder
   int reminder;
 
@@ -766,6 +766,7 @@ class Event implements Comparable<Event> {
     this.location = "",
     this.slot = "0",
     this.group = "",
+    this.myDescription = "",
     this.reminder = -1,
   });
 
@@ -819,6 +820,7 @@ class Event implements Comparable<Event> {
         location = json['l'],
         slot = json['slot'],
         group = json['group'],
+        myDescription = json['myDesc'],
         reminder = json['reminder'];
 
   Map<String, dynamic> toJson() {
@@ -834,6 +836,7 @@ class Event implements Comparable<Event> {
       'l': location,
       'slot': slot,
       'group': group,
+      'myDesc': myDescription,
       'reminder': reminder,
     };
   }
