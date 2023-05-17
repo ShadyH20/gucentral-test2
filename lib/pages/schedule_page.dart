@@ -818,7 +818,6 @@ class SchedulePageState extends State<SchedulePage> {
           DateTime startTime = getTime(dayIndex, timeSlot.split("-")[0].trim());
           DateTime endTime = getTime(dayIndex, timeSlot.split("-")[1].trim());
 
-          String day = DateFormat("dd MMMM").format(startTime);
           String timeFrom =
               DateFormat(is24h ? "k:mm" : 'h:mm a').format(startTime);
 
@@ -839,16 +838,16 @@ class SchedulePageState extends State<SchedulePage> {
           events.add(event);
 
           if (Notifications.on.value) {
-            createOneNotification(event, day, eventDescription, eventLocation,
-                timeFrom, startTime);
+            createOneNotification(
+                event, eventDescription, eventLocation, timeFrom, startTime);
           }
         }
       }
     }
   }
 
-  createOneNotification(Event event, String day, String description,
-      String location, String timeFrom, DateTime startTime) async {
+  createOneNotification(Event event, String description, String location,
+      String timeFrom, DateTime startTime) async {
     int minutesBefore = prefs.getInt('reminder_minutes') ?? 15;
     DateTime reminderTime =
         startTime.subtract(Duration(minutes: minutesBefore));
@@ -886,42 +885,46 @@ class SchedulePageState extends State<SchedulePage> {
     // notificationLayout
   }
 
-  createNotifications() async {
-    {
-      //get local time zone
-      String timeZoneName =
-          await AwesomeNotifications().getLocalTimeZoneIdentifier();
-      print(timeZoneName);
-      AwesomeNotifications().cancelAll();
+  createQuizNotification(Event event, String description, String location,
+      String timeFrom, DateTime startTime) async {
+    int minutesBefore = event.reminder;
+    DateTime reminderTime =
+        startTime.subtract(Duration(minutes: minutesBefore));
 
-      for (Event event in events) {
-        await AwesomeNotifications().createNotification(
-          content: NotificationContent(
-            id: -1,
-            channelKey: 'scheduled',
-            title: 'Lab',
-            body: '3 May, 8:15 AM - Network & Media Lab, Lab in C6.209',
-            wakeUpScreen: true,
-            category: NotificationCategory.Reminder,
-          ),
-          schedule: NotificationCalendar(
-              preciseAlarm: true,
-              hour: 1,
-              minute: 55,
-              // second: 0,
-              // millisecond: 0,
-              allowWhileIdle: true,
-              day: 3,
-              month: 5,
-              year: 2023,
-              timeZone: timeZoneName),
-        );
-      }
-
-      List nots = await AwesomeNotifications().listScheduledNotifications();
-      print(nots.length);
-      print(nots);
+    getMins(int mins) {
+      if (mins < 60) return '$mins mins';
+      if (mins == 60) return '1 hour';
+      if (mins == 120) return '2 hours';
     }
+
+    // Create its notification
+    String notificationBody =
+        '${courseMap[event.title.split(' ').join('')] ?? event.title.split(' ').join('')}, $description, in $location - $timeFrom';
+    String notificationTitle = '$description in ${getMins(minutesBefore)}!';
+
+    print(notificationTitle);
+    print(notificationBody);
+
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: -1,
+        channelKey: 'scheduled',
+        groupKey: 'quizzes',
+        title: notificationTitle,
+        body: notificationBody,
+        wakeUpScreen: true,
+        category: NotificationCategory.Reminder,
+      ),
+      schedule: NotificationCalendar(
+          preciseAlarm: true,
+          day: reminderTime.day,
+          month: reminderTime.month,
+          year: reminderTime.year,
+          hour: reminderTime.hour,
+          minute: reminderTime.minute,
+          allowWhileIdle: true,
+          timeZone: timeZoneName),
+    );
   }
 
 //   EventDataSource _getCalendarDataSource() {
@@ -1527,6 +1530,7 @@ class SchedulePageState extends State<SchedulePage> {
               quizzes.add(quiz);
               _eventDataSource = EventDataSource(events + quizzes);
               Requests.updateQuizzes(quizzes);
+              updateQuizReminders();
 
               setState(() {});
             }
@@ -1775,11 +1779,16 @@ class SchedulePageState extends State<SchedulePage> {
 
   void updateQuizReminders() {
     if (Notifications.on.value) {
-      AwesomeNotifications().cancelAll();
-      for (Event event in events) {
+      // AwesomeNotifications().cancelAll();
+      AwesomeNotifications().cancelNotificationsByGroupKey('quizzes');
+      for (Event event in quizzes) {
         if (quizzes.contains(event)) {
-          createOneNotification(
-              event, '', event.description, event.location, '', event.start);
+          createQuizNotification(
+              event,
+              event.description,
+              event.location,
+              DateFormat(is24h ? "k:mm" : 'h:mm a').format(event.start),
+              event.start);
         }
       }
     }

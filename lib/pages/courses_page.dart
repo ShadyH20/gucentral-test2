@@ -284,6 +284,7 @@ class _CoursesPageState extends State<CoursesPage>
                 itemCount: allMidterms.length,
                 itemBuilder: (context, index) {
                   var item = allMidterms[index];
+                  print('ITEM:::: $item');
                   print('ALL MIDTERMS:::: $allMidterms');
                   print('COURSE CODE::: ${item['course_code']}');
                   print('COURSE MAP::: $courseMap');

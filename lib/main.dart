@@ -69,6 +69,21 @@ void main() async {
           channelKey: 'scheduled',
           channelName: 'Scheduled notifications',
           channelDescription: 'Scheduled reminder notifications',
+          groupKey: 'classes',
+          enableVibration: true,
+          playSound: true,
+          // my asset is 'assets/sounds/notification.mp3'
+          // soundSource: 'notification.mp3',
+          // icon:  'resource://drawable/res_ic_gu_logo',
+          // defaultColor: const Color(0xFF9D50DD),
+          ledColor: Colors.white,
+        ),
+        NotificationChannel(
+          channelGroupKey: 'scheduled_group',
+          channelKey: 'scheduled',
+          channelName: 'Scheduled notifications',
+          channelDescription: 'Scheduled reminder notifications',
+          groupKey: 'quizzes',
           enableVibration: true,
           playSound: true,
           // my asset is 'assets/sounds/notification.mp3'
