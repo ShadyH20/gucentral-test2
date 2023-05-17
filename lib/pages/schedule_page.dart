@@ -414,6 +414,7 @@ class SchedulePageState extends State<SchedulePage> {
       title: TextButton(
         onPressed: () {
           setState(() {
+            _focusedDay = _selectedDay;
             _calendarFormat = _calendarFormat == CalendarFormat.week
                 ? CalendarFormat.month
                 : CalendarFormat.week;
