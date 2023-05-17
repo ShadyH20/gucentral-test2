@@ -321,7 +321,8 @@ class Scrapper {
 
     for (var midterm in midterm_html) {
       var details = midterm.querySelectorAll("td");
-      var course_code = details[0].text.split(" ")[details.length - 1];
+      var splitted = details[0].text.split(" ");
+      var course_code = splitted[splitted.length - 1];
       var grade = details[1].text;
       all_midterms.add({'course_code': course_code, 'grade': grade});
     }
