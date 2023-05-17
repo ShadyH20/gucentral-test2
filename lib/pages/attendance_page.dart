@@ -4,6 +4,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:gucentral/pages/schedule_page.dart';
 import 'package:gucentral/utils/SharedPrefs.dart';
 import 'package:gucentral/utils/constants.dart';
 import 'package:gucentral/widgets/ExpandableChromeDino.dart';
@@ -193,23 +194,33 @@ class AttendancePageState extends State<AttendancePage>
       print('ALREADY WRITTEN MAX ABSENCES::: ${course['code']} -> $maxAbs');
     } catch (e) {
       print('MAX ABSENCES NOT WRITTEN YET');
-      for (Map<String, dynamic> day in arr) {
-        var date = DateFormat('y.MM.dd').parse(day['date']);
-        // FRIDAY IS INITIAL VALUE
-        if (latestDate.weekday == 5 || date.weekday > latestDate.weekday) {
-          latestDate = date;
-          attendanceCounter++;
-        } else if (date.compareTo(latestDate) == 0) {
-          attendanceCounter++;
-        } else {
-          break;
-        }
-      }
-      prefs.setString(
-          '${course['code']}:maxAbsences', (attendanceCounter * 3).toString());
-      maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
-      print('ATT COUNTER::::::${course['code']} ${attendanceCounter * 3}');
     }
+
+    for (Map<String, dynamic> day in arr) {
+      var date = DateFormat('y.MM.dd').parse(day['date']);
+      // FRIDAY IS INITIAL VALUE
+      if (latestDate.weekday == 5 ||
+          date
+                  .getDateOnly()
+                  .difference(latestDate)
+                  .compareTo(const Duration(days: 7)) <
+              0) {
+        if (latestDate.weekday == 5) latestDate = date;
+        attendanceCounter++;
+        print("INCREMENTING ATT COUNTER $attendanceCounter");
+        print(
+            'DIFFERENCE: ${date.getDateOnly().difference(latestDate).inDays}');
+        // } else if (date.compareTo(latestDate) == 0) {
+        //   attendanceCounter++;
+      } else {
+        break;
+      }
+    }
+    print('ATT COUNTER AFTER LOOP $attendanceCounter');
+    prefs.setString(
+        '${course['code']}:maxAbsences', (attendanceCounter * 3).toString());
+    maxAbs = prefs.getString('${course['code']}:maxAbsences')!;
+    print('ATT COUNTER::::::${course['code']} ${attendanceCounter * 3}');
 
     int absenceCounter = 0;
     for (Map<String, dynamic> day in arr) {
