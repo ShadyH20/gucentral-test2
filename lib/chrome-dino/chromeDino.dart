@@ -735,7 +735,7 @@ class _ChromeDinoState extends State<ChromeDino>
                                         horizontal: 10),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(15),
-                                        color: MyApp.isDarkMode.value
+                                        color: context.isDarkMode
                                             ? MyColors.surface
                                             : Colors.grey[100]),
                                     child: Row(children: [

@@ -71,7 +71,7 @@ class AttendancePageState extends State<AttendancePage>
                         margin: EdgeInsets.zero,
                         // padding: const EdgeInsets.only(left: 10),
                         decoration: BoxDecoration(
-                            color: MyApp.isDarkMode.value
+                            color: context.isDarkMode
                                 ? MyColors.surface
                                 : const Color.fromARGB(255, 230, 230, 230),
                             borderRadius: BorderRadius.circular(13)),
@@ -93,7 +93,7 @@ class AttendancePageState extends State<AttendancePage>
                             ),
                             style: TextStyle(
                                 // decoration: TextDecoration.underline,
-                                color: MyApp.isDarkMode.value
+                                color: context.isDarkMode
                                     ? Colors.white70
                                     : Colors.black54,
                                 fontFamily: 'Outfit',

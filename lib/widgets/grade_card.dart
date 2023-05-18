@@ -81,7 +81,7 @@ class GradeCard extends StatelessWidget {
             animateFromLastPercent: true,
             percent: percentage,
             progressColor: gradeColor,
-            backgroundColor: MyApp.isDarkMode.value
+            backgroundColor: context.isDarkMode
                 ? const Color.fromARGB(255, 52, 52, 52)
                 : const Color(0xFFdedede),
             circularStrokeCap: CircularStrokeCap.round,

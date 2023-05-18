@@ -508,7 +508,7 @@ class _TranscriptPageState extends State<TranscriptPage>
       height: 40,
       // padding: const EdgeInsets.only(left: 0, right: 10),
       decoration: BoxDecoration(
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? MyColors.surface
               : const Color.fromARGB(255, 230, 230, 230),
           borderRadius: BorderRadius.circular(10)),
@@ -519,7 +519,7 @@ class _TranscriptPageState extends State<TranscriptPage>
           isExpanded: true,
           value: dropdownValue,
           style: TextStyle(
-              color: MyApp.isDarkMode.value ? Colors.white70 : Colors.black54,
+              color: context.isDarkMode ? Colors.white70 : Colors.black54,
               fontFamily: 'Outfit',
               fontSize: 18,
               fontWeight: FontWeight.bold),
@@ -691,7 +691,7 @@ class Skeleton extends StatelessWidget {
       height: height,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? Colors.white.withOpacity(0.08)
               : Colors.black.withOpacity(0.08),
           borderRadius: BorderRadius.circular(16)),

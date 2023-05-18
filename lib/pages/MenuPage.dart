@@ -54,7 +54,7 @@ class MenuPageState extends State<MenuPage> {
         width: MediaQuery.of(context).size.width * 0.7,
         decoration: BoxDecoration(
           // border: Border.all(color: MyColors.primary, width: 0.5),
-          boxShadow: MyApp.isDarkMode.value
+          boxShadow: context.isDarkMode
               ? [
                   BoxShadow(
                     color: MyColors.primary.withOpacity(0.6),
@@ -64,7 +64,7 @@ class MenuPageState extends State<MenuPage> {
                   ),
                 ]
               : null,
-          gradient: MyApp.isDarkMode.value
+          gradient: context.isDarkMode
               ? null
               // LinearGradient(
               //     // begin: Alignment(-1.7, 0.2),
@@ -94,7 +94,7 @@ class MenuPageState extends State<MenuPage> {
           color:
               // Color.fromARGB(255, 21, 24, 27)
               // Color.fromARGB(255, 17, 18, 19)
-              MyApp.isDarkMode.value ? Colors.grey[900] : null,
+              context.isDarkMode ? Colors.grey[900] : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -127,7 +127,7 @@ class MenuPageState extends State<MenuPage> {
               child: Container(
                 // height: 150,
                 decoration: BoxDecoration(
-                    color: MyApp.isDarkMode.value
+                    color: context.isDarkMode
                         ? const Color.fromARGB(255, 18, 18, 18)
                         // ? Colors.black
                         // ? MyColors.surface
@@ -135,7 +135,7 @@ class MenuPageState extends State<MenuPage> {
                     borderRadius: const BorderRadius.only(
                       bottomRight: Radius.circular(25),
                     ),
-                    boxShadow: MyApp.isDarkMode.value
+                    boxShadow: context.isDarkMode
                         ? [
                             const BoxShadow(
                                 color: Colors.white,

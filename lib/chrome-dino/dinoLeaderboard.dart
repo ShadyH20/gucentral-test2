@@ -88,7 +88,7 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: MyApp.isDarkMode.value
+        backgroundColor: context.isDarkMode
             ? MyColors.background
             : const Color.fromARGB(255, 230, 230, 230),
         appBar: AppBar(
@@ -107,9 +107,9 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
                   if (firstTime) {
                     if (_scrollController.hasClients) {
                       firstTime = false;
-                      _scrollController.animateTo(0,
-                          duration: const Duration(milliseconds: 100),
-                          curve: Curves.easeInOut);
+                      // _scrollController.animateTo(0,
+                      //     duration: const Duration(milliseconds: 100),
+                      //     curve: Curves.easeInOut);
                     }
                   }
 
@@ -137,7 +137,7 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
                             ),
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 7, vertical: 3),
-                            color: MyApp.isDarkMode.value
+                            color: context.isDarkMode
                                 ? const Color.fromARGB(255, 28, 28, 30)
                                 : Colors.white,
                             child: PlayerCard(data, index, MyColors.secondary),
@@ -153,8 +153,8 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
                           top: 0,
                           height: _cardHeight - 10,
                           child: Container(
-                            color: MyApp.isDarkMode.value
-                                ? Colors.black
+                            color: context.isDarkMode
+                                ? MyColors.background
                                 : const Color.fromARGB(255, 230, 230, 230),
                             child: currentPlayerCard(
                                 documents[_currentPlayerIndex].data()
@@ -173,8 +173,8 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
                           bottom: 0,
                           height: _cardHeight - 10,
                           child: Container(
-                            color: MyApp.isDarkMode.value
-                                ? Colors.black
+                            color: context.isDarkMode
+                                ? MyColors.background
                                 : const Color.fromARGB(255, 230, 230, 230),
                             child: currentPlayerCard(
                                 documents[_currentPlayerIndex].data()
@@ -201,14 +201,14 @@ class _DinoLeaderboardState extends State<DinoLeaderboard>
       elevation: pinned ? 8 : 20,
       shape: RoundedRectangleBorder(
         side: BorderSide(
-          color: MyApp.isDarkMode.value ? MyColors.secondary : MyColors.primary,
+          color: context.isDarkMode ? MyColors.secondary : MyColors.primary,
           width: 2.5,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
       margin: EdgeInsets.only(
           left: 7, right: 7, bottom: pinned ? 0 : 5, top: pinned ? 0 : 5),
-      color: MyApp.isDarkMode.value ? MyColors.surface : Colors.white,
+      color: context.isDarkMode ? MyColors.surface : Colors.white,
       child: Center(
           child: PlayerCard(data, index, MyColors.surface, isCurr: true)),
     );
@@ -255,7 +255,7 @@ class PlayerCard extends StatelessWidget {
                 width: 50,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: isCurr && MyApp.isDarkMode.value
+                  color: isCurr && context.isDarkMode
                       ? const Color.fromARGB(255, 48, 50, 61)
                       : background.withOpacity(0.06),
                   borderRadius: BorderRadius.circular(7),

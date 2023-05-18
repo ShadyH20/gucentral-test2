@@ -79,9 +79,8 @@ class _AddWeightCardState extends State<AddWeightCard> {
         margin: const EdgeInsets.only(top: 1, bottom: 1),
         padding: const EdgeInsets.symmetric(vertical: 15),
         decoration: BoxDecoration(
-          color: MyApp.isDarkMode.value
-              ? MyColors.surface
-              : const Color(0xFFF2F2F2),
+          color:
+              context.isDarkMode ? MyColors.surface : const Color(0xFFF2F2F2),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -109,7 +108,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                             width: 130,
                             height: 30,
                             child: Material(
-                              color: MyApp.isDarkMode.value
+                              color: context.isDarkMode
                                   ? Colors.transparent
                                   : null,
                               child: Form(
@@ -141,7 +140,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                             width: 35,
                             height: 35,
                             child: Material(
-                              color: MyApp.isDarkMode.value
+                              color: context.isDarkMode
                                   ? Colors.transparent
                                   : null,
                               child: Form(
@@ -194,7 +193,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                 width: 35,
                                 height: 35,
                                 child: Material(
-                                  color: MyApp.isDarkMode.value
+                                  color: context.isDarkMode
                                       ? Colors.transparent
                                       : null,
                                   child: Form(
@@ -234,7 +233,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                                 // color: Colors.blue,
                                 // decoration: BoxDecoration(borderRadius: BorderRadius.all()),
                                 child: Material(
-                                  color: MyApp.isDarkMode.value
+                                  color: context.isDarkMode
                                       ? Colors.transparent
                                       : null,
                                   child: Form(
@@ -267,7 +266,7 @@ class _AddWeightCardState extends State<AddWeightCard> {
                               height: 18,
                               width: 18,
                               child: Material(
-                                color: MyApp.isDarkMode.value
+                                color: context.isDarkMode
                                     ? Colors.transparent
                                     : null,
                                 child: Checkbox(
@@ -490,7 +489,7 @@ class _WeightTextFieldState extends State<WeightTextField> {
             fontFamily: "Outfit",
             fontWeight: FontWeight.w500,
             color: MyColors.secondary.withOpacity(.15)),
-        enabledBorder: !MyApp.isDarkMode.value
+        enabledBorder: !context.isDarkMode
             ? OutlineInputBorder(
                 borderRadius: BorderRadius.circular(7.5),
                 borderSide: widget.isValid

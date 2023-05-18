@@ -83,7 +83,7 @@ class _EvaluateAcademicsState extends State<EvaluateAcademics>
                         height: 55,
                         // padding: const EdgeInsets.only(left: 0),
                         decoration: BoxDecoration(
-                            color: MyApp.isDarkMode.value
+                            color: context.isDarkMode
                                 ? MyColors.surface
                                 : const Color.fromARGB(255, 230, 230, 230),
                             borderRadius: BorderRadius.circular(13)),
@@ -102,7 +102,7 @@ class _EvaluateAcademicsState extends State<EvaluateAcademics>
                             value: dropdownAcademicValue,
                             style: TextStyle(
                                 // decoration: TextDecoration.underline,
-                                color: MyApp.isDarkMode.value
+                                color: context.isDarkMode
                                     ? Colors.white70
                                     : Colors.black54,
                                 fontFamily: 'Outfit',

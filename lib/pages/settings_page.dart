@@ -40,9 +40,8 @@ class _SettingsPageState extends State<SettingsPage> {
     MyColors = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: MyApp.isDarkMode.value
-          ? MyColors.background
-          : const Color(0xfff3f3fa),
+      backgroundColor:
+          context.isDarkMode ? MyColors.background : const Color(0xfff3f3fa),
       appBar: AppBar(
         // systemOverlayStyle: SystemUiOverlayStyle(
         //     statusBarColor: MyColors.background,
@@ -137,37 +136,32 @@ class _SettingsPageState extends State<SettingsPage> {
 
   static const keyTheme = 'key-theme';
   buildDarkMode() {
-    return SettingsTile.switchTile(
-      leading:
-          const IconBuilder(color: Colors.deepPurple, icon: Icons.dark_mode),
-      title: Text(
-        'Dark Mode',
-        style: titleTS,
-      ),
-      initialValue: prefs.getBool('dark_mode') ?? false,
-
-      /// DISABLED
-      // enabled: false,
-
-      onToggle: (value) {
-        setState(() {
-          prefs.setBool('dark_mode', value);
-          // mainKey.currentState!.setDarkMode(value);
-        });
+    return SettingsTile.navigation(
+      value: Text(MyApp.theme.value == ThemeMode.dark
+          ? 'Dark'
+          : MyApp.theme.value == ThemeMode.light
+              ? 'Light'
+              : 'Automatic'),
+      onPressed: (context) async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return const ThemePage();
+            },
+          ),
+        );
+        setState(() {});
       },
-      trailing: Switch.adaptive(
-        activeColor: MyColors.primary,
-        value: prefs.getBool('dark_mode') ?? false,
-        onChanged: (value) {
-          setState(() {
-            prefs.setBool('dark_mode', value);
-            MyApp.isDarkMode.value = value;
-            MyColors = Theme.of(context).colorScheme;
-            // vibrate();
-
-            // mainKey.currentState!.setDarkMode(value);
-          });
-        },
+      leading: IconBuilder(
+        icon: context.isDarkMode
+            ? Icons.dark_mode_rounded
+            : Icons.light_mode_rounded,
+        color: MyColors.primary,
+        // MyColors.accent,
+      ),
+      title: Text(
+        'App Theme',
+        style: titleTS,
       ),
     );
   }
@@ -436,7 +430,7 @@ class _DefaultPageState extends State<DefaultPage> {
     // page that lets you choose one page to be the default from a list of pages: Home, Courses, Schedule, Attendance, transcript, evaluate, map
 
     return Scaffold(
-        backgroundColor: MyApp.isDarkMode.value
+        backgroundColor: context.isDarkMode
             ? Theme.of(context).colorScheme.background
             : const Color(0xfff3f3fa),
         appBar: AppBar(
@@ -752,14 +746,13 @@ class _NotificationsState extends State<Notifications> {
                               ? 'On time'
                               : '${prefs.getInt('reminder_minutes') ?? 15} minutes before',
                           style: TextStyle(
-                            color:
-                                MyApp.isDarkMode.value ? Colors.white60 : null,
+                            color: context.isDarkMode ? Colors.white60 : null,
                           )),
                       const SizedBox(width: 5),
                       Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 14,
-                        color: MyApp.isDarkMode.value ? Colors.white60 : null,
+                        color: context.isDarkMode ? Colors.white60 : null,
                       ),
                     ],
                   ),
@@ -830,14 +823,14 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
   int _reminderMinutes = prefs.getInt('reminder_minutes') ?? 15;
   @override
   Widget build(BuildContext context) {
+    ColorScheme scheme = Theme.of(context).colorScheme;
     return Scaffold(
-        backgroundColor: MyApp.isDarkMode.value
-            ? Theme.of(context).colorScheme.background
-            : const Color(0xfff3f3fa),
+        backgroundColor:
+            context.isDarkMode ? scheme.background : const Color(0xfff3f3fa),
         appBar: AppBar(
           title: const Text('Classes'),
-          backgroundColor: Theme.of(context).colorScheme.background,
-          foregroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: scheme.background,
+          foregroundColor: scheme.secondary,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -857,8 +850,7 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                 platform: DevicePlatform.iOS,
                 darkTheme: SettingsThemeData(
                   titleTextColor: Colors.white70,
-                  settingsListBackground:
-                      Theme.of(context).colorScheme.background,
+                  settingsListBackground: scheme.background,
                 ),
                 sections: [
                   SettingsSection(
@@ -870,10 +862,7 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                             ? Icon(Icons.check, color: MyColors.primary)
                             : null,
                         onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 0;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
+                          changeReminderMinutes(0);
                         },
                       ),
                       SettingsTile(
@@ -882,10 +871,7 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                             ? Icon(Icons.check, color: MyColors.primary)
                             : null,
                         onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 5;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
+                          changeReminderMinutes(5);
                         },
                       ),
                       SettingsTile(
@@ -894,10 +880,7 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                             ? Icon(Icons.check, color: MyColors.primary)
                             : null,
                         onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 10;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
+                          changeReminderMinutes(10);
                         },
                       ),
                       SettingsTile(
@@ -906,10 +889,7 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                             ? Icon(Icons.check, color: MyColors.primary)
                             : null,
                         onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 15;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
+                          changeReminderMinutes(15);
                         },
                       ),
                       SettingsTile(
@@ -918,10 +898,7 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                             ? Icon(Icons.check, color: MyColors.primary)
                             : null,
                         onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 20;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
+                          changeReminderMinutes(20);
                         },
                       ),
                       SettingsTile(
@@ -930,13 +907,98 @@ class _ReminderMinutesState extends State<ReminderMinutes> {
                             ? Icon(Icons.check, color: MyColors.primary)
                             : null,
                         onPressed: (context) {
-                          setState(() {
-                            _reminderMinutes = 30;
-                            prefs.setInt('reminder_minutes', _reminderMinutes);
-                          });
+                          changeReminderMinutes(30);
                         },
                       ),
                     ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
+
+  void changeReminderMinutes(int mins) {
+    setState(() {
+      _reminderMinutes = mins;
+      prefs.setInt('reminder_minutes', _reminderMinutes);
+    });
+    scheduleKey.currentState?.reInitNotifications();
+  }
+}
+
+class ThemePage extends StatefulWidget {
+  const ThemePage({super.key});
+
+  @override
+  State<ThemePage> createState() => _ThemePageState();
+}
+
+class _ThemePageState extends State<ThemePage> {
+  @override
+  Widget build(BuildContext context) {
+    ColorScheme scheme = Theme.of(context).colorScheme;
+    return Scaffold(
+        backgroundColor:
+            context.isDarkMode ? scheme.background : const Color(0xfff3f3fa),
+        appBar: AppBar(
+          title: const Text('App Theme'),
+          backgroundColor:
+              context.isDarkMode ? Colors.transparent : scheme.background,
+          foregroundColor: scheme.secondary,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: SettingsList(
+            platform: DevicePlatform.iOS,
+            darkTheme: SettingsThemeData(
+              titleTextColor: Colors.white70,
+              settingsListBackground: scheme.background,
+            ),
+            sections: [
+              SettingsSection(
+                margin: const EdgeInsetsDirectional.all(20),
+                tiles: [
+                  SettingsTile(
+                    title: const Text('Automatic'),
+                    trailing: MyApp.theme.value == ThemeMode.system
+                        ? Icon(Icons.check, color: scheme.primary)
+                        : null,
+                    onPressed: (context) {
+                      setState(() {
+                        MyApp.theme.value = ThemeMode.system;
+                      });
+                    },
+                  ),
+                  SettingsTile(
+                    title: const Text('Light Mode'),
+                    trailing: MyApp.theme.value == ThemeMode.light
+                        ? Icon(Icons.check, color: scheme.primary)
+                        : null,
+                    onPressed: (context) {
+                      setState(() {
+                        MyApp.theme.value = ThemeMode.light;
+                      });
+                    },
+                  ),
+                  SettingsTile(
+                    title: const Text('Dark Mode'),
+                    trailing: MyApp.theme.value == ThemeMode.dark
+                        ? Icon(Icons.check, color: scheme.primary)
+                        : null,
+                    onPressed: (context) {
+                      setState(() {
+                        MyApp.theme.value = ThemeMode.dark;
+                      });
+                    },
                   ),
                 ],
               ),

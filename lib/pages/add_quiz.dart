@@ -109,7 +109,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
       // margin: const EdgeInsets.symmetric(horizontal: 15),
       padding: EdgeInsets.zero,
       decoration: BoxDecoration(
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? MyColors.surface
               : const Color.fromARGB(255, 230, 230, 230),
           borderRadius: BorderRadius.circular(10)),
@@ -120,7 +120,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
           isExpanded: true,
           value: _selectedValue,
           style: TextStyle(
-              color: MyApp.isDarkMode.value ? Colors.white70 : Colors.black54,
+              color: context.isDarkMode ? Colors.white70 : Colors.black54,
               fontFamily: 'Outfit',
               fontSize: 18,
               fontWeight: FontWeight.bold),
@@ -867,7 +867,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         highlightedTextStyle: const TextStyle(fontSize: 25),
                         normalTextStyle: TextStyle(
                             fontSize: 20,
-                            color: MyApp.isDarkMode.value
+                            color: context.isDarkMode
                                 ? Colors.white30
                                 : Colors.black54),
                         is24HourMode: false,
@@ -965,7 +965,7 @@ class _AddQuizPageState extends State<AddQuizPage> {
                         highlightedTextStyle: const TextStyle(fontSize: 25),
                         normalTextStyle: TextStyle(
                             fontSize: 20,
-                            color: MyApp.isDarkMode.value
+                            color: context.isDarkMode
                                 ? Colors.white30
                                 : Colors.black54),
                         is24HourMode: false,

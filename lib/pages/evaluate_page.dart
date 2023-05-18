@@ -49,14 +49,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
     return Scaffold(
       backgroundColor: MyColors.background,
       appBar: evaluateAppBar(),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6.0),
-        color: MyApp.isDarkMode.value
-            ? MyColors.surface
-            // const Color.fromARGB(255, 45, 45, 45)
-            : const Color.fromARGB(255, 250, 250, 250),
-        child: buildBottomNavBar(),
-      ),
+      bottomNavigationBar: buildBottomNavBar(),
       body: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
@@ -80,7 +73,7 @@ class _EvaluatePageState extends State<EvaluatePage> {
   BottomNavigationBar buildBottomNavBar() {
     return BottomNavigationBar(
       elevation: 0,
-      backgroundColor: MyApp.isDarkMode.value ? MyColors.surface : null,
+      backgroundColor: context.isDarkMode ? MyColors.surface : null,
       // type: BottomNavigationBarType.shifting,
       unselectedItemColor: MyColors.secondary,
       selectedItemColor: MyColors.primary,

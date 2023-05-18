@@ -609,7 +609,7 @@ class _AddDeadlinePageState extends State<AddDeadlinePage> {
                         highlightedTextStyle: const TextStyle(fontSize: 25),
                         normalTextStyle: TextStyle(
                             fontSize: 20,
-                            color: MyApp.isDarkMode.value
+                            color: context.isDarkMode
                                 ? Colors.white30
                                 : Colors.black54),
                         is24HourMode: false,

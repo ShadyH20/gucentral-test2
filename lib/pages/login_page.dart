@@ -201,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                                         fontWeight: FontWeight.w500,
                                         color: MyColors.secondary
                                             .withOpacity(.15)),
-                                    enabledBorder: !MyApp.isDarkMode.value
+                                    enabledBorder: !context.isDarkMode
                                         ? OutlineInputBorder(
                                             borderRadius:
                                                 BorderRadius.circular(7.5),
@@ -288,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                                           fontWeight: FontWeight.w500,
                                           color: MyColors.secondary
                                               .withOpacity(.15)),
-                                      enabledBorder: !MyApp.isDarkMode.value
+                                      enabledBorder: !context.isDarkMode
                                           ? OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(7.5),

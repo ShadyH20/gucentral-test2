@@ -506,7 +506,7 @@ class _EvaluateACourseState extends State<EvaluateACourse> {
                   hintText: "Type Here...",
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: MyApp.isDarkMode.value
+                      borderSide: context.isDarkMode
                           ? BorderSide(
                               color: MyColors.secondary.withOpacity(0.7),
                             )

@@ -56,7 +56,6 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   static ValueNotifier<Size> cardSize = ValueNotifier(const Size(300, 200));
-  static double cardDy = 100;
 
   static AppBar appBar = AppBar();
 
@@ -228,6 +227,9 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
         )
       ],
     );
+
+    double screenH = MediaQuery.of(context).size.height;
+    double screenW = MediaQuery.of(context).size.width;
     return Scaffold(
         backgroundColor: MyColors.background,
         // bottomNavigationBar: FlutterAdManagerWeb(
@@ -237,10 +239,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
         //   height: 70,
         // ),
         appBar: HomePage.appBar,
-        body: Container(
-          width: double.infinity,
-          padding: EdgeInsets.zero,
-          margin: EdgeInsets.zero,
+        body: SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(height: 5),
@@ -271,8 +270,8 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
               const SizedBox(height: 15),
 
               //// THE 3 BOXES ////
-              Expanded(
-                flex: 4,
+              SizedBox(
+                height: screenH * 0.4,
                 child: Column(
                   children: [
                     //// SUMMARY ////
@@ -309,8 +308,8 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         ),
                         onChange: (size) {
                           setState(() {
-                            HomePage.cardDy = getCardDisplacement();
-                            HomePage.cardSize.value = size;
+                            HomePage.cardSize.value = Size(
+                                MediaQuery.of(context).size.width, size.height);
                             // chromeDino = ChromeDino(size: HomePage.cardSize.value);
                           });
                         },
@@ -413,57 +412,54 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
               ),
 
               //// NOTIFICATIONS ////
-              Expanded(
-                flex: 4,
+              SizedBox(
+                height: screenH * 0.722,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        // height: 50,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text.rich(
-                                  TextSpan(
-                                    text: "Today, ",
-                                    style: TextStyle(
-                                        color: MyColors.secondary,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w700),
-                                    children: [
-                                      TextSpan(
-                                        text: DateFormat("d MMMM")
-                                            .format(DateTime.now()),
-                                        style: const TextStyle(
-                                            // color: MyColors.background,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.normal),
-                                      ),
-                                    ],
-                                  ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text.rich(
+                                TextSpan(
+                                  text: "Today, ",
+                                  style: TextStyle(
+                                      color: MyColors.secondary,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700),
+                                  children: [
+                                    TextSpan(
+                                      text: DateFormat("d MMMM")
+                                          .format(DateTime.now()),
+                                      style: const TextStyle(
+                                          // color: MyColors.background,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.normal),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              // show a loading indicator if the notifications are loading
-                              loadingNotifications
-                                  ? const SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ],
-                          ),
+                            ),
+                            // show a loading indicator if the notifications are loading
+                            loadingNotifications
+                                ? const SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 10),
                       Expanded(
                         flex: 10,
                         child: Container(
@@ -569,8 +565,8 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           borderRadius: BorderRadius.circular(15),
                           color:
                               // Color.fromARGB(255, 227, 246, 254).withOpacity(1)
-                              MyColors.secondary.withOpacity(
-                                  MyApp.isDarkMode.value ? 0.2 : 0.1),
+                              MyColors.secondary
+                                  .withOpacity(context.isDarkMode ? 0.2 : 0.1),
                         ),
                         child: GestureDetector(
                           onTap: () {
@@ -601,12 +597,12 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   width: 42,
                                   height: 42,
                                   decoration: ShapeDecoration(
-                                      color: MyApp.isDarkMode.value
+                                      color: context.isDarkMode
                                           ? Colors.transparent
                                           : Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(15),
-                                        side: MyApp.isDarkMode.value
+                                        side: context.isDarkMode
                                             ? BorderSide(
                                                 color: MyColors.secondary
                                                     .withOpacity(0.4),
@@ -619,7 +615,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   child: Icon(
                                     Icons.notifications,
                                     color: MyColors.secondary.withOpacity(
-                                        MyApp.isDarkMode.value ? 1 : 0.9),
+                                        context.isDarkMode ? 1 : 0.9),
                                   ),
                                 ),
                                 // Small orange cicle if notification is new
@@ -737,7 +733,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
           avoidStatusBar: true,
           minHeight: MediaQuery.of(context).size.height,
           // minHeight: MediaQuery.of(context).size.height,
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? MyColors.background
               : const Color.fromARGB(255, 250, 250, 254),
           cornerRadius: 20,
@@ -767,7 +763,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Material buildNoticiationContent(BuildContext context, notification, date) {
     return Material(
       child: Container(
-        color: MyApp.isDarkMode.value
+        color: context.isDarkMode
             ? MyColors.background
             : const Color.fromARGB(255, 250, 250, 254),
         padding: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
@@ -828,7 +824,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   height: 50,
                   // decoration: ShapeDecoration(
                   //   shape: CircleBorder(
-                  //     side: MyApp.isDarkMode.value
+                  //     side: context.isDarkMode
                   //         ? BorderSide(color: MyColors.secondary, width: 1)
                   //         : const BorderSide(),
                   //   ),
@@ -956,7 +952,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? MyColors.background
               : const Color.fromARGB(255, 250, 250, 254),
           // padding: const EdgeInsets.symmetric(vertical: 10),
@@ -995,19 +991,6 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     child: const Skeleton(height: 55));
               },
             )));
-  }
-
-  getCardDisplacement() {
-    final RenderBox renderBox =
-        gameCardKey.currentContext?.findRenderObject() as RenderBox;
-
-    final Size size = renderBox.size; // or _widgetKey.currentContext?.size
-    print('Size: ${size.width}, ${size.height}');
-
-    final Offset offset = renderBox.localToGlobal(Offset.zero);
-    print('Offset: ${offset.dx}, ${offset.dy}');
-
-    return offset.dy;
   }
 }
 

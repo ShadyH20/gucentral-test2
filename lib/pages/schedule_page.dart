@@ -258,7 +258,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 boxShadow: [
                                   BoxShadow(
                                       offset: const Offset(0, 1.1),
-                                      color: MyApp.isDarkMode.value
+                                      color: context.isDarkMode
                                           ? Colors.white24
                                           : Colors.black26,
                                       spreadRadius: 0.6)
@@ -302,7 +302,7 @@ class SchedulePageState extends State<SchedulePage> {
                                 .isEmpty
                             ? Border(
                                 top: BorderSide(
-                                    color: MyApp.isDarkMode.value
+                                    color: context.isDarkMode
                                         ? Colors.white12
                                         : Colors.black12))
                             : null),
@@ -449,7 +449,7 @@ class SchedulePageState extends State<SchedulePage> {
                 transformAlignment: Alignment.center,
                 child: Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  color: MyApp.isDarkMode.value
+                  color: context.isDarkMode
                       ? MyColors.primary
                       : MyColors.secondary,
                   size: 25,
@@ -566,7 +566,7 @@ class SchedulePageState extends State<SchedulePage> {
                     day.month == DateTime.now().month &&
                     day.day == DateTime.now().day)
                 ? MyColors.primary
-                : MyApp.isDarkMode.value
+                : context.isDarkMode
                     ? const Color.fromARGB(255, 163, 168, 188).withOpacity(0.6)
                     : const Color.fromARGB(255, 76, 78, 88).withOpacity(0.6),
             borderRadius: BorderRadius.circular(7)),
@@ -634,7 +634,7 @@ class SchedulePageState extends State<SchedulePage> {
     bool isWeek = _calendarFormat == CalendarFormat.week;
     return DefaultTextStyle(
       style: TextStyle(
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? const Color.fromARGB(255, 176, 176, 176)
               : const Color.fromARGB(255, 95, 95, 95)),
       child: Container(
@@ -746,7 +746,7 @@ class SchedulePageState extends State<SchedulePage> {
   getTabBackColor(int index) {
     return tabIndex == index
         ? MyColors.primary
-        : MyApp.isDarkMode.value
+        : context.isDarkMode
             ? Colors.white12
             : Colors.black12;
   }
@@ -794,12 +794,7 @@ class SchedulePageState extends State<SchedulePage> {
     }
     scheduleError = false;
 
-    AwesomeNotifications().cancelAll();
-    // //cancel notifications in a specific channel
-    // AwesomeNotifications().cancelSchedule("scheduled");
-    // // pause notifications then resume
-    // AwesomeNotifications().;
-    // AwesomeNotifications().resume();
+    AwesomeNotifications().cancelNotificationsByGroupKey('classes');
 
     for (int i = 0; i < schedule.length; i++) {
       String day = schedule[i][0];
@@ -812,7 +807,7 @@ class SchedulePageState extends State<SchedulePage> {
           String eventDescription = schedule[i][j][3];
           String eventLocation = schedule[i][j][1];
           List semesterAndGroup = schedule[i][j][0].split(' ');
-          String eventSemester = semesterAndGroup[0];
+          // String eventSemester = semesterAndGroup[0];
           String eventGroup = semesterAndGroup[1].replaceFirst('0', '');
 
           // Convert the time slot to start and end times
@@ -862,6 +857,7 @@ class SchedulePageState extends State<SchedulePage> {
       content: NotificationContent(
         id: -1,
         channelKey: 'scheduled',
+        groupKey: 'classes',
         title: notificationTitle,
         body: notificationBody,
         wakeUpScreen: true,
@@ -1502,7 +1498,7 @@ class SchedulePageState extends State<SchedulePage> {
         value: dropdownValue,
         style: TextStyle(
             // decoration: TextDecoration.underline,
-            color: MyApp.isDarkMode.value ? Colors.white70 : Colors.black54,
+            color: context.isDarkMode ? Colors.white70 : Colors.black54,
             fontFamily: 'Outfit',
             fontSize: 18,
             fontWeight: FontWeight.bold),

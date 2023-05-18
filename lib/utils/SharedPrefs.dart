@@ -58,6 +58,7 @@ final GlobalKey<MyAppState> mainKey = GlobalKey();
 final GlobalKey<HomePageState> homeKey = GlobalKey();
 final GlobalKey<SchedulePageState> scheduleKey = GlobalKey<SchedulePageState>();
 
+// ignore: non_constant_identifier_names
 ColorScheme MyColors = Theme.of(mainKey.currentContext!).colorScheme;
 
 // Maps course code to course name

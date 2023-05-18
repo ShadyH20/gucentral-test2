@@ -203,9 +203,10 @@ class _HomePageNavDrawerState extends State<HomePageNavDrawer> {
                     if (!logout) return;
 
                     // Clear SharedPrefs
-                    bool dark = prefs.getBool('dark_mode') ?? false;
+                    String theme =
+                        prefs.getString('theme') ?? 'ThemeMode.system';
                     prefs.clear();
-                    prefs.setBool('dark_mode', dark);
+                    prefs.setString('theme', theme);
                     // Navigate to login page
                     Navigator.pushNamedAndRemoveUntil(
                         context, '/login', (route) => false);

@@ -31,7 +31,7 @@ class BuildSheet {
           duration: const Duration(milliseconds: 400),
           avoidStatusBar: true,
           // minHeight: MediaQuery.of(context).size.height,
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? MyColors.background
               : const Color.fromARGB(255, 250, 250, 254),
           cornerRadius: 20,
@@ -57,7 +57,7 @@ class BuildSheet {
       width: MediaQuery.of(context).size.width,
       // height: 50,
       decoration: BoxDecoration(
-        color: MyApp.isDarkMode.value
+        color: context.isDarkMode
             ? MyColors.background
             : const Color.fromARGB(255, 255, 250, 254),
         // color: MyColors.secondary.withOpacity(0.4),

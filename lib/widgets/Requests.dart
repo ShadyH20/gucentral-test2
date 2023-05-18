@@ -848,7 +848,7 @@ void showSnackBar(BuildContext context, String text,
     duration: duration,
     behavior: SnackBarBehavior.floating,
     elevation: 7,
-    backgroundColor: MyApp.isDarkMode.value
+    backgroundColor: context.isDarkMode
         ? Theme.of(context).colorScheme.surface
         : Color.fromARGB(255, 113, 118, 121),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

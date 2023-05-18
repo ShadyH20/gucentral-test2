@@ -67,7 +67,7 @@ class _CoursesPageState extends State<CoursesPage>
       height: 55,
       padding: const EdgeInsets.only(left: 0),
       decoration: BoxDecoration(
-          color: MyApp.isDarkMode.value
+          color: context.isDarkMode
               ? MyColors.surface
               : const Color.fromARGB(255, 230, 230, 230),
           borderRadius: BorderRadius.circular(10)),
@@ -89,7 +89,7 @@ class _CoursesPageState extends State<CoursesPage>
           ),
           style: TextStyle(
               // decoration: TextDecoration.underline,
-              color: MyApp.isDarkMode.value ? Colors.white70 : Colors.black54,
+              color: context.isDarkMode ? Colors.white70 : Colors.black54,
               fontFamily: 'Outfit',
               fontSize: 16,
               fontWeight: FontWeight.bold),
@@ -380,7 +380,7 @@ class _CoursesPageState extends State<CoursesPage>
                         initialValue: dropdownValue['name'],
                         decoration: InputDecoration(
                           filled: true,
-                          fillColor: MyApp.isDarkMode.value
+                          fillColor: context.isDarkMode
                               ? const Color.fromARGB(255, 20, 21, 24)
                               : Color.fromARGB(58, 173, 173, 173),
                           border: OutlineInputBorder(

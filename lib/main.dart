@@ -122,130 +122,14 @@ void main() async {
   // runApp(MyApp());
 }
 
-Future<void> setTestNotifications() async {
-  //get local time zone
-  String timeZoneName =
-      await AwesomeNotifications().getLocalTimeZoneIdentifier();
-  print(timeZoneName);
-  AwesomeNotifications().cancelAll();
-
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: -1,
-      channelKey: 'scheduled',
-      title: 'Lab',
-      body: '3 May, 8:15 AM - Network & Media Lab, Lab in C6.209',
-      wakeUpScreen: true,
-      category: NotificationCategory.Reminder,
-    ),
-    schedule: NotificationCalendar(
-        preciseAlarm: true,
-        hour: 1,
-        minute: 55,
-        // second: 0,
-        // millisecond: 0,
-        allowWhileIdle: true,
-        day: 3,
-        month: 5,
-        year: 2023,
-        timeZone: timeZoneName),
-  );
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: -1,
-      channelKey: 'scheduled',
-      title: 'Lab',
-      body: '3 May, 8:15 AM - Network & Media Lab, Lab in C6.209',
-      wakeUpScreen: true,
-      category: NotificationCategory.Reminder,
-    ),
-    schedule: NotificationCalendar(
-        preciseAlarm: true,
-        hour: 8,
-        minute: 0,
-        // second: 0,
-        // millisecond: 0,
-        allowWhileIdle: true,
-        day: 3,
-        month: 5,
-        year: 2023,
-        timeZone: timeZoneName),
-  );
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: -1,
-      channelKey: 'scheduled',
-      title: 'Tutorial',
-      body: '3 May, 10:00 AM - Data Bases II, Tutorial in C3.104',
-      wakeUpScreen: true,
-      category: NotificationCategory.Reminder,
-    ),
-    schedule: NotificationCalendar(
-        preciseAlarm: true,
-        hour: 9,
-        minute: 45,
-        // second: 0,
-        // millisecond: 0,
-        allowWhileIdle: true,
-        day: 3,
-        month: 5,
-        year: 2023,
-        timeZone: timeZoneName),
-  );
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: -1,
-      channelKey: 'scheduled',
-      title: 'Lab',
-      body: '3 May, 11:45 AM - Computer System Architecture, Lab in C7.203',
-      wakeUpScreen: true,
-      category: NotificationCategory.Reminder,
-    ),
-    schedule: NotificationCalendar(
-        preciseAlarm: true,
-        hour: 11,
-        minute: 30,
-        // second: 0,
-        // millisecond: 0,
-        allowWhileIdle: true,
-        day: 3,
-        month: 5,
-        year: 2023,
-        timeZone: timeZoneName),
-  );
-  await AwesomeNotifications().createNotification(
-    content: NotificationContent(
-      id: -1,
-      channelKey: 'scheduled',
-      title: 'Lecture',
-      body: '3 May, 1:45 PM - Operating Systems, Lecture in H18',
-      wakeUpScreen: true,
-      category: NotificationCategory.Reminder,
-    ),
-    schedule: NotificationCalendar(
-        preciseAlarm: true,
-        hour: 13,
-        minute: 30,
-        // second: 0,
-        // millisecond: 0,
-        allowWhileIdle: true,
-        day: 3,
-        month: 5,
-        year: 2023,
-        timeZone: timeZoneName),
-  );
-
-  List nots = await AwesomeNotifications().listScheduledNotifications();
-  print(nots.length);
-  print(nots);
-}
-
 class MyApp extends StatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey =
       GlobalKey<NavigatorState>();
 
   static final ValueNotifier<bool> isDarkMode =
       ValueNotifier(prefs.getBool('dark_mode') ?? false);
+  static final ValueNotifier<ThemeMode> theme =
+      ValueNotifier(toThemeMode(prefs.getString('theme')));
 
   static ValueNotifier<bool> isLoading =
       ValueNotifier(prefs.getBool("loading") ?? false);
@@ -254,6 +138,27 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => MyAppState();
+
+  static toThemeMode(String? string) {
+    switch (string) {
+      case 'ThemeMode.dark':
+        return ThemeMode.dark;
+      case 'ThemeMode.light':
+        return ThemeMode.light;
+      default:
+        return ThemeMode.system;
+    }
+  }
+}
+
+extension DarkMode on BuildContext {
+  /// is dark mode currently enabled?
+  bool get isDarkMode {
+    if (MyApp.theme.value == ThemeMode.system) {
+      return MediaQuery.of(this).platformBrightness == Brightness.dark;
+    }
+    return MyApp.theme.value == ThemeMode.dark;
+  }
 }
 
 class MyAppState extends State<MyApp> {
@@ -275,9 +180,10 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     // MyApp.MyColors = Theme.of(context).colorScheme;
-    return ValueListenableBuilder<bool>(
-      valueListenable: MyApp.isDarkMode,
-      builder: (context, isDarkMode, child) {
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: MyApp.theme,
+      builder: (context, theme, child) {
+        MyColors = Theme.of(context).colorScheme;
         return ChangeNotifierProvider(
           create: (context) => ProviderData(),
           child: MaterialApp(
@@ -296,12 +202,11 @@ class MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             initialRoute: prefs.containsKey('username') ? "/home" : "/login",
 
-            theme: isDarkMode
-                ? MyTheme.lightTheme.copyWith(
-                    primaryColor: MyTheme.darkTheme.colorScheme.background)
-                : MyTheme.lightTheme,
+            theme: MyTheme.lightTheme,
             darkTheme: MyTheme.darkTheme,
-            themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode: theme,
+            themeAnimationDuration: const Duration(milliseconds: 1000),
+            themeAnimationCurve: Curves.easeInOutCubic,
 
             onGenerateRoute: (settings) {
               // If you push the PassArguments route
