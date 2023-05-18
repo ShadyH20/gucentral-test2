@@ -775,7 +775,9 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
               child: Row(
                 children: [
                   Text(
-                    '${courseMap[notification['course_code']]}  |',
+                    courseMap[notification['course_code']] != null
+                        ? '${courseMap[notification['course_code']]}  |  '
+                        : '',
                     style: TextStyle(
                       color: MyColors.secondary,
                       fontWeight: FontWeight.w400,
@@ -785,7 +787,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    '  ${notification['course_code']}',
+                    '${notification['course_code']}',
                     style: TextStyle(
                       color: MyColors.secondary,
                       fontWeight: FontWeight.w400,
